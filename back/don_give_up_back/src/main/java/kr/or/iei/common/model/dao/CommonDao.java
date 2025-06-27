@@ -1,11 +1,14 @@
 package kr.or.iei.common.model.dao;
 
+import java.util.ArrayList;
+
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import kr.or.iei.common.model.dto.DonateCode;
 
 @Mapper
 public interface CommonDao {
+
+	ArrayList<DonateCode> selectDonateCtg(); //기부 카테고리 조회
 
 }
