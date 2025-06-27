@@ -1,0 +1,75 @@
+/*페이지 전체*/
+* {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-decoration: none;
+    color: black;
+}
+
+/*헤더*/
+.header-wrap {
+    width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    padding-top: 20px;
+}
+
+/*헤더 상단*/
+.header-wrap>div {
+    display: flex;
+}
+/*로고*/
+.logo {
+    height: 100px;
+    display: flex;
+}
+.logo>img {
+    height: 100%;
+}
+.logo>a {
+    align-content: center;
+    font-size: 50px;
+}
+/*우측 상단*/
+.header-list {
+    display:  flex;
+    position: absolute;
+    right: 0;
+    gap: 20px;
+}
+
+/*헤더 메뉴*/
+.header-menu {
+    width: 100%;
+    border-top: 1px solid black;
+}
+.main-menu {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+.main-menu li {
+    width: 150px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+}
+.mypage-menu {
+    position: relative;
+}
+.sub-menu {
+    position: absolute;
+    display: none;
+}
+.mypage-menu:hover>.sub-menu {
+    display: block;
+}
+.main-menu a:hover {
+    text-decoration: underline;
+}
+
+.section {
+    width: 1200px;
+    margin: 0 auto;
+}
