@@ -64,28 +64,8 @@ function NewsItem(props) {
     //const setNewsList = props.setNewsList;
     const navigate = useNavigate();
 
-     // 상태 값을 변경했을 때, 호출 함수 (onChange)
-     /*
-    function handleChange(){
-        let options = {};
-        options.url = serverUrl + "/news";
-        options.method = 'patch';
-        options.data = {newsNo : news.newsNo};
-
-        axiosInstance(options)
-        .then(function(res){
-            //DB 정상 변경되었을 때, 화면에 반영
-            console.log(res.data.resData); // true or false
-
-            if(res.data.resData){
-                setNewsList([...newsList]);
-            }
-        });
-    }
-        */
-
     return (
-        <tr onClick={() => navigate('news/view/' + news.newsNo)}>
+        <tr onClick={() => navigate('/news/view/' + news.newsNo)}>
             <td>{news.newsNo}</td>
             <td>{news.newsName}</td>
             <td>{news.newsDate}</td>

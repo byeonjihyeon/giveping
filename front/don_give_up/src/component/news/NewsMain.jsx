@@ -11,7 +11,7 @@ export default function NewsMain(){
         <Route path='list' element={<NewsList />} />
         <Route path='write' element={<NewsWrite />} />
         <Route path='view/:newsNo' element={<NewsView />} />
-        <Route path='update/:updateNo' element={<NewsUpdate />} />
+        <Route path='update/:newsNo' element={<NewsUpdate />} />
     </Routes>
 
     )
