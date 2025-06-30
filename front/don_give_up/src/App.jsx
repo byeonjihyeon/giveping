@@ -12,6 +12,7 @@ import MemberJoin from './component/member/MemberJoin';
 import OrgJoin from './component/org/OrgJoin';
 import JoinCategory from './component/common/JoinCategory';
 import BizMain from './component/Biz/BizMain';
+import AdminMain from './component/admin/AdminMain';
 
 function App() {
   //각 입력 값 변경 시 저장 변수(서버 전송용)
@@ -34,6 +35,7 @@ function App() {
             <Route path="/join/category" element={<JoinCategory member={member} setMember={setMember}/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path='/biz/*' element={<BizMain />} />
+            <Route path='/admin/*' element={<AdminMain />} />
           </Routes>
         </main>
       <Footer/>

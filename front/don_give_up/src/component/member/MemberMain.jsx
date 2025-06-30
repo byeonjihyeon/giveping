@@ -7,6 +7,7 @@ import MemberChangePw from './MemberChangePw';
 import LikeOrgList from './LikeOrgList';
 import DonateList from './DonateList';
 import NewsList from './NewsList';
+import LeftMenu from '../common/LeftMenu';
 
 //회원 메인 페이지
 export default function MemberMain(){
