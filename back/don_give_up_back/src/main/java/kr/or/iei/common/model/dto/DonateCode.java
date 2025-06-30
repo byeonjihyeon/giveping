@@ -10,4 +10,7 @@ import lombok.NoArgsConstructor;
 public class DonateCode {
 	private String donateCode;	//기부 코드
 	private String donateCtg;	//기부 카테고리
+	
+	
+	private int memberNo;	//개인 회원 번호
 }

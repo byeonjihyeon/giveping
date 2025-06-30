@@ -1,7 +1,17 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 //회원가입 페이지
-export default function Join(){
+export default function Join(props){
+    const setMember = props.setMember;
+    const member = {
+        memberId : "", memberPw : "", memberName : "", memberPhone : "",
+        memberBirth : "", memberEmail : "", memberAddr : ""
+    }
+
+    useEffect(function(){
+        setMember(member);
+    }, []);
 
     return (
         <section className="section join-wrap">
