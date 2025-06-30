@@ -1,14 +1,12 @@
 package kr.or.iei.admin.model.dto;
 
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Biz {
+public class AdminBiz {
 	private int bizNo;				// 사업 번호	
 	private int orgNo;				// 단체 번호(외래키)
 	private String bizName;			// 사업명

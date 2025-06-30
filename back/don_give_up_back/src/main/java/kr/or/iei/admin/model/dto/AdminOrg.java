@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Org {
+public class AdminOrg {
 	private int orgNo;				//단체 번호
 	private String orgId;			//단체 아이디
 	private String orgPw;			//단체 비밀번호
