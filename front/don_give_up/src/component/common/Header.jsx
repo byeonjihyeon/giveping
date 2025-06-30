@@ -104,6 +104,7 @@ function OrgMyPage(){
         <ul className="sub-menu">
             <li>
                 <Link to="#">회원 정보 수정</Link>
+                
             </li>
             <li>
                 <Link to="#">기업 정보 수정</Link>
