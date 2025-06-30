@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.iei.news.model.dao.NewsDao">
+	<!-- 전체 소식글 개수 조회 -->
+	<select id="selectNewsCount" resultType="_int">
+	select count(*) from tbl_news
+	</select>
+	
+	<!-- 소식 리스트 조회 -->
+	<select id="selectNewsList" parameterType="PageInfo" resultType="News">
+		select news_no as newsNo,
+			   member_no as memberNo,
+			   org_no as orgNo,
+			   news_name as newsName,
+			   news_content as newsContent,
+			   news_thumb as newsThumbPath,
+			   news_date as newsDate,
+			   read_count as readCount
+		  from(
+		  		select rownum as rnum,
+		  				a.*
+		  			from (
+		  					select *
+		  					from tbl_news
+		  					order by news_date desc
+		  					)a
+		  		)a
+		  where rnum between #{start} and #{end}
+	</select>
 </mapper>
