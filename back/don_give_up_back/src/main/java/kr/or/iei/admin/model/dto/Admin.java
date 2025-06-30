@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class Admin {
 	private int memberNo;
+	
 }

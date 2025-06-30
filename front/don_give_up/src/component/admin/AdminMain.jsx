@@ -1,0 +1,58 @@
+import { useState } from "react";
+import LeftMenu from "../common/LeftMenu";
+import { Route, Routes } from "react-router-dom";
+
+import MemberManage from './MemberManage.jsx';
+import OrgManage from "./OrgManage.jsx";
+import BizManage from './BizManage.jsx';
+import RefundManage from'./RefundManage.jsx';
+import ReportManage from'./ReportManage.jsx';
+
+import { Link } from "react-router-dom";
+
+
+//관리자 메인
+export default function AdminMain(){
+    const [menuList, setMenuList] = useState([
+        {url : '/admin/memberManage',         text : "회원 관리"},
+        {url : '/admin/orgManage',      text: '단체 관리'},
+        {url : '/admin/bizManage' ,         text : '기부 사업 관리'},
+        {url : '/admin/refundManage' ,         text : '환불 신청 관리'},
+        {url : '/admin/reportManage' ,         text : '신고 내역 관리'},
+        {url : '/admin/deleteManage' ,         text : '탈퇴 신청 관리'}
+    ]);
+
+
+    return (
+        <div className="mypage-wrap">
+            <div className="mypage-side">
+                <section className="section account-box">
+                    <div className="account-info">
+                        <span className="material-icons">manage_accounts</span>
+                        <span className="member-name">관리자 페이지</span>
+                    </div>
+                     <div className="refund">
+                        <Link to={'/admin/refundManage/'} className="refund-request">환불 요청 내역</Link>
+                        <Link to={'/admin/refundDone/'} className="refund-done">환불 완료 내역</Link>
+                    </div>
+                </section>
+                <section className="section">  
+                    {/* MemberMain에서 사용했던, 컴포넌트 재사용 (이 때, 좌측에 그려질 메뉴 리스트만 다르게 전달) */}
+                    <LeftMenu menuList={menuList} />
+                </section>
+            </div>
+            <div className="mypage-content">
+                <section className="section">
+                    <Routes>
+                        <Route path="memberManage" element={<MemberManage />} />
+                        <Route path="orgManage" element={<OrgManage />}/>
+                        <Route path="bizManage" element={<BizManage />} />
+                        <Route path="refundManage" element={<RefundManage />}  />
+                        <Route path="reportManage" element={<ReportManage />}  />
+                   
+                    </Routes>
+                </section>
+            </div>
+        </div>
+    );
+}
