@@ -13,7 +13,11 @@ import JoinCategory from './component/common/JoinCategory';
 
 
 function App() {
- 
+  //각 입력 값 변경 시 저장 변수(서버 전송용)
+  const [member, setMember] = useState({
+      memberId : "", memberPw : "", memberName : "", memberPhone : "",
+      memberBirth : "", memberEmail : "", memberAddr : "", categoryList : []
+  });
 
   return (
     <div className="wrap">
@@ -22,10 +26,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Main/>}/>
             <Route path="/member/*" element={<MemberMain/>}/>
-            <Route path="/join" element={<Join/>}/>
-            <Route path="/member/join" element={<MemberJoin/>}/>
+            <Route path="/join" element={<Join setMember={setMember}/>}/>
+            <Route path="/member/join" element={<MemberJoin member={member} setMember={setMember}/>}/>
             <Route path="/org/join" element={<OrgJoin/>}/>
-            <Route path="/join/category" element={<JoinCategory/>}/>
+            <Route path="/join/category" element={<JoinCategory member={member} setMember={setMember}/>}/>
             <Route path="/login" element={<Login/>}/>
           </Routes>
         </main>

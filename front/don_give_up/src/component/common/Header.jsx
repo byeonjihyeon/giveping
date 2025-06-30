@@ -29,7 +29,7 @@ function HeaderLink(){
                 {/*로그인 시 보여질 링크*/}
                 <li>이름</li>
                 <li>
-                    <Link to="#">로그아웃</Link>
+                    <Link to="/birth">로그아웃</Link>
                 </li>
             </>
             <>

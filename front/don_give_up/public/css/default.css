@@ -73,3 +73,33 @@
     width: 1200px;
     margin: 0 auto;
 }
+
+/*회원가입*/
+/*회원가입-카테고리 선택*/
+.category-wrap {
+    width: 800px;
+    margin: 0 auto;
+}
+.select-ctg-wrap {
+    padding: 10px;
+    width: 600px;
+    height: 300px;
+}
+.select-ctg-wrap>.select-ctg {
+    margin: 30px;
+    width: 100px;
+    float: left;
+    margin: 5px;
+    padding: 10px 15px;
+    border: 1px solid #999;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #fff;
+    text-align: center;
+}
+
+.select-ctg-wrap>.select-ctg.active {
+  background-color: #007acc;
+  color: white;
+  border-color: #007acc;
+}
