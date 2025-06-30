@@ -59,7 +59,7 @@ function MainNavi(){
                 <Link to="#">후원 사업</Link>
             </li>
             <li>
-                <Link to="#">소식</Link>
+                <Link to="/news/list">소식</Link>
             </li>
             <li className="mypage-menu">
                 {/*회원 등급에 따라 마이페이지/관리자페이지로 보여주기*/}
