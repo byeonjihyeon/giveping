@@ -14,6 +14,8 @@ public interface NewsDao {
 	int selectNewsCount();
 
 	ArrayList<News> selectNewsList(PageInfo pageInfo);
+
+	News selectOneNews(int newsNo);
 	
 	
 

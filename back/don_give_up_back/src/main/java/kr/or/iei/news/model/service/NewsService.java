@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.news.model.dao.NewsDao;
@@ -34,5 +36,10 @@ public class NewsService {
 		newsMap.put("pageInfo", pageInfo);
 		
 		return newsMap;
+	}
+
+	public News selectOneNews(int newsNo) {
+		// TODO Auto-generated method stub
+		return dao.selectOneNews(newsNo);
 	}
 }

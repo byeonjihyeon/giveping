@@ -27,4 +27,22 @@
 		  		)a
 		  where rnum between #{start} and #{end}
 	</select>
+	
+	<!-- 한 개의 소식글 정보 조회 -->
+	<select id="selectOneNews" parameterType="_int" resultType="News">
+    SELECT n.news_no AS newsNo,
+           n.member_no AS memberNo,
+           n.org_no AS orgNo,
+           n.news_name AS newsName,
+           n.news_content AS newsContent,
+           n.news_thumb AS newsThumbPath,
+           n.news_date AS newsDate,
+           n.read_count AS readCount,
+           m.member_name AS memberName,
+           o.org_name AS orgName  <!-- 추가된 부분 -->
+	    FROM tbl_news n
+	    JOIN tbl_member m ON n.member_no = m.member_no
+	    JOIN tbl_org o ON n.org_no = o.org_no  <!-- 추가된 JOIN -->
+	    WHERE n.news_no = #{_parameter}
+	</select>
 </mapper>
