@@ -9,3 +9,8 @@ npm install zustand                                                 -> 로그인
 npm install history --force                                         -> 컴포넌트 외부(인터셉터)에서 컴포넌트 전환을 위해 설치
 npm install @toast-ui/react-editor --force                          -> 게시글 작성, 수정 시 게시글 본문 작성을 위해 설치
 npm install @mui/material @emotion/react @emotion/styled --force    -> MUI(Material-UI)는 리액트 기반의 사용자 인터페이스 라이브러리
+
+
+25-06-30 변지현
+
+npm install react-datepicker --save --force                         -> 달력 라이브러리 사용을 위해 설치
