@@ -1,5 +1,7 @@
 package kr.or.iei.member.model.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,10 @@ public class Member {
 	private String memberEmail;			//회원 이메일
 	private int memberLevel;			//회원 등급(1:관리자, 2:일반회원)
 	private String memberEnrollDate;	//회원 가입일
-	private int totalMoney;				//잔액 예치금
+	private int totalMoney;				//잔액 예치금(기본값 0)
 	private int memberDeleted;			//회원 탈퇴 여부(0:정상, 1:탈퇴)
+	private String memberProfile;		//회원 프로필 사진 경로
+	
+	
+	private List<String> categoryList;	//관심 카테고리 리스트
 }
