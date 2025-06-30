@@ -50,7 +50,7 @@ function MainNavi(){
     return (
         <ul className="main-menu">
             <li>
-                <Link to="#">사업 소개</Link>
+                <Link to="/biz/list">사업 소개</Link>
             </li>
             <li>
                 <Link to="#">후원 단체</Link>
