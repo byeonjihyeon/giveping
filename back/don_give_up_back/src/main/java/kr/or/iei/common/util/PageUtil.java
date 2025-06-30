@@ -6,7 +6,7 @@ import kr.or.iei.common.model.dto.PageInfo;
 
 @Component
 public class PageUtil {
-	public PageInfo getpageInfo(int reqPage,		 //요청페이지 번호
+	public PageInfo getPageInfo(int reqPage,		 //요청페이지 번호
 							int viewCnt, 		//한 페이지에 보여줄 게시글 갯수
 							int pageNaviSize, 	//페이지 네비게이션 크기
 							int totalCount 		//전체 게시글 갯수
