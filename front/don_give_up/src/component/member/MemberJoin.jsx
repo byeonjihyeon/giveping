@@ -35,6 +35,7 @@ export default function MemberJoin(props){
             setIdChk(2);
         }else{
             //유효성 검증 성공인 경우 -> DB에 중복된 아이디 존재하는지 체크하기 위해 서버에 아이디 전달하며 중복 체크 요청
+            /*
             let options = {};
             options.url = serverUrl + "/member/" + member.memberId + "/chkId";
             options.method = "get"; //조회 == GET
@@ -54,6 +55,7 @@ export default function MemberJoin(props){
             .catch(function(err){
                 console.log(err);
             });
+            */
         }
     }
 

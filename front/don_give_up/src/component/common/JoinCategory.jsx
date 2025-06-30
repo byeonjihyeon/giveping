@@ -8,7 +8,7 @@ export default function JoinCategory(props) {
     const axiosInstance = createInstance();
     const navigate = useNavigate();
 
-    let member = props.member;
+    const member = props.member;
     const setMember = props.setMember;
 
     //DB에서 조회한 카테고리 정보를 저장할 State 변수
@@ -29,11 +29,15 @@ export default function JoinCategory(props) {
         });
     }, []);
 
+    useEffect(function(){
+        setMember({...member, categoryList : checkCtgList});
+    }, [checkCtgList]);
 
     // 회원가입 버튼 클릭 시
     function joinMember() {
-        member = {...member, categoryList : checkCtgList};
-        setMember({member});
+        
+        console.log(checkCtgList);
+        console.log(member);
 
         let options = {};
         options.url = serverUrl + "/member/join";
@@ -43,6 +47,9 @@ export default function JoinCategory(props) {
         axiosInstance(options)
         .then(function(res){
             console.log(res);
+        })
+        .catch(function(err){
+            console.log(err);
         })
     }
 
@@ -54,7 +61,7 @@ export default function JoinCategory(props) {
 
             <ul className="select-ctg-wrap">
                 {donateCtgList.map(function (category, index) {
-                    return  <DonateCtg key={"category"+index} category={category} setCheckCtgList={setCheckCtgList}/>
+                    return  <DonateCtg key={"category"+index} category={category} checkCtgList={checkCtgList} setCheckCtgList={setCheckCtgList}/>
                 })}
             </ul>
 
@@ -67,9 +74,10 @@ export default function JoinCategory(props) {
     //카테고리 1개
     function DonateCtg(props){
         const category = props.category;
+        const checkCtgList = props.checkCtgList;
         const setCheckCtgList = props.setCheckCtgList;
 
-    // 카테고리 클릭 시 토글
+    //카테고리 클릭 시 토글
     function toggleCategory(code) {
         setCheckCtgList(function (prev) {
             if (prev.includes(code)) {
@@ -82,10 +90,10 @@ export default function JoinCategory(props) {
                 return [...prev, code];
             }
         });
-    }
+    }   
 
         return (
-            <li className={`select-ctg ${checkCtgList.includes(category.donateCode) ? 'active' : ''}`}
+            <li className={"select-ctg" + (checkCtgList.includes(category.donateCode) ? " active" : "")}
                 onClick={function(){ toggleCategory(category.donateCode); }}>
                 {category.donateCtg}
             </li>
