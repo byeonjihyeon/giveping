@@ -1,4 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.iei.biz.model.dao.BizDao">
+
+
+<!-- 전체 기부사업 게시글 수 조회 --> 
+<select id="selectBoardCount">
+	select count(*) from tbl_donate_biz where biz_status = 1
+</select>
+
+<!-- 기부 사업 리스트 조회 -->
+<select id="selectDonateBizList" parameterType="PageInfo" resultType="Biz">
+    SELECT biz_no AS bizNo,
+           org_no AS orgNo,
+           org_name AS orgName,
+           donate_code AS donateCode,
+           biz_name AS bizName,
+           biz_content AS bizContent,
+           biz_donate_start AS bizDonateStart,
+           biz_donate_end AS bizDonateEnd,
+           biz_start AS bizStart,
+           biz_end AS bizEnd,
+           biz_goal AS bizGoal,
+           biz_status AS bizStatus,
+           biz_reg_date AS bizRegDate,
+           biz_edit AS bizEdit,
+           biz_thumb AS bizThumbPath
+    FROM (
+        SELECT rownum rnum, a.*
+        FROM (
+            SELECT b.biz_no,
+                   b.org_no,
+                   o.org_name,
+                   b.donate_code,
+                   b.biz_name,
+                   b.biz_content,
+                   b.biz_donate_start,
+                   b.biz_donate_end,
+                   b.biz_start,
+                   b.biz_end,
+                   b.biz_goal,
+                   b.biz_status,
+                   b.biz_reg_date,
+                   b.biz_edit,
+                   b.biz_thumb
+            FROM tbl_donate_biz b
+            JOIN tbl_org o ON b.org_no = o.org_no
+            WHERE b.biz_status = 1
+            ORDER BY b.biz_reg_date DESC
+        ) a
+    )
+    WHERE rnum BETWEEN #{start} AND #{end}
+</select>
 </mapper>
