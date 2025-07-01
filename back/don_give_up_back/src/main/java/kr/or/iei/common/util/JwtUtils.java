@@ -28,7 +28,7 @@ public class JwtUtils {
 	
 	
 	//AccessToken 발급 메소드
-	public String createAccessToken(int memberNo, int memberLevel) {
+	public String createAccessToken(String memberId, int memberLevel) {
 		SecretKey key = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
 		
 		Calendar calendar = Calendar.getInstance();					//현재 시간
@@ -40,7 +40,7 @@ public class JwtUtils {
 								 .issuedAt(startTime) 				 //시작시간
 								 .expiration(expireTime) 			 //만료시간
 								 .signWith(key) 					 //암호화 서명
-								 .claim("memberNo", memberNo) 		 //토큰 포함 정보 (key-value 형태)
+								 .claim("memberId", memberId) 		 //토큰 포함 정보 (key-value 형태)
 								 .claim("memberLevel", memberLevel)  //토큰 포함 정보 (key-value 형태)
 								 .compact();						 //생성
 		
@@ -49,7 +49,7 @@ public class JwtUtils {
 	
 	
 	//RefreshToken 발급 메소드
-	public String createRefreshToken(int memberNo, int memberLevel) {
+	public String createRefreshToken(String memberId, int memberLevel) {
 		SecretKey key = Keys.hmacShaKeyFor(jwtSecretKey.getBytes());
 		
 		
@@ -62,7 +62,7 @@ public class JwtUtils {
 								 .issuedAt(startTime) 				
 								 .expiration(expireTime) 			
 								 .signWith(key) 					
-								 .claim("memberNo", memberNo) 		
+								 .claim("memberId", memberId) 		
 								 .claim("memberLevel", memberLevel) 
 								 .compact();						 
 		
@@ -86,10 +86,10 @@ public class JwtUtils {
 											.getPayload();
 			
 			//3. 토큰에서 데이터 추출
-			int memberNo = (int) claims.get("memberNo");
+			String memberId = (String) claims.get("memberId");
 			int memberLevel = (int) claims.get("memberLevel");
 			
-			m.setMemberNo(memberNo);
+			m.setMemberId(memberId);
 			m.setMemberLevel(memberLevel);								
 			
 			
