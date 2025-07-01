@@ -17,6 +17,10 @@ export default function NewsView(){
     //로그인 회원 정보 (관리자일 경우에만 수정, 삭제 버튼 활성화)
     //const {loginMember} = useUserStore(); 
 
+    // 댓글 리스트 저장 변수
+    const [commentList, setCommentList] = useState([]);
+
+    // 소식글 상세 정보 조회
     useEffect(function(){
         let options = {};
         options.url = serverUrl + '/news/' + newsNo;
@@ -27,6 +31,21 @@ export default function NewsView(){
         .then(function(res){
             console.log(res.data.resData);
             setNews(res.data.resData);
+        });
+
+    }, []);
+
+    // 소식글 댓글 리스트 조회
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + '/news/comment/' + newsNo;
+        options.method = 'get';
+
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+            setCommentList(res.data.resData);
         });
 
     }, []);
@@ -52,6 +71,7 @@ export default function NewsView(){
 
 
     return(
+        <>
     <section className="section board-view-wrap">
             <div className="page-title">게시글 상세 보기</div>
             <div className="board-view-content">
@@ -105,7 +125,60 @@ export default function NewsView(){
                 }
                     */}
             </div>
-        </section>
 
+            <hr /><hr /><hr /><hr />
+            <table className="tbl">
+            <thead>
+                <tr>
+                    <th style={{width:"10%"}}>댓글번호</th>
+                    <th style={{width:"10%"}}>회원이름</th>
+                    <th style={{width:"10%"}}>소식번호</th>
+                    <th style={{width:"30%"}}>댓글내용</th>
+                    <th style={{width:"15%"}}>작성시간</th>
+                    <th style={{width:"10%"}}>수정</th>
+                    <th style={{width:"10%"}}>삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                {commentList.map(function(comment, index){
+                    return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList}/>
+                })}
+            </tbody>
+        </table>
+        </section>
+</>
+    )
+}
+
+// 댓글 수정
+function updComment(){
+    console.log("수정");
+
+}
+
+//댓글 삭제
+function delComment(){
+    console.log("삭제");
+
+}
+
+// 댓글 컴포넌트
+// loginMember은 storage 에서 가져오기 -> 본인일 경우(loginMember.memberNo == commentList의 comment.memberNo)에만 댓글 수정, 삭제 가능
+function Comment(props){
+    const comment = props.comment;
+    const commentList = props.commentList;
+    const setCommentList = props.setCommentList;
+
+
+    return(
+        <tr>
+            <td>{comment.commentNo}</td>
+            <td>{comment.memberName}</td>
+            <td>{comment.newsNo}</td>
+            <td>{comment.commentContent}</td>
+            <td>{comment.commentTime}</td>
+            <td onClick={updComment}>수정</td>
+            <td onClick={delComment}>삭제</td>
+        </tr>
     )
 }
