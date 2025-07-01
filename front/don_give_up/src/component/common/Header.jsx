@@ -126,7 +126,7 @@ function MainNavi(){
                 : loginOrg
                 ?
                 <OrgMyPage/>
-                : loginMember.memberLeve == 2
+                : loginMember.memberLevel == 2
                 ?
                 <MemberMyPage/>
                 :
