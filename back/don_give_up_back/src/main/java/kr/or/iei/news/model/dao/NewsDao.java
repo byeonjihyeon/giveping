@@ -23,6 +23,10 @@ public interface NewsDao {
 	int insertNews(News news);
 
 	ArrayList<NewsOrg> selectOneOrg(String orgName);
+
+	int updateNews(News news);
+
+	int deleteNews(int newsNo);
 	
 	
 

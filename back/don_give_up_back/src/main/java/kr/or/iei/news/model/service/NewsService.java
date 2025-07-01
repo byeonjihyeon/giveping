@@ -66,4 +66,26 @@ public class NewsService {
 		
 		return dao.selectOneOrg(orgName);
 	}
+
+	@Transactional
+	public int updateNews(News news) {
+		// TODO Auto-generated method stub
+		return dao.updateNews(news);
+	}
+
+	@Transactional
+	public News deleteNews(int newsNo) {
+		News news = dao.selectOneNews(newsNo);
+		
+		if(news != null) {
+			int result = dao.deleteNews(newsNo);
+			
+			if(result > 0) {
+				return news;
+			}else {
+				return null;
+			}
+		}
+		return null;	
+	}
 }
