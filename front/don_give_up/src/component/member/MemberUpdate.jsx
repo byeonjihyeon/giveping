@@ -148,8 +148,8 @@ export default function MemberUpdate() {
                                         if(e.target.checked){
                                             member.donateCategory.push(e.target.value);
                                             
-                                            if(!member.addCategoryCodes.includes(e.target.value)){
-                                                member.addCategoryCodes.push(e.target.value);
+                                            if(!member.addCategoryCodes.includes(e.target.value)){ 
+                                                
                                             }        
                                             
                                             setMember({...member});
@@ -159,6 +159,11 @@ export default function MemberUpdate() {
                                           if(member.donateCategory.includes(category.donateCode)){
                                             let delNo = member.donateCategory.indexOf(category.donateCode);
                                             member.donateCategory.splice(delNo, 1);  
+
+
+
+
+
                                             setMember({...member});
                                           
                                           }
