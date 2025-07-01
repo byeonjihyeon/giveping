@@ -1,5 +1,5 @@
-import { add } from "date-fns";
-import { useRef, useState } from "react"
+import { format } from "date-fns";
+import { useEffect, useRef, useState } from "react"
 
 //DatePicker(달력) import
 import DatePicker from 'react-datepicker';
@@ -9,28 +9,39 @@ import 'react-datepicker/dist/react-datepicker.css';
 //회원 정보 수정 페이지
 export default function MemberUpdate() {
    
+    /* 
+        회원 번호, 프로필사진, 이름, 전화번호, 생일, 주소, 관심카테고리를 입력받아 서버로 전송!
+    
+    */
+
+
+
+
     //회원 (서버 전송용)
     const [member, setMember] = useState({
-        memberNo: "",                   //회원 번호           
-        memberThumb: "",                //회원 썸네일    
-        memberName: "",                 //회원 이름
-        memberPhone: "",                //회원 전화번호
-        memberBirth: "",                //회원 생년원일
-        memberAddr: "",                 //회원 주소
-        donateCategory: ""              //회원 관심 카테고리
+        memberNo: "1",                   //회원 번호           
+        memberProfile: "",              //회원 프로필사진(객체)    
+        memberName: "변지현",                 //회원 이름
+        memberPhone: "010-1234-1234",                //회원 전화번호
+        memberBirth: "2005/01/01",                //회원 생년원일
+        memberAddr: "경기도 광주시 탄벌동 무슨 아파트 무슨 동 무슨 호",                 //회원 주소
+        donateCategory: []              //회원 관심 카테고리
     });
 
+
     //썸네일 이미지 미리보기용 변수 (서버에 전송x)
-    const [thumbImg, setThumbImg] = useState(null);
+    const [profileImg, setProfileImg] = useState(null);
     
-    //input type=file인 썸네일 업로드 요소와 연결하여 사용.
-    const thumbFileEl = useRef(null);
-    
-    //생년월일
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    //input type=file인 프로필 사진 업로드 요소와 연결하여 사용.
+    const profileFileEl = useRef(null);
     
     //주소
-    const [memberAddr, setMemberAddr] = useState("");
+    //const [memberAddr, setMemberAddr] = useState("");
+
+    function updMember(e){
+        member[e.target.id] = e.target.value;
+        setMember({...member});
+    }
 
     return (
         <div className="member-update-frm-wrap">
@@ -40,26 +51,26 @@ export default function MemberUpdate() {
                         <tr>
                             <th colSpan={2}>
                                 <img src="/images/default_profile.jpg" onClick={function(e){
-                                    thumbFileEl.current.click();
+                                   profileFileEl.current.click();
                                 }}/>
-                                <input type="file" accept="image/*" ref={thumbFileEl}  />
+                                <input type="file" accept="image/*" ref={profileFileEl}  />
                             </th>
                         </tr>
                         <tr>
                             <th>아이디</th>
-                            <td>byeonchoco</td>
+                            <td>{member.memberNo}</td>
                         </tr>
                         <tr>
                             <th>이름</th>
                             <td>
-                                <input type="text" name='memberName' />
+                                <input type="text" id='memberName' value={member.memberName} onChange={updMember} />
                                 <p>이름 유효성 확인 메시지</p>
                             </td>
                         </tr>
                         <tr>
                             <th>전화번호</th>
                             <td>
-                                <input type="text" name='memberName' />
+                                <input type="text" id='memberPhone' value={member.memberPhone} onChange={updMember} />
                                 <p>전화번호 유효성 확인 메시지</p>
                             </td>
                         </tr>
@@ -70,14 +81,19 @@ export default function MemberUpdate() {
                                     dateFormat="yyyy/MM/dd"             //날짜포맷
                                     minDate={new Date('1900-01-01')}    //1900-01-01 전은 선택불가
                                     maxDate={new Date()}                //당일 이후 날짜 선택불가
-                                    selected={selectedDate}
-                                    onChange={(date) => setSelectedDate(date)}
+                                    selected={member.memberBirth}
+                                    onChange={(date) => {
+                                        date = format(date, 'yyyy/MM/dd');  ///포맷변경, date-fns 라이브러리 설치해야 사용가능함수!
+                                        setMember({...member, memberBirth: date});
+                                    }}
+                                    //selected={selectedDate}
+                                    //onChange={(date) => setSelectedDate(date)}
                                 />        
                             </td>
                         </tr>
                         <tr>
                             <th>주소</th>
-                            <FindAddr memberAddr={memberAddr} setMemberAddr={setMemberAddr} />
+                            <FindAddr member={member} setMember={setMember} />
                         </tr>
                         <tr>
                             <th>관심 카테고리</th>
@@ -88,6 +104,9 @@ export default function MemberUpdate() {
                         <tr>
                             <th colSpan={2}>
                                 <input type="submit" value='수정' />
+                                <button type="button" onClick={function(){
+                                    console.log(member);
+                                }}>서버전송 확인용</button>
                             </th>
                         </tr>
                     </tbody>
@@ -99,24 +118,28 @@ export default function MemberUpdate() {
 
 //주소창 컴포넌트
 function FindAddr(props){
-    const memberAddr = props.memberAddr;
-    const setMemberAddr = props.setMemberAddr;
+    const member = props.member;
+    const setMember = props.setMember;
 
-    //상세주소 제외한 주소값
-    const [iuputAddr , setInputAddr] = useState("");
-    
-    //상세주소 입력창 요쇼
+    //주소찾기 클릭완료후, 상세주소창으로 이동시키기 위해 사용.
     const detailAddrEl = useRef(null);
+    
+    const [addr, setAddr] = useState(member.memberAddr);
+    const [detailAddr, setDetailAddr] = useState("");
 
-    //상세주소 입력시 호출 함수 == onChange
+    //상세주소창 onChang호출
     function updDetailAddr(e){
-        if(iuputAddr != null && iuputAddr != ""){   //기본주소값이 작성된 경우에만
-            setMemberAddr(iuputAddr + " " + e.target.value);
-        }
-    }   
+        setDetailAddr(e.target.value);
+    }
+
+    //상세주소창 onBlur호출시 부모컴포넌트 setMember
+    function updAddr(){
+        setMember({...member, memberAddr: addr + " " + detailAddr});
+    }
     
     //카카오 주소찾기 함수
-     function findAddr() {
+    function findAddr() {
+
         new daum.Postcode({
             oncomplete: function(data) {
                 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
@@ -150,9 +173,9 @@ function FindAddr(props){
                     }
                   
                 } 
-
                 //주소 정보를 해당 필드에 넣는다.
-                setInputAddr(addr + extraAddr);
+                setAddr(addr + extraAddr);
+               
                 // 커서를 상세주소 필드로 이동한다.
                 detailAddrEl.current.focus();
             }
@@ -161,9 +184,9 @@ function FindAddr(props){
 
     return (
         <td>
-            <input type="button" onClick={findAddr} value="우편번호 찾기"/> <br/>
-            <input type="text" id="address" placeholder="주소" value={iuputAddr} readOnly />
-            <input type="text" id="detailAddress" placeholder="상세주소" ref={detailAddrEl} onChange={updDetailAddr} />
-       </td>
+            <input type="button" onClick={findAddr} value="주소 찾기"/> <br/>
+            <input type="text" placeholder="주소" value={addr} readOnly/>
+            <input type="text" placeholder="상세주소" value={detailAddr} ref={detailAddrEl} onChange={updDetailAddr} onBlur={updAddr}/>
+        </td>
     )
 }
