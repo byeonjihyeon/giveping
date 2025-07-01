@@ -89,6 +89,7 @@
            b.biz_thumb as bizThumbPath
 		from tbl_donate_biz b
 		JOIN tbl_org o ON b.org_no = o.org_no
+		JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
 		where biz_no = #{_parameter}
 </select>
 
