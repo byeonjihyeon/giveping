@@ -24,6 +24,7 @@ import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
+import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
 import kr.or.iei.news.model.dto.NewsFile;
 import kr.or.iei.news.model.dto.NewsOrg;
@@ -43,7 +44,7 @@ public class NewsController {
 	private String uploadPath;
 
 	@GetMapping("/list/{reqPage}")
-	@NoTokenCheck // 기부 사업 리스트 조회 : 로그인 필요 x
+	@NoTokenCheck // 소식 리스트 조회 : 로그인 필요 x
 	public ResponseEntity<ResponseDTO> selectNewsList(@PathVariable int reqPage) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식 조회 중, 오류가 발생하였습니다.", null, "error");
 
@@ -214,6 +215,21 @@ public class NewsController {
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	@GetMapping("/comment/{newsNo}")
+	@NoTokenCheck // 소식에 달린 댓글 조회 : 로그인 필요 x
+	public ResponseEntity<ResponseDTO> selectCommentList(@PathVariable int newsNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식 조회 중, 오류가 발생하였습니다.", null, "error");
+
+		try {
+			ArrayList<Comment> commentList = service.selectCommentList(newsNo);
+			res = new ResponseDTO(HttpStatus.OK, "", commentList, "");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
 	
 
 }
