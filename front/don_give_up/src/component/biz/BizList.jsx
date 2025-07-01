@@ -193,11 +193,9 @@ function BoardItem(props) {
                     <br />
                     <span>{donateBiz.donateCtg}</span>
                     <br />
-                    <span>{donateBiz.bizContent}</span>
-                    <br />
                     <span>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
                     <br />
-                    <span>{donateBiz.bizGoal}</span>
+                    <span>{donateBiz.bizGoal}(원)</span>
                 </div>
             </div>
         </li>
