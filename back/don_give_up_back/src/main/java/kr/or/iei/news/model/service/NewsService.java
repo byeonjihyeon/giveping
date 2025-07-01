@@ -5,12 +5,14 @@ import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.news.model.dao.NewsDao;
 import kr.or.iei.news.model.dto.News;
+import kr.or.iei.news.model.dto.NewsOrg;
 
 @Service
 public class NewsService {
@@ -41,5 +43,27 @@ public class NewsService {
 	public News selectOneNews(int newsNo) {
 		// TODO Auto-generated method stub
 		return dao.selectOneNews(newsNo);
+	}
+
+	@Transactional
+	public int insertNews(News news) {
+		// (1) 게시글 번호 조회
+		int newsNo = dao.selectNewsNo();
+		System.out.println("newsNo : " + newsNo);
+		
+		news.setNewsNo(newsNo);
+		
+		//(2) 게시글 정보 등록
+		int result = dao.insertNews(news);
+		
+		
+		
+		//return result;
+		return 0;
+	}
+
+	public ArrayList<NewsOrg> selectOneOrg(String orgName) {
+		
+		return dao.selectOneOrg(orgName);
 	}
 }

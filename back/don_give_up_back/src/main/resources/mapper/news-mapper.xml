@@ -45,4 +45,46 @@
 	    JOIN tbl_org o ON n.org_no = o.org_no  <!-- 추가된 JOIN -->
 	    WHERE n.news_no = #{_parameter}
 	</select>
+	
+	<!-- 소식 게시글 번호 조회 -->
+	<select id="selectNewsNo" parameterType="_int">
+		select seq_news.nextval from dual
+	</select>
+	
+	<!-- 소식 게시글 정보 등록 -->
+	<insert id="insertNews" parameterType="News">
+    insert into tbl_news (
+        news_no,
+        member_no,
+        org_no,
+        news_name,
+        news_content,
+        news_thumb,
+        news_date
+    )
+    values (
+        #{newsNo},
+        1,
+        <if test="orgNo != null or orgNo !=''">
+            #{orgNo},
+        </if>
+        <if test="orgNo == null or orgNo == ''">
+            null,
+        </if>
+        #{newsName},
+        #{newsContent},
+        #{newsThumbPath},
+        sysdate
+    )
+</insert>
+
+<!-- 단체명으로 단체 객체 조회하기 -->
+<select id="selectOneOrg" parameterType="string" resultType="NewsOrg">
+select org_no as orgNo,
+	   org_name as orgName
+ from tbl_org 
+ where org_name LIKE '%'|| #{_parameter} ||'%'
+</select>
+
+	
 </mapper>
