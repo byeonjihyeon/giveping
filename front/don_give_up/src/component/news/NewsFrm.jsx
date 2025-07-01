@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import createInstance from "../../axios/Interceptor";
 
 export default function NewsFrm(props){
 //부모 컴포넌트에서 전달 받은 데이터 추출
@@ -9,16 +10,28 @@ export default function NewsFrm(props){
     const setNewsThumb = props.setNewsThumb;
     const orgName = props.orgName;
     const setOrgName = props.setOrgName;
+    const orgNo = props.orgNo;
+    const setOrgNo = props.setOrgNo;
+
+    // 단체 리스트 검색을 위한 변수 선언
+    const [orgList, setOrgList] = useState([]); // 단체 리스트
+    const [showOrgList, setShowOrgList] = useState(false); // 목록 표시 여부
 
 //수정 시, 전달 데이터 추출
     const prevThumbPath = props.prevThumbPath;
     const setPrevThumbPath = props.setPrevThumbPath;
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
 
     //제목 변경 시, 호출 함수(onChange)
     function chgNewsName(e){
         setNewsName(e.target.value);
+    }
+
+    //단체 변경 시, 호출 함수(onChange)
+    function chgOrgName(e){
+        setOrgName(e.target.value);
     }
 
     //썸네일 이미지 미리보기용 변수(서버에 전송 X)
@@ -48,6 +61,42 @@ export default function NewsFrm(props){
         }
     }
 
+    // 단체 검색 요청
+    function searchOrgByName() {
+        if (!orgName || orgName.trim() === "") {
+            alert("단체명을 입력하세요.");
+            return;
+        }
+
+        const options = {
+            method: 'get',
+            //url: `${serverUrl}/news/${orgName}`
+            url : serverUrl + '/news/org/' + orgName
+        };
+
+        axiosInstance(options)
+        .then(res => {
+            console.log(res.data.resData);
+            if (res.data.resData.length > 0) {
+                setOrgList(res.data.resData);
+                setShowOrgList(true);
+            } else {
+                alert("해당 단체명이 존재하지 않습니다.");
+                setOrgList([]);
+                setShowOrgList(false);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    }
+
+    // 단체 하나 클릭 시 orgNo 세팅
+    function selectOrg(org) {
+        setOrgName(org.orgName); // input에 단체명 반영
+        setOrgNo(org.orgNo);     // 상태로 orgNo 저장
+        setShowOrgList(false);   // 리스트 닫기
+    }
 
     
 
@@ -89,8 +138,8 @@ export default function NewsFrm(props){
                             <td>
                                 <div className="input-item">
                                     <input type="text" 
-                                           id="boardTitle" 
-                                           name="boardTitle" 
+                                           id="newsName" 
+                                           name="newsName" 
                                            value={newsName}
                                            onChange={chgNewsName}
                                            />
@@ -99,8 +148,42 @@ export default function NewsFrm(props){
                         </tr>
                         <tr>
                             <th>단체명</th>
-                            <td className="left">{orgName}</td>
+                            <td>
+                                <div className="input-item">
+                                    <input type="text" 
+                                           id="orgName" 
+                                           name="orgName" 
+                                           value={orgName}
+                                           onChange={chgOrgName}
+                                           />
+                                </div>
+                            </td>
                         </tr>
+                        <tr>
+                            <th></th>
+                            <td>
+                                <button type="button" onClick={searchOrgByName} className="btn-primary sm">
+                                    단체 조회
+                                </button>
+                            </td>
+                        </tr>
+                        {
+                            showOrgList && orgList.length > 0 &&
+                            <tr>
+                                <th>조회 결과</th>
+                                <td>
+                                    <ul className="org-list">
+                                        {orgList.map((org, idx) => (
+                                            <li key={idx}>
+                                                <button type="button" onClick={() => selectOrg(org)}>
+                                                    {org.orgName}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

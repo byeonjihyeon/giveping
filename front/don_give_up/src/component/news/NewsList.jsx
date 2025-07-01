@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PageNavi from "../common/PageNavi";
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 
@@ -32,6 +32,14 @@ export default function NewsList(){
     return(
     <>
         <div className="page-title">소식</div>
+        {/* 
+        {isLogined
+            ?  
+            */}
+            <Link to="/news/write" className="btn-primary">글쓰기</Link>
+        {/*
+            : ''}
+        */}
         <table className="tbl">
             <thead>
                 <tr>
