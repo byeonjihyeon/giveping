@@ -1,9 +1,11 @@
 import { format } from "date-fns";
 import { useEffect, useRef, useState } from "react"
+import createInstance from "../../axios/Interceptor";
 
 //DatePicker(달력) import
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+
 
 
 //회원 정보 수정 페이지
@@ -11,37 +13,72 @@ export default function MemberUpdate() {
    
     /* 
         회원 번호, 프로필사진, 이름, 전화번호, 생일, 주소, 관심카테고리를 입력받아 서버로 전송!
-    
     */
-
-
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
 
 
     //회원 (서버 전송용)
     const [member, setMember] = useState({
-        memberNo: "1",                   //회원 번호           
-        memberProfile: "",              //회원 프로필사진(객체)    
-        memberName: "변지현",                 //회원 이름
-        memberPhone: "010-1234-1234",                //회원 전화번호
-        memberBirth: "2005/01/01",                //회원 생년원일
-        memberAddr: "경기도 광주시 탄벌동 무슨 아파트 무슨 동 무슨 호",                 //회원 주소
-        donateCategory: []              //회원 관심 카테고리
+        memberNo: "1",                                                               //회원 번호           
+        memberProfile: "",                                                           //회원 프로필사진(객체)    
+        memberName: "변지현",                                                         //회원 이름
+        memberPhone: "010-1234-1234",                                                //회원 전화번호
+        memberBirth: "2005/01/01",                                                   //회원 생년원일
+        memberAddr: "경기도 광주시 탄벌동 무슨 아파트 무슨 동 무슨 호",                    //회원 주소
+        donateCategory: ['D02','D05', 'D06' ],                                       //회원 관심 카테고리
+        delCategoryCodes : [],                                                    //기존 관심카테고리 취소할 코드 리스트
+        addCategoryCodes : []                                                 //추가할 관심카테고리 코드 리스트
     });
 
+    //전체카테고리 
+    const [categoryList, setCategoryList] = useState([]);
 
+    //전체 카테고리 리스트 서버에 요청
+    useEffect(function(){
+         let options = {};
+        options.url = serverUrl + '/donateCtg';
+        options.method = 'get';
+
+        axiosInstance(options)
+        .then(function(res){
+            setCategoryList(res.data.resData);      
+        })
+    },[])
+    
     //썸네일 이미지 미리보기용 변수 (서버에 전송x)
     const [profileImg, setProfileImg] = useState(null);
     
     //input type=file인 프로필 사진 업로드 요소와 연결하여 사용.
     const profileFileEl = useRef(null);
     
-    //주소
-    //const [memberAddr, setMemberAddr] = useState("");
+    //파일 미리보기 호출
+    function chgProfileImg(e){
+        const files = e.target.files;
+
+        if(files.length != 0 && files[0] != null){
+            setMember({...member, memberProfile: files[0]});
+            
+            const reader = new FileReader();
+            reader.readAsDataURL(files[0]);
+            reader.onloadend = function(){
+                setProfileImg(reader.result);
+                }
+        }else {
+            //업로프 팝업 취소한 경우, 프로필 사진 객체와 미리보기용 변수 초기화
+            setMember({...member, memberProfile: null});
+            setProfileImg(null);
+        }
+        
+    }
 
     function updMember(e){
         member[e.target.id] = e.target.value;
         setMember({...member});
     }
+
+
+
 
     return (
         <div className="member-update-frm-wrap">
@@ -49,11 +86,18 @@ export default function MemberUpdate() {
                 <table border={1}>
                     <tbody>
                         <tr>
-                            <th colSpan={2}>
-                                <img src="/images/default_profile.jpg" onClick={function(e){
-                                   profileFileEl.current.click();
-                                }}/>
-                                <input type="file" accept="image/*" ref={profileFileEl}  />
+                            <th className="profileImg-wrap" colSpan={2}>
+                                {profileImg ? 
+                                    <img src={profileImg} onClick={function(e){
+                                        profileFileEl.current.click();
+                                    }} />
+                                :
+                                    <img src="/images/default_profile.jpg" onClick={function(e){
+                                        profileFileEl.current.click();
+                                    }}/>
+                                    
+                                }
+                                <input type="file" accept="image/*" style={{display: 'none'}} ref={profileFileEl} onChange={chgProfileImg}  />
                             </th>
                         </tr>
                         <tr>
@@ -98,7 +142,40 @@ export default function MemberUpdate() {
                         <tr>
                             <th>관심 카테고리</th>
                             <td>
-                            
+                              {categoryList.map(function(category, index){
+
+                                    function chgCategory(e){
+                                        if(e.target.checked){
+                                            member.donateCategory.push(e.target.value);
+                                            
+                                            if(!member.addCategoryCodes.includes(e.target.value)){
+                                                member.addCategoryCodes.push(e.target.value);
+                                            }        
+                                            
+                                            setMember({...member});
+                                            
+
+                                        }else{
+                                          if(member.donateCategory.includes(category.donateCode)){
+                                            let delNo = member.donateCategory.indexOf(category.donateCode);
+                                            member.donateCategory.splice(delNo, 1);  
+                                            setMember({...member});
+                                          
+                                          }
+                                        }
+                                    }
+
+                                    return  <div key={"category" + index}>
+                                                <input 
+                                                       value={category.donateCode}
+                                                       type='checkbox'
+                                                       checked={member.donateCategory.includes(category.donateCode)}
+                                                       onChange={chgCategory}
+                                                         /> 
+                                                <label>{category.donateCtg}</label> 
+                                            </div>
+                              })}
+
                             </td>
                         </tr>
                         <tr>
