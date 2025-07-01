@@ -49,27 +49,6 @@ export default function BizView(){
     }
     */
 
-    // 카테고리 코드 매핑
-    const donateCategoryMap = {
-    D01: '아동',
-    D02: '노인',
-    D03: '난민',
-    D04: '환경',
-    D05: '장애인',
-    D06: '교육',
-    D07: '재해 지원',
-    D99: '기타',
-    };
-
-    // 승인 상태값 매핑
-    const bizStatusMap = {
-    0: '미승인',
-    1: '승인',
-    2: '반려',
-    3: '탈퇴 요청',
-    4: '탈퇴',
-    };
-
 
     return (
         <section>
@@ -124,7 +103,7 @@ export default function BizView(){
                         <tbody>
                         <tr>
                             <th style={{ width: '20%' }}>기부카테고리</th>
-                            <td style={{ width: '30%' }}>{donateCategoryMap[donateBiz.donateCode]}</td>
+                            <td style={{ width: '30%' }}>{donateBiz.donateCtg}</td>
                             <th style={{ width: '20%' }}>모금 시작일</th>
                             <td style={{ width: '30%' }}>{donateBiz.bizDonateStart}</td>
                         </tr>
@@ -141,8 +120,6 @@ export default function BizView(){
                             <td>{donateBiz.bizGoal}(원)</td>
                         </tr>
                         <tr>
-                            <th>기부사업 게시글 상태(승인여부)</th>
-                            <td>{bizStatusMap[donateBiz.bizStatus]}</td>
                             <th>사업신청검토일자</th>
                             <td>{donateBiz.bizRegDate}</td>
                         </tr>

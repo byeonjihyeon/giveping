@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.iei.common.annotation.NoTokenCheck;
+import kr.or.iei.common.model.dto.LoginOrg;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.org.model.dto.Org;
 import kr.or.iei.org.model.service.OrgService;
@@ -61,4 +62,25 @@ public class OrgController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//로그인
+	@PostMapping("/login")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> orgLogin(@RequestBody Org org){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "로그인 중 오류가 발생했습니다.", null, "error");
+		try {
+			LoginOrg loginOrg = service.orgLogin(org);
+			
+			if(loginOrg == null) {
+				res = new ResponseDTO(HttpStatus.OK, "아이디 및 비밀번호를 확인하세요", null, "warning");
+			}else {				
+				res = new ResponseDTO(HttpStatus.OK, "", loginOrg, "");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
 }

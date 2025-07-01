@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useUserStore from "../../store/useUserStore";
+import Swal from "sweetalert2";
 
 //헤더 JSX
 export default function Header(){
@@ -22,16 +24,42 @@ export default function Header(){
 }
 
 function HeaderLink(){
+    const navigate = useNavigate();
+
+    //스토리지에 저장한 데이터 추출하기
+    const {isLogined, setIsLogined, loginMember, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken} = useUserStore();
+
+    //로그아웃 Link 클릭 시 동작 함수
+    function logout(e){
+        //기본 이벤트 제어
+        e.preventDefault();
+       
+       setIsLogined(false);
+       setLoginMember(null);
+       setLoginOrg(null);
+       setAccessToken(null);
+       setRefreshToken(null);
+       
+       navigate("/login");
+    }
     
     return (
         <ul className="header-list">
+            {isLogined
+            ?
             <>
                 {/*로그인 시 보여질 링크*/}
-                <li>이름</li>
                 <li>
-                    <Link to="#">로그아웃</Link>
+                    {loginMember
+                     ? loginMember.memberName
+                     : loginOrg.orgName
+                    }
+                </li>
+                <li>
+                    <Link to="#" onClick={logout}>로그아웃</Link>
                 </li>
             </>
+            :
             <>
                 {/*비로그인 시 보여질 링크*/}
                 <li>
@@ -41,33 +69,69 @@ function HeaderLink(){
                     <Link to="/join">회원가입</Link>
                 </li>
             </>
+            }
         </ul>
     )
 }
 
 function MainNavi(){
+    const {isLogined, loginMember, loginOrg} = useUserStore();
+    const navigate = useNavigate();
+
+    function clickMyPage(e){
+        e.preventDefault();
+
+        if(isLogined){ //로그인 상태
+            if(loginOrg != null){ //단체 회원 로그인 상태
+                navigate("/org");
+            }else if(loginMember.memberLevel == 2){ //개인 회원 로그인 상태
+                navigate("/member");
+            }else{ //관리자 로그인 상태
+                navigate("/admin");
+            }
+        }else{ //비로그인 상태
+            Swal.fire({
+                title : "알림",
+                text : "로그인을 해주세요.",
+                icon : "warning",
+                confirmButtonText : "확인"
+            })
+            .then(function(result){
+                navigate("/login");
+            });
+        }
+    }
 
     return (
         <ul className="main-menu">
             <li>
-                <Link to="/biz/list">사업 소개</Link>
+                <Link to="#">사업 소개</Link>
             </li>
             <li>
                 <Link to="#">후원 단체</Link>
             </li>
             <li>
-                <Link to="#">후원 사업</Link>
+                <Link to="/biz/list">후원 사업</Link>
             </li>
             <li>
                 <Link to="/news/list">소식</Link>
             </li>
             <li className="mypage-menu">
                 {/*회원 등급에 따라 마이페이지/관리자페이지로 보여주기*/}
-                <Link to="#">마이페이지</Link>
+                <Link to="#" onClick={clickMyPage}>마이페이지</Link>
                 {/*로그인한 회원에 따라 마이페이지 보여주기*/}
-                <OrgMyPage/>
+                {!isLogined
+                ? /*비로그인일 때 개인 회원 마이페이지 목록 보여주기*/
                 <MemberMyPage/>
+                : loginOrg
+                ?
+                <OrgMyPage/>
+                : loginMember.memberLeve == 2
+                ?
+                <MemberMyPage/>
+                :
                 <AdminMyPage/>
+                }
             </li>
         </ul>
     )
@@ -104,7 +168,6 @@ function OrgMyPage(){
         <ul className="sub-menu">
             <li>
                 <Link to="#">회원 정보 수정</Link>
-                
             </li>
             <li>
                 <Link to="#">기업 정보 수정</Link>

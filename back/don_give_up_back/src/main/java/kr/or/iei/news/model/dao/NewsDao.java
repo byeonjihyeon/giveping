@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.PageInfo;
+import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
 import kr.or.iei.news.model.dto.NewsOrg;
 
@@ -27,6 +28,12 @@ public interface NewsDao {
 	int updateNews(News news);
 
 	int deleteNews(int newsNo);
+
+	ArrayList<Comment> selectCommentList(int newsNo);
+
+	int deleteComment(int commentNo);
+
+	int updateComment(Comment comment);
 	
 	
 
