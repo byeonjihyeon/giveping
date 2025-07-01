@@ -13,4 +13,5 @@ public class DonateCode {
 	
 	
 	private int memberNo;	//개인 회원 번호
+	private int orgNo;		//단체 회원 번호
 }

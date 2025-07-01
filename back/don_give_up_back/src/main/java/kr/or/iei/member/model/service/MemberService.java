@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.member.model.dao.MemberDao;
 import kr.or.iei.member.model.dto.Member;
 
@@ -14,6 +15,11 @@ public class MemberService {
 
 	@Autowired
 	private BCryptPasswordEncoder encoder;
+	
+	//아이디 중복체크
+	public int chkMemberId(String memberId) {
+		return dao.chkMemberId(memberId);
+	}
 	
 	//회원가입
 	public int insertMember(Member member) {
@@ -30,11 +36,15 @@ public class MemberService {
 		
 		//3) 가입한 회원의 관심 카테고리 등록
 		if(result > 0 && member.getCategoryList() != null) {
+			DonateCode dc = new DonateCode();
 			for(int i=0; i<member.getCategoryList().size(); i++) {
 				String code = member.getCategoryList().get(i);
-				System.out.println(code);
+				dc.setDonateCode(code);
+				dc.setMemberNo(memberNo);
+				dao.insertMemberDonation(dc);
 			}
 		}
-		return 0;
+		return result;
 	}
+
 }
