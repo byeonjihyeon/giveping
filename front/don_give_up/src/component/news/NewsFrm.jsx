@@ -12,6 +12,7 @@ export default function NewsFrm(props){
     const setOrgName = props.setOrgName;
     const orgNo = props.orgNo;
     const setOrgNo = props.setOrgNo;
+    const type = props.type;
 
     // 단체 리스트 검색을 위한 변수 선언
     const [orgList, setOrgList] = useState([]); // 단체 리스트
