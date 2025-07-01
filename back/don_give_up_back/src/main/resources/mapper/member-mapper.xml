@@ -39,4 +39,13 @@
 				#{memberNo})
 	</insert>
 	
+	<!-- 로그인 - 아이디로 회원 조회 -->
+	<select id="memberLogin" parameterType="string" resultType="Member">
+		select member_no as memberNo,
+			   member_pw as memberPw,
+			   member_level as memberLevel,
+			   member_name as memberName
+		  from tbl_member
+		 where member_id = #{memberId}
+	</select>
 </mapper>

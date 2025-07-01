@@ -41,14 +41,19 @@ public class ValidateAOP {
 						: request.getHeader("Authorization");
 		
 		//토큰 검증 메소드 호출
-		Object resObj = jwtUtils.validateToken(token);
+		Object resObj = jwtUtils.memberValidateToken(token);
 		
-		//토큰 검증 실패
 		if(resObj instanceof HttpStatus httpStatus) {
-			CommonException ex = new CommonException("invalid jwtToken in request Header");
-			ex.setErrorCode(httpStatus); //401, 403 code
-			throw ex; // 예외를 던짐 
+			resObj = jwtUtils.orgValidateToken(token);
+			
+			//토큰 검증 실패
+			if(resObj instanceof HttpStatus OhttpStatus) {
+				CommonException ex = new CommonException("invalid jwtToken in request Header");
+				ex.setErrorCode(OhttpStatus); //401, 403 code
+				throw ex; // 예외를 던짐 
+			}
 		}
+		
 	}
 	
 	
