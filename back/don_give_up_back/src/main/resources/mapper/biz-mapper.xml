@@ -22,6 +22,7 @@
            org_no AS orgNo,
            org_name AS orgName,
            donate_code AS donateCode,
+           donate_ctg AS donateCtg,
            biz_name AS bizName,
            biz_content AS bizContent,
            biz_donate_start AS bizDonateStart,
@@ -40,6 +41,7 @@
                    b.org_no,
                    o.org_name,
                    b.donate_code,
+                   d.donate_ctg,
                    b.biz_name,
                    b.biz_content,
                    b.biz_donate_start,
@@ -53,6 +55,7 @@
                    b.biz_thumb
             FROM tbl_donate_biz b
             JOIN tbl_org o ON b.org_no = o.org_no
+        	JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
             WHERE b.biz_status = 1
             <if test="categories != null and categories.size() > 0">
                 AND b.donate_code IN
@@ -72,6 +75,7 @@
            b.org_no as orgNo,
            o.org_name as orgName,
            b.donate_code as donateCode,
+           d.donate_ctg as donateCtg,
            b.biz_name as bizName,
            b.biz_content as bizContent,
            b.biz_donate_start as bizDonateStart,
