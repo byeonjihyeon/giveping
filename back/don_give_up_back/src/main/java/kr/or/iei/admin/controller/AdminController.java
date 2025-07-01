@@ -23,7 +23,7 @@ public class AdminController {
 	private AdminService service;
 	
 	//전체 회원 목록 조회
-	@GetMapping
+	@GetMapping("/memberManage/{reqPage}")
 	public ResponseEntity<ResponseDTO> selectMemberList(@PathVariable int reqPage){
 		ResponseDTO res= new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 목록 조회 중,오류가 발생하였습니다",null, "error");
 		
@@ -38,5 +38,19 @@ public class AdminController {
 
 	}
 	
+	//전체 단체 조회
+	@GetMapping("/orgManage/{reqPage}")
+	public ResponseEntity<ResponseDTO> selectOrgList(@PathVariable int reqPage){
+		ResponseDTO res= new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 목록 조회 중,오류가 발생하였습니다",null, "error");
+		
+		try {
+			HashMap<String, Object> orgMap = service.selectOrgList(reqPage);
+			res= new ResponseDTO(HttpStatus.OK, "", orgMap,"");
+		}catch(Exception e){
+			e.printStackTrace();
+			
+		}
+		return new ResponseEntity<ResponseDTO>(res,res.getHttpStatus());
 	
+}
 }
