@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.iei.org.model.dao.OrgDao">
+	<!-- 아이디 중복체크 -->
+	<select id="chkOrgId" parameterType="string" resultType="_int">
+	select count(*)
+	  from tbl_org
+	 where org_id = #{orgId}
+	</select>
+	
+	<!-- 단체 번호 조회 -->
+	<select id="selectOrgNo" resultType="_int">
+		select seq_org.nextval
+		  from dual
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="insertOrg" parameterType="Org">
+		insert into tbl_org
+		values (#{orgNo},
+				#{orgId},
+				#{orgPw},
+				#{orgName},
+				#{orgBiznum},
+				#{orgPhone},
+				#{orgEmail},
+				#{orgAddr},
+				#{orgIntroduce},
+				#{orgAccount},
+				#{orgAccountBank},
+				sysdate,
+				36.5,
+				0,
+				null,
+				null)
+	</insert>
+	
+	<!-- 단체 주요 카테고리 등록 -->
+	<insert id="insertOrgDonation" parameterType="DonateCode">
+		insert into tbl_org_donation
+		values (#{donateCode},
+				#{orgNo})
+	</insert>
 </mapper>
