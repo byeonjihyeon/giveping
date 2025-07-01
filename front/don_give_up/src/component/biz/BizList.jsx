@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import PageNavi from "../common/PageNavi";
+import './biz.css';
 
 export default function BizList() {
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -136,7 +137,7 @@ export default function BizList() {
             </div>
 
             <div className="board-list-wrap">
-                <ul className="posting-wrap">
+                <ul className="posting-wrap grid-3x4">
                     {donateBizList.map((donateBiz, index) => (
                         <BoardItem key={"donateBiz" + index} donateBiz={donateBiz} serverUrl={serverUrl} />
                     ))}
@@ -189,16 +190,14 @@ function BoardItem(props) {
                 <div className="posting-title">{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
                     <span>{donateBiz.orgName}</span>
+                    <br />
                     <span>{donateBiz.donateCtg}</span>
+                    <br />
                     <span>{donateBiz.bizContent}</span>
-                    <span>{donateBiz.bizDonateStart}</span>
-                    <span>{donateBiz.bizDonateEnd}</span>
-                    <span>{donateBiz.bizStart}</span>
-                    <span>{donateBiz.bizEnd}</span>
+                    <br />
+                    <span>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
+                    <br />
                     <span>{donateBiz.bizGoal}</span>
-                    <span>{bizStatusMap[donateBiz.bizStatus]}</span>
-                    <span>{donateBiz.bizRegDate}</span>
-                    <span>{donateBiz.bizEdit}</span>
                 </div>
             </div>
         </li>

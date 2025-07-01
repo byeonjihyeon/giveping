@@ -1,0 +1,9 @@
+/* 3열 4행 그리드 설정 */
+ul.posting-wrap.grid-3x4 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3열 */
+    gap: 20px; /* 간격 조절 */
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
