@@ -71,7 +71,7 @@ public class JwtUtils {
 		return refreshToken;
 	}
 	
-	//개인 회원 토큰 검증 
+	//개인 회원 토큰 검증 //
 	public Object memberValidateToken(String token) {
 		
 		Member m = new Member();

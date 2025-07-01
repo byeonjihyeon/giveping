@@ -8,6 +8,7 @@ import LikeOrgList from './LikeOrgList';
 import DonateList from './DonateList';
 import NewsList from './NewsList';
 import LeftMenu from '../common/LeftMenu';
+import CalendarTest from './CalendarTest';
 
 //회원 메인 페이지
 export default function MemberMain(){
@@ -37,6 +38,7 @@ export default function MemberMain(){
                     <Route path='likeOrgList' element={<LikeOrgList />} />
                     <Route path='donateList' element={<DonateList />} />
                     <Route path='news' element={<NewsList />} />
+                    <Route path='calendarTest' element={<CalendarTest />} />
                 </Routes>
             </div>
         </div>
