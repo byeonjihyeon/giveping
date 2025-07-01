@@ -15,13 +15,24 @@ export default function NewsList(){
 
 
     return (
-        <div className="NewsList-wrap" >
-            <Timeline>
-            {newsList.map(function(news,index){
-                    
-            })}
-           </Timeline>
+        <div className="newsList-wrap" >
+                {newsList.map(function(news,index){
+                     return <News key={"news" + index} news={news} />   
+                })}
         </div>
+    )
+}
+
+//소식 하나에 대한 컴포넌트
+function News(props){
+    const news = props.news;
+
+    return (
+            <div className="news-info">
+                <div>{news.title}</div> 
+                <div>{news.content}</div>
+                <div><span>{news.sender}</span> | <span>{news.date}</span></div>  
+            </div>
     )
 }
 
