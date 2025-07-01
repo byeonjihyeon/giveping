@@ -169,17 +169,6 @@ function BoardItem(props) {
     const { donateBiz, serverUrl } = props;
     const navigate = useNavigate();
 
-    const donateCategoryMap = {
-        D01: '아동',
-        D02: '노인',
-        D03: '난민',
-        D04: '환경',
-        D05: '장애인',
-        D06: '교육',
-        D07: '재해 지원',
-        D99: '기타',
-    };
-
     const bizStatusMap = {
         0: '미승인',
         1: '승인',
@@ -201,7 +190,7 @@ function BoardItem(props) {
                 <div className="posting-title">{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
                     <span>{donateBiz.orgName}</span>
-                    <span>{donateCategoryMap[donateBiz.donateCode]}</span>
+                    <span>{donateBiz.donateCtg}</span>
                     <span>{donateBiz.bizContent}</span>
                     <span>{donateBiz.bizDonateStart}</span>
                     <span>{donateBiz.bizDonateEnd}</span>
