@@ -4,82 +4,211 @@ import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import PageNavi from "../common/PageNavi";
 
-
-
-export default function BizList(){ // 기부 사업 리스트 (메뉴 -> 기부 사업 클릭 시 호출되는 jsx)
+export default function BizList() {
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
-    const [donateBizList, setDonateBizList] = useState([]);     // 기부 사업글 리스트 저장 변수 
-    const [reqPage, setReqPage] = useState(1);                  // 요청 페이지
-    const [pageInfo, setPageInfo] = useState({});               // 페이지 네비게이션
-    const {isLogined} = useUserStore();                         // 로그인 여부(??? 사용할지말지고민중)
+    const [donateBizList, setDonateBizList] = useState([]);
+    const [reqPage, setReqPage] = useState(1);
+    const [pageInfo, setPageInfo] = useState({});
+    const { isLogined } = useUserStore();
+    const [searchType, setSearchType] = useState("bizTitle");
+    const [categories, setCategories] = useState([]);
 
-    useEffect(function(){
-        let options = {};
-        options.url = serverUrl + "/biz/list/" + reqPage;
-        options.method = 'get';
+    const [keyWord, setKeyWord] = useState({
+        bizTitle: "",
+        orgName: ""
+    });
 
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res);
-            setDonateBizList(res.data.resData.donateBizList);
-            setPageInfo(res.data.resData.pageInfo);
-        })
-    }, [reqPage]);
+    const donateCategoryMap = {
+        D01: '아동',
+        D02: '노인',
+        D03: '난민',
+        D04: '환경',
+        D05: '장애인',
+        D06: '교육',
+        D07: '재해 지원',
+        D99: '기타',
+    };
 
-    return(
-        <section className="section board-list">
-            <div className="page-title">기부 사업</div>
-            <div className="board-list-wrap">
-                <ul className="posting-wrap">
-                    {donateBizList.map(function(donateBiz, index){
-                        // 게시글 1개에 대한 JSX를 BoardItem이 return한 JSX로
-                        return <BoardItem key={"donateBiz"+index} donateBiz={donateBiz} serverUrl={serverUrl} />
-                    })}
-                </ul>
-            </div>
-            <div className="board-paging-wrap">
-                {/* 페이지 네비게이션 제작 컴포넌트 별도 분리하여 작성하고, 필요 시 재사용 */}
-                <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
-            </div>
-        </section>
+    // 카테고리 -> 카테고리 여러 개 눌렀을 때, 직렬화시키는 하는 함수
+    function paramsSerializer(params) {
+  const parts = [];
 
+  for (const key in params) {
+    const value = params[key];
+    if (Array.isArray(value)) {
+      // 배열이면 key=value1&key=value2 형태로 변환
+      value.forEach(function (v) {
+        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(v));
+      });
+    } else if (value !== undefined && value !== null) {
+      parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+    }
+  }
 
-    )
+  return parts.join("&");
 }
 
+    useEffect(function () {
+    async function fetchData() {
+        const res = await axiosInstance.get(
+        serverUrl + "/biz/list/" + reqPage,
+        {
+            params: { categories },
+            paramsSerializer: paramsSerializer
+        }
+        );
+        setDonateBizList(res.data.resData.donateBizList);
+        setPageInfo(res.data.resData.pageInfo);
+    }
+
+    fetchData();
+    }, [reqPage, categories]);
 
 
-//게시글 1개
-function BoardItem(props) {
-    const donateBiz = props.donateBiz;
-    const serverUrl = props.serverUrl;
-    const navigate = useNavigate();
+    function handleInputChange(e) {
+        const value = e.target.value;
+        setKeyWord({
+            bizTitle: searchType === "bizTitle" ? value : "",
+            orgName: searchType === "orgName" ? value : ""
+        });
+    }
+
+    function handleSearchTypeChange(e) {
+        setSearchType(e.target.value);
+        setKeyWord({ bizTitle: "", orgName: "" });
+    }
+
+    function toggleCategory(code) {
+        setCategories(prev =>
+            prev.includes(code)
+                ? prev.filter(c => c !== code)
+                : [...prev, code]
+        );
+        setReqPage(1);
+    }
+
+    function srchSubmit() {
+    let options = {
+      url: serverUrl + "/biz/search",
+      method: 'post',
+      data: {
+        bizTitle: keyWord.bizTitle,
+        orgName: keyWord.orgName
+      }
+    };
+
+    axiosInstance(options)
+      .then(function(res) {
+        console.log(res.data.resData);
+        setDonateBizList(res.data.resData.donateBizList);
+        setPageInfo(res.data.resData.pageInfo);
+      });
+  }
 
     return (
-        <li className="posting-item" onClick={function(){
-            // 상세 보기 (BoardView) 컴포넌트 전환하며, 게시글 번호 전달
-            navigate('/biz/view/' + donateBiz.bizNo);
+        <section className="section board-list">
+            <div className="page-title">기부 사업</div>
 
-        }}>
+            <div className="category-filter">
+                {Object.entries(donateCategoryMap).map(([code, label]) => (
+                    <button
+                    key={code}
+                    style={{
+                        backgroundColor: categories.includes(code) ? '#007bff' : '#f0f0f0',
+                        color: categories.includes(code) ? 'white' : '#333',
+                        border: '1px solid',
+                        borderColor: categories.includes(code) ? '#0056b3' : '#ccc',
+                        padding: '6px 14px',
+                        margin: '0 6px 6px 0',
+                        cursor: 'pointer',
+                        borderRadius: '4px',
+                        fontWeight: categories.includes(code) ? 'bold' : 'normal',
+                        boxShadow: categories.includes(code) ? '0 0 8px rgba(0,123,255,0.6)' : 'none',
+                        transition: 'background-color 0.3s ease, color 0.3s ease',
+                    }}
+                    onClick={() => toggleCategory(code)}
+                    >
+                    {label}
+                    </button>
+
+                ))}
+            </div>
+
+            <div className="board-list-wrap">
+                <ul className="posting-wrap">
+                    {donateBizList.map((donateBiz, index) => (
+                        <BoardItem key={"donateBiz" + index} donateBiz={donateBiz} serverUrl={serverUrl} />
+                    ))}
+                </ul>
+            </div>
+
+            <div className="board-paging-wrap">
+                <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
+            </div>
+
+            <div className="search-box">
+                <select value={searchType} onChange={handleSearchTypeChange}>
+                    <option value="bizTitle">기부 사업명</option>
+                    <option value="orgName">단체명</option>
+                </select>
+                <input
+                    type="text"
+                    placeholder={searchType === "bizTitle" ? "기부 사업명을 입력하세요" : "단체명을 입력하세요"}
+                    value={searchType === "bizTitle" ? keyWord.bizTitle : keyWord.orgName}
+                    onChange={handleInputChange}
+                />
+                <input type="button" value="검색" onClick={srchSubmit} />
+            </div>
+        </section>
+    );
+}
+
+function BoardItem(props) {
+    const { donateBiz, serverUrl } = props;
+    const navigate = useNavigate();
+
+    const donateCategoryMap = {
+        D01: '아동',
+        D02: '노인',
+        D03: '난민',
+        D04: '환경',
+        D05: '장애인',
+        D06: '교육',
+        D07: '재해 지원',
+        D99: '기타',
+    };
+
+    const bizStatusMap = {
+        0: '미승인',
+        1: '승인',
+        2: '반려',
+        3: '탈퇴 요청',
+        4: '탈퇴',
+    };
+
+    return (
+        <li className="posting-item" onClick={() => navigate('/biz/view/' + donateBiz.bizNo)}>
             <div className="posting-img">
-                {/* 썸네일 이미지가 등록된 경우에는 백엔드로 요청하고, 등록되지 않은 경우에는 기본 이미지 표기되도록 처리 */}
-                <img src={donateBiz.bizThumbPath ? serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0,8) + "/" + donateBiz.bizThumbPath  
-                                               : "/images/default_img.png"} />
+                <img
+                    src={donateBiz.bizThumbPath
+                        ? serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0, 8) + "/" + donateBiz.bizThumbPath
+                        : "/images/default_img.png"}
+                />
             </div>
             <div className="posting-info">
                 <div className="posting-title">{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
                     <span>{donateBiz.orgName}</span>
-                    <span>{donateBiz.donateCode}</span>
+                    <span>{donateCategoryMap[donateBiz.donateCode]}</span>
                     <span>{donateBiz.bizContent}</span>
                     <span>{donateBiz.bizDonateStart}</span>
                     <span>{donateBiz.bizDonateEnd}</span>
                     <span>{donateBiz.bizStart}</span>
                     <span>{donateBiz.bizEnd}</span>
                     <span>{donateBiz.bizGoal}</span>
-                    <span>{donateBiz.bizStatus}</span>
+                    <span>{bizStatusMap[donateBiz.bizStatus]}</span>
                     <span>{donateBiz.bizRegDate}</span>
                     <span>{donateBiz.bizEdit}</span>
                 </div>

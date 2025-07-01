@@ -7,6 +7,7 @@ import useUserStore from "../../store/useUserStore";
 export default function BizView(){
     const param = useParams();
     const bizNo = param.bizNo;
+    console.log(bizNo);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -48,14 +49,36 @@ export default function BizView(){
     }
     */
 
+    // 카테고리 코드 매핑
+    const donateCategoryMap = {
+    D01: '아동',
+    D02: '노인',
+    D03: '난민',
+    D04: '환경',
+    D05: '장애인',
+    D06: '교육',
+    D07: '재해 지원',
+    D99: '기타',
+    };
+
+    // 승인 상태값 매핑
+    const bizStatusMap = {
+    0: '미승인',
+    1: '승인',
+    2: '반려',
+    3: '탈퇴 요청',
+    4: '탈퇴',
+    };
+
+
     return (
-        <section className="section board-view-wrap">
+        <section>
             <div className="page-title">게시글 상세 보기</div>
             <div className="board-view-content">
                 <div className="board-view-info">
                     <div className="board-thumbnail">
                         <img src={
-                            donateBiz.boardThumbPath
+                            donateBiz.bizThumbPath
                             ? serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0,8) + "/" + donateBiz.bizThumbPath
                             : "/images/default_img.png"
                         } />
@@ -91,18 +114,47 @@ export default function BizView(){
                 
                 <hr/>
 
-                <div className="board-content-wrap">
-                    {/*
-                    tbl_board.board_content에는 에디터로 작성했기 때문에, html 태그가 삽입되어 있음.
-                    화면에 보여줄때는 html 태그를 제외한 텍스트만 표기해야 하는데, 이 때 dangerouslySetInnerHTML을 사용할 수 있는데,
-                    이는 악성 스크립트 삽입 위험이 있어 권장되지 않는다. ToastEditor에서 제공하는 Viewer를 이용하여 텍스트만 표기.
-                    */}
+                <div className="board-content-wrap"> 
                     {
                         donateBiz.bizContent
                         ? <Viewer initialValue={donateBiz.bizContent} />
                         : ''
                     }
+                     <table style={{ width: '100%', marginTop: '20px' }} className="donate-info-table">
+                        <tbody>
+                        <tr>
+                            <th style={{ width: '20%' }}>기부카테고리</th>
+                            <td style={{ width: '30%' }}>{donateCategoryMap[donateBiz.donateCode]}</td>
+                            <th style={{ width: '20%' }}>모금 시작일</th>
+                            <td style={{ width: '30%' }}>{donateBiz.bizDonateStart}</td>
+                        </tr>
+                        <tr>
+                            <th>모금 종료일</th>
+                            <td>{donateBiz.bizDonateEnd}</td>
+                            <th>기부사업 시작일</th>
+                            <td>{donateBiz.bizStart}</td>
+                        </tr>
+                        <tr>
+                            <th>기부사업 종료일</th>
+                            <td>{donateBiz.bizEnd}</td>
+                            <th>목표모금금액</th>
+                            <td>{donateBiz.bizGoal}(원)</td>
+                        </tr>
+                        <tr>
+                            <th>기부사업 게시글 상태(승인여부)</th>
+                            <td>{bizStatusMap[donateBiz.bizStatus]}</td>
+                            <th>사업신청검토일자</th>
+                            <td>{donateBiz.bizRegDate}</td>
+                        </tr>
+                        <tr>
+                            <th>수정 사항</th>
+                            <td colSpan="3">{donateBiz.bizEdit}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
+
+                
                 {/* 
                 {
                     loginMember != null && loginMember.memberId == board.boardWriter

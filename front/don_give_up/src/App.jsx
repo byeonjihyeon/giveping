@@ -11,7 +11,8 @@ import Login from './component/common/Login';
 import MemberJoin from './component/member/MemberJoin';
 import OrgJoin from './component/org/OrgJoin';
 import JoinCategory from './component/common/JoinCategory';
-import BizMain from './component/Biz/BizMain';
+import BizMain from './component/biz/BizMain';
+import NewsMain from './component/news/NewsMain';
 import AdminMain from './component/admin/AdminMain';
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
             <Route path="/join/category" element={<JoinCategory member={member} setMember={setMember}/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path='/biz/*' element={<BizMain />} />
+            <Route path='/news/*' element={<NewsMain />} />
             <Route path='/admin/*' element={<AdminMain />} />
           </Routes>
         </main>
