@@ -2,7 +2,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import { useEffect, useState } from "react";
 import useUserStore from "../../store/useUserStore";
-import NewsFrm from "./newsFrm";
+import NewsFrm from "./NewsFrm";
+import ToastEditor from "./ToastEditor";
 
 export default function NewsUpdate(){
 
@@ -19,6 +20,7 @@ export default function NewsUpdate(){
     const [newsThumb, setNewsThumb] = useState(null);     //게시글 썸네일 이미지 파일 객체 
     const [newsContent, setNewsContent] = useState("");   //게시글 내용
     const [orgName, setOrgName] = useState("");                 // 기부단체명
+    const [orgNo, setOrgNo] = useState("");         // 대상 기부 단체번호
 
     const [prevThumbPath, setPrevThumbPath] = useState(null);           //기존 썸네일 서버 저장 파일명
 
@@ -35,6 +37,7 @@ export default function NewsUpdate(){
             setNewsContent(news.newsContent);    //기존 본문 내용
             setPrevThumbPath(news.newsThumbPath); //20250624162600775_04771.jpg
             setOrgName(news.orgName);   // 기부 단체명
+            setOrgNo(news.orgNo);
         });
     }, []);
 
@@ -42,12 +45,22 @@ export default function NewsUpdate(){
     const navigate = useNavigate();
 
     function updateNews(){
+        /**/
+        console.log(newsNo);
+        console.log(newsName);
+        console.log(newsContent);
+        console.log(orgNo);
+        console.log(prevThumbPath);
+        console.log(newsThumb);
+        
+        
         if(newsName != null && newsContent != null){
             const form = new FormData();
 
             form.append('newsNo', newsNo);                                //게시글 번호
             form.append('newsName', newsName);                          //게시글 제목
             form.append('newsContent', newsContent);                      //게시글 본문 내용
+            form.append('orgNo', orgNo);
 
             //기존 썸네일 파일명
             if(prevThumbPath != null){
@@ -72,7 +85,7 @@ export default function NewsUpdate(){
                     navigate('/news/view/'+newsNo);
                 }
             });
-       }
+       }   
     }
 
 
@@ -92,9 +105,13 @@ export default function NewsUpdate(){
                           setPrevThumbPath={setPrevThumbPath}
                           orgName={orgName}
                           setOrgName={setOrgName}
+                          orgNo={orgNo}
+                          setOrgNo={setOrgNo}
                           />
-                <div className="board-content-wrap">
-                </div>
+                                <div className="board-content-wrap">
+                                    <ToastEditor newsContent={newsContent} setNewsContent={setNewsContent}
+                                                 type={1}/>
+                                </div>
                 <div className="button-zone">
                     <button type="submit" className="btn-primary lg">
                         수정하기
