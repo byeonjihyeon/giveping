@@ -22,6 +22,7 @@
            org_no AS orgNo,
            org_name AS orgName,
            donate_code AS donateCode,
+           donate_ctg AS donateCtg,
            biz_name AS bizName,
            biz_content AS bizContent,
            biz_donate_start AS bizDonateStart,
@@ -36,23 +37,25 @@
     FROM (
         SELECT rownum rnum, a.*
         FROM (
-            SELECT b.biz_no,
-                   b.org_no,
-                   o.org_name,
-                   b.donate_code,
-                   b.biz_name,
-                   b.biz_content,
-                   b.biz_donate_start,
-                   b.biz_donate_end,
-                   b.biz_start,
-                   b.biz_end,
-                   b.biz_goal,
-                   b.biz_status,
-                   b.biz_reg_date,
-                   b.biz_edit,
-                   b.biz_thumb
+            SELECT b.biz_no AS biz_no,
+                   b.org_no AS org_no,
+                   o.org_name AS org_name,
+                   b.donate_code AS donate_code,
+                   d.donate_ctg AS donate_ctg,
+                   b.biz_name AS biz_name,
+                   b.biz_content AS biz_content,
+                   TO_CHAR(b.biz_donate_start, 'YYYY-MM-DD') AS biz_donate_start,
+                   TO_CHAR(b.biz_donate_end, 'YYYY-MM-DD') AS biz_donate_end,
+                   TO_CHAR(b.biz_start, 'YYYY-MM-DD') AS biz_start,
+                   TO_CHAR(b.biz_end, 'YYYY-MM-DD') AS biz_end,
+                   b.biz_goal AS biz_goal,
+                   b.biz_status AS biz_status,
+                   TO_CHAR(b.biz_reg_date, 'YYYY-MM-DD') AS biz_reg_date,
+                   b.biz_edit AS biz_edit,
+                   b.biz_thumb AS biz_thumb
             FROM tbl_donate_biz b
             JOIN tbl_org o ON b.org_no = o.org_no
+            JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
             WHERE b.biz_status = 1
             <if test="categories != null and categories.size() > 0">
                 AND b.donate_code IN
@@ -66,25 +69,28 @@
     WHERE rnum BETWEEN #{start} AND #{end}
 </select>
 
+
 <!-- 한 개의 기부 게시글 정보 조회 -->
 <select id="selectOneDonateBiz" parameterType="_int" resultType="Biz">
 	select b.biz_no as bizNo,
            b.org_no as orgNo,
            o.org_name as orgName,
            b.donate_code as donateCode,
+           d.donate_ctg as donateCtg,
            b.biz_name as bizName,
            b.biz_content as bizContent,
-           b.biz_donate_start as bizDonateStart,
-           b.biz_donate_end as bizDonateEnd,
-           b.biz_start as bizStart,
-           b.biz_end as bizEnd,
+           TO_CHAR(b.biz_donate_start, 'YYYY-MM-DD') as bizDonateStart,
+           TO_CHAR(b.biz_donate_end, 'YYYY-MM-DD') as bizDonateEnd,
+           TO_CHAR(b.biz_start, 'YYYY-MM-DD') as bizStart,
+           TO_CHAR(b.biz_end, 'YYYY-MM-DD') as bizEnd,
            b.biz_goal as bizGoal,
            b.biz_status as bizStatus,
-           b.biz_reg_date as bizRegDate,
+           TO_CHAR(b.biz_reg_date, 'YYYY-MM-DD') as bizRegDate,
            b.biz_edit as bizEdit,
            b.biz_thumb as bizThumbPath
 		from tbl_donate_biz b
 		JOIN tbl_org o ON b.org_no = o.org_no
+		JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
 		where biz_no = #{_parameter}
 </select>
 

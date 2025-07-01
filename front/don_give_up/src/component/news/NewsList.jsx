@@ -13,7 +13,7 @@ export default function NewsList(){
     const [newsList, setNewsList] = useState([]);
     const [reqPage, setReqPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
-   //const {istLogined} = useUserStore(); // 관리자 
+   //const {loginMember} = useUserStore(); // 관리자 
 
     useEffect(function(){
         let options = {};
@@ -33,7 +33,7 @@ export default function NewsList(){
     <>
         <div className="page-title">소식</div>
         {/* 
-        {isLogined
+        {loginMember.memberLevel == 1
             ?  
             */}
             <Link to="/news/write" className="btn-primary">글쓰기</Link>

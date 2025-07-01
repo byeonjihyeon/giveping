@@ -17,5 +17,6 @@ public class Comment {
 
 	// join 을 위한 변수 추가
 	private String memberName;
+	private String memberId;
 	
 }

@@ -41,4 +41,13 @@
 		values (#{donateCode},
 				#{orgNo})
 	</insert>
+	
+	<!-- 로그인 - 아이디로 회원 조회 -->
+	<select id="orgLogin" parameterType="string" resultType="Org">
+		select org_no as orgNo,
+		       org_pw as orgPw,
+		       org_name as orgName
+		  from tbl_org
+		 where org_id = #{orgId}
+	</select>
 </mapper>

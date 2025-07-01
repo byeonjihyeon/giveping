@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import PageNavi from "../common/PageNavi";
+import './biz.css';
 
 export default function BizList() {
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -27,8 +28,7 @@ export default function BizList() {
         D04: '환경',
         D05: '장애인',
         D06: '교육',
-        D07: '재해 지원',
-        D99: '기타',
+        D07: '재해 지원'
     };
 
     // 카테고리 -> 카테고리 여러 개 눌렀을 때, 직렬화시키는 하는 함수
@@ -137,7 +137,7 @@ export default function BizList() {
             </div>
 
             <div className="board-list-wrap">
-                <ul className="posting-wrap">
+                <ul className="posting-wrap grid-3x4">
                     {donateBizList.map((donateBiz, index) => (
                         <BoardItem key={"donateBiz" + index} donateBiz={donateBiz} serverUrl={serverUrl} />
                     ))}
@@ -169,17 +169,6 @@ function BoardItem(props) {
     const { donateBiz, serverUrl } = props;
     const navigate = useNavigate();
 
-    const donateCategoryMap = {
-        D01: '아동',
-        D02: '노인',
-        D03: '난민',
-        D04: '환경',
-        D05: '장애인',
-        D06: '교육',
-        D07: '재해 지원',
-        D99: '기타',
-    };
-
     const bizStatusMap = {
         0: '미승인',
         1: '승인',
@@ -201,16 +190,14 @@ function BoardItem(props) {
                 <div className="posting-title">{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
                     <span>{donateBiz.orgName}</span>
-                    <span>{donateCategoryMap[donateBiz.donateCode]}</span>
+                    <br />
+                    <span>{donateBiz.donateCtg}</span>
+                    <br />
                     <span>{donateBiz.bizContent}</span>
-                    <span>{donateBiz.bizDonateStart}</span>
-                    <span>{donateBiz.bizDonateEnd}</span>
-                    <span>{donateBiz.bizStart}</span>
-                    <span>{donateBiz.bizEnd}</span>
+                    <br />
+                    <span>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
+                    <br />
                     <span>{donateBiz.bizGoal}</span>
-                    <span>{bizStatusMap[donateBiz.bizStatus]}</span>
-                    <span>{donateBiz.bizRegDate}</span>
-                    <span>{donateBiz.bizEdit}</span>
                 </div>
             </div>
         </li>

@@ -67,7 +67,24 @@ export default function NewsView(){
         });
     }
 
-    
+    // 댓글 삭제 함수
+    function delComment(commentNo){
+        // filter 로 댓글 저장 변수에서 클릭한 대상의 댓글 없애기
+
+        if(!window.confirm("댓글을 삭제하시겠습니까?")) return; // 댓글 삭제 ok 일 경우에만 axios 실행
+
+        let options = {};
+        options.url = serverUrl + "/news/comment/" + commentNo;
+        options.method = "patch";
+        axiosInstance(options)
+        .then(function(res){
+            // 필터로 삭제한 대상 댓글을 ui에서 삭제 처리
+            if(res.data.resData) {
+                setCommentList(prevList => prevList.filter(c => c.commentNo !== commentNo));
+            }
+            console.log(res.data.resData);
+        });
+    }
 
 
     return(
@@ -96,6 +113,8 @@ export default function NewsView(){
                                     <td style={{width:"20%"}}>{news.orgName}</td>
                                     <th style={{width:"20%"}}>작성일</th>
                                     <td style={{width:"20%"}}>{news.newsDate}</td>
+                                    <th style={{width:"20%"}}>조회수</th>
+                                    <td style={{width:"20%"}}>{news.readCount}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -130,9 +149,7 @@ export default function NewsView(){
             <table className="tbl">
             <thead>
                 <tr>
-                    <th style={{width:"10%"}}>댓글번호</th>
-                    <th style={{width:"10%"}}>회원이름</th>
-                    <th style={{width:"10%"}}>소식번호</th>
+                    <th style={{width:"10%"}}>회원아이디</th>
                     <th style={{width:"30%"}}>댓글내용</th>
                     <th style={{width:"15%"}}>작성시간</th>
                     <th style={{width:"10%"}}>수정</th>
@@ -141,7 +158,7 @@ export default function NewsView(){
             </thead>
             <tbody>
                 {commentList.map(function(comment, index){
-                    return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList}/>
+                    return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList} delComment={delComment}/>
                 })}
             </tbody>
         </table>
@@ -150,35 +167,91 @@ export default function NewsView(){
     )
 }
 
-// 댓글 수정
-function updComment(){
-    console.log("수정");
-
-}
-
-//댓글 삭제
-function delComment(){
-    console.log("삭제");
-
-}
-
 // 댓글 컴포넌트
 // loginMember은 storage 에서 가져오기 -> 본인일 경우(loginMember.memberNo == commentList의 comment.memberNo)에만 댓글 수정, 삭제 가능
 function Comment(props){
     const comment = props.comment;
     const commentList = props.commentList;
     const setCommentList = props.setCommentList;
+    const delComment = props.delComment;
 
+    // loginMember 
+    //const { loginMember } = useUserStore();
+
+    //수정 여부 판단하는 변수 (기본값 : false/ 수정 버튼 클릭 : true로 변경)
+    const [editMode, setEditMode] = useState(false);
+
+    // 댓글 수정 내용 저장하는 변수
+    const [editedContent, setEditedContent] = useState(comment.commentContent);
+
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
+
+    // 수정 버튼 클릭 시 호출되는 함수
+    function handleEditClick(){
+        setEditMode(true); // 수정 여부를 true 로 변경
+    }
+
+    // 수정 중, 취소 했을 때 호출되는 함수
+    function handleCancelEdit(){
+        setEditedContent(comment.commentContent);   // 수정 내용 저장하는 변수 원래 댓글 내용 넣기
+        setEditMode(false); // 수정 여부를 false 로 변경
+    }
+
+    function handleSaveEdit(){
+        let options = {};
+        options.url = serverUrl + "/news/comment";
+        options.method="patch";
+        options.data = {
+            commentNo : comment.commentNo,
+            commentContent : editedContent,
+        };
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+
+            if(res.data.resData > 0){
+                const updatedList = commentList.map((c) =>
+                    c.commentNo === comment.commentNo
+                        ? { ...c, commentContent: editedContent }
+                        : c
+            );
+            setCommentList(updatedList);
+            setEditMode(false);
+            }
+        });
+
+    }
 
     return(
         <tr>
-            <td>{comment.commentNo}</td>
-            <td>{comment.memberName}</td>
-            <td>{comment.newsNo}</td>
-            <td>{comment.commentContent}</td>
+            <td>{comment.memberId}</td>
+            <td>
+                {editMode ? (
+                    <input type="text" value={editedContent} onChange={function(e){
+                        setEditedContent(e.target.value)
+                    }} />
+                ) : (
+                    comment.commentContent
+                )}
+            </td>
             <td>{comment.commentTime}</td>
-            <td onClick={updComment}>수정</td>
-            <td onClick={delComment}>삭제</td>
+            <td>
+                {/*{isAuthor && !editMode && <button onClick={handleEditClick}>수정</button>}*/}
+                {!editMode && <button onClick={handleEditClick}>수정</button>}
+                {/*{isAuthor && editMode && (*/}
+                {editMode && (
+                    <>
+                        <button onClick={handleSaveEdit}>완료</button>
+                        <button onClick={handleCancelEdit}>취소</button>
+                    </>
+                )}
+            </td>
+            <td>
+                {/*{isAuthor && !editMode && <button onClick={() => delComment(comment.commentNo)}>삭제</button>} */}
+                {!editMode && <button onClick={() => delComment(comment.commentNo)}>삭제</button>}
+            </td>
         </tr>
-    )
+    );
 }
