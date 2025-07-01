@@ -529,7 +529,7 @@ export default function OrgJoin(props){
                         </tr>
                         <tr>
                             <th>
-                                <label htmlFor="orgAddr">주소</label>
+                                <label>주소</label>
                             </th>
                             <td>
                                 <input type="text" ref={postcodeRef} placeholder="우편번호" readOnly/>
