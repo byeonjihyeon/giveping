@@ -69,12 +69,27 @@
     text-decoration: underline;
 }
 
+/*공통 부분*/
 .section {
     width: 1200px;
     margin: 0 auto;
 }
+.page-title {
+    text-align: center;
+}
 
 /*회원가입*/
+.join-wrap {
+    background-color: #eee;
+    width: 800px;
+    margin: 0 auto;
+    border: 1px solid black;
+}
+.tbl-join {
+    border: 1px solid black;
+    margin: 0 auto;
+}
+
 /*회원가입-카테고리 선택*/
 .category-wrap {
     width: 800px;

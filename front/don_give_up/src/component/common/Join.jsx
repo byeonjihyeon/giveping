@@ -9,6 +9,7 @@ export default function Join(props){
         memberBirth : "", memberEmail : "", memberAddr : ""
     }
 
+    //개인 회원가입 페이지에서 나왔을 때 저장된 멤버값 초기화
     useEffect(function(){
         setMember(member);
     }, []);

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.iei.member.model.dao.MemberDao">
+	<!-- 아이디 중복 체크 -->
+	<select id="chkMemberId" parameterType="string" resultType="_int">
+		select count(*)
+		  from tbl_member
+		 where member_id = #{memberId}
+	</select>
+	
 	<!-- 회원 번호 조회 -->
 	<select id="selectMemberNo" resultType="_int">
 		select seq_member.nextval
@@ -25,4 +32,11 @@
 				'')
 	</insert>
 
+	<!-- 회원 관심 카테고리 등록 -->
+	<insert id="insertMemberDonation" parameterType="DonateCode">
+		insert into tbl_member_donation
+		values (#{donateCode},
+				#{memberNo})
+	</insert>
+	
 </mapper>

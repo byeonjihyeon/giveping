@@ -41,6 +41,7 @@ export default function NewsView(){
 
         axiosInstance(options)
         .then(function(res){
+            console.log(res.data.resData);
             if(res.data.resData){
                 navigate('/news/list');
             }
@@ -84,11 +85,6 @@ export default function NewsView(){
                 <hr/>
 
                 <div className="board-content-wrap">
-                    {/*
-                    tbl_board.board_content에는 에디터로 작성했기 때문에, html 태그가 삽입되어 있음.
-                    화면에 보여줄때는 html 태그를 제외한 텍스트만 표기해야 하는데, 이 때 dangerouslySetInnerHTML을 사용할 수 있는데,
-                    이는 악성 스크립트 삽입 위험이 있어 권장되지 않는다. ToastEditor에서 제공하는 Viewer를 이용하여 텍스트만 표기.
-                    */}
                     {
                         news.newsContent
                         ? <Viewer initialValue={news.newsContent} />

@@ -1,6 +1,4 @@
-package kr.or.iei.org.model.dto;
-
-import java.util.List;
+package kr.or.iei.news.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Org {
+public class NewsOrg {
 	private int orgNo;				//단체 번호
 	private String orgId;			//단체 아이디
 	private String orgPw;			//단체 비밀번호
@@ -25,8 +23,4 @@ public class Org {
 	private double orgTemperature;	//단체 온도
 	private int orgStatus;			//단체 상태(0:미승인, 1:승인, 2:반려, 3:탈퇴요청, 4:탈퇴)
 	private String orgThumb;		//단체 썸네일 경로
-	private String orgUrl;			//단체 홈페이지 url
-	
-	
-	private List<String> categoryList;	//주요 카테고리 리스트
 }

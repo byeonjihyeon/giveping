@@ -16,10 +16,16 @@ import NewsMain from './component/news/NewsMain';
 import AdminMain from './component/admin/AdminMain';
 
 function App() {
-  //각 입력 값 변경 시 저장 변수(서버 전송용)
+  //개인 회원 정보 저장 변수(서버 전송용)
   const [member, setMember] = useState({
-      memberId : "", memberPw : "", memberName : "", memberPhone : "",
-      memberBirth : "", memberEmail : "", memberAddr : "", categoryList : []
+    memberId : "", memberPw : "", memberName : "", memberPhone : "",
+    memberBirth : "", memberEmail : "", memberAddr : "", categoryList : []
+  });
+
+  //단체 회원 정보 저장 변수(서버 전송용)
+  const [org, setOrg] = useState({
+    orgId : "", orgPw : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "",
+    orgAddr : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", categoryList : []
   });
 
   return (
@@ -30,10 +36,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Main/>}/>
             <Route path="/member/*" element={<MemberMain/>}/>
-            <Route path="/join" element={<Join setMember={setMember}/>}/>
+            <Route path="/join" element={<Join setMember={setMember} setOrg={setOrg}/>}/>
             <Route path="/member/join" element={<MemberJoin member={member} setMember={setMember}/>}/>
-            <Route path="/org/join" element={<OrgJoin/>}/>
-            <Route path="/join/category" element={<JoinCategory member={member} setMember={setMember}/>}/>
+            <Route path="/org/join" element={<OrgJoin org={org} setOrg={setOrg}/>}/>
+            <Route path="/join/category" element={<JoinCategory member={member} setMember={setMember} org={org} setOrg={setOrg}/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path='/biz/*' element={<BizMain />} />
             <Route path='/news/*' element={<NewsMain />} />
