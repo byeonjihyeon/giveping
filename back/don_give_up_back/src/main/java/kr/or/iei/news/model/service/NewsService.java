@@ -11,6 +11,7 @@ import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.news.model.dao.NewsDao;
+import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
 import kr.or.iei.news.model.dto.NewsOrg;
 
@@ -87,5 +88,19 @@ public class NewsService {
 			}
 		}
 		return null;	
+	}
+
+	public ArrayList<Comment> selectCommentList(int newsNo) {
+		return dao.selectCommentList(newsNo);
+	}
+
+	@Transactional
+	public int deleteComment(int commentNo) {
+		return dao.deleteComment(commentNo);
+	}
+
+	@Transactional
+	public int updateComment(Comment comment) {
+		return dao.updateComment(comment);
 	}
 }

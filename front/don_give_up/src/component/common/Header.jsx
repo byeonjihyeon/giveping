@@ -105,13 +105,13 @@ function MainNavi(){
     return (
         <ul className="main-menu">
             <li>
-                <Link to="/biz/list">사업 소개</Link>
+                <Link to="#">사업 소개</Link>
             </li>
             <li>
                 <Link to="#">후원 단체</Link>
             </li>
             <li>
-                <Link to="#">후원 사업</Link>
+                <Link to="/biz/list">후원 사업</Link>
             </li>
             <li>
                 <Link to="/news/list">소식</Link>
