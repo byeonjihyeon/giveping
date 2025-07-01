@@ -111,7 +111,7 @@
 	<select id="selectCommentList" parameterType="_int" resultType="Comment">
 	    SELECT c.comment_no AS commentNo,
 	           c.member_no AS memberNo,
-	           m.member_name AS memberName,
+	           m.member_id AS memberId,
 	           c.news_no AS newsNo,
 	           c.comment_content AS commentContent,
 	           c.comment_time AS commentTime,
@@ -120,4 +120,17 @@
 	    JOIN tbl_member m ON c.member_no = m.member_no
 	    WHERE c.news_no = #{_parameter} and c.comment_deleted = 0
 	</select>
+	
+	<!-- 댓글 삭제 : 상태 삭제 상태로 업데이트 -->
+	<update id="deleteComment" parameterType="_int">
+		update tbl_comment
+		set comment_deleted = 1
+		where comment_no = #{_parameter}
+	</update>
+	
+	<update id="updateComment" parameterType="Comment">
+	update tbl_comment
+		set comment_content = #{commentContent}
+	    where comment_no = #{commentNo}
+	</update>
 </mapper>
