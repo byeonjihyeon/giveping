@@ -20,4 +20,7 @@ public interface OrgDao {
 	//단체 주요 카테고리 등록
 	void insertOrgDonation(DonateCode dc);
 
+	//로그인 - 아이디로 회원 조회
+	Org orgLogin(String orgId);
+
 }

@@ -20,4 +20,6 @@ public interface MemberDao {
 	//회원 관심 카테고리 등록
 	void insertMemberDonation(DonateCode dc);
 
+	//로그인 - 아이디로 회원 조회
+	Member memberLogin(String memberId);
 }
