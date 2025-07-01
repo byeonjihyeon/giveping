@@ -8,7 +8,17 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 //회원 정보 수정 페이지
 export default function MemberUpdate() {
-
+   
+    //회원 (서버 전송용)
+    const [member, setMember] = useState({
+        memberNo: "",                   //회원 번호           
+        memberThumb: "",                //회원 썸네일    
+        memberName: "",                 //회원 이름
+        memberPhone: "",                //회원 전화번호
+        memberBirth: "",                //회원 생년원일
+        memberAddr: "",                 //회원 주소
+        donateCategory: ""              //회원 관심 카테고리
+    });
 
     //썸네일 이미지 미리보기용 변수 (서버에 전송x)
     const [thumbImg, setThumbImg] = useState(null);
@@ -57,6 +67,9 @@ export default function MemberUpdate() {
                             <th>생년월일</th>
                             <td>
                                 <DatePicker
+                                    dateFormat="yyyy/MM/dd"             //날짜포맷
+                                    minDate={new Date('1900-01-01')}    //1900-01-01 전은 선택불가
+                                    maxDate={new Date()}                //당일 이후 날짜 선택불가
                                     selected={selectedDate}
                                     onChange={(date) => setSelectedDate(date)}
                                 />        
@@ -64,8 +77,12 @@ export default function MemberUpdate() {
                         </tr>
                         <tr>
                             <th>주소</th>
+                            <FindAddr memberAddr={memberAddr} setMemberAddr={setMemberAddr} />
+                        </tr>
+                        <tr>
+                            <th>관심 카테고리</th>
                             <td>
-                                <FindAddr memberAddr={memberAddr} setMemberAddr={setMemberAddr} />
+                            
                             </td>
                         </tr>
                         <tr>
@@ -80,6 +97,7 @@ export default function MemberUpdate() {
     )
 }
 
+//주소창 컴포넌트
 function FindAddr(props){
     const memberAddr = props.memberAddr;
     const setMemberAddr = props.setMemberAddr;
@@ -95,8 +113,9 @@ function FindAddr(props){
         if(iuputAddr != null && iuputAddr != ""){   //기본주소값이 작성된 경우에만
             setMemberAddr(iuputAddr + " " + e.target.value);
         }
-    }
-
+    }   
+    
+    //카카오 주소찾기 함수
      function findAddr() {
         new daum.Postcode({
             oncomplete: function(data) {
@@ -141,10 +160,10 @@ function FindAddr(props){
     }
 
     return (
-        <div>
+        <td>
             <input type="button" onClick={findAddr} value="우편번호 찾기"/> <br/>
             <input type="text" id="address" placeholder="주소" value={iuputAddr} readOnly />
             <input type="text" id="detailAddress" placeholder="상세주소" ref={detailAddrEl} onChange={updDetailAddr} />
-       </div>
+       </td>
     )
 }
