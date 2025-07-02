@@ -32,10 +32,9 @@ export default function NewsList(){
     return(
     <>
         <div className="page-title">소식</div>
-        {(loginMember.memberLevel == 1) && (loginMember != null)
-            ?  
-            <Link to="/news/write" className="btn-primary">글쓰기</Link>
-            : ''}
+        {(loginMember?.memberLevel === 1)
+        ? <Link to="/news/write" className="btn-primary">글쓰기</Link>
+        : ''}
         <table className="tbl">
             <thead>
                 <tr>
