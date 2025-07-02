@@ -9,4 +9,10 @@
 		  from tbl_donate_code
 		 where donate_code != 'D99'
 	</select>
+	
+	<!-- 회원별 안 읽은 알림 갯수 조회 -->
+	<select id="countAlarm">
+		select count(*) from tbl_alarm 
+			where member_no = #{memberNo} and alarm_read = 0
+	</select>
 </mapper>

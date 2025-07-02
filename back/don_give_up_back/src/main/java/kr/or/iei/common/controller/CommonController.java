@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.iei.common.annotation.NoTokenCheck;
@@ -29,6 +30,22 @@ public class CommonController {
 		try {
 			ArrayList<DonateCode> categoryList = service.selectDonateCtg();
 			res = new ResponseDTO(HttpStatus.OK, "", categoryList, "");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	// (일반)회원별 안 읽은 알람 수 조회
+	@GetMapping("/countAlarm/{memberNo}")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> countAlarm(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 조회 중 오류 발생", null, "error");
+		
+		try {
+			int countAlarm = service.countAlarm(memberNo);
+			res = new ResponseDTO(HttpStatus.OK, "", countAlarm, "");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

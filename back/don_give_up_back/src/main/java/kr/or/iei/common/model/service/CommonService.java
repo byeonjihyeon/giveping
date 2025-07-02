@@ -18,4 +18,8 @@ public class CommonService {
 	public ArrayList<DonateCode> selectDonateCtg() {
 		return dao.selectDonateCtg();
 	}
+
+	public int countAlarm(int memberNo) {
+		return dao.countAlarm(memberNo);
+	}
 }
