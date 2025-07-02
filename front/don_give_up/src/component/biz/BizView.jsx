@@ -105,7 +105,14 @@ export default function BizView(){
                                 </tr>
                             </tbody>
                         </table>
-                        <button onClick={openDonatePopup}>기부하기</button>
+                        {/* loginMember.orgNo == donateBiz.orgNo인 경우 기부하기 버튼 보이지 않음 */}
+                        {
+                            loginMember != null && loginMember.memberNo != donateBiz.orgNo
+                            ?
+                                <button onClick={openDonatePopup}>기부하기</button>
+                            :
+                            ''
+                        }
                         {/* 기부 팝업 */}
                         {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}              
                         <p className="file-title">첨부파일</p>
