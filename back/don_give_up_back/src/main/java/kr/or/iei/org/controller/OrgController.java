@@ -1,19 +1,26 @@
 package kr.or.iei.org.controller;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.LoginOrg;
 import kr.or.iei.common.model.dto.ResponseDTO;
+import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.org.model.dto.Org;
 import kr.or.iei.org.model.service.OrgService;
 
@@ -23,6 +30,12 @@ import kr.or.iei.org.model.service.OrgService;
 public class OrgController {
 	@Autowired
 	private OrgService service;
+
+	@Autowired
+	private FileUtil fileUtil;
+	
+	@Value("${file.uploadPath}")
+	private String uploadPath;
 	
 	//토큰 재발급
 	@PostMapping("/refresh")
@@ -121,4 +134,41 @@ public class OrgController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	//단체 정보 수정
+	@PatchMapping("/update")
+	public ResponseEntity<ResponseDTO> updateOrg(@ModelAttribute MultipartFile orgThumb, @ModelAttribute Org org, String prevThumbPath) {
+		System.out.println("단체 정보 : " + org);
+		System.out.println("썸네일 정보 : " + orgThumb);
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 정보 수정 중 오류가 발생했습니다.", false, "error");
+		
+		try {
+			//새 썸네일 업로드 시
+			if(orgThumb != null) {
+				String filePath = fileUtil.uploadFile(orgThumb, "/org/thumb/"); //썸네일 파일 업로드
+				org.setOrgThumbPath(filePath); //DB에 저장 파일명 업데이트를 위해
+				
+				//썸네일 이미지를 업로드 하지 않았을 수 있으므로 null이 아닐 때 처리
+				if(prevThumbPath != null) {
+					String savePath = uploadPath + "/org/thumb/";
+					File file = new File(savePath + prevThumbPath.substring(0, 8) + File.separator + prevThumbPath);
+					if(file.exists()) {
+						file.delete();
+					}
+				}
+			}
+			
+			int result = service.updateOrg(org);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "단체 정보 수정 중 오류가 발생했습니다.", false, "wraning");
+			}else {				
+				res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", true, "success");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }

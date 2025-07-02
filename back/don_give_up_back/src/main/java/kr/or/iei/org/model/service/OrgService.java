@@ -93,4 +93,10 @@ public class OrgService {
 	public Org selectOneOrg(int orgNo) {
 		return dao.selectOneOrg(orgNo);
 	}
+
+	//단체 정보 수정
+	@Transactional
+	public int updateOrg(Org org) {
+		return dao.updateOrg(org);
+	}
 }

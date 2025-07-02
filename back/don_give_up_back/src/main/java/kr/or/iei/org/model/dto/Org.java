@@ -25,7 +25,7 @@ public class Org {
 	private String orgEnrollDate;	//단체 가입일
 	private double orgTemperature;	//단체 온도
 	private int orgStatus;			//단체 상태(0:미승인, 1:승인, 2:반려, 3:탈퇴요청, 4:탈퇴)
-	private String orgThumb;		//단체 썸네일 경로
+	private String orgThumbPath;	//단체 썸네일 경로
 	private String orgUrl;			//단체 홈페이지 url
 	
 	

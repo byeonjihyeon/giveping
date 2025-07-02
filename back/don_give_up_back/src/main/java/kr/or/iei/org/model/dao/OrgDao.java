@@ -26,4 +26,6 @@ public interface OrgDao {
 	//단체 1개 정보 조회
 	Org selectOneOrg(int orgNo);
 
+	int updateOrg(Org org);
+
 }

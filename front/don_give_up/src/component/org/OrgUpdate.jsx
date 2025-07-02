@@ -16,7 +16,7 @@ export default function OrgUpdate(){
     //단체 1개 정보를 저장할 State 변수
     const [org, setOrg] = useState({
         orgNo : loginOrg.orgNo, orgId : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "", orgAddrMain : "",
-        orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", orgThumb : "", orgUrl : ""
+        orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", orgThumbPath : "", orgUrl : ""
     });
 
     //이메일 정보를 저장할 State 변수
@@ -44,6 +44,7 @@ export default function OrgUpdate(){
             
             setOrgEmailId(emailId);
             setOrgEmailDomain(emailDomain);
+            setPrevThumbPath(org.orgThumbPath);
 
             setOrg(newOrg);
         });
@@ -80,6 +81,7 @@ export default function OrgUpdate(){
     function chgOrg(e){
         org[e.target.id] = e.target.value;
         setOrg({...org});
+        console.log(org);
     }
 
     /*사업자번호 관련 코드*/
@@ -91,17 +93,17 @@ export default function OrgUpdate(){
     */
     const [biznumChk, setBiznumChk] = useState(0);
 
-    //사업자번호 값 onBlur 함수
-    function checkOrgBiznum(e){
+    useEffect(function(){
         //사업자번호 정규표현식
-        const regExp = /^\d{3}-\d{2}-\d{5}/; //000-00-00000 형식
+        const biznumRegExp = /^\d{3}-\d{2}-\d{5}/; //000-00-00000 형식
 
-        if(!regExp.test(e.target.value)){
+        if(!biznumRegExp.test(org.orgBiznum)){
             setBiznumChk(2); //유효성 체크 실패
         }else{
             setBiznumChk(1); //유효성 체크 통과
         }
-    }
+    }, [org.orgBiznum]);
+
 
     /*전화번호 관련 코드*/
     /*
@@ -112,17 +114,17 @@ export default function OrgUpdate(){
     */
     const [phoneChk, setPhoneChk] = useState(0);
 
-    //전화번호 값 onBlur 함수
-    function checkOrgPhone(e){
+    useEffect(function(){
         //전환번호 정규표현식
-        const regExp = /^\d{2,3}-\d{3,4}-\d{4}/;
+        const phoneRegExp = /^\d{2,3}-\d{3,4}-\d{4}/;
 
-        if(!regExp.test(e.target.value)){
+        if(!phoneRegExp.test(org.orgPhone)){
             setPhoneChk(2); //유효성 체크 실패
         }else{
             setPhoneChk(1); //유효성 체크 통과
         }
-    }
+    },[org.orgPhone]);
+
 
     /*계좌번호 관련 코드*/
     //은행 선택 시 State 변수에 저장
@@ -138,15 +140,16 @@ export default function OrgUpdate(){
     */
     const [accountChk, setAccountChk] = useState(0);
 
-    function checkAccount(e){
+    useEffect(function(){
+        //계좌번호 정규표현식
         const regExp = /^\d{10,14}$/;
 
-        if(!regExp.test(e.target.value)){
+        if(!regExp.test(org.orgAccount)){
             setAccountChk(2);   //유효성 체크 실패
         }else{
             setAccountChk(1);   //유효성 체크 통과
-        }
-    }
+        } 
+    }, [org.orgAccount]);
 
 
     //수정 버튼 클릭 시 호출 함수
@@ -176,6 +179,9 @@ export default function OrgUpdate(){
             }
         }
 
+        console.log(org);
+        console.log(orgThumb);
+        console.log(prevThumbPath);
         //파일 업로드 시 사용할 수 있는 내장 객체
         const form = new FormData();
 
@@ -189,6 +195,13 @@ export default function OrgUpdate(){
         form.append("orgIntroduce", org.orgIntroduce);
         form.append("orgAccount", org.orgAccount);
         form.append("orgAccountBank", org.orgAccountBank);
+        form.append("orgUrl", org.orgUrl);
+
+        //form.append("org", org);
+        //기존 썸네일 파일명
+        if(prevThumbPath != null) {
+            form.append("prevThumbPath", prevThumbPath);
+        }
 
         //썸네일 등록한 경우에만 append
         if(orgThumb != null){
@@ -199,9 +212,9 @@ export default function OrgUpdate(){
         options.url = serverUrl + "/org/update";
         options.method = "patch";
         options.data = form;
-        options.headers = {};
-        options.headers.contentType = "multipart/form-data";
-        options.headers.processData = false; //쿼리스트링으로 변환하지 않도록 설정
+        options.header = {};
+        options.header.contentType = "multipart/form-data";
+        options.header.processData = false; //쿼리스트링으로 변환하지 않도록 설정
 
         axiosInstance(options)
         .then(function(res){
@@ -224,8 +237,8 @@ export default function OrgUpdate(){
                     <tr>
                         <th colSpan={2}>
                             <div>
-                                <img src={thumbImg ? thumbImg : org.orgThumb
-                                            ? serverUrl + "/org/profile/" + org.orgThumb.substring(0, 8) + "/" + org.orgThumb
+                                <img style={{width : "100px"}} src={thumbImg ? thumbImg : prevThumbPath
+                                            ? serverUrl + "/org/thumb/" + prevThumbPath.substring(0, 8) + "/" + org.orgThumb
                                             : "/images/default_profile.jpg"} onClick={function(e){
                                     thumbFileEl.current.click();
                                 }}/>
@@ -246,13 +259,13 @@ export default function OrgUpdate(){
                     <tr>
                         <th>사업자 번호</th>
                         <td>
-                            <input type="text" id="orgBiznum" value={org.orgBiznum} onChange={chgOrg} onBlur={checkOrgBiznum} placeholder="'-'를 포함해서 작성해주세요"/>
+                            <input type="text" id="orgBiznum" value={org.orgBiznum} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요"/>
                         </td>
                     </tr>
                     <tr>
                         <th>전화번호</th>
                         <td>
-                            <input type="text" id="orgPhone" value={org.orgPhone} onChange={chgOrg} onBlur={checkOrgPhone} placeholder="'-'를 포함해서 작성해주세요"/>
+                            <input type="text" id="orgPhone" value={org.orgPhone} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요"/>
                         </td>
                     </tr>
                     <tr>
@@ -290,7 +303,7 @@ export default function OrgUpdate(){
                                 <option value="카카오뱅크">카카오뱅크</option>
                                 <option value="토스뱅크">토스뱅크</option>
                             </select>
-                            <input type="text" id="orgAccount" value={org.orgAccount} onChange={chgOrg} onBlur={checkAccount}/>
+                            <input type="text" id="orgAccount" value={org.orgAccount} onChange={chgOrg}/>
                         </td>
                     </tr>
                     <tr>
