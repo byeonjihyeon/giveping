@@ -113,7 +113,7 @@ export default function NewsView(){
                     }
                 </div>
                 {
-                    loginMember != null && loginMember.orgNo == news.orgNo
+                    loginMember != null && loginMember.memberLevel == 1
                     ?
                     <div className="view-btn-zone">
                         <Link to={"/news/update/" + news.newsNo} className="btn-primary lg">수정</Link>

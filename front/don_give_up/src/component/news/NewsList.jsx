@@ -13,7 +13,7 @@ export default function NewsList(){
     const [newsList, setNewsList] = useState([]);
     const [reqPage, setReqPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
-   //const {loginMember} = useUserStore(); // 관리자 
+   const {loginMember} = useUserStore(); // 관리자만 글쓰기 가능 
 
     useEffect(function(){
         let options = {};
@@ -32,14 +32,10 @@ export default function NewsList(){
     return(
     <>
         <div className="page-title">소식</div>
-        {/* 
-        {loginMember.memberLevel == 1
+        {(loginMember.memberLevel == 1) && (loginMember != null)
             ?  
-            */}
             <Link to="/news/write" className="btn-primary">글쓰기</Link>
-        {/*
             : ''}
-        */}
         <table className="tbl">
             <thead>
                 <tr>
