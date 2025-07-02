@@ -13,11 +13,12 @@ import { useEffect } from 'react';
 //로그인 페이지
 export default function Login(){
     //스토리지에 저장한 데이터 추출하기
-    const {isLogined, setLoginMember} = useUserStore();
+    const {isLogined, setLoginMember, setLoginOrg} = useUserStore();
 
     useEffect(function(){
         if(!isLogined){ //외부에서 강제 로그아웃 시킨 경우
             setLoginMember(null);
+            setLoginOrg(null);
         }
     }, []);
 

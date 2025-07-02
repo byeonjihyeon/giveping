@@ -20,6 +20,13 @@ public class MemberService {
 	
 	@Autowired
 	private JwtUtils jwtUtils;
+
+	//토큰 재발급
+	public String refreshToken(Member member) {
+		//accessToken 재발급 처리
+		String accessToken = jwtUtils.createMemberAccessToken(member.getMemberNo(), member.getMemberLevel(), member.getMemberName());
+		return accessToken;
+	}
 	
 	//아이디 중복체크
 	public int chkMemberId(String memberId) {
@@ -79,6 +86,5 @@ public class MemberService {
 			return null;
 		}
 	}
-
 
 }
