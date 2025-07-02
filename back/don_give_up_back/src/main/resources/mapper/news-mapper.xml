@@ -10,21 +10,21 @@
 	<select id="selectNewsList" parameterType="PageInfo"
 		resultType="News">
 		select news_no as newsNo,
-		member_no as memberNo,
-		org_no as orgNo,
-		news_name as newsName,
-		news_content as newsContent,
-		news_thumb as newsThumbPath,
-		TO_CHAR(news_date, 'YYYY-MM-DD') as newsDate,
-		read_count as readCount
+			member_no as memberNo,
+			org_no as orgNo,
+			news_name as newsName,
+			news_content as newsContent,
+			news_thumb as newsThumbPath,
+			TO_CHAR(news_date, 'YYYY-MM-DD') as newsDate,
+			read_count as readCount
 		from(
-		select rownum as rnum,
-		a.*
-		from (
-		select *
-		from tbl_news
-		order by news_date desc
-		)a
+			select rownum as rnum,
+			a.*
+			from (
+				select *
+				from tbl_news
+				order by news_date desc
+			)a
 		)a
 		where rnum between #{start} and #{end}
 	</select>
@@ -80,6 +80,11 @@
 		sysdate
 		)
 	</insert>
+	
+	<!-- 조회수 업데이트 -->
+	<update id="updateReadCount" parameterType="_int">
+		update tbl_news set read_count = read_count + 1 where news_no = #{parameter}
+	</update>
 
 	<!-- 단체명으로 단체 객체 조회하기 -->
 	<select id="selectOneOrg" parameterType="string"
@@ -121,16 +126,33 @@
 	    WHERE c.news_no = #{_parameter} and c.comment_deleted = 0
 	</select>
 	
-	<!-- 댓글 삭제 : 상태 삭제 상태로 업데이트 -->
+	<!-- 댓글 삭제 : 상태를 '삭제' 상태로 업데이트 -->
 	<update id="deleteComment" parameterType="_int">
 		update tbl_comment
 		set comment_deleted = 1
 		where comment_no = #{_parameter}
 	</update>
 	
+	<!-- 댓글 수정 -->
 	<update id="updateComment" parameterType="Comment">
 	update tbl_comment
 		set comment_content = #{commentContent}
 	    where comment_no = #{commentNo}
 	</update>
+	
+	<!-- 댓글 신고 코드 조회 -->
+	<select id="selectReportCode" resultType="NewsReport">
+	    SELECT report_code AS reportCode,
+	           report_reason AS reportReason
+	    FROM tbl_report_code
+	    WHERE (report_code LIKE 'A%' OR report_code LIKE 'C%')
+	</select>
+	
+	<!-- 댓글 신고 등록 -->
+	<insert id="regCommentReport" parameterType="NewsReport">
+		insert into tbl_report
+			(report_no, report_code, comment_no, report_member_no, DETAIL_REASON)
+    	values 
+    		(seq_report.nextval, #{reportCode}, #{commentNo}, #{reportMemberNo}, #{detailReason})
+	</insert>
 </mapper>

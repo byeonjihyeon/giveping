@@ -9,6 +9,7 @@ import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
 import kr.or.iei.news.model.dto.NewsOrg;
+import kr.or.iei.news.model.dto.NewsReport;
 
 @Mapper
 public interface NewsDao {
@@ -34,6 +35,12 @@ public interface NewsDao {
 	int deleteComment(int commentNo);
 
 	int updateComment(Comment comment);
+
+	int updateReadCount(int newsNo);
+
+	ArrayList<NewsReport> selectReportCode();
+
+	int regCommentReport(NewsReport newsReport);
 	
 	
 

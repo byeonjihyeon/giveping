@@ -31,6 +31,7 @@ import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
 import kr.or.iei.news.model.dto.NewsFile;
 import kr.or.iei.news.model.dto.NewsOrg;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.news.model.service.NewsService;
 
 @RestController
@@ -96,7 +97,6 @@ public class NewsController {
 
 	// 게시글 등록하기
 	@PostMapping
-	@NoTokenCheck // 로그인 필요함.. 임시로 어노테이션 등록 (테스트용)
 	public ResponseEntity<ResponseDTO> insertNews(@ModelAttribute MultipartFile newsThumb, // 썸네일 파일 객체
 			@ModelAttribute News news) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 게시글 정보 조회 중, 오류가 발생하였습니다.", null,
@@ -123,7 +123,6 @@ public class NewsController {
 
 	// 토스트 에디터 사진 등록
 	@PostMapping("/editorImage")
-	@NoTokenCheck // 임시
 	public ResponseEntity<ResponseDTO> uploadEditorImage(@ModelAttribute MultipartFile image) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "에디터 이미지 업로드 중, 오류가 발생하였습니다.", null,
 				"error");
@@ -139,7 +138,6 @@ public class NewsController {
 	}
 
 	@PatchMapping
-	@NoTokenCheck // 임시
 	public ResponseEntity<ResponseDTO> updateNews(@ModelAttribute MultipartFile newsThumb, // 새 썸네일 파일 객체
 													@ModelAttribute News news, // 소식글 번호, 제목, 내용, 삭제 파일 번호 배열
 													String prevThumbPath){ // 기존 썸네일 이미지 파일명
@@ -176,7 +174,6 @@ public class NewsController {
 	}
 	
 	@DeleteMapping("/{newsNo}")
-	@NoTokenCheck // 임시
 	public ResponseEntity<ResponseDTO> deleteNews(@PathVariable int newsNo){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식글 삭제 중, 오류가 발생하였습니다.", false, "error");
 		
@@ -234,7 +231,6 @@ public class NewsController {
 	}
 	
 	@PatchMapping("/comment/{commentNo}")
-	@NoTokenCheck //(임시) 소식에 달린 댓글 삭제 : 로그인 필요 o 
 	public ResponseEntity<ResponseDTO> deleteComment(@PathVariable int commentNo) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글삭제 중, 오류가 발생하였습니다.", false, "error");
 
@@ -250,7 +246,6 @@ public class NewsController {
 	}
 	
 	@PatchMapping("/comment")
-	@NoTokenCheck //(임시) 소식에 달린 댓글 수정 : 로그인 필요 o 
 	public ResponseEntity<ResponseDTO> updateComment(@RequestBody Comment comment) {
 		System.out.println("update comment : " + comment.toString());
 		
@@ -260,6 +255,40 @@ public class NewsController {
 			int result = service.updateComment(comment);
 			if(result > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "댓글이 수정되었습니다.", true, "");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	@GetMapping("/comment/report")
+	public ResponseEntity<ResponseDTO> selectReportCode(){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신고 코드 조회 중, 오류가 발생하였습니다.", null, "error");
+
+		try {
+			ArrayList<NewsReport> newsReportList = service.selectReportCode();
+			if (newsReportList != null) {
+				res = new ResponseDTO(HttpStatus.OK, "", newsReportList, "");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	@PostMapping("/comment/report")
+	public ResponseEntity<ResponseDTO> regCommentReport(@RequestBody NewsReport newsReport){
+		System.out.println("newsReport : " + newsReport.toString());
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 신고 처리 중, 오류가 발생하였습니다.", false, "error");
+
+		try {
+			int result = service.regCommentReport(newsReport);
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "댓글 신고가 완료되었습니다.", true, "");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
