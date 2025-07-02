@@ -4,7 +4,7 @@ import createInstance from "../../axios/Interceptor";
 import Swal from "sweetalert2";
 
 //개인 회원 회원가입 페이지
-export default function MemberJoin(props){
+export default function JoinMember(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const navigate = useNavigate();

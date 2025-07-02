@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { useEffect, useRef, useState } from "react";
 
 //단체 회원 회원가입 페이지
-export default function OrgJoin(props){
+export default function JoinOrg(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const navigate = useNavigate();
