@@ -61,6 +61,7 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 
+	// 소식 글 상세 조회
 	@GetMapping("/{newsNo}")
 	@NoTokenCheck // 로그인 필요 x
 	public ResponseEntity<ResponseDTO> selectOneNews(@PathVariable int newsNo) {
@@ -137,6 +138,7 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 
+	// 소식 글 수정
 	@PatchMapping
 	public ResponseEntity<ResponseDTO> updateNews(@ModelAttribute MultipartFile newsThumb, // 새 썸네일 파일 객체
 													@ModelAttribute News news, // 소식글 번호, 제목, 내용, 삭제 파일 번호 배열
@@ -173,6 +175,7 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	// 소식 글 삭제
 	@DeleteMapping("/{newsNo}")
 	public ResponseEntity<ResponseDTO> deleteNews(@PathVariable int newsNo){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식글 삭제 중, 오류가 발생하였습니다.", false, "error");
@@ -216,6 +219,7 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	// 댓글 리스트 조회
 	@GetMapping("/comment/{newsNo}")
 	@NoTokenCheck // 소식에 달린 댓글 조회 : 로그인 필요 x
 	public ResponseEntity<ResponseDTO> selectCommentList(@PathVariable int newsNo) {
@@ -230,6 +234,7 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	// 댓글 삭제
 	@PatchMapping("/comment/{commentNo}")
 	public ResponseEntity<ResponseDTO> deleteComment(@PathVariable int commentNo) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글삭제 중, 오류가 발생하였습니다.", false, "error");
@@ -245,6 +250,7 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	// 댓글 수정
 	@PatchMapping("/comment")
 	public ResponseEntity<ResponseDTO> updateComment(@RequestBody Comment comment) {
 		System.out.println("update comment : " + comment.toString());
@@ -262,6 +268,7 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	// 댓글 신고 코드 조회
 	@GetMapping("/comment/report")
 	public ResponseEntity<ResponseDTO> selectReportCode(){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신고 코드 조회 중, 오류가 발생하였습니다.", null, "error");
@@ -279,9 +286,9 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	// 댓글 신고 등록
 	@PostMapping("/comment/report")
 	public ResponseEntity<ResponseDTO> regCommentReport(@RequestBody NewsReport newsReport){
-		System.out.println("newsReport : " + newsReport.toString());
 		
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 신고 처리 중, 오류가 발생하였습니다.", false, "error");
 
@@ -289,6 +296,24 @@ public class NewsController {
 			int result = service.regCommentReport(newsReport);
 			if(result > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "댓글 신고가 완료되었습니다.", true, "");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	// 소식 게시판 댓글 등록
+	@PostMapping("/comment")
+	public ResponseEntity<ResponseDTO> regComment(@RequestBody Comment comment){
+		System.out.println("newsReport : " + comment.toString());
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 등록 처리 중, 오류가 발생하였습니다.", false, "error");
+
+		try {
+			int result = service.regComment(comment);
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "댓글 등록이 완료되었습니다.", true, "");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -155,4 +155,10 @@
     	values 
     		(seq_report.nextval, #{reportCode}, #{commentNo}, #{reportMemberNo}, #{detailReason})
 	</insert>
+	
+	<!-- 댓글 등록 -->
+	<insert id="regComment" parameterType="Comment">
+		insert into tbl_comment (comment_no, member_no, news_no, comment_content)
+	    values (seq_comment.nextval, #{memberNo}, #{newsNo}, #{commentContent})
+	</insert>
 </mapper>

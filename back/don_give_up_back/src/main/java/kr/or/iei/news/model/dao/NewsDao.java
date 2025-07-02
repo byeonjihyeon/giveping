@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.or.iei.biz.model.dto.Biz;
+
 import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
@@ -41,6 +41,8 @@ public interface NewsDao {
 	ArrayList<NewsReport> selectReportCode();
 
 	int regCommentReport(NewsReport newsReport);
+
+	int regComment(Comment comment);
 	
 	
 

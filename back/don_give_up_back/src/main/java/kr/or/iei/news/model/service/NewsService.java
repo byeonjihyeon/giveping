@@ -121,4 +121,9 @@ public class NewsService {
 	public int regCommentReport(NewsReport newsReport) {
 		return dao.regCommentReport(newsReport);
 	}
+
+	@Transactional
+	public int regComment(Comment comment) {
+		return dao.regComment(comment);
+	}
 }
