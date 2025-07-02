@@ -111,7 +111,7 @@ function MainNavi(){
                 <Link to="#">후원 단체</Link>
             </li>
             <li>
-                <Link to="/biz/list">후원 사업</Link>
+                <Link to="/biz/list">기부 사업</Link>
             </li>
             <li>
                 <Link to="/news/list">소식</Link>
