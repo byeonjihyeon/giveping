@@ -139,4 +139,20 @@
 		set comment_content = #{commentContent}
 	    where comment_no = #{commentNo}
 	</update>
+	
+	<!-- 댓글 신고 코드 조회 -->
+	<select id="selectReportCode" resultType="NewsReport">
+	    SELECT report_code AS reportCode,
+	           report_reason AS reportReason
+	    FROM tbl_report_code
+	    WHERE (report_code LIKE 'A%' OR report_code LIKE 'C%')
+	</select>
+	
+	<!-- 댓글 신고 등록 -->
+	<insert id="regCommentReport" parameterType="NewsReport">
+		insert into tbl_report
+			(report_no, report_code, comment_no, report_member_no, DETAIL_REASON)
+    	values 
+    		(seq_report.nextval, #{reportCode}, #{commentNo}, #{reportMemberNo}, #{detailReason})
+	</insert>
 </mapper>

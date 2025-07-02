@@ -14,6 +14,7 @@ import kr.or.iei.news.model.dao.NewsDao;
 import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
 import kr.or.iei.news.model.dto.NewsOrg;
+import kr.or.iei.news.model.dto.NewsReport;
 
 @Service
 public class NewsService {
@@ -45,7 +46,6 @@ public class NewsService {
 	public News selectOneNews(int newsNo) {
 		// 조회수 증가 로직
 		int result = dao.updateReadCount(newsNo);
-		System.out.println("조회수 result : " + result);
 
 		if (result > 0) {
 			// 조회수 증가 성공했을 경우만 상세 조회
@@ -111,5 +111,14 @@ public class NewsService {
 	@Transactional
 	public int updateComment(Comment comment) {
 		return dao.updateComment(comment);
+	}
+
+	public ArrayList<NewsReport> selectReportCode() {
+		return dao.selectReportCode();
+	}
+
+	@Transactional
+	public int regCommentReport(NewsReport newsReport) {
+		return dao.regCommentReport(newsReport);
 	}
 }

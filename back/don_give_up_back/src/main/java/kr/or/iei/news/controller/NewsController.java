@@ -31,6 +31,7 @@ import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
 import kr.or.iei.news.model.dto.NewsFile;
 import kr.or.iei.news.model.dto.NewsOrg;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.news.model.service.NewsService;
 
 @RestController
@@ -254,6 +255,40 @@ public class NewsController {
 			int result = service.updateComment(comment);
 			if(result > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "댓글이 수정되었습니다.", true, "");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	@GetMapping("/comment/report")
+	public ResponseEntity<ResponseDTO> selectReportCode(){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신고 코드 조회 중, 오류가 발생하였습니다.", null, "error");
+
+		try {
+			ArrayList<NewsReport> newsReportList = service.selectReportCode();
+			if (newsReportList != null) {
+				res = new ResponseDTO(HttpStatus.OK, "", newsReportList, "");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	@PostMapping("/comment/report")
+	public ResponseEntity<ResponseDTO> regCommentReport(@RequestBody NewsReport newsReport){
+		System.out.println("newsReport : " + newsReport.toString());
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 신고 처리 중, 오류가 발생하였습니다.", false, "error");
+
+		try {
+			int result = service.regCommentReport(newsReport);
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "댓글 신고가 완료되었습니다.", true, "");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
