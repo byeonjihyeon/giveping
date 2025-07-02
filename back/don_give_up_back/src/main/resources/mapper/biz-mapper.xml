@@ -18,7 +18,7 @@
 
 <!-- 기부 사업 리스트 조회 -->
 <select id="selectDonateBizList" parameterType="map" resultType="Biz">
-    SELECT biz_no AS bizNo,
+    SELECT biz_no AS bizNo, 
            org_no AS orgNo,
            org_name AS orgName,
            donate_code AS donateCode,
@@ -33,7 +33,8 @@
            biz_status AS bizStatus,
            biz_reg_date AS bizRegDate,
            biz_edit AS bizEdit,
-           biz_thumb AS bizThumbPath
+           biz_thumb AS bizThumbPath,
+           donate_money AS donateMoney
     FROM (
         SELECT rownum rnum, a.*
         FROM (
@@ -52,7 +53,12 @@
                    b.biz_status AS biz_status,
                    TO_CHAR(b.biz_reg_date, 'YYYY-MM-DD') AS biz_reg_date,
                    b.biz_edit AS biz_edit,
-                   b.biz_thumb AS biz_thumb
+                   b.biz_thumb AS biz_thumb,
+                   NVL((
+                       SELECT SUM(d.donate_money)
+                       FROM tbl_donation_list d
+                       WHERE d.biz_no = b.biz_no
+                   ), 0) AS donate_money
             FROM tbl_donate_biz b
             JOIN tbl_org o ON b.org_no = o.org_no
             JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
@@ -67,6 +73,13 @@
         ) a
     )
     WHERE rnum BETWEEN #{start} AND #{end}
+</select>
+
+
+<select id="selectDonateMoney" parameterType="string" resultType="Biz">
+select sum(donate_money) AS donateMoney
+	from tbl_donation_list
+	where biz_no = #{parameter}
 </select>
 
 
@@ -123,13 +136,13 @@ FROM (
                b.donate_code AS donateCode,
                b.biz_name AS bizName,
                b.biz_content AS bizContent,
-               b.biz_donate_start AS bizDonateStart,
-               b.biz_donate_end AS bizDonateEnd,
-               b.biz_start AS bizStart,
-               b.biz_end AS bizEnd,
+               TO_CHAR(b.biz_donate_start, 'YYYY-MM-DD') AS bizDonateStart,
+               TO_CHAR(b.biz_donate_end, 'YYYY-MM-DD') AS bizDonateEnd,
+               TO_CHAR(b.biz_start, 'YYYY-MM-DD') AS bizStart,
+               TO_CHAR(b.biz_end, 'YYYY-MM-DD') AS bizEnd,
                b.biz_goal AS bizGoal,
                b.biz_status AS bizStatus,
-               b.biz_reg_date AS bizRegDate,
+               TO_CHAR(b.biz_reg_date, 'YYYY-MM-DD') AS bizRegDate,
                b.biz_edit AS bizEdit,
                b.biz_thumb AS bizThumbPath
         FROM tbl_donate_biz b
@@ -147,5 +160,40 @@ FROM (
 )
 WHERE rnum &gt;= #{pageInfo.start}
 </select>
+
+<!-- 특정 후원 사업에 기부한 회원 리스트 조회 -->
+	<select id="selectDonateMember" parameterType="_int" resultType="BizMember">
+    SELECT 
+    	m.member_no AS memberNo,
+    	m.member_id AS memberId,
+        m.member_name AS memberName,
+        TO_CHAR(m.member_birth, 'YYYY-MM-DD') AS memberBirth,
+        m.member_phone AS memberPhone,
+        l.donate_money AS donateMoney,
+        TO_CHAR(l.donate_date, 'YYYY-MM-DD') AS donateDate
+    FROM tbl_donation_list l
+    JOIN tbl_donate_biz b ON l.biz_no = b.biz_no
+    JOIN tbl_member m ON l.member_no = m.member_no
+    WHERE l.biz_no = #{_parameter}
+    order by donateDate
+</select>
+
+<!-- 회원별 예치금 조회하기 -->
+<select id="selectMemberMoney" parameterType="_int" resultType="BizMember">
+select member_id AS memberId,
+	   member_no AS memberNo,
+	   member_name AS memberName,
+	   total_money AS totalMoney
+from tbl_member
+where member_no = #{parameter}
+</select>
+
+<!-- 기부하기 -->
+<insert id="bizDonate" parameterType="BizDonationList">
+insert into tbl_donation_list 
+	(donate_no, biz_no, member_no, donate_money)
+    values 
+    (seq_donate.nextval, #{bizNo}, #{memberNo}, #{donateMoney})
+</insert>
 
 </mapper>
