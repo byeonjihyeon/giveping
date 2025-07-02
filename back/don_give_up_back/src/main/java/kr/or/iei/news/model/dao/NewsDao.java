@@ -34,6 +34,8 @@ public interface NewsDao {
 	int deleteComment(int commentNo);
 
 	int updateComment(Comment comment);
+
+	int updateReadCount(int newsNo);
 	
 	
 

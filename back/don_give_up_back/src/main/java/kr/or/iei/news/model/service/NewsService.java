@@ -41,9 +41,18 @@ public class NewsService {
 		return newsMap;
 	}
 
+	// 소식글 상세 조회
 	public News selectOneNews(int newsNo) {
-		// TODO Auto-generated method stub
-		return dao.selectOneNews(newsNo);
+		// 조회수 증가 로직
+		int result = dao.updateReadCount(newsNo);
+		System.out.println("조회수 result : " + result);
+
+		if (result > 0) {
+			// 조회수 증가 성공했을 경우만 상세 조회
+			return dao.selectOneNews(newsNo);
+		} else {
+			return null;
+		}
 	}
 
 	@Transactional
