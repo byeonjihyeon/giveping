@@ -169,6 +169,12 @@ function BoardItem(props) {
     const { donateBiz, serverUrl } = props;
     const navigate = useNavigate();
 
+    // 기부금 달성률 계산
+    const goal = donateBiz.bizGoal || 0;
+    const donated = donateBiz.donateMoney || 0;
+    const percent = goal > 0 ? Math.floor((donated / goal) * 100) : 0;
+
+
     const bizStatusMap = {
         0: '미승인',
         1: '승인',
@@ -187,15 +193,25 @@ function BoardItem(props) {
                 />
             </div>
             <div className="posting-info">
-                <div className="posting-title">{donateBiz.bizName}</div>
+                <div className="posting-title">{donateBiz.orgName}</div>
                 <div className="posting-sub-info">
-                    <span>{donateBiz.orgName}</span>
+                    <span>{donateBiz.bizName}</span>
+                    <span> #{donateBiz.donateCtg}</span>
                     <br />
-                    <span>{donateBiz.donateCtg}</span>
+                    {/* 
+                    <span>모금 기간 : {donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
                     <br />
-                    <span>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
+                    */}
+                    <span>목표 금액 : {goal.toLocaleString()}원</span>
                     <br />
-                    <span>{donateBiz.bizGoal}(원)</span>
+                    {/* 
+                    <span>모금액 : {donated.toLocaleString()}원</span>
+                    <br />
+                    */}
+                    <span>달성률 {percent}%</span>
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: percent }}></div>
+                    </div>
                 </div>
             </div>
         </li>
