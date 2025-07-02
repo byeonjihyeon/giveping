@@ -6,12 +6,19 @@ export default function Join(props){
     const setMember = props.setMember;
     const member = {
         memberId : "", memberPw : "", memberName : "", memberPhone : "",
-        memberBirth : "", memberEmail : "", memberAddr : ""
+        memberBirth : "", memberEmail : "", memberAddrMain : "", memberAddrDetail : "", categoryList : []
     }
 
-    //개인 회원가입 페이지에서 나왔을 때 저장된 멤버값 초기화
+    const setOrg = props.setOrg;
+    const org = {
+        orgId : "", orgPw : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "",
+        orgAddrMain : "", orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", categoryList : []
+    };
+
+    //회원가입 페이지에서 나왔을 때 저장된 멤버값 초기화
     useEffect(function(){
         setMember(member);
+        setOrg(org);
     }, []);
 
     return (

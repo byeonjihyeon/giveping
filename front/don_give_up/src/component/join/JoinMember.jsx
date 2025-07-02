@@ -5,8 +5,6 @@ import Swal from "sweetalert2";
 
 //개인 회원 회원가입 페이지
 export default function JoinMember(props){
-    const serverUrl = import.meta.env.VITE_BACK_SERVER;
-    const axiosInstance = createInstance();
     const navigate = useNavigate();
     
     const member = props.member;
@@ -28,61 +26,6 @@ export default function JoinMember(props){
     3 : 중복된 아이디가 존재하는 경우 
     */
     const [idChk, setIdChk] = useState(0);
-
-    //아이디 입력 후 포커스를 잃었을 때 호출함수 (onBlur)
-    function checkMemberId(e){
-        //아이디 정규 표현식
-        const regExp = /^[a-zA-Z0-9]{6,20}$/; //영대,소문자와 숫자로 이루어진 6~20글자
-
-        if(!regExp.test(e.target.value)){
-            //유효성 검증 실패인 경우
-            setIdChk(2);
-        }else{
-            setIdChk(0);
-        }
-        
-    }
-
-    //중복체크 버튼 클릭 시 호출 함수
-    function checkMemberIdUnique(){
-        if(idChk != 2){ //유효성 검증 체크 성공인 경우
-            //DB에 중복된 아이디 존재하는지 체크하기 위해 서버에 아이디 전달하며 중복 체크 요청
-            let options = {};
-            options.url = serverUrl + "/member/" + member.memberId + "/chkId";
-            options.method = "get";
-
-            axiosInstance(options)
-            .then(function(res){
-                if(res.data.resData == 1){
-                    setIdChk(3); //중복된 아이디가 존재하는 경우
-                    Swal.fire({
-                        title : "알림",
-                        text : "이미 사용중인 아이디입니다.",
-                        icon : "warning",
-                        confirmButtonText : "확인"
-                    });
-                }else if(res.data.resData == 0){ //중복된 아이디가 존재하지 않는 경우
-                    setIdChk(1); //회원가입 가능한 상태
-                    Swal.fire({
-                        title : "알림",
-                        text : "사용 가능한 아이디입니다.",
-                        icon : "success",
-                        confirmButtonText : "확인"
-                    });
-                }
-            })
-            .catch(function(err){
-                console.log(err);
-            });
-        }else{ //유효성 검증 실패인 경우
-            Swal.fire({
-                title : "알림",
-                text : "아이디 형식이 올바르지 않습니다.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }
-    }
 
 
     /*비밀번호 관련 코드*/
@@ -186,6 +129,220 @@ export default function JoinMember(props){
     const currentDay = String(now.getDate()).padStart(2, "0");
     const today = currentYear + "-" + currentMonth + "-" + currentDay;  //오늘 날짜
 
+
+
+    /*이메일 관련 코드*/
+    /*
+    이메일 검증 결과 저장 변수
+    0 : 검증 이전 상태
+    1 : 아아디, 도메인 모두 유효성 체크 통과
+    2 : 아이디 유효성 체크 실패
+    3 : 아이디 유효성 체크 통과 도메인 입력 X
+    4 : 도메인 유효성 체크 실패
+    5 : 도메인 유효성 체크 통과 아이디 입력 X
+    */
+    const [emailChk, setEmailChk] = useState(0);
+
+
+    //다음 버튼 클릭 시 호출 함수
+    function insertMember(){
+        // 유효성 조건 리스트
+        const validations = [
+            { valid: member.memberId !== "" && idChk !== 1, message: "아이디 중복체크를 하세요." },
+            { valid: idChk !== 1, message: "아이디를 확인하세요." },
+            { valid: pwChk !== 1 && memberPwRe !== "", message: "비밀번호를 확인하세요." },
+            { valid: memberPwRe === "", message: "비밀번호 확인을 입력하세요." },
+            { valid: nameChk != 1, message: "이름을 입력하세요." },
+            { valid: phoneChk !== 1, message: "전화번호를 확인하세요." },
+            { valid: member.memberBirth >= today, message: "생년월일을 확인하세요." },
+            { valid: emailChk !== 1, message: "이메일을 확인하세요." },
+            { valid: member.memberAddrMain === "", message: "주소를 입력하세요." }
+        ];
+
+        // 검증 실패 시 첫 번째 오류 메시지 띄우고 return
+        for (let i = 0; i < validations.length; i++) {
+            if (validations[i].valid) {
+                Swal.fire({
+                    title: "알림",
+                    text: validations[i].message,
+                    icon: "warning",
+                    confirmButtonText: "확인"
+                });
+                return;
+            }
+        }
+    
+        // 모든 조건 통과 시 페이지 이동
+        navigate("/join/category");
+    }
+
+    return (
+        <section className="section join-wrap">
+            <div className="page-title">개인 회원가입</div>
+            <form autoComplete="off" onSubmit={function(e){
+                e.preventDefault(); //기본 submit 이벤트 제어
+                insertMember();     //다음 버튼 클릭 시 호출 함수
+            }}>
+                <table className="tbl-join">
+                    <tbody>
+                        <tr>
+                            <th>
+                                <label htmlFor="memberId">아이디</label>
+                            </th>
+                            <td>
+                                <MemberId member={member} chgMember={chgMember} idChk={idChk} setIdChk={setIdChk}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <label htmlFor="memberPw">비밀번호</label>
+                            </th>
+                            <td>
+                                <input type="password" id="memberPw" value={member.memberPw} onChange={chgMember} onBlur={checkMemberPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
+                                <p>{pwChk == 2 ? "비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <label htmlFor="memberPwRe">비밀번호 확인</label>
+                            </th>
+                            <td>
+                                <input type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={checkMemberPw}/>
+                                <p>{pwChk == 3 ? "비밀번호와 일치하지 않습니다." : ""}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <label htmlFor="memberName">이름</label>
+                            </th>
+                            <td>
+                                <input type="text" id="memberName" value={member.memberName} onChange={chgMember} onBlur={checkMemberName}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <label htmlFor="memberPhone">전화번호</label>
+                            </th>
+                            <td>
+                                <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>생년월일</th>
+                            <td>
+                                <MemberBirth member={member} setMember={setMember} currentYear={currentYear} currentMonth={currentMonth} currentDay={currentDay}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
+                                <label htmlFor="memberEmailId">이메일</label>
+                            </th>
+                            <td>
+                                <MemberEmail member={member} setMember={setMember} setEmailChk={setEmailChk}/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>주소</th>
+                            <td>
+                                <MemberAddr member={member} setMember={setMember}/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colSpan={2}>
+                                <button type="submit">다음</button>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </form>
+        </section>
+    )
+}
+
+/*아이디 관련 코드*/
+function MemberId(props){
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
+
+    const member = props.member;
+    const chgMember = props.chgMember;
+    const idChk = props.idChk;
+    const setIdChk = props.setIdChk;
+
+    //아이디 입력 후 포커스를 잃었을 때 호출함수 (onBlur)
+    function checkMemberId(e){
+        //아이디 정규 표현식
+        const regExp = /^[a-zA-Z0-9]{6,20}$/; //영대,소문자와 숫자로 이루어진 6~20글자
+
+        if(!regExp.test(e.target.value)){
+            //유효성 검증 실패인 경우
+            setIdChk(2);
+        }else{
+            setIdChk(0);
+        }
+        
+    }
+
+    //중복체크 버튼 클릭 시 호출 함수
+    function checkMemberIdUnique(){
+        if(idChk != 2){ //유효성 검증 체크 성공인 경우
+            //DB에 중복된 아이디 존재하는지 체크하기 위해 서버에 아이디 전달하며 중복 체크 요청
+            let options = {};
+            options.url = serverUrl + "/member/" + member.memberId + "/chkId";
+            options.method = "get";
+
+            axiosInstance(options)
+            .then(function(res){
+                if(res.data.resData == 1){
+                    setIdChk(3); //중복된 아이디가 존재하는 경우
+                    Swal.fire({
+                        title : "알림",
+                        text : "이미 사용중인 아이디입니다.",
+                        icon : "warning",
+                        confirmButtonText : "확인"
+                    });
+                }else if(res.data.resData == 0){ //중복된 아이디가 존재하지 않는 경우
+                    setIdChk(1); //회원가입 가능한 상태
+                    Swal.fire({
+                        title : "알림",
+                        text : "사용 가능한 아이디입니다.",
+                        icon : "success",
+                        confirmButtonText : "확인"
+                    });
+                }
+            })
+            .catch(function(err){
+                console.log(err);
+            });
+        }else{ //유효성 검증 실패인 경우
+            Swal.fire({
+                title : "알림",
+                text : "아이디 형식이 올바르지 않습니다.",
+                icon : "warning",
+                confirmButtonText : "확인"
+            });
+        }
+    }
+
+    return (
+        <>
+            <input type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
+            <button type="button" onClick={checkMemberIdUnique}>중복체크</button>
+            <p>{idChk == 2 ? "아이디는 영대소문자와 숫자로 이루어진 6~20글자입니다." : ""}</p>
+        </>
+    )
+}
+
+/*생년월일 관련 코드*/
+function MemberBirth(props){
+    const member = props.member;
+    const setMember = props.setMember;
+    const currentYear = props.currentYear;
+    const currentMonth = props.currentMonth;
+    const currentDay = props.currentDay;
+
     const [birthYear, setBirthYear] = useState(String(currentYear));
     const [birthMonth, setBirthMonth] = useState(currentMonth);
     const [birthDay, setBirthDay] = useState(currentDay);
@@ -247,8 +404,33 @@ export default function JoinMember(props){
         }
     }, [birthYear, birthMonth, birthDay]);
 
+    return (
+        <>
+        <select name="birthYear" value={birthYear} onChange={handleYearChange}>
+            {years.map(function(y, index){
+                return  <option key={"y"+index} value={y}>{y}년</option>
+            })}
+        </select>
+        <select name="birthMonth" value={birthMonth} onChange={handleMonthChange}>
+            {months.map(function(m, index){
+                return  <option key={"m"+index} value={m}>{m}월</option>
+            })}
+        </select>
+        <select name="birthDay" value={birthDay} onChange={handleDayChange}>
+            {days.map(function(d, index){
+                return  <option key={"d"+index} value={d}>{d}일</option>
+            })}
+        </select>
+        </>
+    )
+}
 
-    /*이메일 관련 코드*/
+/*이메일 관련 코드*/
+function MemberEmail(props){
+    const member = props.member;
+    const setMember = props.setMember;
+    const setEmailChk = props.setEmailChk;
+
     //이메일 값 변경 시 저장 변수
     const [memberEmailId, setMemberEmailId] = useState("");         //이메일 아이디
     const [memberEmailDomain, setMemberEmailDomain] = useState(""); //이메일 도메인
@@ -289,17 +471,6 @@ export default function JoinMember(props){
         }
     }, [memberEmailId, memberEmailDomain]);
 
-    /*
-    이메일 검증 결과 저장 변수
-    0 : 검증 이전 상태
-    1 : 아아디, 도메인 모두 유효성 체크 통과
-    2 : 아이디 유효성 체크 실패
-    3 : 아이디 유효성 체크 통과 도메인 입력 X
-    4 : 도메인 유효성 체크 실패
-    5 : 도메인 유효성 체크 통과 아이디 입력 X
-    */
-    const [emailChk, setEmailChk] = useState(0);
-
     useEffect(function(){
         //이메일 아이디 정규 표현식
         const idRegExp = /^[0-9a-zA-Z]([-_]?[0-9a-zA-Z])*$/;
@@ -330,8 +501,27 @@ export default function JoinMember(props){
         }
     }, [memberEmailId, memberEmailDomain]);
 
+    return (
+        <>
+        <input type="text" id="memberEmailId" value={memberEmailId} onChange={chgEmailId}/>@
+        <input type="text" id="memberEmailDomain" value={memberEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
+        <select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : memberEmailDomain}>
+            <option value="custom">직접 입력</option>
+            <option value="naver.com">naver.com</option>
+            <option value="gmail.com">gmail.com</option>
+            <option value="daum.net">daum.net</option>
+            <option value="kakao.com">kakao.com</option>
+            <option value="nate.com">nate.com</option>
+        </select>
+        </>
+    )
+}
 
-    /*주소 관련 코드*/
+/*주소 관련 코드*/
+function MemberAddr(props){
+    const member = props.member;
+    const setMember = props.setMember;
+
     //다음 주소 API 불러오기
     useEffect(() => {
         const script = document.createElement('script');
@@ -340,10 +530,8 @@ export default function JoinMember(props){
         document.body.appendChild(script);
     }, []);
     
-    //우편번호, 주소, 상세주소, 참고항목 useRef
-    const postcodeRef = useRef(null);
+    //주소, 상세주소 useRef
     const addressRef = useRef(null);
-    const extraAddressRef = useRef(null);
     const detailAddressRef = useRef(null);
     
     //상세 주소 값 변경 시 저장 변수
@@ -354,7 +542,6 @@ export default function JoinMember(props){
         new window.daum.Postcode({
             oncomplete: function (data) {
                 let addr = ''; // 주소
-                let extraAddr = ''; // 참고 항목
 
                 if (data.userSelectedType === 'R') {
                     addr = data.roadAddress;
@@ -362,26 +549,10 @@ export default function JoinMember(props){
                     addr = data.jibunAddress;
                 }
 
-                if (data.userSelectedType === 'R') {
-                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-                    extraAddr += data.bname;
-                }
-                if (data.buildingName !== '' && data.apartment === 'Y') {
-                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                }
-                if (extraAddr !== '') {
-                    extraAddr = ' (' + extraAddr + ')';
-                }
-                    extraAddressRef.current.value = extraAddr;
-                } else {
-                    extraAddressRef.current.value = '';
-                }
-
-                postcodeRef.current.value = data.zonecode;
                 addressRef.current.value = addr;
                 
                 //주소 값 State 변수에 저장
-                setMember({...member, memberAddr : addr + " " + addrDetail})
+                setMember({...member, memberAddrMain : addr})
 
                 detailAddressRef.current.focus();
             }
@@ -390,202 +561,15 @@ export default function JoinMember(props){
     
     //상세 주소 값 onChange 호출 함수
     function chgAddrDetail(e){
-        const newDetail = e.target.value;
-        setAddrDetail(newDetail);
-
-        //주소 값 State 변수에 저장
-        const mainAddress = addressRef.current.value || '';
-        setMember({...member, memberAddr : mainAddress + " " + newDetail});
-    }
-
-
-    //다음 버튼 클릭 시 호출 함수
-    function insertMember(){
-        if(idChk == 1 && pwChk == 1 &&
-           memberPwRe != "" && nameChk == 1 &&
-           phoneChk == 1 && member.memberBirth != today &&
-           emailChk == 1 && member.memberAddr != ""){
-            navigate("/join/category");
-        }else if(member.memberId != "" && idChk == 0){
-            Swal.fire({
-                title : "알림",
-                text : "아이디 중복체크를 하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }else if(idChk != 1){
-            Swal.fire({
-                title : "알림",
-                text : "아이디를 확인하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }else if(pwChk != 1 && memberPwRe != ""){
-            Swal.fire({
-                title : "알림",
-                text : "비밀번호를 확인하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }else if(memberPwRe == ""){
-            Swal.fire({
-                title : "알림",
-                text : "비밀번호 확인을 입력하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }else if(nameChk != 1){
-            Swal.fire({
-                title : "알림",
-                text : "이름을 확인하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }else if(phoneChk != 1){
-            Swal.fire({
-                title : "알림",
-                text : "전화번호를 확인하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }else if(member.memberBirth >= today){
-            Swal.fire({
-                title : "알림",
-                text : "생년월일을 확인하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }else if(emailChk != 1){
-            Swal.fire({
-                title : "알림",
-                text : "이메일을 확인하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }else if(member.memberAddr == ""){
-            Swal.fire({
-                title : "알림",
-                text : "주소를 입력하세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            });
-        }
+        //상세 주소 값 State 변수에 저장
+        setMember({...member, memberAddrDetail : e.target.value});
     }
 
     return (
-        <section className="section join-wrap">
-            <div className="page-title">개인 회원가입</div>
-            <form onSubmit={function(e){
-                e.preventDefault(); //기본 submit 이벤트 제어
-                insertMember();     //다음 버튼 클릭 시 호출 함수
-            }}>
-                <table className="tbl-join">
-                    <tbody>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberId">아이디</label>
-                            </th>
-                            <td>
-                                <input type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
-                                <button type="button" onClick={checkMemberIdUnique}>중복체크</button>
-                                <p>{idChk == 2 ? "아이디는 영대소문자와 숫자로 이루어진 6~20글자입니다." : ""}</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberPw">비밀번호</label>
-                            </th>
-                            <td>
-                                <input type="password" id="memberPw" value={member.memberPw} onChange={chgMember} onBlur={checkMemberPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
-                                <p>{pwChk == 2 ? "비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberPwRe">비밀번호 확인</label>
-                            </th>
-                            <td>
-                                <input type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={checkMemberPw}/>
-                                <p>{pwChk == 3 ? "비밀번호와 일치하지 않습니다." : ""}</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberName">이름</label>
-                            </th>
-                            <td>
-                                <input type="text" id="memberName" value={member.memberName} onChange={chgMember} onBlur={checkMemberName}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberPhone">전화번호</label>
-                            </th>
-                            <td>
-                                <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label>생년월일</label>
-                            </th>
-                            <td>
-                                <select name="birthYear" value={birthYear} onChange={handleYearChange}>
-                                    {years.map(function(y, index){
-                                        return  <option key={"y"+index} value={y}>{y}년</option>
-                                    })}
-                                </select>
-                                <select name="birthMonth" value={birthMonth} onChange={handleMonthChange}>
-                                    {months.map(function(m, index){
-                                        return  <option key={"m"+index} value={m}>{m}월</option>
-                                    })}
-                                </select>
-                                <select name="birthDay" value={birthDay} onChange={handleDayChange}>
-                                    {days.map(function(d, index){
-                                        return  <option key={"d"+index} value={d}>{d}일</option>
-                                    })}
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberEmailId">이메일</label>
-                            </th>
-                            <td>
-                                <input type="text" id="memberEmailId" value={memberEmailId} onChange={chgEmailId}/>@
-                                <input type="text" id="memberEmailDomain" value={memberEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
-                                <select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : memberEmailDomain}>
-                                    <option value="custom">직접 입력</option>
-                                    <option value="naver.com">naver.com</option>
-                                    <option value="gmail.com">gmail.com</option>
-                                    <option value="daum.net">daum.net</option>
-                                    <option value="kakao.com">kakao.com</option>
-                                    <option value="nate.com">nate.com</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label>주소</label>
-                            </th>
-                            <td>
-                                <input type="text" ref={postcodeRef} placeholder="우편번호" readOnly/>
-                                <button type="button" onClick={execDaumPostcode}>우편번호 찾기</button><br />
-                                <input type="text" ref={addressRef} placeholder="주소" readOnly/>
-                                <input type="text" ref={extraAddressRef} placeholder="참고항목" readOnly/><br />
-                                <input type="text" ref={detailAddressRef} placeholder="상세주소" value={addrDetail} onChange={chgAddrDetail}/>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colSpan={2}>
-                                <button type="submit">다음</button>
-                            </th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </form>
-        </section>
+        <>
+            <input type="text" ref={addressRef} placeholder="주소" readOnly/>
+            <button type="button" onClick={execDaumPostcode}>주소 찾기</button> <br/>
+            <input type="text" ref={detailAddressRef} placeholder="상세주소" value={member.memberAddrDetail} onChange={chgAddrDetail}/>
+        </>
     )
 }

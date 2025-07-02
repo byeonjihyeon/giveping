@@ -23,7 +23,8 @@
 				#{memberName},
 				#{memberPhone},
 				#{memberBirth},
-				#{memberAddr},
+				#{memberAddrMain},
+				#{memberAddrDetail},
 				#{memberEmail},
 				2,
 				sysdate,
@@ -48,4 +49,6 @@
 		  from tbl_member
 		 where member_id = #{memberId}
 	</select>
+	
+
 </mapper>

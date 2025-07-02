@@ -64,14 +64,24 @@ function setInterceptors(instance) {
 
 					//스토리지에 저장되어 있는 회원 정보, refreshToken 데이터 추출
 					const loginMember = useUserStore.getState().loginMember;
+					const loginOrg = useUserStore.getState().loginOrg;
 					const refreshToken = useUserStore.getState().refreshToken;
 
 					let options = {};
-					options.url = import.meta.env.VITE_BACK_SERVER + '/member/refresh';
-					options.method = 'post';
-					options.data = loginMember;
-					options.headers = {};
-					options.headers.refreshToken = refreshToken; //헤더에 refreshToken 포함시켜 재발급 요청
+
+					if(loginMember != null){
+						options.url = import.meta.env.VITE_BACK_SERVER + '/member/refresh';
+						options.method = 'post';
+						options.data = loginMember;
+						options.headers = {};
+						options.headers.refreshToken = refreshToken; //헤더에 refreshToken 포함시켜 재발급 요청
+					}else {
+						options.url = import.meta.env.VITE_BACK_SERVER + "/org/refresh";
+						options.method = "post";
+						options.data = loginOrg;
+						options.headers = {};
+						options.headers.refreshToken = refreshToken;
+					}
 
 					return instance(options)
 						   .then(function(res){

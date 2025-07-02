@@ -21,13 +21,13 @@ function App() {
   //개인 회원 정보 저장 변수(서버 전송용)
   const [member, setMember] = useState({
     memberId : "", memberPw : "", memberName : "", memberPhone : "",
-    memberBirth : "", memberEmail : "", memberAddr : "", categoryList : []
+    memberBirth : "", memberEmail : "", memberAddrMain : "", memberAddrDetail : "", categoryList : []
   });
 
   //단체 회원 정보 저장 변수(서버 전송용)
   const [org, setOrg] = useState({
     orgId : "", orgPw : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "",
-    orgAddr : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", categoryList : []
+    orgAddrMain : "", orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", categoryList : []
   });
   
   return (

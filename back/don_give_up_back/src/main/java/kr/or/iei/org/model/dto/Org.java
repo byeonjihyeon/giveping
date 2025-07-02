@@ -17,7 +17,8 @@ public class Org {
 	private String orgBiznum;		//단체 사업자 번호
 	private String orgPhone;		//단체 전화번호
 	private String orgEmail;		//단체 이메일
-	private String orgAddr;			//단체 주소
+	private String orgAddrMain;		//단체 주소
+	private String orgAddrDetail;	//단체 상세 주소
 	private String orgIntroduce;	//단체 설명
 	private String orgAccount;		//단체 계좌번호
 	private String orgAccountBank;	//단체 계좌번호 은행명

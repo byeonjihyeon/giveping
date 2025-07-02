@@ -24,7 +24,8 @@
 				#{orgBiznum},
 				#{orgPhone},
 				#{orgEmail},
-				#{orgAddr},
+				#{orgAddrMain},
+				#{orgAddrDetail},
 				#{orgIntroduce},
 				#{orgAccount},
 				#{orgAccountBank},
@@ -49,5 +50,22 @@
 		       org_name as orgName
 		  from tbl_org
 		 where org_id = #{orgId}
+	</select>
+	
+	<!-- 단체 1개 정보 조회 -->
+	<select id="selectOneOrg" parameterType="_int" resultType="Org">
+		select org_id as orgId,
+		       org_name as orgName,
+		       org_biznum as orgBiznum,
+		       org_phone as orgPhone,
+		       org_email as orgEmail,
+		       org_addr as orgAddr,
+		       org_introduce as orgIntroduce,
+		       org_account as orgAccount,
+		       org_account_bank as orgAccountBank,
+		       org_thumb as orgThumb,
+		       org_url as orgUrl
+		  from tbl_org
+		 where org_no = #{orgNo}
 	</select>
 </mapper>

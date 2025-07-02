@@ -24,6 +24,24 @@ public class OrgController {
 	@Autowired
 	private OrgService service;
 	
+	//토큰 재발급
+	@PostMapping("/refresh")
+	public ResponseEntity<ResponseDTO> refreshToken(@RequestBody Org org) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "토근 재발급 실패", null, "error");
+		
+		try {
+			String reAccessToken = service.refreshToken(org);
+			
+			//accessToken 재발급 완료
+			res = new ResponseDTO(HttpStatus.OK, "", reAccessToken, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
 	//아이디 중복체크
 	@GetMapping("/{orgId}/chkId")
 	@NoTokenCheck
@@ -75,6 +93,26 @@ public class OrgController {
 				res = new ResponseDTO(HttpStatus.OK, "아이디 및 비밀번호를 확인하세요", null, "warning");
 			}else {				
 				res = new ResponseDTO(HttpStatus.OK, "", loginOrg, "");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//단체 1개 정보 조회
+	@GetMapping("/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectOneOrg(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 정보 조회 중 오류가 발생했습니다.", null, "error");
+		
+		try {
+			Org org = service.selectOneOrg(orgNo);
+			
+			if(org == null) {
+				res = new ResponseDTO(HttpStatus.OK, "단체 정보 조회 중 오류가 발생했습니다.", null, "wraning");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "", org, "");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();

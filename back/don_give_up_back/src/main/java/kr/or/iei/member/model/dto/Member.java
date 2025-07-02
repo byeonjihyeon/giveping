@@ -16,7 +16,8 @@ public class Member {
 	private String memberName;			//회원 이름
 	private String memberPhone;			//회원 전화번호
 	private String memberBirth;			//회원 생년월일
-	private String memberAddr;			//회원 주소
+	private String memberAddrMain;		//회원 주소
+	private String memberAddrDetail;	//회원 상세 주소
 	private String memberEmail;			//회원 이메일
 	private int memberLevel;			//회원 등급(1:관리자, 2:일반회원)
 	private String memberEnrollDate;	//회원 가입일

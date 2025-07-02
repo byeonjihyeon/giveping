@@ -23,4 +23,7 @@ public interface OrgDao {
 	//로그인 - 아이디로 회원 조회
 	Org orgLogin(String orgId);
 
+	//단체 1개 정보 조회
+	Org selectOneOrg(int orgNo);
+
 }

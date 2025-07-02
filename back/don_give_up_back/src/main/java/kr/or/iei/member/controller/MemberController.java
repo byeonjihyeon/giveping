@@ -25,6 +25,24 @@ public class MemberController {
 	@Autowired
 	private MemberService service;
 	
+	//토큰 재발급
+	@PostMapping("/refresh")
+	public ResponseEntity<ResponseDTO> refreshToken(@RequestBody Member member) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "토근 재발급 실패", null, "error");
+		
+		try {
+			String reAccessToken = service.refreshToken(member);
+			
+			//accessToken 재발급 완료
+			res = new ResponseDTO(HttpStatus.OK, "", reAccessToken, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
 	//아이디 중복 체크
 	@GetMapping("/{memberId}/chkId")
 	@NoTokenCheck
