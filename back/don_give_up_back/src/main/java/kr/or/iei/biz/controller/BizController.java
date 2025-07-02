@@ -96,7 +96,9 @@ public class BizController {
 		
 		try {
 			BizMember bizMember = service.selectMemberMoney(memberNo);
-			res = new ResponseDTO(HttpStatus.OK, "", bizMember, "");
+			if(bizMember !=null) {
+				res = new ResponseDTO(HttpStatus.OK, "", bizMember, "");
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
