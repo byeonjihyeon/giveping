@@ -3,10 +3,11 @@ import createInstance from "../../axios/Interceptor";
 import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
+import './news.css';
+
 export default function NewsView(){
     const param = useParams();
     const newsNo = param.newsNo;
-    console.log(newsNo);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -15,7 +16,7 @@ export default function NewsView(){
     const [news, setNews] = useState({});
 
     //로그인 회원 정보 (관리자일 경우에만 수정, 삭제 버튼 활성화)
-    //const {loginMember} = useUserStore(); 
+    const {loginMember} = useUserStore(); 
 
     // 댓글 리스트 저장 변수
     const [commentList, setCommentList] = useState([]);
@@ -67,25 +68,6 @@ export default function NewsView(){
         });
     }
 
-    // 댓글 삭제 함수
-    function delComment(commentNo){
-        // filter 로 댓글 저장 변수에서 클릭한 대상의 댓글 없애기
-
-        if(!window.confirm("댓글을 삭제하시겠습니까?")) return; // 댓글 삭제 ok 일 경우에만 axios 실행
-
-        let options = {};
-        options.url = serverUrl + "/news/comment/" + commentNo;
-        options.method = "patch";
-        axiosInstance(options)
-        .then(function(res){
-            // 필터로 삭제한 대상 댓글을 ui에서 삭제 처리
-            if(res.data.resData) {
-                setCommentList(prevList => prevList.filter(c => c.commentNo !== commentNo));
-            }
-            console.log(res.data.resData);
-        });
-    }
-
 
     return(
         <>
@@ -130,19 +112,15 @@ export default function NewsView(){
                         : ''
                     }
                 </div>
-                {/* 
                 {
-                    loginMember != null && loginMember.memberId == board.boardWriter
+                    loginMember != null && loginMember.orgNo == news.orgNo
                     ?
-                    */}
                     <div className="view-btn-zone">
                         <Link to={"/news/update/" + news.newsNo} className="btn-primary lg">수정</Link>
                         <button type="button" className="btn-secondary lg" onClick={deleteNews}>삭제</button>
                     </div>
-                {/* 
                     : ''
                 }
-                    */}
             </div>
 
             <hr /><hr /><hr /><hr />
@@ -154,11 +132,12 @@ export default function NewsView(){
                     <th style={{width:"15%"}}>작성시간</th>
                     <th style={{width:"10%"}}>수정</th>
                     <th style={{width:"10%"}}>삭제</th>
+                    <th style={{width:"10%"}}>신고</th>
                 </tr>
             </thead>
             <tbody>
                 {commentList.map(function(comment, index){
-                    return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList} delComment={delComment}/>
+                    return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList}/>
                 })}
             </tbody>
         </table>
@@ -168,24 +147,28 @@ export default function NewsView(){
 }
 
 // 댓글 컴포넌트
-// loginMember은 storage 에서 가져오기 -> 본인일 경우(loginMember.memberNo == commentList의 comment.memberNo)에만 댓글 수정, 삭제 가능
 function Comment(props){
+    const {loginMember, isLogined, setIsLogined, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken} = useUserStore();
     const comment = props.comment;
     const commentList = props.commentList;
     const setCommentList = props.setCommentList;
-    const delComment = props.delComment;
 
-    // loginMember 
-    //const { loginMember } = useUserStore();
 
     //수정 여부 판단하는 변수 (기본값 : false/ 수정 버튼 클릭 : true로 변경)
     const [editMode, setEditMode] = useState(false);
+
+    //댓글 작성자인지 판단하는 변수 (기본값 : false/ 로그인세션과 댓글주인 일치 시 : true로 변경)
+    //본인일 경우(loginMember.memberNo == commentList의 comment.memberNo)에만 댓글 수정, 삭제 가능
+    const [isAuthor, setIsAuthor] = useState(false);
 
     // 댓글 수정 내용 저장하는 변수
     const [editedContent, setEditedContent] = useState(comment.commentContent);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
+
+    // 팝업 모달을 위한 변수 선언
+    const [isReportOpen, setIsReportOpen] = useState(false);
 
     // 수정 버튼 클릭 시 호출되는 함수
     function handleEditClick(){
@@ -197,6 +180,16 @@ function Comment(props){
         setEditedContent(comment.commentContent);   // 수정 내용 저장하는 변수 원래 댓글 내용 넣기
         setEditMode(false); // 수정 여부를 false 로 변경
     }
+
+    // 작성자인지 확인
+    useEffect(function(){
+        if(loginMember && comment && loginMember.memberNo == comment.memberNo){
+            setIsAuthor(true);
+        }else{
+            setIsAuthor(false);
+        }
+
+    }, [loginMember, comment]);
 
     function handleSaveEdit(){
         let options = {};
@@ -211,7 +204,7 @@ function Comment(props){
         .then(function(res){
             console.log(res.data.resData);
 
-            if(res.data.resData > 0){
+            if(res.data.resData){
                 const updatedList = commentList.map((c) =>
                     c.commentNo === comment.commentNo
                         ? { ...c, commentContent: editedContent }
@@ -221,7 +214,38 @@ function Comment(props){
             setEditMode(false);
             }
         });
+    }
 
+    // 댓글 삭제 핸들러
+    function delComment(commentNo){
+        // filter 로 댓글 저장 변수에서 클릭한 대상의 댓글 없애기
+
+        if(!window.confirm("댓글을 삭제하시겠습니까?")) return; // 댓글 삭제 ok 일 경우에만 axios 실행
+
+        let options = {};
+        options.url = serverUrl + "/news/comment/" + commentNo;
+        options.method = "patch";
+        axiosInstance(options)
+        .then(function(res){
+            // 삭제한 대상 댓글을 ui에서 필터로 삭제 처리
+            if(res.data.resData) {
+                setCommentList(prevList => prevList.filter(c => c.commentNo !== commentNo));
+            }
+            console.log(res.data.resData);
+        });
+    }
+
+    
+
+    // 신고하기 버튼 클릭
+    function openReportPopup(){
+        console.log("신고하기 버튼 클릭");
+        setIsReportOpen(true);
+    }
+
+    // 팝업 닫기
+    function closeReportPopup(){
+        setIsReportOpen(false);
     }
 
     return(
@@ -238,10 +262,8 @@ function Comment(props){
             </td>
             <td>{comment.commentTime}</td>
             <td>
-                {/*{isAuthor && !editMode && <button onClick={handleEditClick}>수정</button>}*/}
-                {!editMode && <button onClick={handleEditClick}>수정</button>}
-                {/*{isAuthor && editMode && (*/}
-                {editMode && (
+                {isAuthor && !editMode && <button onClick={handleEditClick}>수정</button>}
+                {isAuthor && editMode && (
                     <>
                         <button onClick={handleSaveEdit}>완료</button>
                         <button onClick={handleCancelEdit}>취소</button>
@@ -249,9 +271,130 @@ function Comment(props){
                 )}
             </td>
             <td>
-                {/*{isAuthor && !editMode && <button onClick={() => delComment(comment.commentNo)}>삭제</button>} */}
-                {!editMode && <button onClick={() => delComment(comment.commentNo)}>삭제</button>}
+                {isAuthor && !editMode && <button onClick={() => delComment(comment.commentNo)}>삭제</button>}
             </td>
+
+            {
+                loginMember != null && loginMember.memberNo == comment.memberNo
+                ?
+                ''
+                : 
+                <td>
+                    <button onClick={openReportPopup}>신고</button>
+                    {/* 신고 팝업 */}
+                    {isReportOpen && <Report onClose={closeReportPopup} comment={comment}/>}
+                </td>
+            }
         </tr>
     );
+}
+
+// 신고 팝업
+function Report(props){
+    const onClose = props.onClose;
+    const comment = props.comment;
+    const {loginMember} = useUserStore();
+
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
+
+    // 선택된 신고 코드
+    const [selectedCode, setSelectedCode] = useState("");
+
+    // 신고 코드 리스트 변수 저장하기
+    const [codeList, setCodeList] = useState([]);
+
+    // 신고 코드 가져오기
+    useEffect(function(){
+    let option = {};
+    option.url = serverUrl + "/news/comment/report";
+    option.method = 'get';
+
+    axiosInstance(option)
+    .then(function(res){
+        console.log(res.data.resData);
+        setCodeList(res.data.resData);  // 신고 코드 리스트에 저장
+    });
+    },[])
+
+    // 신고 상세 사유 변수 선언
+    const [detailReason, setDetailReason] = useState("");
+
+
+    function handleSelectChange(e) {
+    setSelectedCode(e.target.value);
+    }
+
+     // 댓글 신고하기
+    function handleReportClick(){
+        //console.log("신고 버튼 클릭");
+
+        if (!selectedCode) {
+        alert("신고 사유를 선택해주세요.");
+        return;
+        }
+        
+        if(!window.confirm("댓글을 신고하시겠습니까?")) return; // 댓글 신고 ok 일 경우에만 axios 실행
+
+        
+        // 댓글 신고 axios
+        let options = {};
+        options.url = serverUrl + "/news/comment/report";
+        options.method = "post";
+        options.data = {
+            commentNo : comment.commentNo,
+            reportCode : selectedCode,
+            reportMemberNo : loginMember.memberNo,
+            detailReason : detailReason
+        }
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+            // 성공 -> 팝업 닫기
+            onClose();
+        });
+        
+    }
+
+    function chgDetailReason(e){
+        setDetailReason(e.target.value);
+    }
+    
+    return(
+        <div className="modal-overlay">
+            <div className="modal-content">
+                <h3>신고하기</h3>
+                <div style={{ margin: "15px 0" }}>
+                    <p><strong>신고 댓글</strong></p>
+                    <div className="button-group">
+                        <span>댓글 번호: {comment.commentNo}</span> <br />
+                        <span>댓글 내용: {comment.commentContent}</span> <br />
+                    </div>
+
+                    <div style={{ marginTop: "10px" }}>
+                        <label htmlFor="reportCode"><strong>신고 사유 선택</strong></label>
+                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange}>
+                            <option value="">-- 사유를 선택하세요 --</option>
+                            {codeList.map((code) => (
+                                <option key={code.reportCode} value={code.reportCode}>
+                                    {code.reportReason}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <input type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
+                    </div>
+                </div>
+
+                <button onClick={handleReportClick}>신고하기</button>
+                <button onClick={onClose}>닫기</button>
+            </div>
+        </div>
+    );
+
+
+
+
 }
