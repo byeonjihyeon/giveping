@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 import './news.css';
+import axios from "axios";
 
 export default function NewsView(){
     const param = useParams();
@@ -16,10 +17,55 @@ export default function NewsView(){
     const [news, setNews] = useState({});
 
     //로그인 회원 정보 (관리자일 경우에만 수정, 삭제 버튼 활성화)
-    const {loginMember} = useUserStore(); 
+    const {isLogined, setIsLogined, loginMember, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken} = useUserStore();
 
     // 댓글 리스트 저장 변수
     const [commentList, setCommentList] = useState([]);
+
+    // 댓글 등록 시 입력 값 상태 변수
+    const [newComment, setNewComment] = useState("");
+
+    // 댓글 등록 핸들러
+    function submitComment(){
+
+        // 입력된 댓글 내용이 없을 경우 return
+        if(!newComment.trim()){
+            alert("댓글 내용을 입력해주세요");
+            return;
+        }
+
+        let options={};
+        options.url = serverUrl + "/news/comment";
+        options.method="post";
+        options.data ={
+            memberNo : loginMember.memberNo,
+            newsNo : newsNo,
+            commentContent : newComment
+        };
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData); // 등록 완료 시, true 반환
+            if(res.data.resData){
+                // 등록 완료일 경우
+                reloadCommentList(); // 댓글 목록 다시 불러오기
+                setNewComment(""); // 입력창 비우기
+            }
+        })
+    }
+
+    // 댓글 조회 reload
+    function reloadCommentList() {
+        let options = {};
+        options.url = serverUrl + '/news/comment/' + newsNo;
+        options.method = 'get';
+
+        axiosInstance(options)
+        .then(function(res) {
+            setCommentList(res.data.resData);
+        });
+    }
+
 
     // 소식글 상세 정보 조회
     useEffect(function(){
@@ -27,13 +73,11 @@ export default function NewsView(){
         options.url = serverUrl + '/news/' + newsNo;
         options.method = 'get';
 
-
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
             setNews(res.data.resData);
         });
-
     }, []);
 
     // 소식글 댓글 리스트 조회
@@ -113,7 +157,7 @@ export default function NewsView(){
                     }
                 </div>
                 {
-                    loginMember != null && loginMember.memberLevel == 1
+                    loginMember != null && (loginMember.memberLevel == 1 || loginOrg != null)
                     ?
                     <div className="view-btn-zone">
                         <Link to={"/news/update/" + news.newsNo} className="btn-primary lg">수정</Link>
@@ -124,6 +168,19 @@ export default function NewsView(){
             </div>
 
             <hr /><hr /><hr /><hr />
+            {
+                loginMember !=null && loginMember.memberLevel ==2
+                ?
+                <div className="comment-write-box">
+                            <input type="text" value={newComment} 
+                                    onChange={function(e) {setNewComment(e.target.value);
+                                                }}
+                                    placeholder="댓글을 입력하세요" style={{width: '70%', marginRight: '10px'}}/>
+                            <button className="btn-primary" onClick={submitComment}>댓글등록</button>
+                </div>
+                :
+                ''
+            }
             <table className="tbl">
             <thead>
                 <tr>
@@ -275,16 +332,15 @@ function Comment(props){
             </td>
 
             {
-                loginMember != null && loginMember.memberNo == comment.memberNo
-                ?
-                ''
-                : 
+                isLogined &&
+                loginMember?.memberNo != null && // 일반 회원인지 확인
+                loginMember.memberNo !== comment.memberNo && // 본인이 작성한 댓글 아님
                 <td>
                     <button onClick={openReportPopup}>신고</button>
-                    {/* 신고 팝업 */}
-                    {isReportOpen && <Report onClose={closeReportPopup} comment={comment}/>}
+                    {isReportOpen && <Report onClose={closeReportPopup} comment={comment} />}
                 </td>
             }
+
         </tr>
     );
 }
