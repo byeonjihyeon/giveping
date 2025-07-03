@@ -155,6 +155,16 @@ public class OrgController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+
+	//단체 주요 카테고리 조회
+	@GetMapping("/category/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectOrgCategories(@PathVariable int orgNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "", fileUtil, uploadPath);
+		System.out.println(orgNo);
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}	
+
 	//비밀번호 확인
 	@PostMapping("/chkPw/{orgNo}/{orgPw}")
 	public ResponseEntity<ResponseDTO> checkPw(@PathVariable int orgNo, @PathVariable String orgPw) {
@@ -194,6 +204,7 @@ public class OrgController {
 		}
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+
 	}
 
 	//단체 프로필 초기화(삭제)

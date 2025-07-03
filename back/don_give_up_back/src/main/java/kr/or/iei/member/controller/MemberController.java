@@ -1,6 +1,7 @@
 package kr.or.iei.member.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,14 +25,18 @@ import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
+import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
 import kr.or.iei.member.model.service.MemberService;
+import kr.or.iei.org.model.dto.Org;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/member")
 public class MemberController {
+
+    private final JwtUtils jwtUtils;
 
 	@Autowired
 	private MemberService service;
@@ -41,6 +47,10 @@ public class MemberController {
 	
 	@Value("${file.uploadPath}")
 	private String uploadPath;
+
+    MemberController(JwtUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
+    }
 
 	//토큰 재발급
 	@PostMapping("/refresh")
@@ -340,7 +350,33 @@ public class MemberController {
 		}
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
-
+	}
+	
+	//회원 관심단체 조회
+	@GetMapping("/orgLike/{reqPage}/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectOrgLikeList(@PathVariable int reqPage, @PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회 중, 오류가 발생하였습니다.", false, "error");
+		 
+		try {
+			//회원 관심단체 목록과 페이지 네비게이션 정보 조회
+			HashMap<String, Object> paraMap = service.selectOrgLikeList(reqPage, memberNo);
+			res= new ResponseDTO(HttpStatus.OK, "", paraMap , uploadPath);
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//한개의 단체 조회
+	@GetMapping("/orgDetail/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectOrgCategories(@PathVariable int orgNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "", fileUtil, uploadPath);
+		System.out.println(orgNo);
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+		
 	}
 	
 }
