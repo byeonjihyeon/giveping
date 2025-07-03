@@ -105,7 +105,8 @@ export default function BizView(){
                                 </tr>
                             </tbody>
                         </table>
-                        {/* loginMember.orgNo == donateBiz.orgNo인 경우 기부하기 버튼 보이지 않음 */}
+                        {/* (기부단체는 본인 사업에 기부못함) 
+                        loginMember.orgNo == donateBiz.orgNo인 경우 기부하기 버튼 보이지 않음 */}
                         {
                             loginMember != null && loginMember.memberNo != donateBiz.orgNo
                             ?
@@ -167,6 +168,7 @@ export default function BizView(){
                         </tbody>
                     </table>
                     <br /> <hr />
+                    {/* 관리자거나, 해당 기부 사업의 주체 단체일 경우에만 기부한 회원 리스트 버튼 생성 */}
                     {
                         loginMember != null && (loginMember.memberLevel == 1 || loginMember.orgNo ==  donateBiz.orgNo)
                         ?
