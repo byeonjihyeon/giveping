@@ -1,20 +1,30 @@
 package kr.or.iei.member.controller;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.model.dto.ResponseDTO;
+import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.member.model.dto.Member;
+import kr.or.iei.member.model.dto.UpdateMember;
 import kr.or.iei.member.model.service.MemberService;
 
 @RestController
@@ -25,6 +35,13 @@ public class MemberController {
 	@Autowired
 	private MemberService service;
 	
+
+	@Autowired
+	private FileUtil fileUtil;
+	
+	@Value("${file.uploadPath}")
+	private String uploadPath;
+
 	//토큰 재발급
 	@PostMapping("/refresh")
 	public ResponseEntity<ResponseDTO> refreshToken(@RequestBody Member member) {
@@ -42,6 +59,7 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+
 	
 	//아이디 중복 체크
 	@GetMapping("/{memberId}/chkId")
@@ -101,6 +119,228 @@ public class MemberController {
 		}
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//회원 상세조회 
+	@GetMapping("/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectMember(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 조회중, 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			Member member = service.selectMember(memberNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", member, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//회원 정보수정
+	@PatchMapping
+	public ResponseEntity<ResponseDTO> updateMember(@RequestBody UpdateMember updateMember){							
+		Member updMember = updateMember.getMember(); //수정할 회원정보가 담긴 객체(회원번호, 이름, 생년월일, 전화번호, 이메일, 주소)
+		List<String> delCtgList = updateMember.getDelCategory(); //기존 관심 카테고리에서 삭제해야할 리스트
+		List<String> addCtgList = updateMember.getAddCategory(); //추가해야할 회원의 관심 카테고리 리스트
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 수정중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.updateMember(updMember, delCtgList, addCtgList);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "회원 수정 완료하였습니다.",true, "success");		//현재저장된 프로파일명 전
+				
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "회원 수정중, 오류가 발생하였습니다", false, "warning"); 
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//회원관심카테고리 조회
+	@GetMapping("/category/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectCategory(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			List<String> ctgList = service.selectCategory(memberNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", ctgList, "");
+			
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//회원 프로필 파일명(서버에 저장된) 조회
+	@GetMapping("/profile/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectProfile(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.OK, "프로필 조회중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			String filePath = service.selectProfile(memberNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", filePath, "");
+			
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	
+	//회원 프로필(이미지) 초기화
+	@PatchMapping("/profile/{memberNo}")
+	public ResponseEntity<ResponseDTO> deleteProfile(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "초기화 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			String prevFilePath = service.deleteProfile(memberNo);	//preFilePath : 서버에 저장된 기존파일명
+			
+			//기존 파일 삭제 처리
+			if(prevFilePath != null) {
+				String savePath = uploadPath + "/member/";
+				File delFile = new File(savePath + prevFilePath.substring(0, 8) + File.separator + prevFilePath);
+				
+				if(delFile.exists()) {
+					delFile.delete();
+				}
+				
+				res = new ResponseDTO(HttpStatus.OK, "초기화 완료하였습니다.", true, "success");
+				
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "초기화 중 오류가 발생하였습니다.", false, "warning");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//회원 프로필(이미지) 수정
+	@PostMapping("/profile")
+	public ResponseEntity<ResponseDTO> updateProfile(
+														int memberNo,							//회원번호
+														String memberProfile, 					//기존 파일명										
+														@ModelAttribute MultipartFile profile	//업로드할 파일 객체
+													){
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 변경 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			String filePath = fileUtil.uploadFile(profile, "/member/");	//서버에 저장후, 저장된 파일명 반환
+			
+			Member member = new Member();
+			member.setMemberNo(memberNo);
+			member.setMemberProfile(filePath);
+			
+			int result = service.updateProfile(member);	//member객체로 회원번호, 새롭게 저장된 파일명 세팅하여 전달
+			
+			if(result > 0) {
+				if(memberProfile != null) {	//기존 저장되어 있는 프로필 이미지가 있다면
+					String savePath = uploadPath + "/member/";
+					File delFile = new File(savePath + memberProfile.substring(0, 8) + File.separator + memberProfile);
+					
+					if(delFile.exists()) {
+						delFile.delete();	//파일 삭제
+					}
+				}
+				
+				//프론트에서 재랜더링 하기위해 filePath 전달
+				res = new ResponseDTO(HttpStatus.OK, "수정 완료하였습니다.", filePath, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "수정 중, 오류가 발생하였습니다.", false, "warning");
+			}
+		
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//비밀번호 변경 - 기존 비밀번호 체크
+	@PostMapping("/checkPw")
+	public ResponseEntity<ResponseDTO> checkPw(@RequestBody Member member){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기존 비밀번호 확인중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			boolean chkResult = service.checkPw(member);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", chkResult, "");
+
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//비밀번호 변경 - 변경 처리
+	@PatchMapping("/updatePw")
+	public ResponseEntity<ResponseDTO> updateMemberPw(@RequestBody Member member){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 변경중, 오류가 발생하였습니다.", false, "error");
+		
+		try{
+			int result = service.updateMemberPw(member);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "비밀번호가 정상적으로 변경되었습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "비밀번호변경중, 오류가 발생하였습니다.", false, "warning");
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//회원 탈퇴 - 회원 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
+	@PatchMapping("/delete/{memberNo}")
+	public ResponseEntity<ResponseDTO> deleteMember(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원탈퇴중, 오류가 발생하였습니다.",false, "error");
+		
+		try {
+			 HashMap<String, Object> resultMap = service.deleteMember(memberNo);
+			 int result = (Integer) resultMap.get("result");
+		     String delFileName = (String) resultMap.get("delFileName");
+			 
+			 if(result > 0) {	//db 잘 처리되었다면,
+				 if(delFileName != null) {	//서버에 저장된 파일 삭제
+					 String savePath = uploadPath + "/member/";
+					 File delFile = new File(savePath + delFileName.substring(0, 8) + File.separator + delFileName);
+					
+					if(delFile.exists()) {
+						delFile.delete();
+					}
+				 }
+				 res = new ResponseDTO(HttpStatus.OK, "회원 탈퇴 완료하였습니다.", true, "success" );
+			 }else {
+				 res = new ResponseDTO(HttpStatus.OK, "회원 탈퇴중 오류가 발생하였습니다.", false, "warning" );
+			 }
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+
 	}
 	
 }

@@ -1,8 +1,12 @@
 package kr.or.iei.member.model.service;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.LoginMember;
@@ -86,5 +90,124 @@ public class MemberService {
 			return null;
 		}
 	}
+	
+	//회원 상세 조회
+	public Member selectMember(int memberNo) {
+		
+		Member m = dao.selectMember(memberNo);
+		m.setMemberPw(null);
+		
+		return m;
+	}
+	
+	
+	//회원 관심카테고리조회
+	public List<String> selectCategory(int memberNo) {
+		
+		return dao.selectCategory(memberNo);
+	}
+	
+	//회원 정보수정 (카테고리 포함)
+	public int updateMember(Member updMember, List<String> delCtgList, List<String> addCtgList) {
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("memberNo", updMember.getMemberNo());
+		
+		
+		
+		//1. 기존에서 삭제해야할 리스트 제거
+		if(delCtgList != null && !delCtgList.isEmpty()) {
+			paraMap.put("delCtgList", delCtgList);
+			dao.delMemberCategory(paraMap);
+			
+		}
+		
+		//2. 관심카테고리 추가
+		if(addCtgList != null && !addCtgList.isEmpty()) {
+			for(int i=0; i < addCtgList.size(); i++) {
+				DonateCode donateCode = new DonateCode();
+				donateCode.setDonateCode(addCtgList.get(i));
+				donateCode.setMemberNo(updMember.getMemberNo());
+				dao.insertMemberDonation(donateCode);
+				
+			}
+		}
+		
+		//3. 회원정보 수정
+		int result = dao.updateMember(updMember);
+		
+		return result;
+		
+	}
+	
+	
+	//회원 프로필 파일명(서버에 저장된) 조회
+	public String selectProfile(int memberNo) {
+		return dao.selectProfile(memberNo);
+	}
+	
+	//회원 프로필(이미지) 초기화
+	@Transactional
+	public String deleteProfile(int memberNo) {
+		
+		//기존 파일명 조회
+		String prevFilePath = dao.selectProfile(memberNo);
+		
+		//DB 삭제처리
+		int result = dao.deleteProfile(memberNo);
+		
+		if(result > 0) {
+			return prevFilePath;
+		}else {
+			return null;
+		}
+		
+	}
+	
+	//회원 프로필(사진) 업데이트
+	@Transactional
+	public int updateProfile(Member member) {
+		return dao.updateProfile(member);
+	}
+	
+	//기존 비밀번호 체크
+	public boolean checkPw(Member member) {
+		
+		//사용자 입력 비밀번호 = 평문, DB의 pw는 암호화된 비밀번호이므로, BCrpyt 메소드사용
+		Member chkMember = dao.selectMember(member.getMemberNo());
+		
+		//기존 비밀번호 일치 결과 (boolean)
+		return encoder.matches(member.getMemberPw(), chkMember.getMemberPw());
+	}
+	
+	//회원 비밀번호 변경
+	@Transactional
+	public int updateMemberPw(Member member) {
+		//평문 -> 암호화
+		String encodePw = encoder.encode(member.getMemberPw());
+		member.setMemberPw(encodePw);
+		
+		//DB 업데이트
+		return dao.updateMemberPw(member);
+	}
+	
+	//회원 탈퇴 -> 회원 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
+	@Transactional
+	public HashMap<String, Object> deleteMember(int memberNo) {
+		
+		//1. 서버에 저장된 프로필 사진이 있는지 조회
+		String delFileName = dao.selectProfile(memberNo);
+		
+		//2. 회원 정보 업데이트 member_deleted 0 -> 1, (+ 기존 프로필이 있다면 null 처리)
+		int result = dao.deleteMember(memberNo);
+		
+		HashMap<String, Object> resultMap = new HashMap<>();
+		resultMap.put("delFileName", delFileName);	//서버에서 삭제할 파일명
+		resultMap.put("result", result);
+		
+		return resultMap;
+		
+	}
+
 
 }
