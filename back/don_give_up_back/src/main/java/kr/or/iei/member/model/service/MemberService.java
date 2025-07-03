@@ -1,5 +1,6 @@
 package kr.or.iei.member.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -10,9 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.LoginMember;
+import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.JwtUtils;
+import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.member.model.dao.MemberDao;
 import kr.or.iei.member.model.dto.Member;
+import kr.or.iei.org.model.dto.Org;
 
 @Service
 public class MemberService {
@@ -24,7 +28,10 @@ public class MemberService {
 	
 	@Autowired
 	private JwtUtils jwtUtils;
-
+	
+	@Autowired
+	private PageUtil pageUtil;
+	
 	//토큰 재발급
 	public String refreshToken(Member member) {
 		//accessToken 재발급 처리
@@ -207,6 +214,28 @@ public class MemberService {
 		
 		return resultMap;
 		
+	}
+	
+	//회원 관심 단체리스트 조회
+	public HashMap<String, Object> selectOrgLikeList(int reqPage, int memberNo) {
+		
+		int viewCnt = 12;							//한 페이지당 게시글 수
+		int pageNaviSize= 5;						//페이지 네비게이션 길이
+		int totalCount = dao.selectOrgLikeCnt(memberNo);	//전체 관심단체 수	
+		
+		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("memberNo", memberNo);
+		paraMap.put("pageInfo", pageInfo);
+		
+		//관심단체 목록 (회원번호, 시작번호, 끝번호 전달)
+		ArrayList<Org> orgLikeList = dao.selectOrgLikeList(paraMap); 
+		
+		paraMap.put("orgLikeList", orgLikeList);
+		
+		//회원번호, 페이지정보(pageInfo), 회원리스트 전달
+		return paraMap;
 	}
 
 

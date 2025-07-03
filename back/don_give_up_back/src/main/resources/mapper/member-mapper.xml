@@ -62,7 +62,8 @@
 		   member_phone as memberPhone,
 		   to_char(member_birth, 'yyyy/mm/dd') as memberBirth,
 		   member_email as memberEmail,
-		   member_addr as memberAddr,
+		   member_addr_main as memberAddrMain,
+		   member_addr_detail as memberAddrDetail,
 		   member_profile as memberProfile,
 		   total_money as totalMoney,
 		   (select sum(donate_money) from tbl_donation_list d where d.member_no = m.member_no
@@ -81,7 +82,8 @@
 	   	   member_phone = #{memberPhone},
 	   	   member_birth = #{memberBirth},
 	   	   member_Email = #{memberEmail},
-	   	   member_addr = #{memberAddr}
+	   	   member_addr_main = #{memberAddrMain},
+	   	   member_addr_detail = #{memberAddrDetail}
 	 where member_no = #{memberNo} 	   
 	</update>
 	
@@ -152,5 +154,36 @@
 	   where member_no = #{_parameter} 
 	 </update>
 	
-
-</mapper>
+	<!-- 회원 관심단체 전체수 조회 -->
+	<select id="selectOrgLikeCnt"
+	parameterType="_int"
+	resultType="_int">
+	select count(*) from tbl_member_org 
+     where member_no = #{parameter}
+	</select>
+	
+	<!-- 회원 관심단체 리스트 조회 -->
+	<select id="selectOrgLikeList"
+	parameterType="map"
+	resultType="Org">
+    select org_no, org_name, org_thumb
+    from(
+         select rownum rnum, a.*
+           from  (
+                 select *
+                   from tbl_org
+                  where org_no in (select org_no
+                                     from tbl_member_org
+                                    where member_no = #{memberNo}) 
+                   ) a
+          ) a
+    where rnum between #{pageInfo.start} and #{pageInfo.end}                                         
+	</select>
+	
+	<resultMap type="Org" id="orgMap">
+		<result column="org_no" property="orgNo" />
+		<result column="org_name" property="orgName" />
+		<result column="org_thumb" property="orgThumb" />
+	</resultMap>
+	
+</mapper>	

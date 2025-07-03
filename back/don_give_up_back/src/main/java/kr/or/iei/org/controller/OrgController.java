@@ -171,4 +171,14 @@ public class OrgController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//단체 주요 카테고리 조회
+	@GetMapping("/category/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectOrgCategories(@PathVariable int orgNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "", fileUtil, uploadPath);
+		System.out.println(orgNo);
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+		
+	}
 }

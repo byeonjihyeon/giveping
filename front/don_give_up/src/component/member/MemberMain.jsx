@@ -10,6 +10,7 @@ import NewsList from './NewsList';
 import ProfileUpdate from './ProfileUpdate';
 import CalendarTest from './CalendarTest';
 import MemberDelete from './MemberDelete';
+import PaymentFrm from './PaymentFrm';
 
 import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
@@ -67,6 +68,7 @@ export default function MemberMain(){
                     <Route path='changeProfile' element={<ProfileUpdate member={member} setMember={setMember}/>} />
                     <Route path='calendarTest' element={<CalendarTest />} />
                     <Route path='delete' element={<MemberDelete member={member} />} />
+                    <Route path='money/charge' element={<PaymentFrm />} />
                 </Routes>
             </div>
         </div>
