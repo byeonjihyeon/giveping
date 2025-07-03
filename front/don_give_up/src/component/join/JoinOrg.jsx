@@ -165,7 +165,7 @@ function insertOrg() {
         { valid: pwChk !== 1 && orgPwRe !== "", message: "비밀번호를 확인하세요." },
         { valid: orgPwRe === "", message: "비밀번호 확인을 입력하세요." },
         { valid: org.orgName === "", message: "단체명을 입력하세요." },
-        { valid: biznumChk !== 1, message: "사업자번호를 확인하세요." },
+        { valid: biznumChk !== 1, message: "사업자번호를 확인하세요.(XXX-XX-XXXXX) 형식" },
         { valid: phoneChk !== 1, message: "전화번호를 확인하세요." },
         { valid: emailChk !== 1, message: "이메일을 확인하세요." },
         { valid: org.orgAddrMain === "", message: "주소를 입력하세요." },

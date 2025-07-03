@@ -196,4 +196,20 @@ insert into tbl_donation_list
     (seq_donate.nextval, #{bizNo}, #{memberNo}, #{donateMoney})
 </insert>
 
+<!-- 설문조사 질문 리스트 조회 -->
+<select id="selectSurveyQuestion" resultType="SurveyQuestion">
+select QUESTION_NO as questionNo,
+	   QUESTION_CONTENT as questionContent,
+	   QUESTION_WEIGHT as questionWeight
+from tbl_survey_question
+</select>
+
+<!-- 설문조사 답변 등록 -->
+	<insert id="regSurveyAnswer" parameterType="SurveyAnswer">
+		insert into tbl_survey_answer
+		(answer_no, question_no, member_no, biz_no, answer_score)
+		values
+		(seq_answer.nextval, #{questionNo}, #{memberNo}, #{bizNo}, #{answerScore})
+	</insert>
+
 </mapper>

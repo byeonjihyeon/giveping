@@ -26,3 +26,14 @@
   border-radius: 8px;
   width: 400px;
 }
+
+/* 댓글 창 css */
+.comment-write-box {
+    margin: 20px 0;
+}
+.comment-write-box input {
+    padding: 5px;
+}
+.comment-write-box button {
+    padding: 5px 10px;
+}

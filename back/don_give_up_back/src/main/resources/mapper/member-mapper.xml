@@ -47,7 +47,7 @@
 			   member_level as memberLevel,
 			   member_name as memberName
 		  from tbl_member
-		 where member_id = #{memberId}
+		 where member_id = #{memberId} and member_deleted = 0
 	</select>
 	
 

@@ -10,6 +10,8 @@ import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
 import kr.or.iei.biz.model.dto.BizMember;
 import kr.or.iei.biz.model.dto.Keyword;
+import kr.or.iei.biz.model.dto.SurveyAnswer;
+import kr.or.iei.biz.model.dto.SurveyQuestion;
 
 @Mapper
 public interface BizDao {
@@ -29,6 +31,10 @@ public interface BizDao {
 	BizMember selectMemberMoney(int memberNo);
 
 	int bizDonate(BizDonationList bizDonationList);
+
+	ArrayList<SurveyQuestion> selectSurveyQuestion();
+
+	int regSurveyAnswer(SurveyAnswer answer);
 	
 
 }

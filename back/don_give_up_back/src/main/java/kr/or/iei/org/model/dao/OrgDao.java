@@ -1,5 +1,7 @@
 package kr.or.iei.org.model.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.common.model.dto.DonateCode;
@@ -26,6 +28,19 @@ public interface OrgDao {
 	//단체 1개 정보 조회
 	Org selectOneOrg(int orgNo);
 
+	//단체 주요 카테고리 조회
+	List<String> selectOrgDonation(int orgNo);
+	
+	//단체 정보 수정
 	int updateOrg(Org org);
+
+	//단체 주요 카테고리 삭제
+	void deleteOrgDonation(int orgNo);
+
+	//비밀번호 확인
+	String checkPw(int orgNo);
+
+	//비밀번호 변경
+	int updatePw(Org org);
 
 }
