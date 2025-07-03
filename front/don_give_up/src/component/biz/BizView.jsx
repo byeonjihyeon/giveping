@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 import Survey from './Survey';
+import BizFile from './BizFile';
 
 export default function BizView(){
     const {loginMember} = useUserStore();
     const param = useParams();
     const bizNo = param.bizNo;
-    console.log(bizNo);
+    //console.log(bizNo);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -32,8 +33,13 @@ export default function BizView(){
     // 관리자 전용 버튼 가시화 위한 변수 선언
     const [showMemberList, setShowMemberList] = useState(false);
 
+    const [bizFile, setBizFile] = useState([]); // 게시글에 대한 첨부파일 객체
+    const [prevBizFileList, setPrevBizFileList] = useState([]); //BizFile 객체 리스트 
+    const [delBizFileNo, setDelBizFileNo] = useState([]); //삭제 대상 파일 번호 저장 배열
+
+    
     function openDonatePopup() {
-        console.log("기부하기 버튼 클릭");
+        //console.log("기부하기 버튼 클릭");
         if(loginMember.orgNo == donateBiz.orgNo){
             alert("같은 단체의 사업에 기부할 수 없습니다.");
             return;
@@ -43,7 +49,7 @@ export default function BizView(){
     }
 
     function openSurveyPopup() {
-        console.log("설문조사 버튼 클릭");
+        //console.log("설문조사 버튼 클릭");
         setIsSurveyOpen(true);
     }
 
@@ -64,8 +70,8 @@ export default function BizView(){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
-            console.log(res.data.resData.bizMemberList);
+            //console.log(res.data.resData);
+            //console.log(res.data.resData.bizMemberList);
             setDonateBiz(res.data.resData);
             setMemberList(res.data.resData.bizMemberList);
             //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
@@ -73,22 +79,57 @@ export default function BizView(){
 
     }, []);
 
-    const navigate = useNavigate();
-    //삭제하기 클릭 시, 동작 함수
-    /*
-    function deleteBoard(){
+    useEffect(function(){
         let options = {};
-        options.url = serverUrl + '/biz/' + board.bizNo;
-        options.method = 'delete';
+        options.url = serverUrl + '/biz/file/' + bizNo;
+        options.method = 'get';
 
         axiosInstance(options)
         .then(function(res){
-            if(res.data.resData){
-                navigate('/biz/list');
-            }
+            //console.log(res.data.resData);
+            setPrevBizFileList(res.data.resData);
+            //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
         });
+        console.log("삭제 대상 파일 번호 배열 변경됨:", delBizFileNo);
+    }, []);
+
+    const navigate = useNavigate();
+
+    // 파일 업로드 버튼 클릭 시 호출되는 함수
+    function updateFile(){
+        const form = new FormData();
+
+        // bizNo 보내기
+        form.append("bizNo", bizNo);
+        //추가 첨부파일
+        for(let i=0; i<bizFile.length; i++){
+            form.append('bizFile', bizFile[i]);
+        }
+        //기존 첨부파일 중, 삭제 대상 파일
+        for(let i=0; i<delBizFileNo.length; i++){
+            form.append('delBizFileNo', delBizFileNo[i]);
+        }
+        
+       
+        console.log("delBizFileNo" + delBizFileNo);
+        
+        
+        let options = {};
+            options.url = serverUrl + '/biz/file';
+            options.method = 'post'; //수정 == PUT or PATCH == 일부 컬럼 정보 수정 == PATCH
+            options.data = form;
+            options.headers = {};
+            options.headers.contentType = 'multipart/form-data';
+            options.headers.processData = false; //쿼리 스트링 변환 X
+
+            axiosInstance(options)
+            .then(function(res){
+                console.log(res.data.resData); //true or false
+                if(res.data.resData){
+                    navigate('/biz/view/'+bizNo);
+                }
+            });
     }
-    */
 
     return (
         <section>
@@ -139,17 +180,31 @@ export default function BizView(){
                         {/* 설문조사 팝업 */}
                         {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
 
-                        <p className="file-title">첨부파일</p>
-                        <div className="file-zone">
-                            {
-                                donateBiz.fileList
-                                ? donateBiz.fileList.map(function(file, index){
-                                    return <FileItem key={"file"+index} file={file} donateBiz={donateBiz}/>
-                                  })
-                                : ''
-                            }
-                        </div>
                     </div>
+                        <section className="section biz-content-wrap">
+                            <div className="page-title">첨부파일</div>
+                            <form className="bizFile" onSubmit={function(e){
+                                e.preventDefault();
+                                updateFile(); //파일 업로드 함수 호출
+                            }}> 
+                                
+                                <BizFile loginMember={loginMember}
+                                                bizFile={bizFile}
+                                                setBizFile={setBizFile}
+                                                prevBizFileList={prevBizFileList}
+                                                setPrevBizFileList={setPrevBizFileList}
+                                                delBizFileNo={delBizFileNo}
+                                                setDelBizFileNo={setDelBizFileNo}
+                                                />
+                                <div className="biz-content-wrap">
+                                </div>
+                                <div className="button-zone">
+                                    <button type="submit" className="btn-primary lg">
+                                        파일 업로드하기
+                                    </button>
+                                </div>
+                            </form>
+                        </section>
                 </div>
                 
                 <hr/>
