@@ -62,7 +62,7 @@ function HeaderLink(){
                 </li>
                 <li>
                     {/*알림 아이콘 => 일반 회원들에게만 보임*/}
-                    {loginMember.memberLevel == 2
+                    {loginOrg || loginMember.memberLevel == 2
                      ?
                     <DotBadge />
                     : 

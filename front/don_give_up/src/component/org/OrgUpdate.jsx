@@ -39,12 +39,14 @@ export default function OrgUpdate(){
             const newOrg = res.data.resData;
             newOrg.orgUrl = "";
             
+            console.log(newOrg);
+
             //이메일 내에서 @를 기준으로 아이디와 도메인 추출
             const [emailId, emailDomain] = newOrg.orgEmail.split("@");
             
             setOrgEmailId(emailId);
             setOrgEmailDomain(emailDomain);
-            setPrevThumbPath(org.orgThumbPath);
+            setPrevThumbPath(newOrg.orgThumbPath);
 
             setOrg(newOrg);
         });
@@ -81,7 +83,6 @@ export default function OrgUpdate(){
     function chgOrg(e){
         org[e.target.id] = e.target.value;
         setOrg({...org});
-        console.log(org);
     }
 
     /*사업자번호 관련 코드*/
@@ -208,6 +209,8 @@ export default function OrgUpdate(){
             form.append("orgThumb", orgThumb);
         }
 
+        console.log(form);
+
         let options = {};
         options.url = serverUrl + "/org/update";
         options.method = "patch";
@@ -238,7 +241,7 @@ export default function OrgUpdate(){
                         <th colSpan={2}>
                             <div>
                                 <img style={{width : "100px"}} src={thumbImg ? thumbImg : prevThumbPath
-                                            ? serverUrl + "/org/thumb/" + prevThumbPath.substring(0, 8) + "/" + org.orgThumb
+                                            ? serverUrl + "/org/thumb/" + prevThumbPath.substring(0, 8) + "/" + prevThumbPath
                                             : "/images/default_profile.jpg"} onClick={function(e){
                                     thumbFileEl.current.click();
                                 }}/>

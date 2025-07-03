@@ -12,12 +12,8 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-<<<<<<< HEAD
     "@mui/icons-material": "^7.2.0",
-    "@mui/material": "^7.1.2",
-=======
     "@mui/material": "^7.2.0",
->>>>>>> b42d613715d4124bc5b4e7ecd580d480d5df625f
     "@toast-ui/react-editor": "^3.2.3",
     "axios": "^1.10.0",
     "date-fns": "^4.1.0",
