@@ -14,6 +14,8 @@ import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
 import kr.or.iei.biz.model.dto.BizMember;
 import kr.or.iei.biz.model.dto.Keyword;
+import kr.or.iei.biz.model.dto.SurveyAnswer;
+import kr.or.iei.biz.model.dto.SurveyQuestion;
 import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.PageUtil;
 
@@ -89,5 +91,18 @@ public class BizService {
 	@Transactional
 	public int bizDonate(BizDonationList bizDonationList) {
 		return dao.bizDonate(bizDonationList);
+	}
+
+	public ArrayList<SurveyQuestion> selectSurveyQuestion() {
+		return dao.selectSurveyQuestion();
+	}
+
+	@Transactional
+	public int regSurveyAnswer(List<SurveyAnswer> answerList) {
+		int result = 0;
+		for(SurveyAnswer answer : answerList) {
+			result += dao.regSurveyAnswer(answer);
+		}
+		return result;
 	}
 }

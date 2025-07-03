@@ -1,11 +1,13 @@
 package kr.or.iei.biz.controller;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +23,8 @@ import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
 import kr.or.iei.biz.model.dto.BizMember;
 import kr.or.iei.biz.model.dto.Keyword;
+import kr.or.iei.biz.model.dto.SurveyAnswer;
+import kr.or.iei.biz.model.dto.SurveyQuestion;
 import kr.or.iei.biz.model.service.BizService;
 import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.ResponseDTO;
@@ -121,6 +125,39 @@ public class BizController {
 			e.printStackTrace();
 		}
 		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	// 설문조사 질문 조회
+	@GetMapping("/survey")
+	public ResponseEntity<ResponseDTO> selectSurveyQuestion(){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "설문조사 질문 조회 중, 오류가 발생하였습니다..", null, "error");
+		
+		try {
+			ArrayList<SurveyQuestion> surveyQuestionList = service.selectSurveyQuestion();
+			if(surveyQuestionList !=null) {
+				res = new ResponseDTO(HttpStatus.OK, "", surveyQuestionList, "");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	// 설문조사 답변 등록
+	@PostMapping("/survey")
+	public ResponseEntity<ResponseDTO> regSurveyAnswer(@RequestBody List<SurveyAnswer> answerList) throws DuplicateKeyException{
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 처리 중, 오류가 발생하였습니다.", false, "error");
+		System.out.println("answerList : " +answerList);
+		try {
+			int result = service.regSurveyAnswer(answerList);
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "", true, "");				
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
