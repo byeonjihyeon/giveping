@@ -43,4 +43,13 @@ public interface OrgDao {
 	//비밀번호 변경
 	int updatePw(Org org);
 
+	//단체 프로필 조회
+	String selectThumb(int orgNo);
+
+	//단체 프로필 초기화(삭제)
+	int deleteThumb(int orgNo);
+
+	//단체 프로필 수정
+	int updateThumb(Org org);
+
 }

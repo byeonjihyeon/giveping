@@ -27,10 +27,9 @@ export default function Sidebar (props){
            <div className="profile-wrap">
                 <img src={  loginMember
                             ?   //개인 회원 로그인 시
-                                member.memberProfile ?
-                                serverUrl + "/member/" + member.memberProfile.substring(0,8) + "/" + member.memberProfile
-                                :
-                                "/images/default_profile.jpg"
+                                member.memberProfile
+                                ? serverUrl + "/member/" + member.memberProfile.substring(0,8) + "/" + member.memberProfile
+                                : "/images/default_profile.jpg"
                             :   loginOrg
                                 ?   //단체 회원 로그인 시
                                     org.orgThumbPath 

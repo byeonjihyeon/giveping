@@ -3,6 +3,8 @@
 export default function OrgDelete(){
 
     return (
-        <>탈퇴하기</>
+        <div>
+            
+        </div>
     )
 }
