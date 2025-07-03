@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.iei.biz.model.dto.Biz;
+import kr.or.iei.biz.model.dto.BizDonationList;
+import kr.or.iei.biz.model.dto.BizMember;
 import kr.or.iei.biz.model.dto.Keyword;
 import kr.or.iei.biz.model.service.BizService;
 import kr.or.iei.common.annotation.NoTokenCheck;
@@ -56,6 +58,7 @@ public class BizController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	// 게시물 상세 조회
 	@GetMapping("/{bizNo}")
 	@NoTokenCheck		// 로그인 필요 x
 	public ResponseEntity<ResponseDTO> selectOneDonateBiz(@PathVariable int bizNo){
@@ -85,6 +88,42 @@ public class BizController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	// 회원 예치금 조회하기
+	@GetMapping("/donate/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectMemberMoney(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 예치금 조회 중, 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			BizMember bizMember = service.selectMemberMoney(memberNo);
+			if(bizMember !=null) {
+				res = new ResponseDTO(HttpStatus.OK, "", bizMember, "");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	
+	// 기부하기 (insert -> TBL_DONATION_LIST)
+	@PostMapping("/donate")
+	public ResponseEntity<ResponseDTO> bizDonate(@RequestBody BizDonationList bizDonationList){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 처리 중, 오류가 발생하였습니다.", false, "error");
+		System.out.println("BizDonationList : " +bizDonationList.toString());
+		try {
+			int result = service.bizDonate(bizDonationList);
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "", true, "");				
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
 	
 	
 }

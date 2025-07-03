@@ -3,6 +3,7 @@ package kr.or.iei.org.model.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.LoginOrg;
@@ -21,12 +22,20 @@ public class OrgService {
 	@Autowired
 	private JwtUtils jwtUtils;
 
+	//토큰 재발급
+	public String refreshToken(Org org) {
+		//accessToken 재발급 처리
+		String accessToken = jwtUtils.createOrgAccessToken(org.getOrgNo(), org.getOrgName());
+		return accessToken;
+	}
+	
 	//아이디 중복체크
 	public int chkOrgId(String orgId) {
 		return dao.chkOrgId(orgId);
 	}
 
 	//회원가입
+	@Transactional
 	public int insertOrg(Org org) {
 		//1) 비밀번호 암호화
 		String encodePw = encoder.encode(org.getOrgPw());
@@ -80,4 +89,14 @@ public class OrgService {
 		}
 	}
 
+	//단체 1개 정보 조회
+	public Org selectOneOrg(int orgNo) {
+		return dao.selectOneOrg(orgNo);
+	}
+
+	//단체 정보 수정
+	@Transactional
+	public int updateOrg(Org org) {
+		return dao.updateOrg(org);
+	}
 }

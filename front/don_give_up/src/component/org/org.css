@@ -1,0 +1,11 @@
+.org-main-wrap {
+    width: 1200px;
+    margin: 0 auto;
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+}
+.org-main-mid-wrap {
+    width: 950px;
+    border: 1px solid black;
+}

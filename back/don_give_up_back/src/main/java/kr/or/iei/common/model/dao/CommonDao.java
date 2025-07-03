@@ -11,4 +11,6 @@ public interface CommonDao {
 
 	ArrayList<DonateCode> selectDonateCtg(); //기부 카테고리 조회
 
+	int countAlarm(int memberNo);
+
 }

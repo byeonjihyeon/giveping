@@ -1,13 +1,18 @@
 package kr.or.iei.biz.model.service;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import kr.or.iei.biz.model.dao.BizDao;
 import kr.or.iei.biz.model.dto.Biz;
+import kr.or.iei.biz.model.dto.BizDonationList;
+import kr.or.iei.biz.model.dto.BizMember;
 import kr.or.iei.biz.model.dto.Keyword;
 import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.PageUtil;
@@ -44,8 +49,16 @@ public class BizService {
 	}
 
 	public Biz selectOneDonateBiz(int bizNo) {
-		// TODO Auto-generated method stub
-		return dao.selectOneDonateBiz(bizNo);
+		
+		// 1. 상세 조회 시, 해당 사업에 기부한 회원 조회
+		List<BizMember> bizMemberList = dao.selectDonateMember(bizNo);
+		// 2. 기부 사업 상세 조회
+	    Biz biz = dao.selectOneDonateBiz(bizNo);
+	    
+	    // 3. 1번에서 조회된 회원 리스트를 Biz 객체에 set
+	    biz.setBizMemberList(bizMemberList);
+		
+		return biz;
 	}
 
 	public HashMap<String, Object> searchDonateBiz(Keyword keyword) {
@@ -53,7 +66,6 @@ public class BizService {
 		int viewCnt = 12;						// 한 페이지 당 게시글 수
 		int pageNaviSize = 5;					// 페이지 네비게이션 길이
 		int totalcount = dao.selectSearchCount(keyword);//전체 게시글 수
-		System.out.println("totalcount : " + totalcount);
 		
 		// 페이징 정보 (reqPage 임시로 1로 지정)
 		PageInfo pageInfo = pageUtil.getPageInfo(1, viewCnt, pageNaviSize, totalcount);
@@ -68,5 +80,14 @@ public class BizService {
 		donateBizMap.put("pageInfo", pageInfo);
 		
 		return donateBizMap;
+	}
+
+	public BizMember selectMemberMoney(int memberNo) {
+		return dao.selectMemberMoney(memberNo);
+	}
+
+	@Transactional
+	public int bizDonate(BizDonationList bizDonationList) {
+		return dao.bizDonate(bizDonationList);
 	}
 }

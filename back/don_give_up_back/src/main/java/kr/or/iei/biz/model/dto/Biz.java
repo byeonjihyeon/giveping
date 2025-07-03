@@ -35,4 +35,10 @@ public class Biz {
 	// 삭제 파일 번호 배열 저장 변수
 	private int [] delBizFileNo;
 	
+	// 특정 기부 사업에 기부한 회원 리스트 변수
+	private List<BizMember> bizMemberList;
+	
+	// 모인 기부금 액수
+	private int donateMoney;
+	
 }									

@@ -1,6 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
 import Swal from "sweetalert2";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
+import MailIcon from '@mui/icons-material/Mail';
+import DotBadge from "./DotBadge";
 
 //헤더 JSX
 export default function Header(){
@@ -53,6 +58,15 @@ function HeaderLink(){
                     {loginMember
                      ? loginMember.memberName
                      : loginOrg.orgName
+                    }
+                </li>
+                <li>
+                    {/*알림 아이콘 => 일반 회원들에게만 보임*/}
+                    {loginOrg || loginMember.memberLevel == 2
+                     ?
+                    <DotBadge />
+                    : 
+                    ""
                     }
                 </li>
                 <li>
@@ -111,7 +125,7 @@ function MainNavi(){
                 <Link to="#">후원 단체</Link>
             </li>
             <li>
-                <Link to="/biz/list">후원 사업</Link>
+                <Link to="/biz/list">기부 사업</Link>
             </li>
             <li>
                 <Link to="/news/list">소식</Link>
@@ -126,7 +140,7 @@ function MainNavi(){
                 : loginOrg
                 ?
                 <OrgMyPage/>
-                : loginMember.memberLeve == 2
+                : loginMember.memberLevel == 2
                 ?
                 <MemberMyPage/>
                 :

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import PageNavi from "../common/PageNavi";
+import './biz.css';
 
 export default function BizList() {
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -136,7 +137,7 @@ export default function BizList() {
             </div>
 
             <div className="board-list-wrap">
-                <ul className="posting-wrap">
+                <ul className="posting-wrap grid-3x4">
                     {donateBizList.map((donateBiz, index) => (
                         <BoardItem key={"donateBiz" + index} donateBiz={donateBiz} serverUrl={serverUrl} />
                     ))}
@@ -168,6 +169,12 @@ function BoardItem(props) {
     const { donateBiz, serverUrl } = props;
     const navigate = useNavigate();
 
+    // 기부금 달성률 계산
+    const goal = donateBiz.bizGoal || 0;
+    const donated = donateBiz.donateMoney || 0;
+    const percent = goal > 0 ? Math.floor((donated / goal) * 100) : 0;
+
+
     const bizStatusMap = {
         0: '미승인',
         1: '승인',
@@ -186,19 +193,25 @@ function BoardItem(props) {
                 />
             </div>
             <div className="posting-info">
-                <div className="posting-title">{donateBiz.bizName}</div>
+                <div className="posting-title">{donateBiz.orgName}</div>
                 <div className="posting-sub-info">
-                    <span>{donateBiz.orgName}</span>
-                    <span>{donateBiz.donateCtg}</span>
-                    <span>{donateBiz.bizContent}</span>
-                    <span>{donateBiz.bizDonateStart}</span>
-                    <span>{donateBiz.bizDonateEnd}</span>
-                    <span>{donateBiz.bizStart}</span>
-                    <span>{donateBiz.bizEnd}</span>
-                    <span>{donateBiz.bizGoal}</span>
-                    <span>{bizStatusMap[donateBiz.bizStatus]}</span>
-                    <span>{donateBiz.bizRegDate}</span>
-                    <span>{donateBiz.bizEdit}</span>
+                    <span>{donateBiz.bizName}</span>
+                    <span> #{donateBiz.donateCtg}</span>
+                    <br />
+                    {/* 
+                    <span>모금 기간 : {donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
+                    <br />
+                    */}
+                    <span>목표 금액 : {goal.toLocaleString()}원</span>
+                    <br />
+                    {/* 
+                    <span>모금액 : {donated.toLocaleString()}원</span>
+                    <br />
+                    */}
+                    <span>달성률 {percent}%</span>
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: percent }}></div>
+                    </div>
                 </div>
             </div>
         </li>

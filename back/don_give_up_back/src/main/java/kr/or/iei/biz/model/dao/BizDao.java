@@ -7,6 +7,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.biz.model.dto.Biz;
+import kr.or.iei.biz.model.dto.BizDonationList;
+import kr.or.iei.biz.model.dto.BizMember;
 import kr.or.iei.biz.model.dto.Keyword;
 
 @Mapper
@@ -21,6 +23,12 @@ public interface BizDao {
 	int selectSearchCount(Keyword keyword);
 
 	ArrayList<Biz> selectSearchBizList(Keyword keyword);
+
+	List<BizMember> selectDonateMember(int bizNo);
+
+	BizMember selectMemberMoney(int memberNo);
+
+	int bizDonate(BizDonationList bizDonationList);
 	
 
 }
