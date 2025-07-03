@@ -99,4 +99,36 @@ public class OrgService {
 	public int updateOrg(Org org) {
 		return dao.updateOrg(org);
 	}
+
+	//비밀번호 확인
+	public int checkPw(int orgNo, String orgPw) {
+		int result = 0;
+		
+		//1) 암호화된 비밀번호 가지고 오기
+		String encodePw = dao.checkPw(orgNo);
+		
+		//2) 평문 비밀번호 == 암호화 비밀번호인지 확인
+		if(encoder.matches(orgPw, encodePw)) {
+			result = 1; //일치하면 결과값 1로 변경
+		}
+		
+		return result;
+	}
+
+	//비밀번호 변경
+	@Transactional
+	public int updatePw(int orgNo, String newOrgPw) {
+		//1) 비밀번호 암호화
+		String encodePw = encoder.encode(newOrgPw);
+		
+		//2) 비밀번호 변경
+		Org org = new Org();
+		org.setOrgNo(orgNo);
+		org.setOrgPw(encodePw);
+		
+		int result = dao.updatePw(org);
+		
+		return result;
+	}
+		
 }

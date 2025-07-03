@@ -26,6 +26,13 @@ public interface OrgDao {
 	//단체 1개 정보 조회
 	Org selectOneOrg(int orgNo);
 
+	//단체 정보 수정
 	int updateOrg(Org org);
+
+	//비밀번호 확인
+	String checkPw(int orgNo);
+
+	//비밀번호 변경
+	int updatePw(Org org);
 
 }

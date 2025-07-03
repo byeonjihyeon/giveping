@@ -89,4 +89,18 @@
 		 	   </if>
 		 where org_no = #{orgNo}
 	</update>
+	
+	<!-- 비밀번호 확인 -->
+	<select id="checkPw" parameterType="_int" resultType="string">
+		select org_pw as orgPw
+		  from tbl_org
+		 where org_no = #{orgNo}
+	</select>
+	
+	<!-- 비밀번호 변경 -->
+	<update id="updatePw" parameterType="Org">
+		update tbl_org
+		   set org_pw = #{orgPw}
+		 where org_no = #{orgNo}
+	</update>
 </mapper>

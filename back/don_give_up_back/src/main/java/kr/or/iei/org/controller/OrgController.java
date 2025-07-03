@@ -171,4 +171,45 @@ public class OrgController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//비밀번호 확인
+	@PostMapping("/chkPw/{orgNo}/{orgPw}")
+	public ResponseEntity<ResponseDTO> checkPw(@PathVariable int orgNo, @PathVariable String orgPw) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 확인 중 오류가 발생했습니다.", false, "error");
+
+		try {
+			int result = service.checkPw(orgNo, orgPw);
+			
+			if(result > 0) {				
+				res = new ResponseDTO(HttpStatus.OK, "비밀번호가 확인되었습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "비밀번호가 일치하지 않습니다.", false, "warning");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//비밀번호 변경
+	@PostMapping("/updPw/{orgNo}/{newOrgPw}")
+	public ResponseEntity<ResponseDTO> updatePw(@PathVariable int orgNo, @PathVariable String newOrgPw) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 변경 중 오류가 발생했습니다.", false, "error");
+		
+		try {
+			int result = service.updatePw(orgNo, newOrgPw);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "비밀번호가 변경되었습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "비밀번호 변경 중 오류가 발생했습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }

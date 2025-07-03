@@ -158,7 +158,7 @@ export default function OrgUpdate(){
         // 유효성 조건 리스트
         const validations = [
             { valid: org.orgName === "", message: "단체명을 입력하세요." },
-            { valid: biznumChk !== 1, message: "사업자번호를 확인하세요." },
+            { valid: biznumChk !== 1, message: "사업자번호를 확인하세요.(XXX-XX-XXXXX 형식)" },
             { valid: phoneChk !== 1, message: "전화번호를 확인하세요." },
             { valid: emailChk !== 1, message: "이메일을 확인하세요." },
             { valid: org.orgAddrMain === "", message: "주소를 입력하세요." },
@@ -209,8 +209,6 @@ export default function OrgUpdate(){
             form.append("orgThumb", orgThumb);
         }
 
-        console.log(form);
-
         let options = {};
         options.url = serverUrl + "/org/update";
         options.method = "patch";
@@ -240,9 +238,13 @@ export default function OrgUpdate(){
                     <tr>
                         <th colSpan={2}>
                             <div>
-                                <img style={{width : "100px"}} src={thumbImg ? thumbImg : prevThumbPath
-                                            ? serverUrl + "/org/thumb/" + prevThumbPath.substring(0, 8) + "/" + prevThumbPath
-                                            : "/images/default_profile.jpg"} onClick={function(e){
+                                <img
+                                style={{width : "100px"}}
+                                src={/*새로운 썸네일 등록 시 새로운 썸네일 보여지도록, 새로운 썸네일 등록 안 하면 기존 썸네일 보여지도록, 기존 썸네일 없다면 기본 프로필 사진*/
+                                    thumbImg ? thumbImg : prevThumbPath
+                                    ? serverUrl + "/org/thumb/" + prevThumbPath.substring(0, 8) + "/" + prevThumbPath
+                                    : "/images/default_profile.jpg"}
+                                onClick={function(e){
                                     thumbFileEl.current.click();
                                 }}/>
                                 <input type="file" accept="image/*" style={{display : "none"}} ref={thumbFileEl} onChange={chgThumbFile}/>
