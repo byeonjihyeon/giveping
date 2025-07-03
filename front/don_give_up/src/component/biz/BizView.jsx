@@ -3,6 +3,7 @@ import createInstance from "../../axios/Interceptor";
 import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
+import Survey from './Survey';
 
 export default function BizView(){
     const {loginMember} = useUserStore();
@@ -22,8 +23,11 @@ export default function BizView(){
     //로그인 회원 정보 (수정, 삭제 버튼 활성화)
     //const {loginMember} = useUserStore(); 
 
-    // 팝업 모달을 위한 변수 선언
+    // 기부 팝업 모달을 위한 변수 선언
     const [isDonateOpen, setIsDonateOpen] = useState(false);
+
+    // 기부하기 팝업 모달을 위한 변수 선언
+    const [isSurveyOpen, setIsSurveyOpen] = useState(false);
 
     // 관리자 전용 버튼 가시화 위한 변수 선언
     const [showMemberList, setShowMemberList] = useState(false);
@@ -36,6 +40,15 @@ export default function BizView(){
         }else{
             setIsDonateOpen(true);
         }
+    }
+
+    function openSurveyPopup() {
+        console.log("설문조사 버튼 클릭");
+        setIsSurveyOpen(true);
+    }
+
+    function closeSurveyPopup() {
+        setIsDonateOpen(false);
     }
 
     function closeDonatePopup() {
@@ -115,7 +128,17 @@ export default function BizView(){
                             ''
                         }
                         {/* 기부 팝업 */}
-                        {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}              
+                        {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}
+
+                        {/* (설문조사 팝업 => 기부 이력 있는 회원만 버튼 보임)*/}
+                        {
+                            loginMember != null &&
+                            memberList.some(member => member.memberNo === loginMember.memberNo) &&
+                            <button onClick={openSurveyPopup}>설문조사</button>
+                        }
+                        {/* 설문조사 팝업 */}
+                        {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
+
                         <p className="file-title">첨부파일</p>
                         <div className="file-zone">
                             {
