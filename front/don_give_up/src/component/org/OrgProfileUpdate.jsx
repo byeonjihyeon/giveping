@@ -33,7 +33,7 @@ export default function OrgProfileUpdate(props){
             const reader = new FileReader();    //브라우저에서 파일을 비동기적으로 읽어올 객체 생성
             reader.readAsDataURL(files[0]);     //파일 데이터 읽어오기
             reader.onloadend = function(){      //모두 읽어오면, 실행할 함수
-            setProfileImg(reader.result);       //미리보기용 state변수에 세팅
+                setProfileImg(reader.result);       //미리보기용 state변수에 세팅
             
             }
         }else {
