@@ -2,6 +2,7 @@ package kr.or.iei.member.model.dto;
 
 import java.util.List;
 
+import kr.or.iei.common.model.dto.DonateCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class Member {
 	private int memberLevel;			//회원 등급(1:관리자, 2:일반회원)
 	private String memberEnrollDate;	//회원 가입일
 	private int totalMoney;				//잔액 예치금(기본값 0)
+	private int totalDonateMoney; 		//총 기부금액
 	private int memberDeleted;			//회원 탈퇴 여부(0:정상, 1:탈퇴)
 	private String memberProfile;		//회원 프로필 사진 경로
 	

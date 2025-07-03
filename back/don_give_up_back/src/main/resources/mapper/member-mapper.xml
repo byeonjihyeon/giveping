@@ -48,4 +48,106 @@
 		  from tbl_member
 		 where member_id = #{memberId}
 	</select>
+	
+	<!-- 회원번호로 회원 상세조회 -->
+	<select id="selectMember"
+	parameterType="_int"
+	resultType="Member">
+	select member_no as memberNo,
+		   member_id as memberId,
+		   member_pw as memberPw,
+		   member_name as memberName,
+		   member_phone as memberPhone,
+		   to_char(member_birth, 'yyyy/mm/dd') as memberBirth,
+		   member_email as memberEmail,
+		   member_addr as memberAddr,
+		   member_profile as memberProfile,
+		   total_money as totalMoney,
+		   (select sum(donate_money) from tbl_donation_list d where d.member_no = m.member_no
+		   ) as totalDonateMoney
+	  from tbl_member m
+	 where member_no = #{memberNo} 		   
+	</select>
+	
+	
+	
+	<!-- 회원 정보수정 -->
+	<update id="updateMember"
+	parameterType="Member">
+	update tbl_member
+	   set member_name = #{memberName},
+	   	   member_phone = #{memberPhone},
+	   	   member_birth = #{memberBirth},
+	   	   member_Email = #{memberEmail},
+	   	   member_addr = #{memberAddr}
+	 where member_no = #{memberNo} 	   
+	</update>
+	
+	<!-- 회원 관심 카테고리 조회 -->
+	<select id="selectCategory"
+	parameterType="_int"
+	resultType="String">
+	select donate_code as donateCode 
+	  from tbl_member_donation
+	 where member_no = #{member.memberNo}
+	</select>
+	
+	<!-- 프로필 파일명 조회(서버저장용) -->
+	<select id='selectProfile'
+	parameterType="_int"
+	resultType="String">
+	select member_profile as memberProfile
+	  from tbl_member where member_no = #{_parameter}
+	</select>
+	
+	
+	<!-- 회원 프로필 이미지 초기화 -->
+	<update id="deleteProfile"
+	parameterType="_int">
+	update tbl_member
+	   set member_profile = null
+	 where member_no = #{_parameter} 	   
+	</update>
+	
+	<!-- 회원 프로필 이미지 수정 -->
+	<update id="updateProfile"
+	parameterType="Member">
+	update tbl_member
+	   set member_profile = #{memberProfile}
+	 where member_no = #{memberNo} 
+	</update>
+	
+	<!-- 회원 기존 관심에서 제외된 카테고리 삭제 -->
+	<delete id='delMemberCategory'
+	parameterType="map">
+	delete from	tbl_member_donation
+	where member_no = #{memberNo} and
+	donate_code in <foreach collection="delCtgList"
+							item='donateCode'
+							open="("
+							separator=","
+							close=")">
+						#{donateCode}		
+					</foreach>	  
+	</delete>
+	
+	<!--회원 비밀번호 변경  -->
+	<update id='updateMemberPw'
+	parameterType="Member">
+	update tbl_member
+	   set member_pw = #{memberPw}
+	 where member_no = #{memberNo} 
+	</update>
+	
+	<!-- 회원 탈퇴: 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
+		member_deleted 0 -> 1
+	 -->
+	 <update id='deleteMember'
+	 parameterType="_int">
+	 update tbl_member
+	    set member_deleted = 1,
+	    	member_profile = null
+	   where member_no = #{_parameter} 
+	 </update>
+	
 </mapper>

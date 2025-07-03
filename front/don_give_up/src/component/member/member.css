@@ -32,7 +32,8 @@
 
 .profile-wrap>img {
     border-radius: 50%;
-    width: 35%;
+    width: 80px;
+    height: 80px;
     margin-bottom: 10px;
 }
 
@@ -225,4 +226,45 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
+}
+
+
+
+
+/* 회원 수정 페이지 */
+.update-frm-wrap {
+    width: 600px;
+}
+
+.input-wrap {
+    display: flex;
+    border: 1px solid black;
+}
+
+.input-title-wrap {
+    width: 20%;
+}
+.input-wrap > div{
+    height: 50px;
+}
+
+.category-wrap {
+    border: 1px solid black;
+    display: flex;
+    gap: 10px;
+}
+
+.category-name {
+    border: 1px solid black;
+    height: 50%;
+    width: 20%;
+    cursor: pointer;
+}
+
+.chosed-category {
+    background-color: lightblue;
+}
+
+.update-frm-wrap input {
+    width: 300px;
 }

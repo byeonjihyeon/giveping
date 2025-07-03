@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { NavLink } from "react-router-dom";
+import useUserStore from "../../store/useUserStore";
 
 export default function Sidebar (props){
 
     const menuList = props.menuList;
+    const member = props.member;
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+
+    const {loginMember} = useUserStore();
 
     const location = useLocation();
 
@@ -19,19 +24,24 @@ export default function Sidebar (props){
     return (
         <div className="sidebar-wrap">
            <div className="profile-wrap">
-                <img src="/images/default_profile.jpg"/>
-                <p>변초코님</p>
-                <p>byeonchoco</p>   
+                <img src={
+                            member.memberProfile ?
+                            serverUrl + "/member/" + member.memberProfile.substring(0,8) + "/" + member.memberProfile
+                            :
+                            "/images/default_profile.jpg"
+                         }/>
+                <p>{member.memberName + " 님"}</p>
+                <p>{member.memberEmail}</p>   
            </div>
            { !isMyHome ? //현재 url이 /member가 아닌지?
             <div className="profile-wrap-btm">
                 <NavLink to='/member/donateList' end>
                     <span>기부금액</span>
-                    <span>100000 원</span>
+                    <span>{member.totalDonateMoney} 원</span>
                 </NavLink>
                 <div>
                     <span>보유금액</span>
-                    <span>5000 원</span>   
+                    <span>{member.totalMoney} 원</span>   
                 </div>
             </div>
            :
@@ -69,4 +79,6 @@ function OneSideMenu(props) {
        </>
     )
 }
+
+
 
