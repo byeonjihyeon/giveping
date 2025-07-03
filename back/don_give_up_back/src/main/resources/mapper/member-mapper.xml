@@ -62,7 +62,8 @@
 		   member_phone as memberPhone,
 		   to_char(member_birth, 'yyyy/mm/dd') as memberBirth,
 		   member_email as memberEmail,
-		   member_addr as memberAddr,
+		   member_addr_main as memberAddrMain,
+		   member_addr_detail as memberAddrDetail,
 		   member_profile as memberProfile,
 		   total_money as totalMoney,
 		   (select sum(donate_money) from tbl_donation_list d where d.member_no = m.member_no

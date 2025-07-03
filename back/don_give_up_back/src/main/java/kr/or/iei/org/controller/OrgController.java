@@ -122,10 +122,10 @@ public class OrgController {
 		try {
 			Org org = service.selectOneOrg(orgNo);
 			
-			if(org == null) {
-				res = new ResponseDTO(HttpStatus.OK, "단체 정보 조회 중 오류가 발생했습니다.", null, "wraning");
-			}else {
+			if(org != null) {
 				res = new ResponseDTO(HttpStatus.OK, "", org, "");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "단체 정보 조회 중 오류가 발생했습니다.", null, "wraning");
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -136,33 +136,16 @@ public class OrgController {
 	
 	//단체 정보 수정
 	@PatchMapping("/update")
-	public ResponseEntity<ResponseDTO> updateOrg(@ModelAttribute MultipartFile orgThumb, @ModelAttribute Org org, String prevThumbPath) {
-		System.out.println("단체 정보 : " + org);
-		System.out.println("썸네일 정보 : " + orgThumb);
+	public ResponseEntity<ResponseDTO> updateOrg(@RequestBody Org org) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 정보 수정 중 오류가 발생했습니다.", false, "error");
 		
 		try {
-			//새 썸네일 업로드 시
-			if(orgThumb != null) {
-				String filePath = fileUtil.uploadFile(orgThumb, "/org/thumb/"); //썸네일 파일 업로드
-				org.setOrgThumbPath(filePath); //DB에 저장 파일명 업데이트를 위해
-				
-				//썸네일 이미지를 업로드 하지 않았을 수 있으므로 null이 아닐 때 처리
-				if(prevThumbPath != null) {
-					String savePath = uploadPath + "/org/thumb/";
-					File file = new File(savePath + prevThumbPath.substring(0, 8) + File.separator + prevThumbPath);
-					if(file.exists()) {
-						file.delete();
-					}
-				}
-			}
-			
 			int result = service.updateOrg(org);
 			
 			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "단체 정보 수정 중 오류가 발생했습니다.", false, "wraning");
-			}else {				
 				res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", true, "success");
+			}else {				
+				res = new ResponseDTO(HttpStatus.OK, "단체 정보 수정 중 오류가 발생했습니다.", false, "warning");
 			}
 			
 		}catch(Exception e) {

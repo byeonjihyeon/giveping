@@ -38,14 +38,14 @@ function HeaderLink(){
     function logout(e){
         //기본 이벤트 제어
         e.preventDefault();
-       
-       setIsLogined(false);
-       setLoginMember(null);
-       setLoginOrg(null);
-       setAccessToken(null);
-       setRefreshToken(null);
-       
-       navigate("/login");
+    
+        setIsLogined(false);
+        setLoginMember(null);
+        setLoginOrg(null);
+        setAccessToken(null);
+        setRefreshToken(null);
+        
+        navigate("/login");
     }
     
     return (

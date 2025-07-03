@@ -1,5 +1,7 @@
 package kr.or.iei.org.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -91,13 +93,40 @@ public class OrgService {
 
 	//단체 1개 정보 조회
 	public Org selectOneOrg(int orgNo) {
-		return dao.selectOneOrg(orgNo);
+		Org org = new Org();
+		
+		//1) tbl_org에서 단체 정보 조회
+		org = dao.selectOneOrg(orgNo);
+		
+		//2) tbl_org_donation에서 단체 주요 카테고리 조회
+		List<String> categoryList = dao.selectOrgDonation(orgNo);
+		
+		org.setCategoryList(categoryList);
+		
+		return org;
 	}
 
 	//단체 정보 수정
 	@Transactional
 	public int updateOrg(Org org) {
-		return dao.updateOrg(org);
+		//1) tbl_org에서 단체 정보 수정
+		int result = dao.updateOrg(org);
+		
+		if(result > 0 && org.getCategoryList() != null) {
+		//2) tbl_org_donation에서 기존 단체 주요 카테고리 삭제
+			dao.deleteOrgDonation(org.getOrgNo());
+		
+		//3) tbl_org_donation에서 새로운 단체 주요 카테고리 등록 
+			DonateCode dc = new DonateCode();
+			for(int i=0; i<org.getCategoryList().size(); i++) {
+				String code = org.getCategoryList().get(i);
+				dc.setDonateCode(code);
+				dc.setOrgNo(org.getOrgNo());
+				dao.insertOrgDonation(dc);
+			}
+		}
+		
+		return result;
 	}
 
 	//비밀번호 확인
