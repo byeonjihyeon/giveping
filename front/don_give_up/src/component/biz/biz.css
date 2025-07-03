@@ -56,9 +56,12 @@ ul.posting-wrap.grid-3x4 {
     border-radius: 8px;
     width: 400px;
     max-width: 90%;
+    max-height: 80vh;            
+    overflow-y: auto;            /* 세로 스크롤 활성화 */
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     position: relative;
 }
+
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
