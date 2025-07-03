@@ -212,4 +212,64 @@ from tbl_survey_question
 		(seq_answer.nextval, #{questionNo}, #{memberNo}, #{bizNo}, #{answerScore})
 	</insert>
 
+<!-- 기부사업 상세 페이지 파일 등록 시 tbl_no의 pk_no 조회 -->	
+	<select id="selectPk" parameterType="Biz" resultType="BizNo">
+		select pk_no as pkNo from tbl_no where biz_no = #{bizNo}
+	</select>
+	
+<!-- 파일 등록 -->
+<insert id="insertBoardFile" parameterType="BizFile">
+	insert into tbl_file
+	(file_no, pk_no, file_name, file_path)
+	values
+	(seq_file.nextval, #{pkNo}, #{fileName}, #{filePath})
+</insert>
+
+<!-- tbl_no 테이블 등록 -->
+	<insert id="regPkNo" parameterType="_int">
+		insert into tbl_no 
+		(pk_no, biz_no)
+		values
+		(seq_pk_no.nextval, #{parameter})
+	</insert>
+	
+	<!-- 첨부파일 리스트 조회 -->
+	<select id="selectBizFileList" parameterType="_int" resultType="BizFile">
+	select file_no as fileNo,
+		   pk_no as pkNo,
+		   file_name as fileName, 
+		   file_path as filePath
+	from tbl_file 
+	where pk_no = (select pk_no from tbl_no where biz_no = #{parameter})
+	</select>
+	
+	<!--  삭제 대상 파일 리스트 조회 -->
+	<select id="selectDelBizFile" parameterType="map" resultType="BizFile">
+	select file_no as fileNo,
+		   pk_no as pkNo,
+		   file_name as fileName,
+		   file_path as filePath
+	 from tbl_file
+	 where file_no in
+	 <foreach collection="array"
+	 		  item="fileNo"
+	 		  open="("
+	 		  separator=","
+	 		  close=")">
+	 		  #{fileNo}
+	 		  </foreach>
+	</select>
+
+<!-- 삭제 대상 파일 DB 삭제 -->
+	 <delete id="deleteBizFile" parameterType="map">
+	 delete from tbl_file
+	 where file_no in 
+	 	  <foreach collection="array"
+	 	  		    item="fileNo"
+	 	  		    open="("
+	 	  		    separator=","
+	 	  		    close=")">
+	 	  			#{fileNo}
+	 	  </foreach>	     
+	 </delete>
 </mapper>

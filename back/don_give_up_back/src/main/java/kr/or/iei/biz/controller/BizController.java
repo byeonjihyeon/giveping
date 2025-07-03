@@ -1,5 +1,6 @@
 package kr.or.iei.biz.controller;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,15 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
+import kr.or.iei.biz.model.dto.BizFile;
 import kr.or.iei.biz.model.dto.BizMember;
 import kr.or.iei.biz.model.dto.Keyword;
 import kr.or.iei.biz.model.dto.SurveyAnswer;
@@ -160,6 +164,66 @@ public class BizController {
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	/*
+	@PostMapping("/file")
+	// 첨부파일 등록 (수정)
+	public ResponseEntity<ResponseDTO> regFile (@ModelAttribute MultipartFile [] bizFile, 	// 추가할 첨부파일
+												@RequestParam(required = false) int[] delFileNos,	// 삭제할 첨부파일 번호
+												@ModelAttribute Biz biz		// 대상 게시글 번호를 담은 객체
+												){
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "파일 처리 중, 오류가 발생하였습니다.", false, "error");
+		System.out.println("bizFile : " +bizFile);
+		System.out.println("biz : " +biz.toString());
+		System.out.println("delFileNos : " +delFileNos);
+		
+		
+		try {
+			
+			ArrayList<BizFile> addFileList = new ArrayList<>();
+			//첨부파일 업로드 및 추가
+			if(bizFile != null) {
+				for(int i=0; i<bizFile.length; i++) {
+					for (MultipartFile file : bizFile) {
+		                String filePath = fileUtil.uploadFile(file, "/biz/board/");
+		                BizFile bf = new BizFile();
+		                bf.setFileName(file.getOriginalFilename());
+		                bf.setFilePath(filePath);
+		                bf.setBizNo(biz.getBizNo());	// Biz 객체 안의 bizNo를 저장
+		                addFileList.add(bf);
+		            }
+			}
+			}
+			
+			// 2. 서비스에 위임 (첨부파일 추가 및 삭제 처리)
+	        service.updateBizFiles(biz.getBizNo(), addFileList, delFileNos);
+			
+			res = new ResponseDTO(HttpStatus.OK, "파일이 등록 되었습니다.", true, "success");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	*/
+	
+	// 특정 기부사업의 첨부파일 리스트 조회
+	@GetMapping("/file/{bizNo}")
+	@NoTokenCheck // 기부 사업 리스트 조회 : 로그인 필요 x
+	public ResponseEntity<ResponseDTO> selectBoardList(@PathVariable int bizNo){
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "첨부파일 조회 중, 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			ArrayList<BizFile> bizFileList = service.selectBizFileList(bizNo);
+			res = new ResponseDTO(HttpStatus.OK, "", bizFileList, "");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
 	
 	
 	
