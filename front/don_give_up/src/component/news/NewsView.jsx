@@ -80,21 +80,6 @@ export default function NewsView(){
         });
     }, []);
 
-    // 소식글 댓글 리스트 조회
-    useEffect(function(){
-        let options = {};
-        options.url = serverUrl + '/news/comment/' + newsNo;
-        options.method = 'get';
-
-
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res.data.resData);
-            setCommentList(res.data.resData);
-        });
-
-    }, []);
-
     const navigate = useNavigate();
     //삭제하기 클릭 시, 동작 함수
 
@@ -184,6 +169,7 @@ export default function NewsView(){
             <table className="tbl">
             <thead>
                 <tr>
+                    <th style={{width:"10%"}}>회원프로필</th>
                     <th style={{width:"10%"}}>회원아이디</th>
                     <th style={{width:"30%"}}>댓글내용</th>
                     <th style={{width:"15%"}}>작성시간</th>
@@ -193,7 +179,8 @@ export default function NewsView(){
                 </tr>
             </thead>
             <tbody>
-                {commentList.map(function(comment, index){
+                {Array.isArray(news.commentList) &&
+                news.commentList.map(function(comment, index){
                     return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList}/>
                 })}
             </tbody>
@@ -202,6 +189,7 @@ export default function NewsView(){
 </>
     )
 }
+
 
 // 댓글 컴포넌트
 function Comment(props){
@@ -307,6 +295,13 @@ function Comment(props){
 
     return(
         <tr>
+            <td>
+                <img src={
+                            comment.memberProfile
+                            ? serverUrl + "/member/" + comment.memberProfile.substring(0,8) + "/" + comment.memberProfile
+                            : "/images/default_img.png"
+                        } />
+            </td>
             <td>{comment.memberId}</td>
             <td>
                 {editMode ? (
