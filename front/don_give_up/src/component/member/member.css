@@ -13,11 +13,8 @@
 /* 사이드 메뉴 CSS */
 .sidebar-wrap {
     width: 200px;
-    border: 1px solid black;
-}
-
-.sidebar-wrap {
     border: 1px solid #dcdcdc;
+    background-color: #fafafa;
 }
 
 .profile-wrap {
@@ -80,10 +77,6 @@
     font-weight: bold;
 }
 
-.side-menu-wrap {
-    background-color: #fafafa;
-}
-
 .side-menu {
     display: flex;
     flex-direction: column;
@@ -109,11 +102,6 @@
 .side-sub-menu > a {
     color: #828282;
     text-decoration: none;
-}
-
-.side-menu>a:last-of-type {
-    border-top: 1px solid #dcdcdc;
-    border-bottom: none;
 }
 
 
@@ -190,11 +178,12 @@
     border-radius: 50%;
     border: 1px solid #91C8E4;
     text-align: center;
+    
 }
 
 .state>span {
     line-height: 80px;
-    font-size: 20px;
+    font-size: 15px;
     color: #91C8E4;
     font-weight: bold;
 }

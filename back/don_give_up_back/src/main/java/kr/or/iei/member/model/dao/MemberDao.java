@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.member.model.dto.MemberAlarm;
+import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -73,4 +74,8 @@ public interface MemberDao {
 
 	// 알림 읽음 처리
 	int updateAlarmRead(int alarmNo);
+	
+	//회원기부내역 조회
+	ArrayList<MemberDonation> selectDonationHistory(int memberNo);
+	
 }

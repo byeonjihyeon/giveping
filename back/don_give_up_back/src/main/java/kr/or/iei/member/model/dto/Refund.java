@@ -13,4 +13,6 @@ public class Refund {
 	private String memberAccount;		//출금계좌
 	private String memberAccountBank;	//은행명
 	private String refundDate;			//출금날짜
+	private int refundStatus;			//환불 완료 여부(0 : 미완료, 1 : 완료)
+	private String refundFinDate;		//환불 완료 날짜
 }

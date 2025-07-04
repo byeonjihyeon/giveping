@@ -4,30 +4,8 @@ import useUserStore from "../../store/useUserStore";
 import PageNavi from '../common/PageNavi';
 import { isAfter } from "date-fns";
 
-
-import Checkbox from '@mui/material/Checkbox';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import Favorite from '@mui/icons-material/Favorite';
-
-
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-
 //회원 관심단체 리스트
 export default function likeOrgList(){
-
-    /*
-    화면에 보여줄 내용
-    단체 이름
-    단체 썸네일
-    단체별 주요 기부 카테고리
-    현재 진행중인 사업이 있는지?
-    하트
-    페이지네이션
-
-    필요한 필수 정보: 회원 번호
-
-    div클릭시 -> 단체소개 페이지로 이동
-  */
 
     //회원 관심단체 리스트
     const [likeOrgList, setLikeOrgList] = useState([]);
@@ -64,7 +42,9 @@ export default function likeOrgList(){
     return (
         <>
             {
-            likeOrgList.length > 0 ?
+            !likeOrgList ?
+            ""    
+            :likeOrgList.length > 0 ?
                 <div>
                     <div className="likeOrgList-wrap">
                         {likeOrgList.map(function(likeOrg, index){
@@ -119,6 +99,7 @@ function LikeOrg(props){
             }
         });
 
+        
     }
 
    
@@ -142,9 +123,7 @@ function LikeOrg(props){
             </div>
             <div className="likeOrg-name">
                 <div>{likeOrg.orgName}</div>
-                <div>
                 <img src='/images/favorite_38dp_EA3323.png' onClick={delLikeOrg} />
-                </div>
                  <div className="org-ctg-wrap">
                     {likeOrg.categoryList.map(function(category, index){
                         return <div className="org-ctg" key={"category" + index}>{category}</div>

@@ -27,6 +27,7 @@ import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.member.model.dto.MemberAlarm;
+import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
@@ -137,10 +138,9 @@ public class MemberController {
 	@GetMapping("/{memberNo}")
 	public ResponseEntity<ResponseDTO> selectMember(@PathVariable int memberNo){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 조회중, 오류가 발생하였습니다.", null, "error");
-		
 		try {
 			Member member = service.selectMember(memberNo);
-			
+
 			res = new ResponseDTO(HttpStatus.OK, "", member, "");
 			
 		}catch(Exception e) {
@@ -429,6 +429,22 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 		
-
+	}
+	
+	//회원 기부내역 조회
+	@GetMapping("/donationHistory/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectDonationHistory (@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			ArrayList<MemberDonation> donationHistory = service.selectDonationHistory(memberNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", donationHistory, "");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 }

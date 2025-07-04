@@ -262,7 +262,44 @@ from tbl_survey_question
 		values
 		(seq_answer.nextval, #{questionNo}, #{memberNo}, #{bizNo}, #{answerScore})
 	</insert>
+	
+	<!-- 사업 번호 조회 -->
+	<select id="selectBizNo" resultType="_int">
+		select seq_biz.nextval
+		  from dual
+	</select>
 
+	<!-- 대표 사진 업로드 -->
+	<insert id="uploadThumb" parameterType="Biz">
+		insert into tbl_donate_biz
+		(biz_no, org_no, biz_name, biz_content, biz_start, biz_end, biz_goal, biz_status, biz_reg_date, biz_thumb)
+		values
+		(#{bizNo}, #{orgNo}, '오류', '오류', sysdate, sysdate, 0, 0, sysdate, #{bizThumbPath})
+	</insert>
+	
+	<!-- 기부 사업 등록 -->
+	<update id="insertBiz" parameterType="Biz">
+		update tbl_donate_biz
+		   set donate_code = #{donateCode},
+		   	   biz_name = #{bizName},
+		       biz_content = #{bizContent},
+		       biz_donate_start = sysdate+7,
+		       biz_donate_end = sysdate+7+#{bizDonateTerm},
+		       biz_start = #{bizStart},
+		       biz_end = #{bizEnd},
+		       biz_goal = #{bizGoal}
+		 where biz_no = #{bizNo}
+	</update>
+	
+	<!-- 모금액 사용 계획 등록 -->
+	<insert id="insertBizPlan" parameterType="BizPlan">
+		insert into tbl_biz_plan
+		values (seq_biz_plan.nextval,
+				#{bizNo},
+				#{bizPlanPurpose},
+				#{bizPlanMoney})
+	</insert>
+	
 <!-- 기부사업 상세 페이지 파일 등록 시 tbl_no의 pk_no 조회 -->	
 	<select id="selectPk" parameterType="Biz" resultType="BizNo">
 		select pk_no as pkNo from tbl_no where biz_no = #{bizNo}
