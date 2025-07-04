@@ -155,21 +155,22 @@
 	 </update>
 	 
 	 <!-- 회원별 알림 리스트 조회 -->
-	 <select id="selectAlarmList" parameterType="string" resultType="Alarm">
-	 select alarm_no as alarmNo,
-	 		member_no as memberNo,
-	 		biz_no as bizNo,
-	 		news_no as newsNo,
-	 		alarm_type as alarmType,
-	 		alarm_date as alarmDate,
-	 		alarm_read as alarmRead,
-	 		biz_name as bizName,
-	 		org_name as orgName
-	 from tbl_alarm a
-	 join tbl_donate_biz d on a.biz_no = d.biz_no
-	 join tbl_org o on d.org_no = o.org_no
-	 where member_no = #{parameter}
-	 </select>
+	 <select id="selectAlarmList" parameterType="int" resultType="Alarm">
+	    SELECT a.alarm_no AS alarmNo,
+	           a.member_no AS memberNo,
+	           a.biz_no AS bizNo,
+	           a.news_no AS newsNo,
+	           a.alarm_type AS alarmType,
+	           a.alarm_date AS alarmDate,
+	           a.alarm_read AS alarmRead,
+	           d.biz_name AS bizName,
+	           o.org_name AS orgName
+	    FROM tbl_alarm a
+	    JOIN tbl_donate_biz d ON a.biz_no = d.biz_no
+	    JOIN tbl_org o ON d.org_no = o.org_no
+	    WHERE a.member_no = #{memberNo}
+	</select>
+
 	
 	<!-- 회원 관심단체 전체수 조회 -->
 	<select id="selectOrgLikeCnt"

@@ -15,5 +15,9 @@ public class Alarm {
 	private int alarmType;
 	private String alarmDate;
 	private int alarmRead;
+	
+	// join 을 위한 변수 선언 
+	private String bizName;
+	private String orgName;
 
 }
