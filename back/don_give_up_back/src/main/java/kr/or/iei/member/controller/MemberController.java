@@ -411,14 +411,14 @@ public class MemberController {
 	}
 	
 	//회원 기부내역 조회
-	@GetMapping("/donationHistory/{memberNo}")
-	public ResponseEntity<ResponseDTO> selectDonationHistory (@PathVariable int memberNo){
+	@GetMapping("/donationHistory/{memberNo}/{reqPage}")
+	public ResponseEntity<ResponseDTO> selectDonationHistory (@PathVariable int memberNo, @PathVariable int reqPage){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회중, 오류가 발생하였습니다.", false, "error");
 		
 		try {
-			ArrayList<MemberDonation> donationHistory = service.selectDonationHistory(memberNo);
-			
-			res = new ResponseDTO(HttpStatus.OK, "", donationHistory, "");
+			HashMap<String, Object> paraMap = service.selectDonationHistory(memberNo, reqPage);
+	
+			res = new ResponseDTO(HttpStatus.OK, "", paraMap, "");
 			
 		}catch (Exception e) {
 			e.printStackTrace();

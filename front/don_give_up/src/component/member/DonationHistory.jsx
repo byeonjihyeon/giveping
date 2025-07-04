@@ -3,7 +3,7 @@ import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
 
 //기부내역 조회 리스트
-export default function DonateList(props){
+export default function DonationHistory(props){
     const member = props.member;
 
     /* 
@@ -20,6 +20,26 @@ export default function DonateList(props){
     가능하다면, 전체내역과  상단에 기부내역, 결제내역 버튼 누르면 각각 해당 내용 나올수 있도록
     */
 
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
+    const {loginMember} = useUserStore();
+    
+    const [donationHistory, setDonationHistory] = useState([]);
+    const [pageinfo, setPageInfo] = useState({}); 
+    const [reqPage, setReqPage] = useState(1);
+
+    useEffect(function(){
+         let options = {};
+         options.url = serverUrl + '/member/donationHistory/' + loginMember.memberNo +"/"+ reqPage;
+         options.method = 'get';
+
+         axiosInstance(options)
+         .then(function(res){
+            let results = res.data.resData;
+            setDonationHistory(results.donationHistory);
+            setPageInfo(results.pageInfo);
+         })
+    }, [reqPage])
 
     return (
         <div className="member-donate-list-wrap-out">
@@ -29,24 +49,30 @@ export default function DonateList(props){
                 <p>기간설정 영역</p>
             </div>
             {
-            !member.donationHistory ?
+            !donationHistory ?
             ""
             :
-            member.donationHistory.length > 0 ?
+            donationHistory.length > 0 ?
                 <div className="donate-list-wrap-in">
-                {member.donationHistory.map(function(donation,index){
+                {donationHistory.map(function(donation,index){
                     return <Donation key={"donation" + index} donation={donation} />
                 })}              
-            </div>
-
+                </div>
+            
             :
              <>
                 <div>조회되는 기부내역이 없네요..</div>
              </>
             }
-
-
-            
+            {
+            reqPage < pageinfo.totalPage ?
+            <div onClick={function(){
+                    setReqPage(reqPage + 1); 
+            }}>더보기</div>
+            :
+            ""
+            }
+         
         </div>
     )
 }

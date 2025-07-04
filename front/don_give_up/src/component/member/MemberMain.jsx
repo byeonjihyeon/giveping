@@ -5,9 +5,10 @@ import { useEffect, useState } from 'react';
 import MemberUpdate from './MemberUpdate';
 import MemberChangePw from './MemberChangePw';
 import LikeOrgList from './LikeOrgList';
-import DonateList from './DonateList';
+import DonationHistory from './DonationHistory';
 import NewsList from './NewsList';
 import ProfileUpdate from './ProfileUpdate';
+import WalletHistory from './WalletHistory';
 
 import MemberDelete from './MemberDelete';
 import PaymentFrm from './PaymentFrm';
@@ -26,7 +27,7 @@ export default function MemberMain(){
         {url: '/member/likeOrgList', name: '관심단체' },
         {url: '/member/donateList', name: '내 활동', submenuList: [{url: '/member/donateList' , name: '기부내역'}]  },
         {url: '/member/money/charge', name: '예치금', submenuList: [{url: '/member/money/charge' , name: '예치금 충전하기'},  {url: '/member/money/refund' , name: '예치금 출금하기'}
-                                                                          , {url: '/member/chargeNrefund' , name: '충전 / 출금내역'}]},
+                                                                          , {url: '/member/money/history' , name: '충전 / 출금내역'}]},
 
         {url: '/member/update', name: '내 정보', submenuList: [{url: '/member/update' , name: '회원정보 수정'}, {url: '/member/changePw' , name: '비밀번호 변경'}, 
                                                               {url: '/member/changeProfile' , name: '프로필사진 변경'}]}
@@ -61,11 +62,12 @@ export default function MemberMain(){
                     <Route path='update' element={<MemberUpdate member={member} setMember={setMember} />} /> 
                     <Route path='changePw' element={<MemberChangePw/>} />
                     <Route path='likeOrgList' element={<LikeOrgList />} />
-                    <Route path='donateList' element={<DonateList member={member}  />} />
+                    <Route path='donateList' element={<DonationHistory member={member}  />} />
                     <Route path='news' element={<NewsList />} />
                     <Route path='changeProfile' element={<ProfileUpdate member={member} setMember={setMember}/>} />
                     <Route path='delete' element={<MemberDelete member={member} />} />
                     <Route path='money/charge' element={<PaymentFrm />} />
+                    <Route path='money/history' element={<WalletHistory />} />
                 </Routes>
             </div>
         </div>

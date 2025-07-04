@@ -74,16 +74,24 @@
 	
 	<!-- 회원 기부내역 조회 -->
 	<select id="selectDonationHistory"
-	parameterType="_int"
+	parameterType="map"
 	resultType="MemberDonation">
-	select donate_no as donateNo, 
-	       biz_name as bizName, 
-	       org_name as orgName, 
-	       to_char(donate_money, '99,999,999') as donateMoney, 
-	       to_char(donate_date, 'YYYY-MM-DD HH24:MI:SS') as donateDate 
- 	 from tbl_donation_list join tbl_donate_biz using(biz_no)
-                         	join tbl_org using (org_no)
- 	where member_no = #{_parameter}
+	select <if test="pageInfo != null">rownum,</if> 
+         donate_no as donateNo, 
+         biz_name as bizName, 
+         org_name as orgName, 
+         to_char(donate_money, '99,999,999') as donateMoney, 
+         to_char(donate_date, 'YYYY-MM-DD HH24:MI:SS') as donateDate        
+   from (
+        select *
+          from tbl_donation_list join tbl_donate_biz using(biz_no)
+                                 join tbl_org using (org_no)
+ 	    where member_no = #{memberNo}
+        order by donate_date desc
+        )a
+   <if test="pageInfo != null">
+   	where rownum between 1 and #{pageInfo.end}        
+   </if>     
 	</select>
 	
 	<!-- 회원 충전내역 조회 --> 
@@ -95,6 +103,7 @@
            to_char(charge_date, 'YYYY-MM-DD HH24:MI:SS') as chargeDate
  	  from tbl_charge 
   	 where member_no =#{_parameter}
+  	 order by chargedate desc 
 	</select>
 	
 	<!-- 회원 출금내역 조회 -->
@@ -109,7 +118,7 @@
 	       refund_status as refundStatus,
       	   to_char(refund_fin_date, 'YYYY-MM-DD HH24:MI:SS') as refundFinDate
 	  from tbl_refund where member_no= #{_parameter}
-	
+	 order by refunddate desc 
 	
 	</select>
 	
@@ -325,4 +334,13 @@
 	parameterType="map">
 	delete from tbl_member_org where member_no = #{memberNo} and org_No = #{orgNo}
 	</delete>
+	
+	<!-- 회원 총 기부수 조회 -->
+	<select id='countDonationList'
+	parameterType="_int"
+	resultType="_int">
+	select count(*) 
+	  from tbl_donation_list 
+	 where member_no = #{_parameter} 
+	</select>
 </mapper>	

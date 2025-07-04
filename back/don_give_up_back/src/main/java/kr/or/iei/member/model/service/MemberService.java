@@ -257,8 +257,26 @@ public class MemberService {
 	}
 	
 	//회원 기부내역 조회
-	public ArrayList<MemberDonation> selectDonationHistory(int memberNo) {
-		return dao.selectDonationHistory(memberNo);
+	public HashMap<String, Object> selectDonationHistory(int memberNo, int reqPage) {
+		
+		//1. 페이지네이션
+		int viewCnt = 3;		//더보기 클릭시 보여줄 글 수 
+		
+		//2. 회원의 총 참여 기부수 조회
+		int totalCnt = dao.countDonationList(memberNo);
+	
+		PageInfo pageInfo = pageUtil.getPageInfoVer2(reqPage, viewCnt, totalCnt);
+		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		paraMap.put("memberNo", memberNo);
+		if(reqPage > 0) {
+			paraMap.put("pageInfo", pageInfo);
+		}
+		
+	    ArrayList<MemberDonation> donationHistory = dao.selectDonationHistory(paraMap);
+	    paraMap.put("donationHistory", donationHistory);
+	    
+		return paraMap;
 	}
 
 }
