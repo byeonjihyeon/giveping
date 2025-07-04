@@ -70,8 +70,8 @@ export default function BizView(){
 
         axiosInstance(options)
         .then(function(res){
-            //console.log(res.data.resData);
-            //console.log(res.data.resData.bizMemberList);
+            console.log(res.data.resData);
+            console.log("후원회원", res.data.resData.bizMemberList);
             setDonateBiz(res.data.resData);
             setMemberList(res.data.resData.bizMemberList);
             //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
@@ -95,41 +95,7 @@ export default function BizView(){
 
     const navigate = useNavigate();
 
-    // 파일 업로드 버튼 클릭 시 호출되는 함수
-    function updateFile(){
-        const form = new FormData();
-
-        // bizNo 보내기
-        form.append("bizNo", bizNo);
-        //추가 첨부파일
-        for(let i=0; i<bizFile.length; i++){
-            form.append('bizFile', bizFile[i]);
-        }
-        //기존 첨부파일 중, 삭제 대상 파일
-        for(let i=0; i<delBizFileNo.length; i++){
-            form.append('delBizFileNo', delBizFileNo[i]);
-        }
-        
-       
-        console.log("delBizFileNo" + delBizFileNo);
-        
-        
-        let options = {};
-            options.url = serverUrl + '/biz/file';
-            options.method = 'post'; //수정 == PUT or PATCH == 일부 컬럼 정보 수정 == PATCH
-            options.data = form;
-            options.headers = {};
-            options.headers.contentType = 'multipart/form-data';
-            options.headers.processData = false; //쿼리 스트링 변환 X
-
-            axiosInstance(options)
-            .then(function(res){
-                console.log(res.data.resData); //true or false
-                if(res.data.resData){
-                    navigate('/biz/view/'+bizNo);
-                }
-            });
-    }
+    
 
     return (
         <section>
@@ -179,32 +145,19 @@ export default function BizView(){
                         }
                         {/* 설문조사 팝업 */}
                         {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
-
                     </div>
-                        <section className="section biz-content-wrap">
-                            <div className="page-title">첨부파일</div>
-                            <form className="bizFile" onSubmit={function(e){
-                                e.preventDefault();
-                                updateFile(); //파일 업로드 함수 호출
-                            }}> 
-                                
-                                <BizFile loginMember={loginMember}
+                        
+                        <BizFile loginMember={loginMember}
                                                 bizFile={bizFile}
                                                 setBizFile={setBizFile}
                                                 prevBizFileList={prevBizFileList}
                                                 setPrevBizFileList={setPrevBizFileList}
                                                 delBizFileNo={delBizFileNo}
                                                 setDelBizFileNo={setDelBizFileNo}
+                                                donateBiz={donateBiz}
+                                                bizNo={bizNo}
                                                 />
-                                <div className="biz-content-wrap">
-                                </div>
-                                <div className="button-zone">
-                                    <button type="submit" className="btn-primary lg">
-                                        파일 업로드하기
-                                    </button>
-                                </div>
-                            </form>
-                        </section>
+                        
                 </div>
                 
                 <hr/>
@@ -287,48 +240,6 @@ export default function BizView(){
     );
 }
 
-//파일 1개 정보
-function FileItem(props) {
-    const file = props.file;
-
-    const serverUrl = import.meta.env.VITE_BACK_SERVER;
-    const axiosInstance = createInstance();
-
-    //파일 다운로드 아이콘 클릭 시, 동작 함수
-    function fileDown(){
-        let options = {};
-        options.url = serverUrl + '/biz/file/' + donateBiz.bizFileNo;
-        options.method = 'get';
-        options.responseType = 'blob'; //서버에서 파일(바이너리)을 응답받기 위함.
-
-        axiosInstance(options)
-        .then(function(res){
-            //res.data => 서버에서 응답해준 리소스
-            const fileData = res.data;
-            const blob = new Blob([fileData]); //단건이여도, 배열로 전달해야 함.
-            const url = window.URL.createObjectURL(blob); //브라우저에 요청하기 위한 URL 생성
-
-            //가상의 a태그 생성하고, 화면에서는 숨김 => 동적으로 클릭 이벤트 발생 => a태그 삭제
-            const link = document.createElement("a");
-            link.href = url;                                //다운로드 요청 URL 지정
-            link.style.display = 'none';                    //a 태그 화면에서 숨기기 위함
-            link.setAttribute('download', file.fileName);   //다운로드할 파일명 지정
-            document.body.appendChild(link);                //body 태그 하위로 삽입
-            link.click();                                   //동적으로 클릭하여, 다운로드 유도
-            link.remove();                                  //a 태그 삭제
-
-            window.URL.revokeObjectURL(url); //URL 정보 삭제
-        });
-    }
-
-
-    return (
-        <div className="board-file">
-            <span className="material-icons file-icon" onClick={fileDown}>file_download</span>
-            <span className="file-name">{file.fileName}</span>
-        </div>
-    );
-}
 
 // 멤버 1명 객체
 function MemberItem(props){
