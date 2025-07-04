@@ -99,9 +99,11 @@ public class NewsService {
 		return null;	
 	}
 
+	/*
 	public ArrayList<Comment> selectCommentList(int newsNo) {
 		return dao.selectCommentList(newsNo);
 	}
+	*/
 
 	@Transactional
 	public int deleteComment(int commentNo) {

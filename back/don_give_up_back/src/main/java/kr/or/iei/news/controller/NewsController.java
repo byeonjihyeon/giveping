@@ -70,6 +70,7 @@ public class NewsController {
 
 		try {
 			News news = service.selectOneNews(newsNo);
+			System.out.println("news: "+news);
 			res = new ResponseDTO(HttpStatus.OK, "", news, "");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -219,6 +220,8 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	/*
+	
 	// 댓글 리스트 조회
 	@GetMapping("/comment/{newsNo}")
 	@NoTokenCheck // 소식에 달린 댓글 조회 : 로그인 필요 x
@@ -233,6 +236,7 @@ public class NewsController {
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	*/
 	
 	// 댓글 삭제
 	@PatchMapping("/comment/{commentNo}")

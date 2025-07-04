@@ -1,6 +1,8 @@
 package kr.or.iei.news.model.dto;
 
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +23,7 @@ public class News {
 	// join 을 위해 변수 추가
 	private String memberName;
 	private String orgName;
+	
+	// 댓글 리스트
+	private List<Comment> commentList;
 }
