@@ -206,4 +206,67 @@ public class OrgController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 
 	}
+
+	//단체 프로필 초기화(삭제)
+	@PatchMapping("/thumb/{orgNo}")
+	public ResponseEntity<ResponseDTO> deleteThumb(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 초기화 중 오류가 발생했습니다.", false, "error");
+		
+		try {
+			String prevFilePath = service.deleteThumb(orgNo); //prevFilePath : 서버에 저장된 기존 파일
+			
+			if(prevFilePath != null) {
+				String savePath = uploadPath + "/org/thumb/";
+				File delFile = new File(savePath + prevFilePath.substring(0, 8) + File.separator + prevFilePath);
+				
+				if(delFile.exists()) {
+					delFile.delete();
+				}
+				
+				res = new ResponseDTO(HttpStatus.OK, "기본 프로필로 변경되었습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "프로필 초기화 중 오류가 발생했습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//단체 프로필 수정
+	@PostMapping("/thumb")
+	public ResponseEntity<ResponseDTO> updateThumb(@ModelAttribute MultipartFile profile, int orgNo, String orgThumbPath) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 수정 중 오류가 발생했습니다.", null, "error");
+		
+		try {
+			String filePath = fileUtil.uploadFile(profile, "/org/thumb/");
+			
+			Org org = new Org();
+			org.setOrgNo(orgNo);
+			org.setOrgThumbPath(filePath);
+			
+			int result = service.updateThumb(org);
+			
+			if(result > 0) {
+				if(orgThumbPath != null) {
+					String savePath = uploadPath + "/org/thumb/";
+					File delFile = new File(savePath + orgThumbPath.substring(0, 8) + File.separator + orgThumbPath);
+					
+					if(delFile.exists()) {
+						delFile.delete();
+					}
+				}
+				
+				res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", filePath, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "프로필 수정 중 오류가 발생했습니다.", null, "warning");
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }

@@ -8,7 +8,6 @@ import Swal from "sweetalert2";
 export default function OrgUpdate(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
-    const navigate = useNavigate();
 
     const mainOrg = props.org;
     const setMainOrg = props.setOrg;
@@ -183,6 +182,9 @@ export default function OrgUpdate(props){
                 text : res.data.clientMsg,
                 icon : res.data.alertIcon,
                 confirmButtonText : "확인"
+            })
+            .then(function(result){
+                setMainOrg({...mainOrg, orgName : org.orgName, orgEmail : org.orgEmail});
             });
         });
  
