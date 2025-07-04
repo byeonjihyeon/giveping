@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useParams } from 'react-router-dom';
 import './member.css';
 import Sidebar from '../common/Sidebar';
 import { useEffect, useState } from 'react';
@@ -64,6 +64,7 @@ export default function MemberMain(){
                     <Route path='likeOrgList' element={<LikeOrgList />} />
                     <Route path='donateList' element={<DonationHistory member={member}  />} />
                     <Route path='news' element={<NewsList />} />
+                    <Route path='news/:memberNo' element={<NewsList />} />
                     <Route path='changeProfile' element={<ProfileUpdate member={member} setMember={setMember}/>} />
                     <Route path='delete' element={<MemberDelete member={member} />} />
                     <Route path='money/charge' element={<PaymentFrm />} />

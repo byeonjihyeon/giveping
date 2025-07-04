@@ -9,7 +9,9 @@ import createInstance from '../../axios/Interceptor';
     const newsContent = props.newsContent;
     const setNewsContent = props.setNewsContent;
     const type=props.type; // 등록 : 0 ,수정 : 1
-    console.log(type);
+    //기부 사업 등록에 필요한 변수
+    const donateBiz = props.donateBiz;
+    const setDonateBiz = props.setDonateBiz;
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -21,7 +23,11 @@ import createInstance from '../../axios/Interceptor';
     function changeContent(){
         //에디터 본문에 작성한 내용 state 변수에 세팅
         const editorText = editorRef.current.getInstance().getHTML(); //<ul>밑줄</ul>
-        setNewsContent(editorText);
+        if(setNewsContent && !setDonateBiz){
+            setNewsContent(editorText);
+        }else{
+            setDonateBiz({...donateBiz, bizContent : editorText});
+        }
     }
 
     // 에디터 상단, 이미지 아이콘 클릭하여 이미지 업로드 후, OK 버튼 클릭 시 동작 함수
@@ -31,7 +37,11 @@ import createInstance from '../../axios/Interceptor';
         form.append("image", file);
 
         let options = {};
-        options.url = serverUrl + "/news/editorImage";
+        if(newsContent && !donateBiz.bizContent){
+            options.url = serverUrl + "/news/editorImage";
+        }else{
+            options.url = serverUrl + "/biz/editorImage";
+        }
         options.method='post';
         options.data = form;
         options.headers = {};
@@ -60,8 +70,23 @@ import createInstance from '../../axios/Interceptor';
                             addImageBlobHook : uploadImg
                         }}
                 >
-            </Editor>
-            : ''
+                </Editor>
+            : donateBiz
+                ? type == 0 || (type == 1 && donateBiz.bizContent != "")
+                    ?
+                        <Editor ref={editorRef} 
+                            initialValue={donateBiz.bizContent}
+                            initialEditType="wysiwyg"
+                            language="ko-KR"
+                            height="600px"
+                            onChange={changeContent}
+                            hooks={{
+                                addImageBlobHook : uploadImg
+                            }}
+                        >
+                        </Editor>
+                    : ""
+                : ""
             }
         </div>    
     )

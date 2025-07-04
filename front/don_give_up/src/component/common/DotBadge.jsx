@@ -4,12 +4,23 @@ import MailIcon from '@mui/icons-material/Mail';
 import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useParams } from 'react-router-dom';
+
 
 // 알람 아이콘
 export default function DotBadge() {
     const {isLogined, setIsLogined, loginMember} = useUserStore();
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
+    const { memberNo } = useParams();
+
+     const navigate = useNavigate();
+
+    function handleClick() {
+      // 알림 아이콘 클릭 시, 마이페이지의 내소식으로 이동
+      navigate("/member/news");
+    }
 
 
     // 알림 여부 상태
@@ -39,7 +50,7 @@ export default function DotBadge() {
         }, [isLogined, loginMember]);
 
   return (
-    <Box sx={{ color: 'action.active' }}>
+    <Box sx={{ color: 'action.active' }} onClick={handleClick} style={{cursor: 'pointer'}}>
       <Badge
         color="secondary"
         variant="dot"

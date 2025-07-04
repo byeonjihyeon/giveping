@@ -103,7 +103,7 @@
 		)
 		values (
 		#{newsNo},
-		1,
+		#{memberNo},
 		<if test="orgNo != null or orgNo !=''">
 			#{orgNo},
 		</if>

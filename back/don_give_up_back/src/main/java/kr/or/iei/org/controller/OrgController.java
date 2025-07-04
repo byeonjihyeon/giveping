@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.or.iei.biz.model.dto.Biz;
+import kr.or.iei.biz.model.dto.BizPlan;
 import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.LoginOrg;
 import kr.or.iei.common.model.dto.ResponseDTO;
@@ -269,4 +271,7 @@ public class OrgController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+
+	
 }

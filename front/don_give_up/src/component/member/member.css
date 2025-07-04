@@ -13,11 +13,8 @@
 /* 사이드 메뉴 CSS */
 .sidebar-wrap {
     width: 200px;
-    border: 1px solid black;
-}
-
-.sidebar-wrap {
     border: 1px solid #dcdcdc;
+    background-color: #fafafa;
 }
 
 .profile-wrap {
@@ -78,10 +75,6 @@
 .side-sub-menu>a.active {
     color: #91C8E4;
     font-weight: bold;
-}
-
-.side-menu-wrap {
-    background-color: #fafafa;
 }
 
 .side-menu {
@@ -284,3 +277,4 @@
 .update-frm-wrap input {
     width: 200px;
 }
+

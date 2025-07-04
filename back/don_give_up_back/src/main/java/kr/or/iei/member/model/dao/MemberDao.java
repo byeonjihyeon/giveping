@@ -71,10 +71,19 @@ public interface MemberDao {
 	
 	//회원 관심단체 삭제
 	int delLikeOrg(HashMap<String, Integer> delMap);
+
+	// 알림 읽음 처리
+	int updateAlarmRead(int alarmNo);
 	
+
 	//회원 총 기부수 조회
 	int countDonationList(int memberNo);
 	
 	//회원 기부리스트 조회
 	ArrayList<MemberDonation> selectDonationHistory(HashMap<String, Object> paraMap);
+
+	//회원기부내역 조회
+	ArrayList<MemberDonation> selectDonationHistory(int memberNo);
+	
+
 }
