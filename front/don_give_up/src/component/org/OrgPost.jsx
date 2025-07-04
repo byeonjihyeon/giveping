@@ -256,23 +256,35 @@ export default function OrgPost(){
             }
         }
 
-        let options = {};
-        options.url = serverUrl + "/biz/post";
-        options.method = "patch";
-        options.data = donateBiz
-
-        axiosInstance(options)
-        .then(function(res){
-            Swal.fire({
-                title : "알림",
-                text : res.data.clientMsg,
-                icon : res.data.alertIcon,
-                confirmButtonText : "확인"
-            })
-            .then(function(result){
-                
-            });
-        });
+        Swal.fire({
+            title : "알림",
+            text : "사업신청후 7일 경과 후에도 승인처리 되지 않은 경우 자동 반려처리됩니다. (7일의 기준은 25-06-20 오후 3:00에 신청 시 마감 시한은 25-6-27 23:59)",
+            icon : "warning",
+            showCancelButton : true,
+            confirmButtonText : "확인",
+            cancelButtonText : "취소"
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                let options = {};
+                options.url = serverUrl + "/biz/post";
+                options.method = "patch";
+                options.data = donateBiz
+        
+                axiosInstance(options)
+                .then(function(res){
+                    Swal.fire({
+                        title : "알림",
+                        text : res.data.clientMsg,
+                        icon : res.data.alertIcon,
+                        confirmButtonText : "확인"
+                    })
+                    .then(function(result){
+                        
+                    });
+                });
+            }
+        })
     }
 
     return (
