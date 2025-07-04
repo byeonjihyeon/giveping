@@ -12,16 +12,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
 import kr.or.iei.biz.model.dto.BizMember;
+import kr.or.iei.biz.model.dto.BizPlan;
 import kr.or.iei.biz.model.dto.Keyword;
 import kr.or.iei.biz.model.dto.SurveyAnswer;
 import kr.or.iei.biz.model.dto.SurveyQuestion;
@@ -161,6 +165,61 @@ public class BizController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	// 토스트 에디터 사진 등록
+	@PostMapping("/editorImage")
+	public ResponseEntity<ResponseDTO> uploadEditorImage(@ModelAttribute MultipartFile image) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "에디터 이미지 업로드 중, 오류가 발생하였습니다.", null, "error");
+
+		try {
+			String filePath = fileUtil.uploadFile(image, "/biz/board/editor/");
+			// res.resData => "/editor/20250624/20250624151520485_00485.jpg"
+			res = new ResponseDTO(HttpStatus.OK, "", "/biz/board/editor/" + filePath.substring(0, 8) + "/" + filePath, "");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 	
+	//대표 이미지 등록
+	@PostMapping("/thumb")
+	public ResponseEntity<ResponseDTO> uploadThumb(@ModelAttribute MultipartFile bizImg, int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "대표 이미지 업로드 중, 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			String filePath = fileUtil.uploadFile(bizImg, "/biz/thumb/");
+			
+			Biz biz = new Biz();
+			biz.setOrgNo(orgNo);
+			biz.setBizThumbPath(filePath);
+			
+			Biz newBiz = service.uploadThumb(biz);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", newBiz, "");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 	
+	//기부 사업 등록
+	@PatchMapping("/post")
+	public ResponseEntity<ResponseDTO> insertBiz(@RequestBody Biz biz) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.insertBiz(biz);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "정상적으로 등록되었습니다.", true, "success");				
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "warning");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }

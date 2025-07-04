@@ -14,7 +14,7 @@ public class Biz {
 	private String bizName;			// 사업명
 	private String donateCode;		// 기부 코드(외래키, tbl_donate_code에서 해당 기부 코드 삭제 이전에 'D99'(기타)로 변경)	
 	private String bizContent;		// 사업 내용
-	private String bizDonateStart;	//모금 시작 날짜(사업 승인 날짜)
+	private String bizDonateStart;	//모금 시작 날짜(기부 사업 등록일부터 플러스 7일)
 	private String bizDonateEnd;	//모금 종료 날짜(모금 시작 날짜에서 단체가 선택한 30, 60, 90일 플러스)
 	private String bizStart;		// 사업 시작 날짜
 	private String bizEnd;			// 사업 종료 날짜(react에서 사업 시작 날짜가 사업 종료 날짜보다 늦지 않도록 알림창 띄워주기)
@@ -23,6 +23,9 @@ public class Biz {
 	private String bizRegDate;		// 사업 신청 검토일자 (사업 승인 여부가 미확인 상태에서, 수정사항이 추가될 경우 해당 칼럼에 sysdate값을 update)
 	private String bizEdit;			// 수정 사항(사업 승인 여부 확인 후 수정 사항 있을 경우에만 INSERT)
 	private String bizThumbPath;	// 사업 썸네일
+	
+	private int bizDonateTerm;		// 모금 기간(30일, 60일, 90일)
+	private List<BizPlan> bizPlanList; //모금액 사용 계획
 	
 	
 	// join 을 위해 선언한 변수
