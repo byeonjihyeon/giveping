@@ -165,7 +165,7 @@
 	<!-- 회원 관심단체 리스트 조회 -->
 	<select id="selectOrgLikeList"
 	parameterType="map"
-	resultType="Org">
+	resultMap="orgMap">
     select org_no, org_name, org_thumb
     from(
          select rownum rnum, a.*
@@ -180,10 +180,52 @@
     where rnum between #{pageInfo.start} and #{pageInfo.end}                                         
 	</select>
 	
+	<!-- 단체 주요 카테고리 조회 -->
+	<select id='selectOrgCategoryList'
+	parameterType="_int"
+	resultType="String">
+	select (select donate_ctg from tbl_donate_code d where d.donate_code = o.donate_code) as donateCtg
+	  from tbl_org_donation o
+	 where org_no = #{_parameter} 
+	</select>
+	
+	<!-- 단체 사업 조회 -->
+	<select id="selectBizList"
+	parameterType="_int"
+	resultType="Biz">
+	select biz_no as bizNo,
+		   biz_name as bizName,
+		   donate_code as donateCode,
+		   to_char(biz_donate_end, 'yyyy/mm/dd') as bizDonateEnd,
+		   biz_thumb as bizThumbPath 
+	  from tbl_donate_biz
+	 where org_no = #{_parameter} 
+	</select>
+	
 	<resultMap type="Org" id="orgMap">
 		<result column="org_no" property="orgNo" />
 		<result column="org_name" property="orgName" />
-		<result column="org_thumb" property="orgThumb" />
+		<result column="org_thumb" property="orgThumbPath" />
+	
+		<collection property="categoryList"
+					  select="selectOrgCategoryList"
+					  column="org_no"
+					javaType="java.util.List"
+					  ofType="String" 
+					  >
+		</collection>
+		
+		<collection property="bizList"
+				 	  select="selectBizList"
+				 	  column="org_no"
+				 	 javaType="java.util.List"
+				 	   ofType="Biz" >
+		</collection>
 	</resultMap>
 	
+	<!-- 회원 관심단체 삭제 -->
+	<delete id="delLikeOrg"
+	parameterType="map">
+	delete from tbl_member_org where member_no = #{memberNo} and org_No = #{orgNo}
+	</delete>
 </mapper>	

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -361,7 +362,6 @@ public class MemberController {
 			//회원 관심단체 목록과 페이지 네비게이션 정보 조회
 			HashMap<String, Object> paraMap = service.selectOrgLikeList(reqPage, memberNo);
 			res= new ResponseDTO(HttpStatus.OK, "", paraMap , uploadPath);
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -369,14 +369,25 @@ public class MemberController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	//한개의 단체 조회
-	@GetMapping("/orgDetail/{orgNo}")
-	public ResponseEntity<ResponseDTO> selectOrgCategories(@PathVariable int orgNo){
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "", fileUtil, uploadPath);
-		System.out.println(orgNo);
+	//회원 관심단체 삭제
+	@DeleteMapping("/delLikeOrg/{orgNo}/{memberNo}")
+	public ResponseEntity<ResponseDTO> deleteOrgLikeList(@PathVariable int orgNo, @PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "취소중, 오류가 발생하였습니다.", false, "error");
+
+		try {
+			int result = service.delLikeOrg(orgNo, memberNo);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "", true, "");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "취소 중, 오류가 발생하였습니다.", false, "warning");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 		
 	}
-	
 }

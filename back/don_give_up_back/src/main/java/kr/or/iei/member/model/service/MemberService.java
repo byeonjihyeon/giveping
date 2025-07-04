@@ -237,6 +237,17 @@ public class MemberService {
 		//회원번호, 페이지정보(pageInfo), 회원리스트 전달
 		return paraMap;
 	}
+	
+	//회원 관심단체 삭제
+	@Transactional
+	public int delLikeOrg(int orgNo, int memberNo) {
+		HashMap<String, Integer> delMap = new HashMap<>();
+		delMap.put("orgNo", orgNo);
+		delMap.put("memberNo", memberNo);
+		
+		return dao.delLikeOrg(delMap);
+	}
 
+	
 
 }

@@ -64,5 +64,8 @@ public interface MemberDao {
 	//회원 관심단체 리스트 조회
 	ArrayList<Org> selectOrgLikeList(HashMap<String, Object> paraMap);
 	
+	//회원 관심단체 삭제
+	int delLikeOrg(HashMap<String, Integer> delMap);
+	
 
 }

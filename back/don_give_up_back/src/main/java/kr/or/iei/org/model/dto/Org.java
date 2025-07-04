@@ -2,6 +2,7 @@ package kr.or.iei.org.model.dto;
 
 import java.util.List;
 
+import kr.or.iei.biz.model.dto.Biz;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,4 +31,5 @@ public class Org {
 	
 	
 	private List<String> categoryList;	//주요 카테고리 리스트
+	private List<Biz> bizList;			//기부사업 리스트
 }

@@ -120,17 +120,32 @@
 .likeOrgList-wrap {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 30px;
 }
 
 /* 관심기부단체 카드*/
 .likeOrg-wrap {
     width: 250px;
+    cursor: pointer;
+    border: 1px solid #dcdcdc;
+}
+
+.likeOrg-wrap:hover {
+    border: 1px solid #848b91;
 }
 
 .likeOrg-logo {
     position: relative;
     height: 150px;
+    border: 1px solid black;
+}
+
+.org-ctg-wrap {
+    display: flex;
+    border: 1px solid black;
+    
+}
+.org-ctg {
     border: 1px solid black;
 }
 
@@ -151,6 +166,9 @@
     height: 100%;
 }
 
+.likeOrg-name img {
+    width: 10%;
+}
 
 
 /* 기부 내역 */

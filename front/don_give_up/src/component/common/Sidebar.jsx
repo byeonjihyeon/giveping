@@ -48,7 +48,7 @@ export default function Sidebar (props){
                 </p>   
            </div>
            
-           { isMyHome //현재 url이 /member가 아닌지?
+           { !isMyHome && loginMember //현재 url이 /member가 아닌지?
             ?   loginMember
                 ?
                 <div className="profile-wrap-btm">
@@ -62,7 +62,7 @@ export default function Sidebar (props){
                     </div>
                 </div>
                 : ""
-           :    loginOrg
+           : !isMyHome && loginOrg
                 ?
                 <div className="profile-wrap-btm">
                     <div>
