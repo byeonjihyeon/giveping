@@ -65,9 +65,17 @@
 		       org_introduce as orgIntroduce,
 		       org_account as orgAccount,
 		       org_account_bank as orgAccountBank,
+		       org_temperature as orgTemperature,
 		       org_thumb as orgThumbPath,
 		       org_url as orgUrl
 		  from tbl_org
+		 where org_no = #{orgNo}
+	</select>
+	
+	<!-- 단체 주요 카테고리 조회 -->
+	<select id="selectOrgDonation" parameterType="_int" resultType="string">
+		select donate_code
+		  from tbl_org_donation
 		 where org_no = #{orgNo}
 	</select>
 	
@@ -84,9 +92,47 @@
 		       org_account = #{orgAccount},
 		       org_account_bank = #{orgAccountBank},
 		       org_url = #{orgUrl}
-		       <if test="orgThumbPath != null and orgThumbPath != ''">
-		 	   , org_thumb = #{orgThumbPath}
-		 	   </if>
+		 where org_no = #{orgNo}
+	</update>
+	
+	<!-- 단체 주요 카테고리 삭제 -->
+	<delete id="deleteOrgDonation" parameterType="_int">
+		delete from tbl_org_donation
+		 where org_no = #{orgNo}
+	</delete>
+
+	<!-- 비밀번호 확인 -->
+	<select id="checkPw" parameterType="_int" resultType="string">
+		select org_pw as orgPw
+		  from tbl_org
+		 where org_no = #{orgNo}
+	</select>
+	
+	<!-- 비밀번호 변경 -->
+	<update id="updatePw" parameterType="Org">
+		update tbl_org
+		   set org_pw = #{orgPw}
+		 where org_no = #{orgNo}
+	</update>
+	
+	<!-- 단체 프로필 조회 -->
+	<select id="selectThumb" parameterType="_int" resultType="string">
+		select org_thumb as orgThumbPath
+		  from tbl_org
+		 where org_no = #{orgNo}
+	</select>
+	
+	<!-- 단체 프로필 초기화(삭제) -> 삭제가 아닌 null로 변경 -->
+	<update id="deleteThumb" parameterType="_int">
+		update tbl_org
+		   set org_thumb = null
+		 where org_no = #{orgNo}
+	</update>
+	
+	<!-- 단체 프로필 수정 -->
+	<update id="updateThumb" parameterType="Org">
+		update tbl_org
+		   set org_thumb = #{orgThumbPath}
 		 where org_no = #{orgNo}
 	</update>
 </mapper>

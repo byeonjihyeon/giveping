@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.Member;
+import kr.or.iei.org.model.dto.Org;
 
 @Mapper
 public interface MemberDao {
@@ -60,4 +61,13 @@ public interface MemberDao {
 
 	// 회원별 알림 리스트 조회
 	ArrayList<MemberAlarm> selectAlarmList(int memberNo);
+	
+	//회원 관심단체 수 조회
+	int selectOrgLikeCnt(int memberNo);
+	
+	//회원 관심단체 리스트 조회
+	ArrayList<Org> selectOrgLikeList(HashMap<String, Object> paraMap);
+	
+	//회원 관심단체 삭제
+	int delLikeOrg(HashMap<String, Integer> delMap);
 }

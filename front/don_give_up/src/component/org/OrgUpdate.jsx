@@ -5,28 +5,30 @@ import useUserStore from "../../store/useUserStore";
 import Swal from "sweetalert2";
 
 //단체 정보 수정
-export default function OrgUpdate(){
+export default function OrgUpdate(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
-    const navigate = useNavigate();
+
+    const mainOrg = props.org;
+    const setMainOrg = props.setOrg;
 
     //단체 번호를 가져오기 위함
     const {loginOrg} = useUserStore();
 
     //단체 1개 정보를 저장할 State 변수
     const [org, setOrg] = useState({
-        orgNo : loginOrg.orgNo, orgId : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "", orgAddrMain : "",
-        orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", orgThumbPath : "", orgUrl : ""
+        orgNo : "", orgId : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "", orgAddrMain : "",
+        orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", orgUrl : "", categoryList : []
     });
+
+    const [donateCtgList, setDonateCtgList] = useState([]); //DB에서 조회한 카테고리 리스트를 저장할 State 변수
+    const [checkCtgList, setCheckCtgList] = useState([]);   //체크한 카테고리 정보를 저장할 State 변수
 
     //이메일 정보를 저장할 State 변수
     const [orgEmailId, setOrgEmailId] = useState("");
     const [orgEmailDomain, setOrgEmailDomain] = useState("");
     //이메일 유효성 체크 결과를 저장할 변수
     const [emailChk, setEmailChk] = useState(0);
-
-    //기존 섬네일 서버 저장 파일명
-    const [prevThumbPath, setPrevThumbPath] = useState(null);
 
     //단체 1개 정보 가져오기
     useEffect(function(){
@@ -37,47 +39,34 @@ export default function OrgUpdate(){
         axiosInstance(options)
         .then(function(res){
             const newOrg = res.data.resData;
-            newOrg.orgUrl = "";
             
-            console.log(newOrg);
+            if(!newOrg.orgUrl){
+                newOrg.orgUrl = "";
+            }
 
             //이메일 내에서 @를 기준으로 아이디와 도메인 추출
             const [emailId, emailDomain] = newOrg.orgEmail.split("@");
             
             setOrgEmailId(emailId);
             setOrgEmailDomain(emailDomain);
-            setPrevThumbPath(newOrg.orgThumbPath);
+
+            setCheckCtgList(newOrg.categoryList);
 
             setOrg(newOrg);
         });
     }, []);
 
-    //게시글 썸네일 이미지 파일 객체
-    const [orgThumb, setOrgThumb] = useState(null);
-    //썸네일 이미지 미리보기용 변수(서버에 전송 X)
-    const [thumbImg, setThumbImg] = useState(null);
-    //input type=file인 썸네일 업로드 요소와 연결하여 사용
-    const thumbFileEl = useRef(null);
+    //카테고리 리스트 정보 가져오기
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + "/donateCtg";
+        options.method = "get";
 
-    //썸네일 이미지 변경 시 호출 함수(onChange)
-    function chgThumbFile(e){
-        const files = e.target.files;
-        
-        if(files.length != 0 && files[0] != null){
-            setOrgThumb(files[0]);    //게시글 등록하기 클릭 시 서버에 전송될 썸네일 파일 객체
-
-            //썸네일 이미지 화면에 보여주기
-            const reader = new FileReader();    //브라우저에서 파일을 비동기적으로 읽을 수 있게 해주는 객체
-            reader.readAsDataURL(files[0]);     //파일 데이터 읽어오기
-            reader.onloadend = function(){      //모두 읽어오면 실행할 함수 작성
-                setThumbImg(reader.result);     //미리보기용 State 변수에 세팅
-            }
-        }else{
-            //업로드 팝업 취소한 경우 썹네일 파일 객체와 미리보기용 변수 초기화
-            setOrgThumb(null);
-            setThumbImg(null);
-        }
-    }
+        axiosInstance(options)
+        .then(function(res){
+            setDonateCtgList(res.data.resData);
+        });
+    }, []);
 
     //input 태그 안 내용 변경 시
     function chgOrg(e){
@@ -155,10 +144,11 @@ export default function OrgUpdate(){
 
     //수정 버튼 클릭 시 호출 함수
     function updateOrg(){
+
         // 유효성 조건 리스트
         const validations = [
             { valid: org.orgName === "", message: "단체명을 입력하세요." },
-            { valid: biznumChk !== 1, message: "사업자번호를 확인하세요." },
+            { valid: biznumChk !== 1, message: "사업자번호를 확인하세요.(XXX-XX-XXXXX 형식)" },
             { valid: phoneChk !== 1, message: "전화번호를 확인하세요." },
             { valid: emailChk !== 1, message: "이메일을 확인하세요." },
             { valid: org.orgAddrMain === "", message: "주소를 입력하세요." },
@@ -180,44 +170,10 @@ export default function OrgUpdate(){
             }
         }
 
-        console.log(org);
-        console.log(orgThumb);
-        console.log(prevThumbPath);
-        //파일 업로드 시 사용할 수 있는 내장 객체
-        const form = new FormData();
-
-        form.append("orgNo", loginOrg.orgNo);
-        form.append("orgName", org.orgName);
-        form.append("orgBiznum", org.orgBiznum);
-        form.append("orgPhone", org.orgPhone);
-        form.append("orgEmail", org.orgEmail);
-        form.append("orgAddrMain", org.orgAddrMain);
-        form.append("orgAddrDetail", org.orgAddrDetail);
-        form.append("orgIntroduce", org.orgIntroduce);
-        form.append("orgAccount", org.orgAccount);
-        form.append("orgAccountBank", org.orgAccountBank);
-        form.append("orgUrl", org.orgUrl);
-
-        //form.append("org", org);
-        //기존 썸네일 파일명
-        if(prevThumbPath != null) {
-            form.append("prevThumbPath", prevThumbPath);
-        }
-
-        //썸네일 등록한 경우에만 append
-        if(orgThumb != null){
-            form.append("orgThumb", orgThumb);
-        }
-
-        console.log(form);
-
         let options = {};
         options.url = serverUrl + "/org/update";
         options.method = "patch";
-        options.data = form;
-        options.header = {};
-        options.header.contentType = "multipart/form-data";
-        options.header.processData = false; //쿼리스트링으로 변환하지 않도록 설정
+        options.data = org;
 
         axiosInstance(options)
         .then(function(res){
@@ -226,8 +182,12 @@ export default function OrgUpdate(){
                 text : res.data.clientMsg,
                 icon : res.data.alertIcon,
                 confirmButtonText : "확인"
+            })
+            .then(function(result){
+                setMainOrg({...mainOrg, orgName : org.orgName, orgEmail : org.orgEmail});
             });
         });
+ 
     }
 
     return (
@@ -237,18 +197,6 @@ export default function OrgUpdate(){
         }}>
             <table className="tbl-org" border={1}>
                 <tbody>
-                    <tr>
-                        <th colSpan={2}>
-                            <div>
-                                <img style={{width : "100px"}} src={thumbImg ? thumbImg : prevThumbPath
-                                            ? serverUrl + "/org/thumb/" + prevThumbPath.substring(0, 8) + "/" + prevThumbPath
-                                            : "/images/default_profile.jpg"} onClick={function(e){
-                                    thumbFileEl.current.click();
-                                }}/>
-                                <input type="file" accept="image/*" style={{display : "none"}} ref={thumbFileEl} onChange={chgThumbFile}/>
-                            </div>
-                        </th>
-                    </tr>
                     <tr>
                         <th>아이디</th>
                         <td>{org.orgId}</td>
@@ -314,6 +262,16 @@ export default function OrgUpdate(){
                         <td>
                             <input type="text" id="orgUrl" value={org.orgUrl} onChange={chgOrg}/>
                         </td>
+                    </tr>
+                    <tr>
+                        <th colSpan={2}>
+                            <ul className="select-ctg-wrap">
+                                {donateCtgList.map(function(category, index){
+                                    return <DonateCtg key={"category"+index} category={category} org={org} setOrg={setOrg}
+                                                                             checkCtgList={checkCtgList} setCheckCtgList={setCheckCtgList}/>
+                                })}
+                            </ul>
+                        </th>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -473,5 +431,39 @@ function MemberAddr(props){
             <button type="button" onClick={execDaumPostcode}>주소 찾기</button> <br/>
             <input type="text" ref={detailAddressRef} value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" />
         </>
+    )
+}
+
+function DonateCtg(props){
+    const category = props.category;
+    const org = props.org;
+    const setOrg = props.setOrg;
+    const checkCtgList = props.checkCtgList;
+    const setCheckCtgList = props.setCheckCtgList;
+
+    //카테고리 클릭 시 토글
+    function toggleCategory(code) {
+        setCheckCtgList(function (prev) {
+            if (prev.includes(code)) {
+                // 이미 선택된 경우 제거
+                return prev.filter(function (item) {
+                return item !== code;
+                });
+            } else {
+                // 새로운 선택 추가
+                return [...prev, code];
+            }
+        });
+    }
+
+    useEffect(function(){
+        setOrg({...org, categoryList : checkCtgList});
+    }, [checkCtgList]);
+
+    return (
+        <li className={"select-ctg" + (!checkCtgList ? "" : checkCtgList.includes(category.donateCode) ? " active" : "")}
+            onClick={function(){ toggleCategory(category.donateCode); }}>
+            {category.donateCtg}
+        </li>
     )
 }
