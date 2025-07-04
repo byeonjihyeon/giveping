@@ -155,12 +155,14 @@ public class BizController {
 	// 설문조사 답변 등록
 	@PostMapping("/survey")
 	public ResponseEntity<ResponseDTO> regSurveyAnswer(@RequestBody List<SurveyAnswer> answerList) throws DuplicateKeyException{
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 처리 중, 오류가 발생하였습니다.", false, "error");
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "답변 저장 처리 중, 오류가 발생하였습니다.", false, "error");
 		System.out.println("answerList : " +answerList);
 		try {
 			int result = service.regSurveyAnswer(answerList);
 			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "", true, "");				
+				res = new ResponseDTO(HttpStatus.OK, "답변이 성공적으로 저장되었습니다.", true, "success");				
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "답변 저장 처리 중, 오류가 발생하였습니다.", false, "error");		
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
