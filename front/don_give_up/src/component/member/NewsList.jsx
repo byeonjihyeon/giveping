@@ -112,9 +112,3 @@ function News(props){
         </div>
     );
 }
-
-
-
-
-
-
