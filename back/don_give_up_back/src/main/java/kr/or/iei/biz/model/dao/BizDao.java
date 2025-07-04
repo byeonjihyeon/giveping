@@ -38,8 +38,6 @@ public interface BizDao {
 
 	int regSurveyAnswer(SurveyAnswer answer);
 
-	int insertBoardFile(BizFile file);
-
 	BizNo selectPk(Biz biz);
 
 	int regPkNo(int bizNo);
@@ -49,6 +47,12 @@ public interface BizDao {
 	ArrayList<BizFile> selectDelBizFile(int[] delBizFileNo);
 
 	int deleteBizFile(int[] delBizFileNo);
+
+	// 사업 번호로 pkNo 조회
+	BizNo getBizNoFromBizNo(Biz biz);
+
+	// 첨부파일 추가
+	void insertBizFile(BizFile file);
 	
 
 }

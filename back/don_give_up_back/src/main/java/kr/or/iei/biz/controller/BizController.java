@@ -26,6 +26,7 @@ import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
 import kr.or.iei.biz.model.dto.BizFile;
 import kr.or.iei.biz.model.dto.BizMember;
+import kr.or.iei.biz.model.dto.BizNo;
 import kr.or.iei.biz.model.dto.Keyword;
 import kr.or.iei.biz.model.dto.SurveyAnswer;
 import kr.or.iei.biz.model.dto.SurveyQuestion;
@@ -165,48 +166,64 @@ public class BizController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	/*
+	
 	@PostMapping("/file")
 	// 첨부파일 등록 (수정)
 	public ResponseEntity<ResponseDTO> regFile (@ModelAttribute MultipartFile [] bizFile, 	// 추가할 첨부파일
-												@RequestParam(required = false) int[] delFileNos,	// 삭제할 첨부파일 번호
-												@ModelAttribute Biz biz		// 대상 게시글 번호를 담은 객체
+												@ModelAttribute Biz biz		// 게시글 번호, 제목, 내용, 삭제 파일 번호 배열
 												){
 		
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "파일 처리 중, 오류가 발생하였습니다.", false, "error");
-		System.out.println("bizFile : " +bizFile);
-		System.out.println("biz : " +biz.toString());
-		System.out.println("delFileNos : " +delFileNos);
-		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "첨부파일 처리 중, 오류가 발생하였습니다.", false, "error");
 		
 		try {
 			
-			ArrayList<BizFile> addFileList = new ArrayList<>();
-			//첨부파일 업로드 및 추가
+			//추가 첨부파일 업로드 처리
 			if(bizFile != null) {
+				ArrayList<BizFile> addFileList = new ArrayList<>();
+				
 				for(int i=0; i<bizFile.length; i++) {
-					for (MultipartFile file : bizFile) {
-		                String filePath = fileUtil.uploadFile(file, "/biz/board/");
-		                BizFile bf = new BizFile();
-		                bf.setFileName(file.getOriginalFilename());
-		                bf.setFilePath(filePath);
-		                bf.setBizNo(biz.getBizNo());	// Biz 객체 안의 bizNo를 저장
-		                addFileList.add(bf);
-		            }
-			}
+					String filePath = fileUtil.uploadFile(bizFile[i], "/biz/board/"); //첨부파일 업로드
+					
+					BizFile addFile = new BizFile();
+					addFile.setFileName(bizFile[i].getOriginalFilename()); //사용자 업로드 파일명
+					addFile.setFilePath(filePath);							 //서버 저장 파일명
+					addFile.setBizNo(biz.getBizNo());					 //사업 번호 (service 단에서 biz_no 로 pk_no 찾는 로직 추가)				
+	                addFile.setPkNo(biz.getBizNo());					// 임시
+	                
+					addFileList.add(addFile);
+				}
+				
+				biz.setFileList(addFileList);
 			}
 			
-			// 2. 서비스에 위임 (첨부파일 추가 및 삭제 처리)
-	        service.updateBizFiles(biz.getBizNo(), addFileList, delFileNos);
+			//DB 작업 후, 서버에서 첨부파일 삭제를 위해 파일 리스트 조회
+			//board : 게시글 번호, 게시글 제목, 게시글 내용, 썸네일(추가 업로드한 경우만), 추가 첨부파일(추가 업로드한 경우만), 삭제 파일번호 배열(삭제 대상 파일이 존재할때만)
+			ArrayList<BizFile> delFileList = service.updateFile(biz);
 			
-			res = new ResponseDTO(HttpStatus.OK, "파일이 등록 되었습니다.", true, "success");
+			//서비스에서 반환해준 삭제 파일 리스트 null일 수 있으므로 체크 후, 서버 삭제
+			if(delFileList != null) {
+				String savePath = uploadPath + "/biz/board/";
+				
+				for(int i=0; i<delFileList.size(); i++) {
+					BizFile delFile = delFileList.get(i); 
+					
+					File file = new File(savePath + delFile.getFilePath().substring(0, 8) + File.separator + delFile.getFilePath());
+					if(file.exists()) {
+						file.delete();
+					}
+				}
+			}
+			
+			
+			
+			res = new ResponseDTO(HttpStatus.OK, "파일이 정상적으로 처리 되었습니다.", true, "success");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	*/
+	
 	
 	// 특정 기부사업의 첨부파일 리스트 조회
 	@GetMapping("/file/{bizNo}")

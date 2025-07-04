@@ -218,7 +218,7 @@ from tbl_survey_question
 	</select>
 	
 <!-- 파일 등록 -->
-<insert id="insertBoardFile" parameterType="BizFile">
+<insert id="insertBizFile" parameterType="BizFile">
 	insert into tbl_file
 	(file_no, pk_no, file_name, file_path)
 	values
@@ -261,7 +261,7 @@ from tbl_survey_question
 	</select>
 
 <!-- 삭제 대상 파일 DB 삭제 -->
-	 <delete id="deleteBizFile" parameterType="map">
+	 <delete id="deleteBizFile" parameterType="int[]">
 	 delete from tbl_file
 	 where file_no in 
 	 	  <foreach collection="array"
