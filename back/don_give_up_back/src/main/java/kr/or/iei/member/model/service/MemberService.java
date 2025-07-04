@@ -255,4 +255,9 @@ public class MemberService {
 		return dao.selectAlarmList(memberNo);
 	}
 
+	// 내 소식 알림 읽음 처리
+	public int updateAlarmRead(int alarmNo) {
+		return dao.updateAlarmRead(alarmNo);
+	}
+
 }
