@@ -71,19 +71,21 @@ import createInstance from '../../axios/Interceptor';
                         }}
                 >
                 </Editor>
-            : type == 0 || (type == 1 && donateBiz.bizContent != "")
-                ?
-                    <Editor ref={editorRef} 
-                        initialValue={donateBiz.bizContent}
-                        initialEditType="wysiwyg"
-                        language="ko-KR"
-                        height="600px"
-                        onChange={changeContent}
-                        hooks={{
-                            addImageBlobHook : uploadImg
-                        }}
-                    >
-                    </Editor>
+            : donateBiz
+                ? type == 0 || (type == 1 && donateBiz.bizContent != "")
+                    ?
+                        <Editor ref={editorRef} 
+                            initialValue={donateBiz.bizContent}
+                            initialEditType="wysiwyg"
+                            language="ko-KR"
+                            height="600px"
+                            onChange={changeContent}
+                            hooks={{
+                                addImageBlobHook : uploadImg
+                            }}
+                        >
+                        </Editor>
+                    : ""
                 : ""
             }
         </div>    
