@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.common.model.dto.DonateCode;
+import kr.or.iei.member.model.dto.MemberAlarm;
+import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -57,6 +59,9 @@ public interface MemberDao {
 	
 	//회원 탈퇴: 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
 	int deleteMember(int memberNo);
+
+	// 회원별 알림 리스트 조회
+	ArrayList<MemberAlarm> selectAlarmList(int memberNo);
 	
 	//회원 관심단체 수 조회
 	int selectOrgLikeCnt(int memberNo);
@@ -64,5 +69,9 @@ public interface MemberDao {
 	//회원 관심단체 리스트 조회
 	ArrayList<Org> selectOrgLikeList(HashMap<String, Object> paraMap);
 	
-
+	//회원 관심단체 삭제
+	int delLikeOrg(HashMap<String, Integer> delMap);
+	
+	//회원기부내역 조회
+	ArrayList<MemberDonation> selectDonationHistory(int memberNo);
 }

@@ -15,6 +15,8 @@ import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.member.model.dao.MemberDao;
+import kr.or.iei.member.model.dto.MemberAlarm;
+import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -237,6 +239,26 @@ public class MemberService {
 		//회원번호, 페이지정보(pageInfo), 회원리스트 전달
 		return paraMap;
 	}
+	
+	//회원 관심단체 삭제
+	@Transactional
+	public int delLikeOrg(int orgNo, int memberNo) {
+		HashMap<String, Integer> delMap = new HashMap<>();
+		delMap.put("orgNo", orgNo);
+		delMap.put("memberNo", memberNo);
+		
+		return dao.delLikeOrg(delMap);
+	}
 
+
+	//내 소식 알림 리스트 조회
+	public ArrayList<MemberAlarm> selectAlarmList(int memberNo) {
+		return dao.selectAlarmList(memberNo);
+	}
+	
+	//회원 기부내역 조회
+	public ArrayList<MemberDonation> selectDonationHistory(int memberNo) {
+		return dao.selectDonationHistory(memberNo);
+	}
 
 }

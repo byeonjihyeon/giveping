@@ -22,14 +22,14 @@ export default function MemberUpdate(props) {
 
     //화면표출 및 서버에 전송할 회원정보
     const [member, setMember] = useState({
-        memberNo: loginMember.memberNo,      //회원번호
+        memberNo: mainMember.memberNo,       //회원번호
         memberId: "",                        //회원아이디
         memberName: "",                      //회원이름
         memberPhone: "",                     //회원전화번호
         memberBirth: "",                     //회원생년월일
         memberEmail: "",                     //회원이메일
         memberAddrMain: "",                  //회원주소
-        memberAddrDetail: ""                     //회원상세주소
+        memberAddrDetail: ""                 //회원상세주소
     });
 
     //전체 기부카테고리

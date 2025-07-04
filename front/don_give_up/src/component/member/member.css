@@ -104,26 +104,36 @@
     text-decoration: none;
 }
 
-.side-menu>a:last-of-type {
-    border-top: 1px solid #dcdcdc;
-    border-bottom: none;
-}
-
 
 .likeOrgList-wrap {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 30px;
 }
 
 /* 관심기부단체 카드*/
 .likeOrg-wrap {
     width: 250px;
+    cursor: pointer;
+    border: 1px solid #dcdcdc;
+}
+
+.likeOrg-wrap:hover {
+    border: 1px solid #848b91;
 }
 
 .likeOrg-logo {
     position: relative;
     height: 150px;
+    border: 1px solid black;
+}
+
+.org-ctg-wrap {
+    display: flex;
+    border: 1px solid black;
+    
+}
+.org-ctg {
     border: 1px solid black;
 }
 
@@ -144,6 +154,9 @@
     height: 100%;
 }
 
+.likeOrg-name img {
+    width: 10%;
+}
 
 
 /* 기부 내역 */
@@ -165,11 +178,12 @@
     border-radius: 50%;
     border: 1px solid #91C8E4;
     text-align: center;
+    
 }
 
 .state>span {
     line-height: 80px;
-    font-size: 20px;
+    font-size: 15px;
     color: #91C8E4;
     font-weight: bold;
 }

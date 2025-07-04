@@ -4,12 +4,13 @@ import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 import Survey from './Survey';
+import BizFile from './BizFile';
 
 export default function BizView(){
     const {loginMember} = useUserStore();
     const param = useParams();
     const bizNo = param.bizNo;
-    console.log(bizNo);
+    //console.log(bizNo);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -32,8 +33,13 @@ export default function BizView(){
     // 관리자 전용 버튼 가시화 위한 변수 선언
     const [showMemberList, setShowMemberList] = useState(false);
 
+    const [bizFile, setBizFile] = useState([]); // 게시글에 대한 첨부파일 객체
+    const [prevBizFileList, setPrevBizFileList] = useState([]); //BizFile 객체 리스트 
+    const [delBizFileNo, setDelBizFileNo] = useState([]); //삭제 대상 파일 번호 저장 배열
+
+    
     function openDonatePopup() {
-        console.log("기부하기 버튼 클릭");
+        //console.log("기부하기 버튼 클릭");
         if(loginMember.orgNo == donateBiz.orgNo){
             alert("같은 단체의 사업에 기부할 수 없습니다.");
             return;
@@ -43,7 +49,7 @@ export default function BizView(){
     }
 
     function openSurveyPopup() {
-        console.log("설문조사 버튼 클릭");
+        //console.log("설문조사 버튼 클릭");
         setIsSurveyOpen(true);
     }
 
@@ -65,7 +71,7 @@ export default function BizView(){
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
-            console.log(res.data.resData.bizMemberList);
+            console.log("후원회원", res.data.resData.bizMemberList);
             setDonateBiz(res.data.resData);
             setMemberList(res.data.resData.bizMemberList);
             //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
@@ -73,22 +79,23 @@ export default function BizView(){
 
     }, []);
 
-    const navigate = useNavigate();
-    //삭제하기 클릭 시, 동작 함수
-    /*
-    function deleteBoard(){
+    useEffect(function(){
         let options = {};
-        options.url = serverUrl + '/biz/' + board.bizNo;
-        options.method = 'delete';
+        options.url = serverUrl + '/biz/file/' + bizNo;
+        options.method = 'get';
 
         axiosInstance(options)
         .then(function(res){
-            if(res.data.resData){
-                navigate('/biz/list');
-            }
+            //console.log(res.data.resData);
+            setPrevBizFileList(res.data.resData);
+            //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
         });
-    }
-    */
+        console.log("삭제 대상 파일 번호 배열 변경됨:", delBizFileNo);
+    }, []);
+
+    const navigate = useNavigate();
+
+    
 
     return (
         <section>
@@ -138,18 +145,19 @@ export default function BizView(){
                         }
                         {/* 설문조사 팝업 */}
                         {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
-
-                        <p className="file-title">첨부파일</p>
-                        <div className="file-zone">
-                            {
-                                donateBiz.fileList
-                                ? donateBiz.fileList.map(function(file, index){
-                                    return <FileItem key={"file"+index} file={file} donateBiz={donateBiz}/>
-                                  })
-                                : ''
-                            }
-                        </div>
                     </div>
+                        
+                        <BizFile loginMember={loginMember}
+                                                bizFile={bizFile}
+                                                setBizFile={setBizFile}
+                                                prevBizFileList={prevBizFileList}
+                                                setPrevBizFileList={setPrevBizFileList}
+                                                delBizFileNo={delBizFileNo}
+                                                setDelBizFileNo={setDelBizFileNo}
+                                                donateBiz={donateBiz}
+                                                bizNo={bizNo}
+                                                />
+                        
                 </div>
                 
                 <hr/>
@@ -232,48 +240,6 @@ export default function BizView(){
     );
 }
 
-//파일 1개 정보
-function FileItem(props) {
-    const file = props.file;
-
-    const serverUrl = import.meta.env.VITE_BACK_SERVER;
-    const axiosInstance = createInstance();
-
-    //파일 다운로드 아이콘 클릭 시, 동작 함수
-    function fileDown(){
-        let options = {};
-        options.url = serverUrl + '/biz/file/' + donateBiz.bizFileNo;
-        options.method = 'get';
-        options.responseType = 'blob'; //서버에서 파일(바이너리)을 응답받기 위함.
-
-        axiosInstance(options)
-        .then(function(res){
-            //res.data => 서버에서 응답해준 리소스
-            const fileData = res.data;
-            const blob = new Blob([fileData]); //단건이여도, 배열로 전달해야 함.
-            const url = window.URL.createObjectURL(blob); //브라우저에 요청하기 위한 URL 생성
-
-            //가상의 a태그 생성하고, 화면에서는 숨김 => 동적으로 클릭 이벤트 발생 => a태그 삭제
-            const link = document.createElement("a");
-            link.href = url;                                //다운로드 요청 URL 지정
-            link.style.display = 'none';                    //a 태그 화면에서 숨기기 위함
-            link.setAttribute('download', file.fileName);   //다운로드할 파일명 지정
-            document.body.appendChild(link);                //body 태그 하위로 삽입
-            link.click();                                   //동적으로 클릭하여, 다운로드 유도
-            link.remove();                                  //a 태그 삭제
-
-            window.URL.revokeObjectURL(url); //URL 정보 삭제
-        });
-    }
-
-
-    return (
-        <div className="board-file">
-            <span className="material-icons file-icon" onClick={fileDown}>file_download</span>
-            <span className="file-name">{file.fileName}</span>
-        </div>
-    );
-}
 
 // 멤버 1명 객체
 function MemberItem(props){
