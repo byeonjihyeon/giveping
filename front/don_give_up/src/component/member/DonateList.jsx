@@ -4,12 +4,17 @@ import { useState } from "react"
 export default function DonateList(){
     
     /* 
-    1. 기부번호 
-    2. 사업명
-    3. 단체명
-    4. 기부일자
-    5. 기부액
-    6. 기부영수증출력버튼
+    화면에 보여줄 내용
+    1. 후원한 사업 개수
+    2. 총 기부금액
+    3. 후원한 단체
+    4. 후원한 사업 이름
+    3. 기부 날짜
+    4. 기부 금액
+    5. 기부 없을시 내용 출력
+    6. 영수증 버튼 출력
+
+    가능하다면, 전체내역과  상단에 기부내역, 결제내역 버튼 누르면 각각 해당 내용 나올수 있도록
     */
 
     const [donateList, setDonateList] = useState([

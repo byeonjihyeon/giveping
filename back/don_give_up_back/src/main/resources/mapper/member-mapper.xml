@@ -65,9 +65,9 @@
 		   member_addr_main as memberAddrMain,
 		   member_addr_detail as memberAddrDetail,
 		   member_profile as memberProfile,
-		   total_money as totalMoney,
-		   (select sum(donate_money) from tbl_donation_list d where d.member_no = m.member_no
-		   ) as totalDonateMoney
+		   to_char(total_money, '99,999,999') as totalMoney,
+		   to_char((select sum(donate_money) from tbl_donation_list d where d.member_no = m.member_no
+		   ), '99,999,999') as totalDonateMoney
 	  from tbl_member m
 	 where member_no = #{memberNo} 		   
 	</select>
