@@ -71,7 +71,11 @@ public interface MemberDao {
 	
 	//회원 관심단체 삭제
 	int delLikeOrg(HashMap<String, Integer> delMap);
+
+	// 알림 읽음 처리
+	int updateAlarmRead(int alarmNo);
 	
 	//회원기부내역 조회
 	ArrayList<MemberDonation> selectDonationHistory(int memberNo);
+	
 }

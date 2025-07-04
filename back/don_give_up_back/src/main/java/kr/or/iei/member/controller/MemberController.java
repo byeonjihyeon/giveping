@@ -370,6 +370,27 @@ public class MemberController {
 
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	// 알림 클릭 시, 알림 읽음 표시로 업데이트
+	@PatchMapping("/alarm/{alarmNo}")
+	public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable int alarmNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 읽음 처리 중, 오류가 발생하였습니다.", false, "error");
+		
+		try{
+			int result = service.updateAlarmRead(alarmNo);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "", true, "");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "", false, "");
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 
 
 	//회원 관심단체 조회

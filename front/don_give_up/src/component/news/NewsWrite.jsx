@@ -6,7 +6,7 @@ import ToastEditor from "./ToastEditor";
 import Swal from "sweetalert2";
 import {useNavigate} from "react-router-dom";
 export default function NewsWrite(){
-    //const {loginMember} = useUserStore(); // 관리자만 작성 가능
+    const {loginMember} = useUserStore(); // 관리자만 작성 가능
     
     const [newsName, setNewsName] = useState("");   // 소식 제목
     const [newsThumb, setNewsThumb] = useState(null);    // 소식 썸네일 이미지 파일 객체
@@ -27,8 +27,8 @@ export default function NewsWrite(){
             // 첫번째로 작성하는 문자열 ==> input의 name 속성값 역할을 함.
             form.append("newsName", newsName);
             form.append("newsContent", newsContent);
-            //form.append("boardWriter", loginMember.memberId);   // 작성자 (관리자만 가능)
-            form.append("boardWriter", 'admin');
+            form.append("memberNo", loginMember.memberNo);   // 작성자 (관리자만 가능)
+            //form.append("boardWriter", 'admin');
             form.append("orgNo", orgNo);    // 대상 단체 번호
 
             if(newsThumb != null){ //썸네일 이미지 업로드한 경우에만
