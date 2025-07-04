@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
@@ -11,6 +11,8 @@ export default function BizView(){
     const param = useParams();
     const bizNo = param.bizNo;
     //console.log(bizNo);
+
+    const [searchParams] = useSearchParams();
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -54,7 +56,7 @@ export default function BizView(){
     }
 
     function closeSurveyPopup() {
-        setIsDonateOpen(false);
+        setIsSurveyOpen(false);
     }
 
     function closeDonatePopup() {
@@ -77,7 +79,14 @@ export default function BizView(){
             //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
         });
 
-    }, []);
+    }, [bizNo]);
+
+    // 쿼리 파라미터 survey=open 인지 감지해서 설문조사 팝업 자동 열기
+    useEffect(() => {
+        if(searchParams.get('survey') === 'open'){
+            setIsSurveyOpen(true);
+        }
+    }, [searchParams]);
 
     useEffect(function(){
         let options = {};
@@ -138,11 +147,6 @@ export default function BizView(){
                         {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}
 
                         {/* (설문조사 팝업 => 기부 이력 있는 회원만 버튼 보임)*/}
-                        {
-                            loginMember != null &&
-                            memberList.some(member => member.memberNo === loginMember.memberNo) &&
-                            <button onClick={openSurveyPopup}>설문조사</button>
-                        }
                         {/* 설문조사 팝업 */}
                         {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
                     </div>

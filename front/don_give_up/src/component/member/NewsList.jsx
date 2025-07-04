@@ -104,11 +104,20 @@ function News(props){
     }
 
     return (
-        <div className="news-info" onClick={handleClick} style={{cursor: 'pointer'}}>
+        <div 
+            className="news-info" 
+            onClick={handleClick} 
+            style={{
+                cursor: 'pointer',
+                color: news.alarmRead === 1 ? 'gray' : 'black',
+                backgroundColor: news.alarmRead === 1 ? '#f0f0f0' : 'white',
+            }}
+        >
             <div>{content}</div>
             <div>
-                <span>{news.bizName}</span> | <span>{news.alarmDate}</span> | <span>{news.alarmRead}</span>
+                <span>{news.bizName}</span> | <span>{news.alarmDate}</span>
             </div>
         </div>
     );
+
 }
