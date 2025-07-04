@@ -81,7 +81,8 @@ function News(props){
         //navigate('/biz/view/' + news.bizNo);
 
         if(news.alarmType === 0){
-            console.log("타입 0번 클릭")
+            console.log("타입 0번 클릭");
+            navigate('/biz/view/'+news.bizNo+'?survey=open');
         }else if(news.alarmType === 1){
             navigate('/biz/view/' + news.bizNo);
         }else if(news.alarmType === 2){

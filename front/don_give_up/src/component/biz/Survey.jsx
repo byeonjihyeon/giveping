@@ -3,9 +3,13 @@ import createInstance from "../../axios/Interceptor";
 import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
+import { useLocation } from 'react-router-dom';
+
 export default function Survey(props){
     const onClose = props.onClose;
     const donateBiz = props.donateBiz;
+    console.log("bizNos : " + donateBiz.bizNo);
+
     const {loginMember} = useUserStore();
     console.log(donateBiz.bizNo);
 
@@ -18,8 +22,12 @@ export default function Survey(props){
     // 설문조사 답변 상태 저장 변수
     const [answers, setAnswers] = useState([]);
 
+    const location = useLocation();
+    const stateBizNo = location.state?.bizNo;
+
     // 설문조사 질문 리스트 가져오기
     useEffect(function(){
+
         let options = {};
         options.url = serverUrl + '/biz/survey';
         options.method = 'get';
@@ -28,7 +36,7 @@ export default function Survey(props){
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
-            const questions = res.data.resData
+            const questions = res.data.resData;
             setQuestionList(questions);
             //questionList안에는 question 객체가 여러 개 들어있음 => map 으로 객체 하나씩 꺼내오기
             
@@ -37,14 +45,14 @@ export default function Survey(props){
                 questionNo : q.questionNo,
                 answerScore : null, // 1~5 점 중, 선택한 점수가 들어감
                 memberNo : loginMember.memberNo,
-                bizNo : donateBiz.bizNo
+                bizNo: donateBiz.bizNo || stateBizNo  // 소식 페이지에서 넘어왔을 때, bizNo 값 null이므로
             }));
 
             setAnswers(initialAnswers);
        
         });
 
-    }, []);
+    }, []); 
 
     // 점수 선택 시, 점수 변경하는 핸들러
     function handleScoreChange(index, score){
@@ -56,25 +64,40 @@ export default function Survey(props){
 
     // 제출하기 버튼 클릭 시 호출되는 함수
     function submit(){
+        const bizNo = donateBiz?.bizNo || stateBizNo;
 
+        if (!bizNo) {
+        alert("기부사업 정보가 없습니다. 다시 시도해주세요.");
+        return;
+        }
+
+         // answers를 bizNo 포함하여 재구성
+        const fixedAnswers = answers.map(a => ({
+            ...a,
+            bizNo: bizNo
+        }));
+
+        console.log("제출할 answers:", fixedAnswers);
+        /*
         const isAllAnswered = answers.every(a => a.answerScore !== null);
         if(!isAllAnswered){
             alert("모든 질문에 답변해주세요.");
             return;
         }
+            */
 
-        console.log(answers);
+        + console.log("answers[0].bizNo:", fixedAnswers[0]?.bizNo);
+        //console.log("answers.bizNo : " + answers.bizNo); // answers 안에 bizNo 가 null임
         
         let options={};
         options.url = serverUrl + "/biz/survey";
-        options.data =  answers;
+        options.data =  fixedAnswers;
         options.method="post";
 
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
             if(res.data.resData){
-                alert("설문조사가 성공적으로 저장됨"); // 임시
                 onClose();  // 성공 시, 팝업 종료
             }
         });

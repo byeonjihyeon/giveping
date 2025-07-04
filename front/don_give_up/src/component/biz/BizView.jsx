@@ -5,12 +5,15 @@ import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 import Survey from './Survey';
 import BizFile from './BizFile';
+import { useSearchParams } from 'react-router-dom';
 
 export default function BizView(){
     const {loginMember} = useUserStore();
     const param = useParams();
     const bizNo = param.bizNo;
     //console.log(bizNo);
+
+    const [searchParams] = useSearchParams(); 
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -37,7 +40,10 @@ export default function BizView(){
     const [prevBizFileList, setPrevBizFileList] = useState([]); //BizFile 객체 리스트 
     const [delBizFileNo, setDelBizFileNo] = useState([]); //삭제 대상 파일 번호 저장 배열
 
-    
+    useEffect(() => {
+        setIsSurveyOpen(searchParams.get('survey') === 'open');
+    }, [searchParams]);
+
     function openDonatePopup() {
         //console.log("기부하기 버튼 클릭");
         if(loginMember.orgNo == donateBiz.orgNo){
@@ -90,6 +96,7 @@ export default function BizView(){
             setPrevBizFileList(res.data.resData);
             //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
         });
+
         console.log("삭제 대상 파일 번호 배열 변경됨:", delBizFileNo);
     }, []);
 
@@ -141,10 +148,10 @@ export default function BizView(){
                         {
                             loginMember != null &&
                             memberList.some(member => member.memberNo === loginMember.memberNo) &&
-                            <button onClick={openSurveyPopup}>설문조사</button>
+                            {/*<button onClick={openSurveyPopup}>설문조사</button>*/}
                         }
                         {/* 설문조사 팝업 */}
-                        {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
+                        {isSurveyOpen && <Survey onClose={function() { setIsSurveyOpen(false) }} donateBiz={donateBiz} />}
                     </div>
                         
                         <BizFile loginMember={loginMember}
