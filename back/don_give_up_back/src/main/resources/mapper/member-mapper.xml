@@ -153,6 +153,23 @@
 	    	member_profile = null
 	   where member_no = #{_parameter} 
 	 </update>
+	 
+	 <!-- 회원별 알림 리스트 조회 -->
+	 <select id="selectAlarmList" parameterType="string" resultType="Alarm">
+	 select alarm_no as alarmNo,
+	 		member_no as memberNo,
+	 		biz_no as bizNo,
+	 		news_no as newsNo,
+	 		alarm_type as alarmType,
+	 		alarm_date as alarmDate,
+	 		alarm_read as alarmRead,
+	 		biz_name as bizName,
+	 		org_name as orgName
+	 from tbl_alarm a
+	 join tbl_donate_biz d on a.biz_no = d.biz_no
+	 join tbl_org o on d.org_no = o.org_no
+	 where member_no = #{parameter}
+	 </select>
 	
 	<!-- 회원 관심단체 전체수 조회 -->
 	<select id="selectOrgLikeCnt"

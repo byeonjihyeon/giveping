@@ -30,7 +30,7 @@ public class Biz {
 	private String donateCtg;	// 기부 카테고리명
 	
 	// 기부 사업 게시글에 대한 파일 정보 저장 변수 
-	private List<BizFile> bizList;
+	private List<BizFile> fileList;
 	
 	// 삭제 파일 번호 배열 저장 변수
 	private int [] delBizFileNo;

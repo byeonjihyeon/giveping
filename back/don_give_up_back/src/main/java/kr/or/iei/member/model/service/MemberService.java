@@ -15,6 +15,7 @@ import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.member.model.dao.MemberDao;
+import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -248,6 +249,10 @@ public class MemberService {
 		return dao.delLikeOrg(delMap);
 	}
 
-	
+
+	// 내 소식 알림 리스트 조회
+	public ArrayList<MemberAlarm> selectAlarmList(int memberNo) {
+		return dao.selectAlarmList(memberNo);
+	}
 
 }

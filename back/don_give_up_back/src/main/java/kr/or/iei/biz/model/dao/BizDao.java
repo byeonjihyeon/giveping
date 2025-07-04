@@ -8,7 +8,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
+import kr.or.iei.biz.model.dto.BizFile;
 import kr.or.iei.biz.model.dto.BizMember;
+import kr.or.iei.biz.model.dto.BizNo;
 import kr.or.iei.biz.model.dto.Keyword;
 import kr.or.iei.biz.model.dto.SurveyAnswer;
 import kr.or.iei.biz.model.dto.SurveyQuestion;
@@ -35,6 +37,22 @@ public interface BizDao {
 	ArrayList<SurveyQuestion> selectSurveyQuestion();
 
 	int regSurveyAnswer(SurveyAnswer answer);
+
+	BizNo selectPk(Biz biz);
+
+	int regPkNo(int bizNo);
+
+	ArrayList<BizFile> selectBizFileList(int bizNo);
+
+	ArrayList<BizFile> selectDelBizFile(int[] delBizFileNo);
+
+	int deleteBizFile(int[] delBizFileNo);
+
+	// 사업 번호로 pkNo 조회
+	BizNo getBizNoFromBizNo(Biz biz);
+
+	// 첨부파일 추가
+	void insertBizFile(BizFile file);
 	
 
 }
