@@ -1,11 +1,13 @@
 package kr.or.iei.member.model.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.common.model.dto.DonateCode;
+import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.Member;
 
 @Mapper
@@ -55,4 +57,7 @@ public interface MemberDao {
 	
 	//회원 탈퇴: 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
 	int deleteMember(int memberNo);
+
+	// 회원별 알림 리스트 조회
+	ArrayList<MemberAlarm> selectAlarmList(int memberNo);
 }

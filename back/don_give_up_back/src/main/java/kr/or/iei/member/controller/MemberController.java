@@ -1,6 +1,7 @@
 package kr.or.iei.member.controller;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
+import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
 import kr.or.iei.member.model.service.MemberService;
@@ -343,4 +345,19 @@ public class MemberController {
 
 	}
 	
+	// 회원별 알림 리스트 조회
+	@GetMapping("/alarm/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectAlarmList(@PathVariable int memberNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 조회 중, 오류가 발생하였습니다.", null, "error");
+
+		try {
+			ArrayList<MemberAlarm> alarmList = service.selectAlarmList(memberNo);
+			res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "", alarmList, "error");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+
+	}
 }

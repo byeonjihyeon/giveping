@@ -1,5 +1,6 @@
 package kr.or.iei.member.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.member.model.dao.MemberDao;
+import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.Member;
 
 @Service
@@ -207,6 +209,10 @@ public class MemberService {
 		
 		return resultMap;
 		
+	}
+
+	public ArrayList<MemberAlarm> selectAlarmList(int memberNo) {
+		return dao.selectAlarmList(memberNo);
 	}
 
 
