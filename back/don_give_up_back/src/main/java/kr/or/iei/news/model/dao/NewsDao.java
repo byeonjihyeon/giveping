@@ -30,8 +30,6 @@ public interface NewsDao {
 
 	int deleteNews(int newsNo);
 
-	ArrayList<Comment> selectCommentList(int newsNo);
-
 	int deleteComment(int commentNo);
 
 	int updateComment(Comment comment);

@@ -174,7 +174,9 @@ public class BizController {
 												){
 		
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "첨부파일 처리 중, 오류가 발생하였습니다.", false, "error");
-		
+		System.out.println("controller 도착");
+		System.out.println("biz" + biz);
+		System.out.println("bizFile" + bizFile);
 		try {
 			
 			//추가 첨부파일 업로드 처리
@@ -213,10 +215,8 @@ public class BizController {
 					}
 				}
 			}
-			
-			
-			
 			res = new ResponseDTO(HttpStatus.OK, "파일이 정상적으로 처리 되었습니다.", true, "success");
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

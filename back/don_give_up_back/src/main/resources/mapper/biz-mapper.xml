@@ -18,7 +18,7 @@
 
 <!-- 기부 사업 리스트 조회 -->
 <select id="selectDonateBizList" parameterType="map" resultType="Biz">
-    SELECT biz_no AS bizNo, 
+    SELECT biz_no AS bizNo,
            org_no AS orgNo,
            org_name AS orgName,
            donate_code AS donateCode,
@@ -84,27 +84,94 @@ select sum(donate_money) AS donateMoney
 
 
 <!-- 한 개의 기부 게시글 정보 조회 -->
-<select id="selectOneDonateBiz" parameterType="_int" resultType="Biz">
-	select b.biz_no as bizNo,
-           b.org_no as orgNo,
-           o.org_name as orgName,
-           b.donate_code as donateCode,
-           d.donate_ctg as donateCtg,
-           b.biz_name as bizName,
-           b.biz_content as bizContent,
-           TO_CHAR(b.biz_donate_start, 'YYYY-MM-DD') as bizDonateStart,
-           TO_CHAR(b.biz_donate_end, 'YYYY-MM-DD') as bizDonateEnd,
-           TO_CHAR(b.biz_start, 'YYYY-MM-DD') as bizStart,
-           TO_CHAR(b.biz_end, 'YYYY-MM-DD') as bizEnd,
-           b.biz_goal as bizGoal,
-           b.biz_status as bizStatus,
-           TO_CHAR(b.biz_reg_date, 'YYYY-MM-DD') as bizRegDate,
-           b.biz_edit as bizEdit,
-           b.biz_thumb as bizThumbPath
+<select id="selectOneDonateBiz" parameterType="_int" resultMap="bizMap">
+	select b.biz_no,
+           b.org_no,
+           o.org_name,
+           b.donate_code,
+           d.donate_ctg,
+           b.biz_name,
+           b.biz_content,
+           TO_CHAR(b.biz_donate_start, 'YYYY-MM-DD') as biz_donate_start,
+           TO_CHAR(b.biz_donate_end, 'YYYY-MM-DD') as biz_donate_end,
+           TO_CHAR(b.biz_start, 'YYYY-MM-DD') as biz_start,
+           TO_CHAR(b.biz_end, 'YYYY-MM-DD') as biz_end,
+           b.biz_goal,
+           b.biz_status,
+           TO_CHAR(b.biz_reg_date, 'YYYY-MM-DD') as biz_reg_date,
+           b.biz_edit,
+           b.biz_thumb
 		from tbl_donate_biz b
 		JOIN tbl_org o ON b.org_no = o.org_no
 		JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
 		where biz_no = #{_parameter}
+</select>
+
+<resultMap type="Biz" id="bizMap">
+	<!-- SQL 조회 결과 컬럼을, type 속성에 작성된 DTO 클래스의 어느 변수에 바인딩할지 -->
+		<result column="biz_no" property="bizNo"/>
+		<result column="org_no" property="orgNo"/>
+		<result column="org_name" property="orgName"/>
+		<result column="donate_code" property="donateCode"/>
+		<result column="donate_ctg" property="donateCtg"/>
+		<result column="biz_content" property="bizContent"/>
+		<result column="biz_name" property="bizName"/>
+		<result column="biz_donate_start" property="bizDonateStart"/>
+		<result column="biz_donate_end" property="bizDonateEnd"/>
+		<result column="biz_start" property="bizStart"/>
+		<result column="biz_end" property="bizEnd"/>
+		<result column="biz_goal" property="bizGoal"/>
+		<result column="biz_status" property="bizStatus"/>
+		<result column="biz_reg_date" property="bizRegDate"/>
+		<result column="biz_edit" property="bizEdit"/>
+		<result column="biz_thumb" property="bizThumbPath"/>
+		
+		<collection property="fileList"
+					select="selectBizFileList"
+					column="biz_no"
+					javaType="java.util.List"
+					ofType="BizFile">
+		</collection>
+		<collection property="bizMemberList"
+					select="selectMemberList"
+					column="biz_no"
+					javaType="java.util.List"
+					ofType="BizMember">
+		</collection>
+		
+	</resultMap>
+
+	<!-- 게시글에 대한 파일 리스트 조회 -->
+	<select id="selectBizFileList"
+	 parameterType="_int"
+	 resultType="BizFile">
+		select f.file_no as fileNo,
+			   f.pk_no as pkNo,
+			   f.file_name as fileName,
+			   f.file_path as filePath,
+			   n.biz_no as bizNo
+		from tbl_file f
+		join tbl_no n on f.pk_no = n.pk_no
+		where n.biz_no = #{_parameter}
+	</select>
+
+<!-- 게시글에 대한 기부한 멤버 리스트 조회 -->
+<select id="selectMemberList"
+ parameterType="_int"
+ resultType="BizMember">
+	SELECT 
+    	m.member_no AS memberNo,
+    	m.member_id AS memberId,
+        m.member_name AS memberName,
+        TO_CHAR(m.member_birth, 'YYYY-MM-DD') AS memberBirth,
+        m.member_phone AS memberPhone,
+        l.donate_money AS donateMoney,
+        TO_CHAR(l.donate_date, 'YYYY-MM-DD') AS donateDate
+    FROM tbl_donation_list l
+    JOIN tbl_donate_biz b ON l.biz_no = b.biz_no
+    JOIN tbl_member m ON l.member_no = m.member_no
+    WHERE l.biz_no = #{_parameter}
+    order by donateDate
 </select>
 
 <!-- 검색 게시물 개수 조회 -->
@@ -161,22 +228,6 @@ FROM (
 WHERE rnum &gt;= #{pageInfo.start}
 </select>
 
-<!-- 특정 후원 사업에 기부한 회원 리스트 조회 -->
-	<select id="selectDonateMember" parameterType="_int" resultType="BizMember">
-    SELECT 
-    	m.member_no AS memberNo,
-    	m.member_id AS memberId,
-        m.member_name AS memberName,
-        TO_CHAR(m.member_birth, 'YYYY-MM-DD') AS memberBirth,
-        m.member_phone AS memberPhone,
-        l.donate_money AS donateMoney,
-        TO_CHAR(l.donate_date, 'YYYY-MM-DD') AS donateDate
-    FROM tbl_donation_list l
-    JOIN tbl_donate_biz b ON l.biz_no = b.biz_no
-    JOIN tbl_member m ON l.member_no = m.member_no
-    WHERE l.biz_no = #{_parameter}
-    order by donateDate
-</select>
 
 <!-- 회원별 예치금 조회하기 -->
 <select id="selectMemberMoney" parameterType="_int" resultType="BizMember">
@@ -232,16 +283,7 @@ from tbl_survey_question
 		values
 		(seq_pk_no.nextval, #{parameter})
 	</insert>
-	
-	<!-- 첨부파일 리스트 조회 -->
-	<select id="selectBizFileList" parameterType="_int" resultType="BizFile">
-	select file_no as fileNo,
-		   pk_no as pkNo,
-		   file_name as fileName, 
-		   file_path as filePath
-	from tbl_file 
-	where pk_no = (select pk_no from tbl_no where biz_no = #{parameter})
-	</select>
+
 	
 	<!--  삭제 대상 파일 리스트 조회 -->
 	<select id="selectDelBizFile" parameterType="map" resultType="BizFile">

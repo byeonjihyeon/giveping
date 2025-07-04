@@ -362,7 +362,8 @@ public class MemberController {
 
 		try {
 			ArrayList<MemberAlarm> alarmList = service.selectAlarmList(memberNo);
-			res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "", alarmList, "error");
+			System.out.println("최종 alarmList :" + alarmList);
+			res= new ResponseDTO(HttpStatus.OK, "", alarmList , uploadPath);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

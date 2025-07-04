@@ -55,13 +55,10 @@ public class BizService {
 
 	public Biz selectOneDonateBiz(int bizNo) {
 		
-		// 1. 상세 조회 시, 해당 사업에 기부한 회원 조회
-		List<BizMember> bizMemberList = dao.selectDonateMember(bizNo);
+		
 		// 2. 기부 사업 상세 조회
 	    Biz biz = dao.selectOneDonateBiz(bizNo);
 	    
-	    // 3. 1번에서 조회된 회원 리스트를 Biz 객체에 set
-	    biz.setBizMemberList(bizMemberList);
 		
 		return biz;
 	}
@@ -268,7 +265,7 @@ public class BizService {
 				// 서버에서 삭제할 파일 리스트 조회
 				delFileList = dao.selectDelBizFile(biz.getDelBizFileNo());
 				// 삭제할 파일 정보 DB에서 삭제
-				System.out.println("biz.getDelBizFileNo() : " + Arrays.toString(biz.getDelBizFileNo()));
+				System.out.println("biz.getDelBizFileNo() : " + Arrays.toString(biz.getDelBizFileNo())); // 결과 :[24]
 				dao.deleteBizFile(biz.getDelBizFileNo());
 			}
 			
