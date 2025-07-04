@@ -8,7 +8,7 @@ import LikeOrgList from './LikeOrgList';
 import DonateList from './DonateList';
 import NewsList from './NewsList';
 import ProfileUpdate from './ProfileUpdate';
-import CalendarTest from './CalendarTest';
+
 import MemberDelete from './MemberDelete';
 import PaymentFrm from './PaymentFrm';
 
@@ -23,19 +23,17 @@ export default function MemberMain(){
     const [menuList, setMenuList] = useState([
         {url: '/member', name: 'MY홈' },
         {url: '/member/news', name: '내 소식' },
-        {url: '/member/update', name: '내 정보', submenuList: [{url: '/member/update' , name: '회원정보 수정'}, {url: '/member/changePw' , name: '비밀번호 변경'}, 
-                                                              {url: '/member/changeProfile' , name: '프로필사진 변경'}]},
-        {url: '/member/donateList', name: '기부내역조회' },
         {url: '/member/likeOrgList', name: '관심단체' },
-        {url: '/member/money/charge', name: '예치금 충전/출금', submenuList: [{url: '/member/money/charge' , name: '예치금 충전'}, {url: '/member/money/chargeHistory' , name: '예치금 충전내역'}, 
-                                                                          {url: '/member/money/refund' , name: '예치금 출금'}, {url: '/member/money/refundHistory' , name: '예치금 출금내역'} 
-        ]}
+        {url: '/member/donateList', name: '내 활동', submenuList: [{url: '/member/donateList' , name: '기부내역'}]  },
+        {url: '/member/money/charge', name: '예치금', submenuList: [{url: '/member/money/charge' , name: '예치금 충전하기'},  {url: '/member/money/refund' , name: '예치금 출금하기'}
+                                                                          , {url: '/member/chargeNrefund' , name: '충전 / 출금내역'}]},
+
+        {url: '/member/update', name: '내 정보', submenuList: [{url: '/member/update' , name: '회원정보 수정'}, {url: '/member/changePw' , name: '비밀번호 변경'}, 
+                                                              {url: '/member/changeProfile' , name: '프로필사진 변경'}]}
     ])
 
     //자식컴포넌트에 전달할 회원정보
-    const [member, setMember] = useState({
-
-    }); 
+    const [member, setMember] = useState({}); 
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -63,10 +61,9 @@ export default function MemberMain(){
                     <Route path='update' element={<MemberUpdate member={member} setMember={setMember} />} /> 
                     <Route path='changePw' element={<MemberChangePw/>} />
                     <Route path='likeOrgList' element={<LikeOrgList />} />
-                    <Route path='donateList' element={<DonateList />} />
+                    <Route path='donateList' element={<DonateList member={member}  />} />
                     <Route path='news' element={<NewsList />} />
                     <Route path='changeProfile' element={<ProfileUpdate member={member} setMember={setMember}/>} />
-                    <Route path='calendarTest' element={<CalendarTest />} />
                     <Route path='delete' element={<MemberDelete member={member} />} />
                     <Route path='money/charge' element={<PaymentFrm />} />
                 </Routes>

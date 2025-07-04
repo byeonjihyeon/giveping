@@ -111,11 +111,6 @@
     text-decoration: none;
 }
 
-.side-menu>a:last-of-type {
-    border-top: 1px solid #dcdcdc;
-    border-bottom: none;
-}
-
 
 .likeOrgList-wrap {
     display: flex;
@@ -190,11 +185,12 @@
     border-radius: 50%;
     border: 1px solid #91C8E4;
     text-align: center;
+    
 }
 
 .state>span {
     line-height: 80px;
-    font-size: 20px;
+    font-size: 15px;
     color: #91C8E4;
     font-weight: bold;
 }

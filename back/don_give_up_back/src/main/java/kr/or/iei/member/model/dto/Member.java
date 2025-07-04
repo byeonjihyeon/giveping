@@ -28,7 +28,7 @@ public class Member {
 	private String memberProfile;		//회원 프로필 사진 경로
 	
 	private List<String> categoryList;				//관심 카테고리 리스트
-	private List<MemberDonation> donationHisory;	//기부내역
+	private List<MemberDonation> donationHistory;	//기부내역
 	private List<Charge> chargeHistory;				//충전내역
 	private List<Refund> refundHistory;				//출금내역
 }
