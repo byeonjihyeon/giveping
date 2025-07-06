@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import PageNavi from '../common/PageNavi';
-import { isAfter } from "date-fns";
+import { isAfter, set } from "date-fns";
 
 //회원 관심단체 리스트
 export default function likeOrgList(){
@@ -18,6 +18,9 @@ export default function likeOrgList(){
 
     //회원 번호 추출을 위함
     const {loginMember} = useUserStore();
+
+    //재랜더링 유도변수
+    const [reload, setReload] = useState(false);
     
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -36,7 +39,7 @@ export default function likeOrgList(){
         });
         
         
-    },[reqPage]);
+    },[reqPage, reload]);
     
 
     return (
@@ -48,7 +51,11 @@ export default function likeOrgList(){
                 <div>
                     <div className="likeOrgList-wrap">
                         {likeOrgList.map(function(likeOrg, index){
-                            return <LikeOrg key={"likeOrg" + index} likeOrg={likeOrg} loginMember={loginMember} likeOrgList={likeOrgList} setLikeOrgList={setLikeOrgList} />
+
+                            
+
+                            return <LikeOrg key={"likeOrg" + index} likeOrg={likeOrg} loginMember={loginMember} likeOrgList={likeOrgList} setLikeOrgList={setLikeOrgList}
+                                             reload={reload} setReload={setReload} reqPage={reqPage} setReqPage={setReqPage} />
                         })}
                     </div>
                     <div>
@@ -72,18 +79,20 @@ function LikeOrg(props){
     const loginMember = props.loginMember; //회원번호 추출하기위함
     const likeOrgList= props.likeOrgList;
     const setLikeOrgList = props.setLikeOrgList;
-    const activeBizList = bizList.map(function(biz,index){  //현재 진행중인 사업리스트, 
+    const reload= props.reload;
+    const setReload = props.setReload;
+    const reqPage = props.reqPage;
+    const setReqPage = props.setReqPage;
+    const activeBizList = bizList.map(function(biz,index){  //현재 진행중인 사업리스트,
     return isAfter(biz.bizDonateEnd, new Date());           //isAfter(사업모금종료날짜, 오늘날짜)  == 사업모금날짜가 오늘날짜보다 미래인지? true or false
     })                                                        
                     
     const axiosInstance = createInstance();
      
-    //관심단체이므로 초기화면엔 checked로 설정
-    const [checked, setChecked] = useState(true);
-
     //하트 클릭시 동작함수 (하트눌렀을때 제거)
     function delLikeOrg(){
-       
+        
+    
         let options = {};
         options.url = serverUrl + "/member/delLikeOrg/" + likeOrg.orgNo + "/" + loginMember.memberNo;
         options.method = "delete";
@@ -94,9 +103,16 @@ function LikeOrg(props){
                 let newLikeOrgList = likeOrgList.filter(function(dLikeOrg, dIndex){
                     return likeOrg.orgNo != dLikeOrg.orgNo;
                 })
-
                 setLikeOrgList(newLikeOrgList);
-            }
+                
+                //삭제후,현재페이지의 리스트가 0개 && 현재페이지가 1페이지가 아니라면,
+                if(newLikeOrgList.length == 0 && reqPage > 1){
+                    setReqPage(prev => prev -1);
+                }else{
+                    setReload(!reload);
+                }
+
+           }
         });
 
         

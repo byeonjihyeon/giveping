@@ -1,24 +1,13 @@
 import { useEffect, useState } from "react"
 import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
+import DateSelectBar from '../common/DateSelectBar';
+import { format, startOfMonth, subYears } from "date-fns";
+
 
 //기부내역 조회 리스트
 export default function DonationHistory(props){
     const member = props.member;
-
-    /* 
-    화면에 보여줄 내용
-    1. 후원한 사업 개수
-    2. 총 기부금액
-    3. 후원한 단체
-    4. 후원한 사업 이름
-    3. 기부 날짜
-    4. 기부 금액
-    5. 기부 없을시 내용 출력
-    6. 영수증 버튼 출력
-
-    가능하다면, 전체내역과  상단에 기부내역, 결제내역 버튼 누르면 각각 해당 내용 나올수 있도록
-    */
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -27,26 +16,43 @@ export default function DonationHistory(props){
     const [donationHistory, setDonationHistory] = useState([]);
     const [pageinfo, setPageInfo] = useState({}); 
     const [reqPage, setReqPage] = useState(1);
+    const [startDate, setStartDate] = useState(format(startOfMonth(subYears(new Date(), 1)),'yyyy-MM-dd HH:mm:ss')); //초기값 작년 오늘날짜 해당월의 1일로 설정, 
+    const [endDate, setEndDate] = useState(format(new Date(),'yyyy-MM-dd HH:mm:ss')); //오늘날짜로 초기값
+    const [srchCnt, setSrchCnt] = useState(0);    //해당기간 기부건수
 
+    //해당기간 회원 기부내역 조회
     useEffect(function(){
+        
          let options = {};
-         options.url = serverUrl + '/member/donationHistory/' + loginMember.memberNo +"/"+ reqPage;
+         options.url = serverUrl + '/member/donationHistory/' + loginMember.memberNo;
+         options.params = {
+            reqPage, startDate, endDate               
+         }
          options.method = 'get';
 
          axiosInstance(options)
          .then(function(res){
-            let results = res.data.resData;
+            let results = res.data.resData; 
             setDonationHistory(results.donationHistory);
             setPageInfo(results.pageInfo);
+            setSrchCnt(results.totalCnt);
+
          })
-    }, [reqPage])
+    }, [reqPage, startDate, endDate])
 
     return (
         <div className="member-donate-list-wrap-out">
             <div>기부내역</div>
+            <div>
+                <div>총 기부건수</div>
+                <div>{!member.donationHistory ? "" : member.donationHistory.length} 건</div>
+                <div>총 기부금액</div>
+                <div>{member.totalDonateMoney} 원</div>
+            </div>
             
             <div className="member-donate-period">
-                <p>기간설정 영역</p>
+                <DateSelectBar startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
+                <div>(조회결과 : {srchCnt} 건)</div>
             </div>
             {
             !donationHistory ?
@@ -72,6 +78,8 @@ export default function DonationHistory(props){
             :
             ""
             }
+            <div>조회 기간은 최근 1년 기준으로 설정되어 있습니다. <br/> 
+                 다른 조건으로 검색을 원하실 경우 검색 기간 설정을 변경해주세요.</div>
          
         </div>
     )
@@ -83,7 +91,6 @@ function Donation(props){
 
     return (
        <>
-       
         <div className="donate-info-wrap">
                 <div className="state-wrap">
                     <div className="state">
@@ -100,7 +107,6 @@ function Donation(props){
                     <button type="button">영수증 출력</button>
                 </div>
         </div> 
-        
        </> 
     )
 }

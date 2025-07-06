@@ -85,7 +85,6 @@ export default function MemberDelete(props){
                 - 가지고 잇는 금액이 있어도 걍 탈퇴진행한다면? 
                 - 그 돈을 관리자가 출금후 빵원 처리 ?
                 - 걍 db에서 바로 0원 처리?
-                - 그리고,, 상태변경하면 기존에 있는 아이디있어서 다른사람이 가입못함..어떻게하지..
             2. 탈퇴버튼 클릭 활성화되며 탈퇴완료~!(db에는 남아있음)
             <hr /> <br />
             <div>
@@ -93,7 +92,7 @@ export default function MemberDelete(props){
             </div>
             <hr /> <br />
             <div>
-                현재 너의 토탈 잔액 : <span>{member.totalMoney} 원</span>
+                현재 너의 토탈 잔액 : <span>{mainMember.totalMoney} 원</span>
             </div>
             <br />
             <div>

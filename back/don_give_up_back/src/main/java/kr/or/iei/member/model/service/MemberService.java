@@ -17,6 +17,7 @@ import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.member.model.dao.MemberDao;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
+import kr.or.iei.member.model.dto.Wallet;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -103,7 +104,10 @@ public class MemberService {
 	//회원 상세 조회
 	public Member selectMember(int memberNo) {
 		
-		Member m = dao.selectMember(memberNo);
+		HashMap<String, Integer> memberMap = new HashMap<>();
+		memberMap.put("memberNo", memberNo);
+		Member m = dao.selectMember(memberMap);
+
 		m.setMemberPw(null);
 		
 		return m;
@@ -122,8 +126,7 @@ public class MemberService {
 		HashMap<String, Object> paraMap = new HashMap<>();
 		paraMap.put("memberNo", updMember.getMemberNo());
 		
-		
-		
+	
 		//1. 기존에서 삭제해야할 리스트 제거
 		if(delCtgList != null && !delCtgList.isEmpty()) {
 			paraMap.put("delCtgList", delCtgList);
@@ -183,7 +186,10 @@ public class MemberService {
 	public boolean checkPw(Member member) {
 		
 		//사용자 입력 비밀번호 = 평문, DB의 pw는 암호화된 비밀번호이므로, BCrpyt 메소드사용
-		Member chkMember = dao.selectMember(member.getMemberNo());
+		HashMap<String, Integer> memberMap = new HashMap<>();
+		memberMap.put("memberNo", member.getMemberNo());
+		
+		Member chkMember = dao.selectMember(memberMap);
 		
 		//기존 비밀번호 일치 결과 (boolean)
 		return encoder.matches(member.getMemberPw(), chkMember.getMemberPw());
@@ -257,18 +263,24 @@ public class MemberService {
 	}
 	
 	//회원 기부내역 조회
-	public HashMap<String, Object> selectDonationHistory(int memberNo, int reqPage) {
+	public HashMap<String, Object> selectDonationHistory(int memberNo, int reqPage, String startDate, String endDate) {
 		
 		//1. 페이지네이션
 		int viewCnt = 3;		//더보기 클릭시 보여줄 글 수 
 		
+		HashMap<String, Object> paraMap = new HashMap<>();
+		
+		paraMap.put("memberNo", memberNo);
+		paraMap.put("startDate", startDate);
+		paraMap.put("endDate", endDate);
+		paraMap.put("reqPage", reqPage);
+		
 		//2. 회원의 총 참여 기부수 조회
-		int totalCnt = dao.countDonationList(memberNo);
-	
+		int totalCnt = dao.countDonationList(paraMap);
+		paraMap.put("totalCnt", totalCnt); //날짜 지정에 대한 결과수를 보여주기위해
 		PageInfo pageInfo = pageUtil.getPageInfoVer2(reqPage, viewCnt, totalCnt);
 		
-		HashMap<String, Object> paraMap = new HashMap<>();
-		paraMap.put("memberNo", memberNo);
+		
 		if(reqPage > 0) {
 			paraMap.put("pageInfo", pageInfo);
 		}
@@ -282,6 +294,33 @@ public class MemberService {
 	// 내 소식 알림 읽음 처리
 	public int updateAlarmRead(int alarmNo) {
 		return dao.updateAlarmRead(alarmNo);
+	}
+
+	//회원 충전,출금내역 조회
+	public HashMap<String, Object> selectWalletHistory(int memberNo, String filter, int reqPage, String startDate,
+			String endDate) {
+		
+		//1. 더보기 클릭시 보여줄 글 갯수 = 5개
+		int viewCount = 5;
+		
+		
+		HashMap<String, Object> walletMap = new HashMap<>();
+		walletMap.put("memberNo", memberNo);
+		walletMap.put("filter", filter);
+		walletMap.put("startDate", startDate);
+		walletMap.put("endDate", endDate);
+		
+		//dao에 전체 또는 충전 또는 출금 && 기간 전달하여 내역갯수 조회
+		int totalCnt = dao.countWalletHistory(walletMap);
+		//페이지네이션 만들기(더보기용)
+		PageInfo pageInfo = pageUtil.getPageInfoVer2(reqPage, viewCount, totalCnt);
+		walletMap.put("pageInfo", pageInfo);
+		
+		//회원번호, 필터, 시작날짜, 끝날짜 전달
+		ArrayList<Wallet> walletHistory = dao.selectWallectHistory(walletMap);
+		walletMap.put("walletHistory", walletHistory);
+		
+		return walletMap;
 	}
 
 }

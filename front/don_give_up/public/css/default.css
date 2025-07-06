@@ -80,7 +80,7 @@
 .content {
   width: 100%; 
   max-width: 1400px;
-  margin: 30px auto;
+  margin: 0px auto;
   flex: 1; 
 }
 

@@ -15,6 +15,7 @@ import PaymentFrm from './PaymentFrm';
 
 import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
+import MyHome from './MyHome';
 
 //회원 메인 페이지
 export default function MemberMain(){
@@ -52,13 +53,12 @@ export default function MemberMain(){
         })
     },[]);  
 
- 
-
     return (
         <div className='member-main-wrap'>
             <Sidebar menuList={menuList} member={member}/>
             <div className='member-main-mid-wrap'>
                 <Routes>
+                    <Route path='/' element={<MyHome member={member} />}  />
                     <Route path='update' element={<MemberUpdate member={member} setMember={setMember} />} /> 
                     <Route path='changePw' element={<MemberChangePw/>} />
                     <Route path='likeOrgList' element={<LikeOrgList />} />
@@ -68,7 +68,7 @@ export default function MemberMain(){
                     <Route path='changeProfile' element={<ProfileUpdate member={member} setMember={setMember}/>} />
                     <Route path='delete' element={<MemberDelete member={member} />} />
                     <Route path='money/charge' element={<PaymentFrm />} />
-                    <Route path='money/history' element={<WalletHistory />} />
+                    <Route path='money/history' element={<WalletHistory member={member} />} />
                 </Routes>
             </div>
         </div>

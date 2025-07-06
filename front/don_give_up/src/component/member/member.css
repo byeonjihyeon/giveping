@@ -104,7 +104,70 @@
     text-decoration: none;
 }
 
+/* MyHome */
+.myHome-wrap {
+    width: 900px;
+}
+.myHome-wrap-top {
+    display: flex;
+    gap: 10px;
+}
+.top-info {
+    width: 50%;
+    padding: 15px 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+}
 
+.detail-left > div:first-of-type {
+    font-size: 20px;
+}
+.detail-right {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.donation-cnt {
+    display: flex;
+    gap: 30px
+}
+
+.money>span:first-of-type{
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.money>span:nth-of-type(2){
+    font-size: 20px;
+}
+
+
+.chargeOrRefund-btn{
+    display: flex;
+    gap: 10px;
+}
+.chargeOrRefund-btn>*{
+    width: 80px;
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.charge-btn {
+    background-color: #91C8E4;
+    border: none;
+    color: white;
+}
+.refund-btn {
+    background-color: #dcdcdc;
+    border: none;
+}
+
+
+
+
+/* 관심기부단체 리스트 */
 .likeOrgList-wrap {
     display: flex;
     flex-wrap: wrap;
@@ -278,3 +341,19 @@
     width: 200px;
 }
 
+/* 결제내역 페이지 */
+.history-wrap {
+    display: flex;
+    border: 1px solid black;
+    gap: 30px;
+}
+
+/* 기간조회 필터창 */
+.filter-wrap {
+    display: flex;
+    gap: 10px;
+    
+}
+.filter-wrap > div {
+    border: 1px solid black;
+}

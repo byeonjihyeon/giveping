@@ -53,7 +53,7 @@ export default function Sidebar (props){
                 <div className="profile-wrap-btm">
                     <NavLink to='/member/donateList' end>
                         <span>기부금액</span>
-                        <span>{member.totalDonateMoney} 원</span>
+                        <span>{member.totalDonateMoney == null ? 0 : member.totalDonateMoney} 원</span>
                     </NavLink>
                     <div>
                         <span>보유금액</span>

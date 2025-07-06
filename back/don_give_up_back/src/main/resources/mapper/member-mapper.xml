@@ -53,14 +53,14 @@
 
 	<!-- 회원번호로 회원 상세조회 -->
 	<select id="selectMember"
-	parameterType="_int"
+	parameterType="map"
 	resultMap="memberMap">
 	select member_no ,
 		   member_id ,
 		   member_pw ,
 		   member_name ,
 		   member_phone ,
-		   to_char(member_birth, 'yyyy/mm/dd') as member_birth,
+		   to_char(member_birth, 'yyyy-mm-dd') as member_birth,
 		   member_email ,
 		   member_addr_main ,
 		   member_addr_detail ,
@@ -69,7 +69,7 @@
 		   to_char((select sum(donate_money) from tbl_donation_list d where d.member_no = m.member_no
 		   ), '99,999,999') as total_donate_money
 	  from tbl_member m
-	 where member_no = #{_parameter} 		   
+	 where member_no = #{memberNo} 		   
 	</select>
 	
 	<!-- 회원 기부내역 조회 -->
@@ -81,12 +81,16 @@
          biz_name as bizName, 
          org_name as orgName, 
          to_char(donate_money, '99,999,999') as donateMoney, 
-         to_char(donate_date, 'YYYY-MM-DD HH24:MI:SS') as donateDate        
+         to_char(donate_date, 'YYYY-MM-DD') as donateDate        
    from (
         select *
           from tbl_donation_list join tbl_donate_biz using(biz_no)
                                  join tbl_org using (org_no)
  	    where member_no = #{memberNo}
+ 	      <if test='pageInfo != null'>
+ 	      and (donate_date between to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
+	   						   and to_date(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
+ 	      </if>
         order by donate_date desc
         )a
    <if test="pageInfo != null">
@@ -138,7 +142,7 @@
 		
 		<collection property="donationHistory"
 					select="selectDonationHistory"
-					column="member_no"
+					column="{memberNo = member_no}"
 					javaType="java.util.List"
 					ofType='MemberDonation'>
 		</collection>
@@ -342,11 +346,15 @@
 
 	<!-- 회원 총 기부수 조회 -->
 	<select id='countDonationList'
-	parameterType="_int"
+	parameterType="map"
 	resultType="_int">
 	select count(*) 
 	  from tbl_donation_list 
-	 where member_no = #{_parameter} 
+	 where member_no = #{memberNo} 
+	 <if test="reqPage > 0">
+	   and (donate_date between to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
+	   						and to_date(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
+	 </if>
 	</select>
 
 	<update id="updateAlarmRead" parameterType="_int">
@@ -354,5 +362,76 @@
 	   set alarm_read = 1
 	 where alarm_no = #{_parameter}
 	</update>
+	
+	<!-- 회원 충전/출금 수 -->
+	<select id="countWalletHistory"
+	parameterType="map"
+	resultType="_int">
+	select count(*)
+         from(
+               select 'charge' as type,
+                      charge_no as no,
+                      to_char(charge_money, '99,999,999') as money,
+                      to_char(charge_date, 'yyyy-mm-dd HH24:MI:SS') as transDate
+                 from tbl_charge
+                where member_no = #{memberNo}
+               union all
+               select 'refund' as type,
+                      refund_no as no,
+                      to_char(refund_money,'99,999,999') as money,
+                      to_char(refund_date, 'yyyy-mm-dd HH24:MI:SS') as transDate
+                 from tbl_refund
+                where member_no = #{memberNo}
+            ) 
+        where transDate between #{startDate} and #{endDate}
+       <if test='filter == "charge"'>
+       	  and type = 'charge' 
+       </if>
+       <if test='filter == "refund"'>
+          and type = 'refund'		
+       	</if>
+		  
+	</select>
+	
+	<!-- 회원 충전, 충금 조회 -->
+	<select id="selectWallectHistory"
+	parameterType="map"
+	resultType="Wallet">
+	select rownum, a.*   
+   	  from(  
+	        select *
+	          from(
+	               select 'charge' as type,
+	                      charge_no as no,
+	                      to_char(charge_money, '99,999,999') as money,
+	                      to_char(charge_date, 'yyyy-mm-dd HH24:MI:SS') as transDate,
+	                      null as refundFinDate,
+	                      null as memberAccount,
+	                      null as memberAccountBank
+	                 from tbl_charge
+	                where member_no = #{memberNo}
+	               union all
+	               select 'refund' as type,
+	                      refund_no as no,
+	                      to_char(refund_money,'99,999,999') as money,
+	                      to_char(refund_date, 'yyyy-mm-dd HH24:MI:SS') as transDate,
+	                      to_char(refund_fin_date, 'yyyy-mm-dd HH24:MI:SS') as refundFinDate,
+	                      member_account as memberAccount,
+	                      member_account_bank as memberAccountBank
+	                 from tbl_refund
+	                where member_no = #{memberNo} 
+	               		  
+           		 ) 
+           where transDate between #{startDate} and #{endDate}
+           <if test="filter eq 'charge'">
+           and type = 'charge'
+           </if>
+           <if test="filter eq 'refund'">
+           and type = 'refund'
+           </if>
+       		order by transDate desc  
+        ) a
+    where rownum between 1 and #{pageInfo.end}    
+	</select>
 
 </mapper>	

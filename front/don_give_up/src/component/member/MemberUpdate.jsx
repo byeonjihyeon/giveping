@@ -1,4 +1,4 @@
-import { add, format } from "date-fns";
+import { add, format, isAfter, isBefore, min, parse } from "date-fns";
 import { useEffect, useRef, useState } from "react"
 import createInstance from "../../axios/Interceptor";
 
@@ -16,9 +16,12 @@ export default function MemberUpdate(props) {
     const mainMember = props.member;
     const setMainMember = props.setMember;
 
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
 
     //스토리지에서 회원번호 추출용도 및 회원이름 변경시 재랜더링 하고자!
     const {loginMember, setLoginMember} = useUserStore();
+
 
     //화면표출 및 서버에 전송할 회원정보
     const [member, setMember] = useState({
@@ -32,6 +35,9 @@ export default function MemberUpdate(props) {
         memberAddrDetail: ""                 //회원상세주소
     });
 
+    //date 타입 input 태그에 최대 선택할수 있는기간을 설정하기 위해 만든 변수
+    const today = format(new Date(), 'yyyy-mm-dd');
+
     //전체 기부카테고리
     const [allCategory , setAllCategory] = useState([]);
 
@@ -41,8 +47,8 @@ export default function MemberUpdate(props) {
     //선택한 카테고리
     const [choseCategory, setChoseCategory] = useState([]);
     
-    const serverUrl = import.meta.env.VITE_BACK_SERVER;
-    const axiosInstance = createInstance();
+
+   
 
     //기존 회원정보 조회
     useEffect(function(){
@@ -52,6 +58,7 @@ export default function MemberUpdate(props) {
 
         axiosInstance(options)
         .then(function(res){
+
             setMember(res.data.resData);
         })
     },[]);
@@ -87,10 +94,149 @@ export default function MemberUpdate(props) {
         });
 
     },[])
+
+    //유효성 불통과시 보여줄 메시지 변수
+    const [invalidMsg, setInvalidMsg] = useState({
+        id : "",
+        birth : "",
+        phone : "",
+        email : ""
+
+    })
     
+    //각 입력값 유효성 통과 여부 true : 통과
+    const [chkInfo, setChkInfo] = useState({
+        id : true,
+        birth : true,
+        phone : true,
+        email : true
+    })
+
+    //이름 유효성 검사 (on blur)
+    function chkName(e){
+        setChkInfo({...chkInfo, id: false});
+        setInvalidMsg({...invalidMsg, id: ""});
+        
+        let name = e.target.value;
+
+        if(name.length == 0){   //아무입력도 안했을때
+            setInvalidMsg({...invalidMsg, id: "이름은 필수 정보입니다."});
+        }else { //입력후 유효성검사
+            //이름 정규표현식
+            const regExp = /^[가-힣]{2,10}$/; //이름은 한글 2~10글자
+           
+            if(!regExp.test(name)){
+                setInvalidMsg({...invalidMsg, id: "이름은 한글 2 ~ 10글자 입니다."})
+           }else{
+                setChkInfo({...chkInfo, id: true});
+                setInvalidMsg({...invalidMsg, id: ""});
+           }
+        }
+    }
+
+    //생년월일 유효성 검사 (on blur)
+    function chkBirth(e){
+        setChkInfo({...chkInfo, birth: false});
+        setInvalidMsg({...invalidMsg, birth: ""});
+
+        let birthStr = e.target.value; //"19900101"
+
+        if(birthStr.length == 0){
+            setInvalidMsg({...invalidMsg, birth: "생년월일은 필수 정보입니다."});
+            return;
+        }
+
+        let regExp = /^\d{8}$/;     //숫자로만 8자리
+        if(!regExp.test(birthStr)){
+            setInvalidMsg({...invalidMsg, birth: "생년월일은 8자리 숫자로 입력해 주세요."});
+            return;
+        }
+
+        let birth = parse(birthStr, 'yyyyMMdd', new Date()); //parse : 문자열 -> Date (date-dns 제공함수)
+        let maxDate = new Date();   //현재 날짜(최대입력날짜)
+        let minDate = new Date('1900-01-01'); //(최소입력날짜 1990-01-01)
+
+        //isBefore(d1,d2) == d1이 d2보다 이전인지?
+        //isAfter(d1,d2) == d1이 d2보다 이후인지?
+        if(isBefore(birth, maxDate) && isAfter(birth, minDate)){ //생일이 조건에 충족한다면,
+            let customBirth = birthStr.substring(0,4) + "-" + birthStr.substring(4,6) + "-" + birthStr.substring(6);
+            setMember({...member, memberBirth: customBirth});
+
+            setChkInfo({...chkInfo, birth: true});
+            setInvalidMsg({...invalidMsg, birth: ""});
+
+        }else{ //충족하지 않는다면,
+            setChkInfo({...chkInfo, birth: false});
+            setInvalidMsg({...invalidMsg, birth: "생년월일이 정확한지 확인해주세요."});
+        }
+    }
+
+    //전화번호 유효성 검사 (on blur)
+    function chkPhone(e){
+        setChkInfo({...chkInfo, phone: false});
+        setInvalidMsg({...invalidMsg, phone: ""});
+
+        let phone = e.target.value;
+
+        if(phone.length == 0){
+            setInvalidMsg({...invalidMsg, phone: "휴대전화번호는 필수 정보입니다."});
+        }else{
+            const regExp =/^01[016789]-?\d{3,4}-?\d{4}$/; //하이픈 유무 관계없이 검사
+            
+            if(!regExp.test(phone)){    //유효성 통과 X
+                setInvalidMsg({...invalidMsg, phone: "휴대전화번호가 정확한지 확인해 주세요."});
+            }else{ //유효성 통과 
+                if(!phone.includes("-")){ //하이픈이 포함되어있지 않다면, "-" 추가해주기
+                
+                    let custom = "";
+
+                    if(phone.length == 10){ //"0101234567"
+                        custom = phone.substring(0,3) + "-" + phone.substring(3,6) + "-" + phone.substring(6); //010-123-4567
+                        setMember({...member, memberPhone: custom});
+                    }else{  //"01012345678"
+                        custom = phone.substring(0,3) + "-" + phone.substring(3,7) + "-" + phone.substring(7); //010-123-4567
+                        setMember({...member, memberPhone: custom});
+                    }
+                }
+
+                setChkInfo({...chkInfo, phone: true});
+                setInvalidMsg({...invalidMsg, phone: ""});
+            }   
+        }
+    }
+
+    //이메일 유효성 검사 (on blur)
+    function chkEmail(e){
+        setChkInfo({...chkInfo, email: false});
+        setInvalidMsg({...invalidMsg, email: ""});
+
+        let email = e.target.value;
+        
+        if(email.length == 0){
+            setInvalidMsg({...invalidMsg, email: "이메일은 필수정보입니다."});
+        }else{
+            const regExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$/; //이메일 정규표현식
+            
+            if(!regExp.test(email)){  // 유효성 x
+                setInvalidMsg({...invalidMsg, email: "이메일주소가 정확한지 확인해 주세요."});
+            }else{  //유효성 통과
+                setChkInfo({...chkInfo, email: true});
+                setInvalidMsg({...invalidMsg, email: ""});
+            }
+        }
+    }
+
     //수정하기 버튼 클릭시 동작함수
     function updateMember(){
 
+        //유효성 확인여부객체인 chkInfo를 순회하여 하나라도 false라면, return.
+        for(let chk in chkInfo){
+            if(!chkInfo[chk]){
+                alert('다시 확인하여주세요');
+                return;
+            }
+        }
+    
         //삭제할 카테고리 : 기존카테고리 - 현재카테고리
         const delCategory = prevCategory.filter(function(code,index){return !choseCategory.includes(code)});
         //추가할 카테고리 : 현재카테고리 - 기존카테로기
@@ -108,7 +254,7 @@ export default function MemberUpdate(props) {
         axiosInstance(options)
         .then(function(res){
             if(member.memberName != loginMember.memberName){                        //이름이 변경되었다면, 스토리지변수 또한 변경
-                setLoginMember({...loginMember, memberName: member.memberName});  //헤더, 사이드메뉴 재랜더링
+                setLoginMember({...loginMember, memberName: member.memberName});    //스토리지영역도 변경적용 및 헤더, 사이드메뉴 재랜더링
                 setMainMember({...mainMember, memberName: member.memberName})
             }
             
@@ -127,34 +273,35 @@ export default function MemberUpdate(props) {
             <div className="input-wrap">
                 <div className="input-title-wrap">이름</div>
                 <div>
-                    <input type="text" id='memberName' value={member.memberName} onChange={updMember} />
-                    <p>이름 유효성 메시지창</p>
+                    <input type="text" id='memberName' value={member.memberName} onChange={updMember} onBlur={chkName} />
+                    <p>{invalidMsg.id}</p>
                 </div>
             </div>
             <div className="input-wrap">
                 <div className="input-title-wrap">생년월일</div>
                 <div>
-                    <input type='text' id='memberBirth' value={member.memberBirth} onChange={updMember}/>
+                    <input type='type' id='memberBirth' value={member.memberBirth} placeholder="생년월일 8자리" onChange={updMember} onBlur={chkBirth}/>
+                    <p>{invalidMsg.birth}</p>
                 </div>
+               
             </div>
             <div className="input-wrap">
                 <div className="input-title-wrap" >전화번호</div>
                 <div>
-                    <input type="text" id='memberPhone' value={member.memberPhone} onChange={updMember}/>
-                    <p>전화번호 유효성 메시지창</p>
+                    <input type="text" id='memberPhone' value={member.memberPhone} onChange={updMember} onBlur={chkPhone}/>
+                    <p>{invalidMsg.phone}</p>
                 </div>
             </div>
             <div className="input-wrap">
                 <div className="input-title-wrap">이메일</div>
                 <div>
-                    <input type="text" id='memberEmail' value={member.memberEmail} onChange={updMember}/>
-                    <p>이메일 유효성 메시지창</p>
+                    <input type="text" id='memberEmail' maxLength={100} value={member.memberEmail} onChange={updMember} onBlur={chkEmail}/>
+                    <p>{invalidMsg.email}</p>
                 </div>   
             </div>
     
             <div className="input-wrap">
                 <div className="input-title-wrap">주소</div>
-                    {/* <input type="text" id='memberAddr' value={member.memberAddrMain + " " + member.memberAddrDetail} onChange={updMember}/>  */}
                 <MemberAddr member={member} setMember={setMember} />
             
             </div>
@@ -237,12 +384,7 @@ function MemberAddr(props){
                     if(extraAddr !== ''){
                         extraAddr = ' (' + extraAddr + ')';
                     }
-                    // 조합된 참고항목을 해당 필드에 넣는다.
-                    document.getElementById("extraAddress").value = extraAddr;
-                
-                } else {
-                    document.getElementById("extraAddress").value = '';
-                }
+                } 
 
                 //주소 정보를 해당 필드에 넣는다.
                 member['memberAddrMain'] = addr; 
@@ -257,10 +399,9 @@ function MemberAddr(props){
     return (
         <div>
             
+            <input type="button" onClick={DaumPostcode} value="주소 찾기" /> <br/>
             <input type="text" id="memberAddrMain" placeholder="주소" value={member.memberAddrMain} readOnly />
-            <input type="button" onClick={DaumPostcode} value="주소 찾기" /><br/>
-            <input type="text" id="memberAddrDetail" placeholder="상세주소" value={member.memberAddrDetail} ref={detailAddrEl} onChange={updAddr} />
-            <input type="text" id="extraAddress" placeholder="참고항목" readOnly /> <br/>  
+            <input type="text" id="memberAddrDetail" placeholder="상세주소" maxLength={30} value={!member.memberAddrDetail ? "" : member.memberAddrDetail} ref={detailAddrEl} onChange={updAddr} />
         </div>
     )
 }

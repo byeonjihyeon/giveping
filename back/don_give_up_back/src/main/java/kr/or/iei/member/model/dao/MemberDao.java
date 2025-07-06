@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
+import kr.or.iei.member.model.dto.Wallet;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -31,7 +32,7 @@ public interface MemberDao {
 	Member memberLogin(String memberId);
 	
 	//회원 상세 조회
-	Member selectMember(int memberNo);
+	Member selectMember(HashMap<String, Integer> memberMap);
 	
 	//회원정보 수정
 	int updateMember(Member member);
@@ -60,7 +61,7 @@ public interface MemberDao {
 	//회원 탈퇴: 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
 	int deleteMember(int memberNo);
 
-	// 회원별 알림 리스트 조회
+	//회원별 알림 리스트 조회
 	ArrayList<MemberAlarm> selectAlarmList(int memberNo);
 	
 	//회원 관심단체 수 조회
@@ -75,15 +76,20 @@ public interface MemberDao {
 	// 알림 읽음 처리
 	int updateAlarmRead(int alarmNo);
 	
-
 	//회원 총 기부수 조회
-	int countDonationList(int memberNo);
+	int countDonationList(HashMap<String, Object> paraMap);
 	
 	//회원 기부리스트 조회
 	ArrayList<MemberDonation> selectDonationHistory(HashMap<String, Object> paraMap);
 
 	//회원기부내역 조회
 	ArrayList<MemberDonation> selectDonationHistory(int memberNo);
+	
+	//회원 결제, 출금내역 건수 조회
+	int countWalletHistory(HashMap<String, Object> walletMap);
+	
+	//회원 결제, 출금내역 조회
+	ArrayList<Wallet> selectWallectHistory(HashMap<String, Object> walletMap);
 	
 
 }

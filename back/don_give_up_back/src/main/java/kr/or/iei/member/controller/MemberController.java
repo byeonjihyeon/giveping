@@ -139,10 +139,9 @@ public class MemberController {
 	public ResponseEntity<ResponseDTO> selectMember(@PathVariable int memberNo){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 조회중, 오류가 발생하였습니다.", null, "error");
 		try {
-			Member member = service.selectMember(memberNo);
-
-			res = new ResponseDTO(HttpStatus.OK, "", member, "");
 			
+			Member member = service.selectMember(memberNo);
+			res = new ResponseDTO(HttpStatus.OK, "", member, "");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -401,7 +400,7 @@ public class MemberController {
 		try {
 			//회원 관심단체 목록과 페이지 네비게이션 정보 조회
 			HashMap<String, Object> paraMap = service.selectOrgLikeList(reqPage, memberNo);
-			res= new ResponseDTO(HttpStatus.OK, "", paraMap , uploadPath);
+			res= new ResponseDTO(HttpStatus.OK, "", paraMap , "");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -432,13 +431,17 @@ public class MemberController {
 	}
 	
 	//회원 기부내역 조회
-	@GetMapping("/donationHistory/{memberNo}/{reqPage}")
-	public ResponseEntity<ResponseDTO> selectDonationHistory (@PathVariable int memberNo, @PathVariable int reqPage){
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회중, 오류가 발생하였습니다.", false, "error");
-		
-		try {
-			HashMap<String, Object> paraMap = service.selectDonationHistory(memberNo, reqPage);
+	@GetMapping("/donationHistory/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectDonationHistory (@PathVariable int memberNo,
+															  @RequestParam int reqPage,
+															  @RequestParam String startDate,
+															  @RequestParam String endDate
+																){
 	
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회중, 오류가 발생하였습니다.", false, "error");
+		try {
+			HashMap<String, Object> paraMap = service.selectDonationHistory(memberNo, reqPage, startDate, endDate);
+			
 			res = new ResponseDTO(HttpStatus.OK, "", paraMap, "");
 			
 		}catch (Exception e) {
@@ -446,5 +449,28 @@ public class MemberController {
 		}
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//회원 충전, 출금내역 조회
+	@GetMapping("/walletHistory/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectWalletHistory (@PathVariable int memberNo,			
+															@RequestParam String filter,
+															@RequestParam int reqPage,
+															@RequestParam String startDate,
+															@RequestParam String endDate
+															){
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			HashMap<String, Object> walletMap = service.selectWalletHistory(memberNo, filter, reqPage, startDate, endDate);
+			res = new ResponseDTO(HttpStatus.OK, "", walletMap, "");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+		
 	}
 }
