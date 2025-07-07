@@ -1,10 +1,13 @@
 package kr.or.iei.member.model.service;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +38,9 @@ public class MemberService {
 	
 	@Autowired
 	private PageUtil pageUtil;
+	
+	@Autowired
+	private JavaMailSender mailSender;
 	
 	//토큰 재발급
 	public String refreshToken(Member member) {
@@ -323,11 +329,88 @@ public class MemberService {
 		
 		return walletMap;
 	}
+	
+	//충전하기
+	@Transactional
+	public int charge(int memberNo, int charge) {
+		HashMap<String, Integer> memberMap = new HashMap<>();
+		memberMap.put("memberNo", memberNo);
+		memberMap.put("charge", charge);
+		
+		return dao.charge(memberMap);
+	}
 
 	// 회원별 설문조사 내역 리스트 조회
 	public ArrayList<MemberSurveyAnswer> selectSurveyHistory(int memberNo) {
 		return dao.selectSurveyHistory(memberNo);
 	}
 
+
+	//회원 아이디 찾기
+	public String selectMemberId(Member member) {
+		return dao.selectMemberId(member);
+	}
+
+	//회원 비밀번호 찾기
+	public int selectMemberPw(Member member) {
+		//1) 회원 비밀번호 찾기
+		int result = dao.selectMemberPw(member);
+		
+		if(result > 0) {
+			//임시 비밀번호 10자리 : 영대/소문자, 숫자, 특수문자
+			String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			String lower = "abcdefghijklmnopqrstuvwxyz";
+			String digit = "0123456789";
+			String special = "!@#$";
+			
+			String allChar = upper + lower + digit + special;
+			
+			SecureRandom random = new SecureRandom(); //난수 발생 객체
+			StringBuilder randomPw = new StringBuilder(); //임시 비밀번호 10자리 저장 객체
+			
+			//각각 최소 1개씩 임시 비밀번호에 포함되도록 처리
+			randomPw.append(upper.charAt(random.nextInt(upper.length())));
+			randomPw.append(lower.charAt(random.nextInt(lower.length())));
+			randomPw.append(digit.charAt(random.nextInt(digit.length())));
+			randomPw.append(special.charAt(random.nextInt(special.length())));
+			
+			//위에서 4자리 추가 후 나머지 6자리 임시 비밀번호 발행 처리
+			for(int i=0; i<6; i++) {
+				//전체 문자열에 무작위 추출하여 추가
+				randomPw.append(allChar.charAt(random.nextInt(allChar.length())));
+			}
+			
+			//발행된 임시 비밀번호 10자리를 무작위로 섞기기
+			char [] charArr = randomPw.toString().toCharArray();
+			for(int i=0; i<charArr.length; i++) {
+				int randomIdx = random.nextInt(charArr.length);
+				
+				char temp = charArr[i];
+				charArr[i] = charArr[randomIdx];
+				charArr[randomIdx] = temp;
+			}
+			
+			//최종 임시 비밀번호
+			String newRandomPw = new String(charArr);
+			
+			System.out.println(newRandomPw);
+			
+			//메일로 보낼 메시지
+			SimpleMailMessage msg = new SimpleMailMessage();
+			msg.setTo("qor659659@gmail.com");
+			msg.setFrom("dongiveup00@gmail.com");
+			msg.setSubject("Don Give Up 임시 비밀번호 안내");
+			msg.setText(member.getMemberId() + "님의 임시 비밀번호는 " + newRandomPw + " 입니다.");
+			
+			mailSender.send(msg);
+			
+			String encodePw = encoder.encode(newRandomPw);
+			member.setMemberPw(encodePw);
+			
+			//2) 임시 비밀번호로 변경
+			dao.updateRandomPw(member);
+		}
+		return result;
+	}
 
 }

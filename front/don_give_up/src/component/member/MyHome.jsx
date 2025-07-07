@@ -3,14 +3,17 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
+import Modal from "../common/Modal";
 
 export default function MyHome(props){
-    //const member = props.member;
+    const member = props.member;
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const {loginMember} = useUserStore();
     const [newsList, setNewsList] = useState([]);
-    const [member, setMember] = useState({}); 
+    const [reLoadMember, setReLoadMember] = useState({}); 
+	//모달창 상태
+    const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
 
     // 알림 리스트 가져오기
     useEffect(function(){
@@ -38,12 +41,10 @@ export default function MyHome(props){
         
         axiosInstance(options)
         .then(function(res){
-            setMember(res.data.resData);
+            setReLoadMember(res.data.resData);
             console.log(res.data.resData);
         })
     }
-    
-
 
 
     return (
@@ -74,8 +75,25 @@ export default function MyHome(props){
                             <span> 원</span>
                         </div>
                         <div className="chargeOrRefund-btn">
-                            <div className="charge-btn">충전</div>
-                            <div className="refund-btn">출금</div>
+                            <button className="charge-btn" onClick={function(){
+                                setModalType('charge');                        
+                            }} >충전</button>
+                            <button className="refund-btn" onClick={function(){
+                                setModalType('refund');
+                            }}>출금</button>
+                            <Modal title={"충전하기"} isOpen={modalType !== null} onClose={function(){
+                                setModalType(null);
+                            }}>
+
+                            {modalType === 'charge' ?
+                            <ChargeFrm onClose={setModalType}  />
+                            :
+                            modalType === 'refund' ?
+                            <RefundFrm />
+                            :
+                            ""
+                            }
+                            </Modal>                     
                         </div>                       
                     </div>
                 </div>
@@ -83,7 +101,7 @@ export default function MyHome(props){
             <div className="myNews-wrap">
                 <div className="myNews-title-wrap">
                     <span>내 소식</span>
-                    <span> | 총 {member.unreadAlarm} 건</span>
+                    <span> | 총 {setReLoadMember.unreadAlarm} 건</span>
                 </div>
                 <div className="myNews-item">
                     <div className="newsList-wrap" >
@@ -267,7 +285,5 @@ function Surveys(props){
       </div>
     </div>
     );
-
-
-
 }
+

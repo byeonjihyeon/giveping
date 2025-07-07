@@ -9,9 +9,8 @@ import DonationHistory from './DonationHistory';
 import NewsList from './NewsList';
 import ProfileUpdate from './ProfileUpdate';
 import WalletHistory from './WalletHistory';
-
 import MemberDelete from './MemberDelete';
-import PaymentFrm from './PaymentFrm';
+
 
 import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
@@ -68,7 +67,6 @@ export default function MemberMain(){
                     <Route path='news/:memberNo' element={<NewsList />} />
                     <Route path='changeProfile' element={<ProfileUpdate member={member} setMember={setMember}/>} />
                     <Route path='delete' element={<MemberDelete member={member} />} />
-                    <Route path='money/charge' element={<PaymentFrm />} />
                     <Route path='money/history' element={<WalletHistory member={member} />} />
                 </Routes>
             </div>

@@ -4,7 +4,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import createInstance from '../../axios/Interceptor';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import useUserStore from '../../store/useUserStore';
@@ -27,7 +27,19 @@ export default function Login(){
 
     function chgRadio(e){
         setSelectRadio(e.target.value);
+        setMember({memberId : "", memberPw : ""});
+        setOrg({orgId : "", orgPw : ""});
     }
+
+    //개인 회원 선택 시 저장할 State 변수
+    const [member, setMember] = useState({
+        memberId : "", memberPw : ""
+    });
+
+    //단체 회원 선택 시 저장할 State 변수
+    const [org, setOrg] = useState({
+        orgId : "", orgPw : ""
+    });
 
     return (
         <section className="section login-wrap">
@@ -41,7 +53,10 @@ export default function Login(){
                 </FormControl>
             </div>
             <div>
-                <DoLogin selectRadio={selectRadio}/>
+                <DoLogin selectRadio={selectRadio} member={member} setMember={setMember} org={org} setOrg={setOrg}/>
+            </div>
+            <div>
+                <Link to="/findId">아이디 찾기</Link> | <Link to="/findPw">비밀번호 찾기</Link> | <Link to="/join">회원가입</Link>
             </div>
         </section>
     )
@@ -52,26 +67,19 @@ function DoLogin(props){
     const axiosInstance = createInstance();
     const navigate = useNavigate();
 
-    //선택한 라디오 버튼 값 추출
     const selectRadio = props.selectRadio;
+    const member = props.member;
+    const setMember = props.setMember;
+    const org = props.org;
+    const setOrg = props.setOrg;
 
     const {setIsLogined, setLoginMember, setLoginOrg, setAccessToken, setRefreshToken} = useUserStore();
-
-    //개인 회원 선택 시 저장할 State 변수
-    const [member, setMember] = useState({
-        memberId : "", memberPw : ""
-    });
     
     //개인 회원 선택 시 input 태그 onChange 함수
     function chgMember(e){
         member[e.target.id] = e.target.value;
         setMember({...member});
     }
-    
-    //단체 회원 선택 시 저장할 State 변수
-    const [org, setOrg] = useState({
-        orgId : "", orgPw : ""
-    });
 
     //단체 회원 선택 시 input 태그 onChange 함수
     function chgOrg(e){

@@ -15,6 +15,8 @@ import Join from './component/join/Join';
 import JoinMember from './component/join/JoinMember';
 import JoinOrg from './component/join/JoinOrg';
 import JoinCategory from './component/join/JoinCategory';
+import FindID from './component/common/FindID';
+import FindPW from './component/common/FindPw';
 
 function App() {
 
@@ -47,6 +49,8 @@ function App() {
             <Route path='/news/*' element={<NewsMain />} />
             <Route path='/admin/*' element={<AdminMain />} />
             <Route path="/org/*" element={<OrgMain/>}/>
+            <Route path="/findId" element={<FindID/>}/>
+            <Route path="/findPw" element={<FindPW/>}/>
           </Routes>
         </main>
       <Footer/>
