@@ -201,6 +201,7 @@ FROM (
                b.org_no AS orgNo,
                o.org_name AS orgName,
                b.donate_code AS donateCode,
+               d.donate_ctg AS donateCtg,
                b.biz_name AS bizName,
                b.biz_content AS bizContent,
                TO_CHAR(b.biz_donate_start, 'YYYY-MM-DD') AS bizDonateStart,
@@ -214,6 +215,7 @@ FROM (
                b.biz_thumb AS bizThumbPath
         FROM tbl_donate_biz b
         JOIN tbl_org o ON b.org_no = o.org_no
+        JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
         WHERE b.biz_status = 1
         <if test="bizTitle != null and bizTitle != ''">
             AND b.biz_name LIKE '%' || #{bizTitle} || '%'
