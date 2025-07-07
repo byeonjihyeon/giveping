@@ -190,15 +190,11 @@ export default function BizView(){
                             <th>기부사업 종료일</th>
                             <td>{donateBiz.bizEnd}</td>
                             <th>목표모금금액</th>
-                            <td>{donateBiz.bizGoal}(원)</td>
+                            <td>{donateBiz?.bizGoal != null ? donateBiz.bizGoal.toLocaleString() : '-'} (원)</td>
                         </tr>
                         <tr>
                             <th>사업신청검토일자</th>
                             <td>{donateBiz.bizRegDate}</td>
-                        </tr>
-                        <tr>
-                            <th>수정 사항</th>
-                            <td colSpan="3">{donateBiz.bizEdit}</td>
                         </tr>
                         </tbody>
                     </table>

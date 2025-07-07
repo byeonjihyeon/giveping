@@ -17,6 +17,7 @@ import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.member.model.dao.MemberDao;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
+import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Wallet;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
@@ -332,5 +333,11 @@ public class MemberService {
 		
 		return dao.charge(memberMap);
 	}
+
+	// 회원별 설문조사 내역 리스트 조회
+	public ArrayList<MemberSurveyAnswer> selectSurveyHistory(int memberNo) {
+		return dao.selectSurveyHistory(memberNo);
+	}
+
 
 }

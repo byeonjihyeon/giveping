@@ -64,14 +64,15 @@ public class BizService {
 		return biz;
 	}
 
-	public HashMap<String, Object> searchDonateBiz(Keyword keyword) {
+	// 기부 단체 검색
+	public HashMap<String, Object> searchDonateBiz(Keyword keyword, int reqPage) {
 		System.out.println(keyword.toString());
 		int viewCnt = 12;						// 한 페이지 당 게시글 수
 		int pageNaviSize = 5;					// 페이지 네비게이션 길이
 		int totalcount = dao.selectSearchCount(keyword);//전체 게시글 수
 		
 		// 페이징 정보 (reqPage 임시로 1로 지정)
-		PageInfo pageInfo = pageUtil.getPageInfo(1, viewCnt, pageNaviSize, totalcount);
+		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalcount);
 		
 		keyword.setPageInfo(pageInfo);
 		

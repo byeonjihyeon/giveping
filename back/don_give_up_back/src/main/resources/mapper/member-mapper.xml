@@ -2,130 +2,135 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.iei.member.model.dao.MemberDao">
 	<!-- 아이디 중복 체크 -->
-	<select id="chkMemberId" parameterType="string" resultType="_int">
+	<select id="chkMemberId" parameterType="string"
+		resultType="_int">
 		select count(*)
-		  from tbl_member
-		 where member_id = #{memberId}
+		from tbl_member
+		where member_id = #{memberId}
 	</select>
-	
+
 	<!-- 회원 번호 조회 -->
 	<select id="selectMemberNo" resultType="_int">
 		select seq_member.nextval
-		  from dual
+		from dual
 	</select>
 
 	<!-- 회원가입 -->
 	<insert id="insertMember" parameterType="Member">
 		insert into tbl_member
 		values (#{memberNo},
-				#{memberId},
-				#{memberPw},
-				#{memberName},
-				#{memberPhone},
-				#{memberBirth},
-				#{memberAddrMain},
-				#{memberAddrDetail},
-				#{memberEmail},
-				2,
-				sysdate,
-				0,
-				0,
-				'')
+		#{memberId},
+		#{memberPw},
+		#{memberName},
+		#{memberPhone},
+		#{memberBirth},
+		#{memberAddrMain},
+		#{memberAddrDetail},
+		#{memberEmail},
+		2,
+		sysdate,
+		0,
+		0,
+		'')
 	</insert>
 
 	<!-- 회원 관심 카테고리 등록 -->
 	<insert id="insertMemberDonation" parameterType="DonateCode">
-		insert into tbl_member_donation
+		insert into
+		tbl_member_donation
 		values (#{donateCode},
-				#{memberNo})
+		#{memberNo})
 	</insert>
-	
+
 	<!-- 로그인 - 아이디로 회원 조회 -->
-	<select id="memberLogin" parameterType="string" resultType="Member">
+	<select id="memberLogin" parameterType="string"
+		resultType="Member">
 		select member_no as memberNo,
-			   member_pw as memberPw,
-			   member_level as memberLevel,
-			   member_name as memberName
-		  from tbl_member
-		 where member_id = #{memberId} and member_deleted = 0
+		member_pw as memberPw,
+		member_level as memberLevel,
+		member_name as memberName
+		from tbl_member
+		where member_id = #{memberId} and member_deleted = 0
 	</select>
-	
+
 
 	<!-- 회원번호로 회원 상세조회 -->
-	<select id="selectMember"
-	parameterType="map"
-	resultMap="memberMap">
-	select member_no ,
-		   member_id ,
-		   member_pw ,
-		   member_name ,
-		   member_phone ,
-		   to_char(member_birth, 'yyyy-mm-dd') as member_birth,
-		   member_email ,
-		   member_addr_main ,
-		   member_addr_detail ,
-		   member_profile ,
-		   to_char(total_money, '99,999,999') as total_money,
-		   to_char((select sum(donate_money) from tbl_donation_list d where d.member_no = m.member_no
-		   ), '99,999,999') as total_donate_money
-	  from tbl_member m
-	 where member_no = #{memberNo} 		   
+	<select id="selectMember" parameterType="map"
+		resultMap="memberMap">
+		select member_no ,
+		member_id ,
+		member_pw ,
+		member_name ,
+		member_phone ,
+		to_char(member_birth, 'yyyy-mm-dd') as member_birth,
+		member_email ,
+		member_addr_main ,
+		member_addr_detail ,
+		member_profile ,
+		to_char(total_money, 'FM999,999,999PR') as total_money,
+		to_char((select sum(donate_money) from tbl_donation_list d where d.member_no =
+		m.member_no
+		), '99,999,999') as total_donate_money
+		from tbl_member m
+		where member_no = #{memberNo}
 	</select>
-	
+
 	<!-- 회원 기부내역 조회 -->
-	<select id="selectDonationHistory"
-	parameterType="map"
-	resultType="MemberDonation">
-	select <if test="pageInfo != null">rownum,</if> 
-         donate_no as donateNo, 
-         biz_name as bizName, 
-         org_name as orgName, 
-         to_char(donate_money, '99,999,999') as donateMoney, 
-         to_char(donate_date, 'YYYY-MM-DD') as donateDate        
-   from (
-        select *
-          from tbl_donation_list join tbl_donate_biz using(biz_no)
-                                 join tbl_org using (org_no)
- 	    where member_no = #{memberNo}
- 	      <if test='pageInfo != null'>
- 	      and (donate_date between to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
-	   						   and to_date(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
- 	      </if>
-        order by donate_date desc
-        )a
-   <if test="pageInfo != null">
-   	where rownum between 1 and #{pageInfo.end}        
-   </if>     
+	<select id="selectDonationHistory" parameterType="map"
+		resultType="MemberDonation">
+		select
+		<if test="pageInfo != null">rownum,</if>
+		donate_no as donateNo,
+		biz_name as bizName,
+		org_name as orgName,
+		biz_no as bizNo,
+		org_biznum as orgBizNum,
+		org_addr_main as orgAddrMain,
+		org_addr_detail as orgAddrDetail,
+		to_char(donate_money, 'FM999,999,999PR') as donateMoney,
+		to_char(donate_date, 'YYYY-MM-DD') as donateDate
+		from (
+		select *
+		from tbl_donation_list join tbl_donate_biz using(biz_no)
+		join tbl_org using (org_no)
+		where member_no = #{memberNo}
+		<if test='pageInfo != null'>
+			and (donate_date between to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
+			and to_date(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
+		</if>
+		order by donate_date desc
+		)a
+		<if test="pageInfo != null">
+			where rownum between 1 and #{pageInfo.end}
+		</if>
 	</select>
-	
-	<!-- 회원 충전내역 조회 --> 
-	<select id="selectChargeHistory"
-	parameterType="_int"
-	resultType="Charge">
-	select charge_no as chargeNo, 
-       	   to_char(charge_money, '99,999,999') as chargeMoney, 
-           to_char(charge_date, 'YYYY-MM-DD HH24:MI:SS') as chargeDate
- 	  from tbl_charge 
-  	 where member_no =#{_parameter}
-  	 order by chargedate desc 
+
+	<!-- 회원 충전내역 조회 -->
+	<select id="selectChargeHistory" parameterType="_int"
+		resultType="Charge">
+		select charge_no as chargeNo,
+		to_char(charge_money, '99,999,999') as chargeMoney,
+		to_char(charge_date, 'YYYY-MM-DD HH24:MI:SS') as chargeDate
+		from tbl_charge
+		where member_no =#{_parameter}
+		order by chargedate desc
 	</select>
-	
+
 	<!-- 회원 출금내역 조회 -->
-	<select id='selectRefundHistory'
-	parameterType="_int"
-	resultType="Refund">
-	select refund_no as refundNo, 
-      	   to_char(refund_money, '99,999,999') as refundMoney,
-	       member_account as memberAccount, 
-	       member_account_bank as memberAccountBank,
-	       to_char(refund_date, 'YYYY-MM-DD HH24:MI:SS') as refundDate,
-	       refund_status as refundStatus,
-      	   to_char(refund_fin_date, 'YYYY-MM-DD HH24:MI:SS') as refundFinDate
-	  from tbl_refund where member_no= #{_parameter}
-	 order by refunddate desc 
-	
+	<select id='selectRefundHistory' parameterType="_int"
+		resultType="Refund">
+		select refund_no as refundNo,
+		to_char(refund_money, '99,999,999') as refundMoney,
+		member_account as memberAccount,
+		member_account_bank as memberAccountBank,
+		to_char(refund_date, 'YYYY-MM-DD HH24:MI:SS') as refundDate,
+		refund_status as refundStatus,
+		to_char(refund_fin_date, 'YYYY-MM-DD HH24:MI:SS') as refundFinDate
+		from tbl_refund where member_no= #{_parameter}
+		order by refunddate desc
+
 	</select>
-	
+
 	<resultMap type="Member" id="memberMap">
 		<result column="member_no" property="memberNo" />
 		<result column="member_id" property="memberId" />
@@ -139,299 +144,298 @@
 		<result column="member_profile" property="memberProfile" />
 		<result column="total_money" property="totalMoney" />
 		<result column="total_donate_money" property="totalDonateMoney" />
-		
+
 		<collection property="donationHistory"
-					select="selectDonationHistory"
-					column="{memberNo = member_no}"
-					javaType="java.util.List"
-					ofType='MemberDonation'>
+			select="selectDonationHistory" column="{memberNo = member_no}"
+			javaType="java.util.List" ofType='MemberDonation'>
 		</collection>
 		<collection property="chargeHistory"
-					select="selectChargeHistory"
-					column="member_no"
-					javaType="java.util.List"
-					ofType='Charge'>
+			select="selectChargeHistory" column="member_no"
+			javaType="java.util.List" ofType='Charge'>
 		</collection>
 		<collection property="refundHistory"
-					select="selectRefundHistory"
-					column="member_no"
-					javaType="java.util.List"
-					ofType='Refund'>
+			select="selectRefundHistory" column="member_no"
+			javaType="java.util.List" ofType='Refund'>
 		</collection>
-		<collection property="categoryList"
-					select="selectCategory"
+		<collection property="categoryList" select="selectCategory"
+			column="member_no" javaType="java.util.List" ofType='String'>
+		</collection>
+	</resultMap>
+
+	<!-- 회원 정보수정 -->
+	<update id="updateMember" parameterType="Member">
+		update tbl_member
+		set member_name = #{memberName},
+		member_phone = #{memberPhone},
+		member_birth = #{memberBirth},
+		member_Email = #{memberEmail},
+		member_addr_main = #{memberAddrMain},
+		member_addr_detail = #{memberAddrDetail}
+		where member_no = #{memberNo}
+	</update>
+
+	<!-- 회원 관심 카테고리 조회 -->
+	<select id="selectCategory" parameterType="_int"
+		resultType="String">
+		select donate_code as donateCode
+		from tbl_member_donation
+		where member_no = #{member.memberNo}
+	</select>
+
+	<!-- 프로필 파일명 조회(서버저장용) -->
+	<select id='selectProfile' parameterType="_int"
+		resultType="String">
+		select member_profile as memberProfile
+		from tbl_member where member_no = #{_parameter}
+	</select>
+
+
+	<!-- 회원 프로필 이미지 초기화 -->
+	<update id="deleteProfile" parameterType="_int">
+		update tbl_member
+		set member_profile = null
+		where member_no = #{_parameter}
+	</update>
+
+	<!-- 회원 프로필 이미지 수정 -->
+	<update id="updateProfile" parameterType="Member">
+		update tbl_member
+		set member_profile = #{memberProfile}
+		where member_no = #{memberNo}
+	</update>
+
+	<!-- 회원 기존 관심에서 제외된 카테고리 삭제 -->
+	<delete id='delMemberCategory' parameterType="map">
+		delete from tbl_member_donation
+		where member_no = #{memberNo} and
+		donate_code in
+		<foreach collection="delCtgList" item='donateCode' open="("
+			separator="," close=")">
+			#{donateCode}
+		</foreach>
+	</delete>
+
+	<!--회원 비밀번호 변경 -->
+	<update id='updateMemberPw' parameterType="Member">
+		update tbl_member
+		set member_pw = #{memberPw}
+		where member_no = #{memberNo}
+	</update>
+
+	<!-- 회원 탈퇴: 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자 member_deleted 0 -> 
+		1 -->
+	<update id='deleteMember' parameterType="_int">
+		update tbl_member
+		set member_deleted = 1,
+		member_profile = null
+		where member_no = #{_parameter}
+	</update>
+
+	<!-- 회원별 알림 리스트 조회 -->
+	<select id="selectAlarmList" parameterType="_int"
+		resultMap="AlarmMap">
+		SELECT
+		a.alarm_no,
+		a.member_no,
+		a.biz_no,
+		a.news_no,
+		a.alarm_type,
+		a.alarm_date,
+		a.alarm_read,
+		d.biz_name,
+		COALESCE(o.org_name, o2.org_name) AS org_name
+		FROM tbl_alarm a
+		LEFT JOIN tbl_donate_biz d ON a.biz_no = d.biz_no
+		LEFT JOIN tbl_org o ON d.org_no = o.org_no
+		LEFT JOIN tbl_news n ON a.news_no = n.news_no
+		LEFT JOIN tbl_org o2 ON n.org_no = o2.org_no
+		WHERE a.member_no = #{_parameter}
+		order by alarm_date desc
+	</select>
+	
+	<resultMap type="Alarm" id="AlarmMap">
+		<result column="alarm_no" property="alarmNo"/>
+		<result column="member_no" property="memberNo"/>
+		<result column="biz_no" property="bizNo"/>
+		<result column="news_no" property="newsNo"/>
+		<result column="alarm_type" property="alarmType"/>
+		<result column="alarm_date" property="alarmDate"/>
+		<result column="alarm_read" property="alarmRead"/>
+		<result column="biz_name" property="bizName"/>
+		<result column="org_name" property="orgName"/>
+		
+		<collection property="surveyList"
+					select="selectSurveyHistory"
 					column="member_no"
 					javaType="java.util.List"
-					ofType='String'>
+					ofType="MemberSurveyAnswer">
 		</collection>
 	</resultMap>
 	
-	<!-- 회원 정보수정 -->
-	<update id="updateMember"
-	parameterType="Member">
-	update tbl_member
-	   set member_name = #{memberName},
-	   	   member_phone = #{memberPhone},
-	   	   member_birth = #{memberBirth},
-	   	   member_Email = #{memberEmail},
-	   	   member_addr_main = #{memberAddrMain},
-	   	   member_addr_detail = #{memberAddrDetail}
-	 where member_no = #{memberNo} 	   
-	</update>
-	
-	<!-- 회원 관심 카테고리 조회 -->
-	<select id="selectCategory"
-	parameterType="_int"
-	resultType="String">
-	select donate_code as donateCode 
-	  from tbl_member_donation
-	 where member_no = #{member.memberNo}
-	</select>
-	
-	<!-- 프로필 파일명 조회(서버저장용) -->
-	<select id='selectProfile'
-	parameterType="_int"
-	resultType="String">
-	select member_profile as memberProfile
-	  from tbl_member where member_no = #{_parameter}
-	</select>
-	
-	
-	<!-- 회원 프로필 이미지 초기화 -->
-	<update id="deleteProfile"
-	parameterType="_int">
-	update tbl_member
-	   set member_profile = null
-	 where member_no = #{_parameter} 	   
-	</update>
-	
-	<!-- 회원 프로필 이미지 수정 -->
-	<update id="updateProfile"
-	parameterType="Member">
-	update tbl_member
-	   set member_profile = #{memberProfile}
-	 where member_no = #{memberNo} 
-	</update>
-	
-	<!-- 회원 기존 관심에서 제외된 카테고리 삭제 -->
-	<delete id='delMemberCategory'
-	parameterType="map">
-	delete from	tbl_member_donation
-	where member_no = #{memberNo} and
-	donate_code in <foreach collection="delCtgList"
-							item='donateCode'
-							open="("
-							separator=","
-							close=")">
-						#{donateCode}		
-					</foreach>	  
-	</delete>
-	
-	<!--회원 비밀번호 변경  -->
-	<update id='updateMemberPw'
-	parameterType="Member">
-	update tbl_member
-	   set member_pw = #{memberPw}
-	 where member_no = #{memberNo} 
-	</update>
-	
-	<!-- 회원 탈퇴: 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
-		member_deleted 0 -> 1
-	 -->
-	 <update id='deleteMember'
-	 parameterType="_int">
-	 update tbl_member
-	    set member_deleted = 1,
-	    	member_profile = null
-	   where member_no = #{_parameter} 
-	 </update>
-	 
-	 <!-- 회원별 알림 리스트 조회 -->
-	 <select id="selectAlarmList" parameterType="int" resultType="Alarm">
-	    
-    SELECT 
-        a.alarm_no AS alarmNo,
-        a.member_no AS memberNo,
-        a.biz_no AS bizNo,
-        a.news_no AS newsNo,
-        a.alarm_type AS alarmType,
-        a.alarm_date AS alarmDate,
-        a.alarm_read AS alarmRead,
-        d.biz_name AS bizName,
-        COALESCE(o.org_name, o2.org_name) AS orgName
-    FROM tbl_alarm a
-    LEFT JOIN tbl_donate_biz d ON a.biz_no = d.biz_no
-    LEFT JOIN tbl_org o ON d.org_no = o.org_no
-    LEFT JOIN tbl_news n ON a.news_no = n.news_no
-    LEFT JOIN tbl_org o2 ON n.org_no = o2.org_no
-    WHERE a.member_no = #{memberNo}
+	<!-- 회원 설문조사 리스트 조회 -->
+	<select id="selectSurveyHistory" parameterType="_int" resultType="MemberSurveyAnswer">
+	select answer_no as answerNo,
+	       question_no as questionNo,
+	       member_no as memberNo,
+	       biz_no as bizNo,
+	       answer_score as answerScore,
+	       answer_date as answerDate
+	from tbl_survey_answer
+	where member_no = #{_parameter}
 	</select>
 
-	
 	<!-- 회원 관심단체 전체수 조회 -->
-	<select id="selectOrgLikeCnt"
-	parameterType="_int"
-	resultType="_int">
-	select count(*) from tbl_member_org 
-     where member_no = #{parameter}
+	<select id="selectOrgLikeCnt" parameterType="_int"
+		resultType="_int">
+		select count(*) from tbl_member_org
+		where member_no = #{parameter}
 	</select>
-	
+
 	<!-- 회원 관심단체 리스트 조회 -->
-	<select id="selectOrgLikeList"
-	parameterType="map"
-	resultMap="orgMap">
-    select org_no, org_name, org_thumb
-    from(
-         select rownum rnum, a.*
-           from  (
-                 select *
-                   from tbl_org
-                  where org_no in (select org_no
-                                     from tbl_member_org
-                                    where member_no = #{memberNo}) 
-                   ) a
-          ) a
-    where rnum between #{pageInfo.start} and #{pageInfo.end}                                         
+	<select id="selectOrgLikeList" parameterType="map"
+		resultMap="orgMap">
+		select org_no, org_name, org_thumb
+		from(
+		select rownum rnum, a.*
+		from (
+		select *
+		from tbl_org
+		where org_no in (select org_no
+		from tbl_member_org
+		where member_no = #{memberNo})
+		) a
+		) a
+		where rnum between #{pageInfo.start} and #{pageInfo.end}
 	</select>
-	
+
 	<!-- 단체 주요 카테고리 조회 -->
-	<select id='selectOrgCategoryList'
-	parameterType="_int"
-	resultType="String">
-	select (select donate_ctg from tbl_donate_code d where d.donate_code = o.donate_code) as donateCtg
-	  from tbl_org_donation o
-	 where org_no = #{_parameter} 
+	<select id='selectOrgCategoryList' parameterType="_int"
+		resultType="String">
+		select (select donate_ctg from tbl_donate_code d where d.donate_code =
+		o.donate_code) as donateCtg
+		from tbl_org_donation o
+		where org_no = #{_parameter}
 	</select>
-	
+
 	<!-- 단체 사업 조회 -->
-	<select id="selectBizList"
-	parameterType="_int"
-	resultType="Biz">
-	select biz_no as bizNo,
-		   biz_name as bizName,
-		   donate_code as donateCode,
-		   to_char(biz_donate_end, 'yyyy/mm/dd') as bizDonateEnd,
-		   biz_thumb as bizThumbPath 
-	  from tbl_donate_biz
-	 where org_no = #{_parameter} 
+	<select id="selectBizList" parameterType="_int" resultType="Biz">
+		select biz_no as bizNo,
+		biz_name as bizName,
+		donate_code as donateCode,
+		to_char(biz_donate_end, 'yyyy/mm/dd') as bizDonateEnd,
+		biz_thumb as bizThumbPath
+		from tbl_donate_biz
+		where org_no = #{_parameter}
 	</select>
-	
+
 	<resultMap type="Org" id="orgMap">
 		<result column="org_no" property="orgNo" />
 		<result column="org_name" property="orgName" />
 		<result column="org_thumb" property="orgThumbPath" />
-	
+
 		<collection property="categoryList"
-					  select="selectOrgCategoryList"
-					  column="org_no"
-					javaType="java.util.List"
-					  ofType="String" 
-					  >
+			select="selectOrgCategoryList" column="org_no"
+			javaType="java.util.List" ofType="String">
 		</collection>
-		
-		<collection property="bizList"
-				 	  select="selectBizList"
-				 	  column="org_no"
-				 	 javaType="java.util.List"
-				 	   ofType="Biz" >
+
+		<collection property="bizList" select="selectBizList"
+			column="org_no" javaType="java.util.List" ofType="Biz">
 		</collection>
 	</resultMap>
-	
+
 	<!-- 회원 관심단체 삭제 -->
-	<delete id="delLikeOrg"
-	parameterType="map">
-	delete from tbl_member_org where member_no = #{memberNo} and org_No = #{orgNo}
+	<delete id="delLikeOrg" parameterType="map">
+		delete from tbl_member_org where member_no = #{memberNo} and org_No =
+		#{orgNo}
 	</delete>
-	
+
 
 	<!-- 회원 총 기부수 조회 -->
-	<select id='countDonationList'
-	parameterType="map"
-	resultType="_int">
-	select count(*) 
-	  from tbl_donation_list 
-	 where member_no = #{memberNo} 
-	 <if test="reqPage > 0">
-	   and (donate_date between to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
-	   						and to_date(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
-	 </if>
+	<select id='countDonationList' parameterType="map"
+		resultType="_int">
+		select count(*)
+		from tbl_donation_list
+		where member_no = #{memberNo}
+		<if test="reqPage > 0">
+			and (donate_date between to_date(#{startDate}, 'YYYY-MM-DD HH24:MI:SS')
+			and to_date(#{endDate}, 'YYYY-MM-DD HH24:MI:SS'))
+		</if>
 	</select>
 
+	<!-- 회원 알림 읽음 처리 -->
 	<update id="updateAlarmRead" parameterType="_int">
-	update tbl_alarm
-	   set alarm_read = 1
-	 where alarm_no = #{_parameter}
+		update tbl_alarm
+		set alarm_read = 1
+		where alarm_no = #{_parameter}
 	</update>
-	
+
 	<!-- 회원 충전/출금 수 -->
-	<select id="countWalletHistory"
-	parameterType="map"
-	resultType="_int">
-	select count(*)
-         from(
-               select 'charge' as type,
-                      charge_no as no,
-                      to_char(charge_money, '99,999,999') as money,
-                      to_char(charge_date, 'yyyy-mm-dd HH24:MI:SS') as transDate
-                 from tbl_charge
-                where member_no = #{memberNo}
-               union all
-               select 'refund' as type,
-                      refund_no as no,
-                      to_char(refund_money,'99,999,999') as money,
-                      to_char(refund_date, 'yyyy-mm-dd HH24:MI:SS') as transDate
-                 from tbl_refund
-                where member_no = #{memberNo}
-            ) 
-        where transDate between #{startDate} and #{endDate}
-       <if test='filter == "charge"'>
-       	  and type = 'charge' 
-       </if>
-       <if test='filter == "refund"'>
-          and type = 'refund'		
-       	</if>
-		  
+	<select id="countWalletHistory" parameterType="map"
+		resultType="_int">
+		select count(*)
+		from(
+		select 'charge' as type,
+		charge_no as no,
+		to_char(charge_money, '99,999,999') as money,
+		to_char(charge_date, 'yyyy-mm-dd HH24:MI:SS') as transDate
+		from tbl_charge
+		where member_no = #{memberNo}
+		union all
+		select 'refund' as type,
+		refund_no as no,
+		to_char(refund_money,'99,999,999') as money,
+		to_char(refund_date, 'yyyy-mm-dd HH24:MI:SS') as transDate
+		from tbl_refund
+		where member_no = #{memberNo}
+		)
+		where transDate between #{startDate} and #{endDate}
+		<if test='filter == "charge"'>
+			and type = 'charge'
+		</if>
+		<if test='filter == "refund"'>
+			and type = 'refund'
+		</if>
+
 	</select>
-	
+
 	<!-- 회원 충전, 충금 조회 -->
-	<select id="selectWallectHistory"
-	parameterType="map"
-	resultType="Wallet">
-	select rownum, a.*   
-   	  from(  
-	        select *
-	          from(
-	               select 'charge' as type,
-	                      charge_no as no,
-	                      to_char(charge_money, '99,999,999') as money,
-	                      to_char(charge_date, 'yyyy-mm-dd HH24:MI:SS') as transDate,
-	                      null as refundFinDate,
-	                      null as memberAccount,
-	                      null as memberAccountBank
-	                 from tbl_charge
-	                where member_no = #{memberNo}
-	               union all
-	               select 'refund' as type,
-	                      refund_no as no,
-	                      to_char(refund_money,'99,999,999') as money,
-	                      to_char(refund_date, 'yyyy-mm-dd HH24:MI:SS') as transDate,
-	                      to_char(refund_fin_date, 'yyyy-mm-dd HH24:MI:SS') as refundFinDate,
-	                      member_account as memberAccount,
-	                      member_account_bank as memberAccountBank
-	                 from tbl_refund
-	                where member_no = #{memberNo} 
-	               		  
-           		 ) 
-           where transDate between #{startDate} and #{endDate}
-           <if test="filter eq 'charge'">
-           and type = 'charge'
-           </if>
-           <if test="filter eq 'refund'">
-           and type = 'refund'
-           </if>
-       		order by transDate desc  
-        ) a
-    where rownum between 1 and #{pageInfo.end}    
+	<select id="selectWallectHistory" parameterType="map"
+		resultType="Wallet">
+		select rownum, a.*
+		from(
+		select *
+		from(
+		select 'charge' as type,
+		charge_no as no,
+		to_char(charge_money, '99,999,999') as money,
+		to_char(charge_date, 'yyyy-mm-dd HH24:MI:SS') as transDate,
+		null as refundFinDate,
+		null as memberAccount,
+		null as memberAccountBank
+		from tbl_charge
+		where member_no = #{memberNo}
+		union all
+		select 'refund' as type,
+		refund_no as no,
+		to_char(refund_money,'99,999,999') as money,
+		to_char(refund_date, 'yyyy-mm-dd HH24:MI:SS') as transDate,
+		to_char(refund_fin_date, 'yyyy-mm-dd HH24:MI:SS') as refundFinDate,
+		member_account as memberAccount,
+		member_account_bank as memberAccountBank
+		from tbl_refund
+		where member_no = #{memberNo}
+
+		)
+		where transDate between #{startDate} and #{endDate}
+		<if test="filter eq 'charge'">
+			and type = 'charge'
+		</if>
+		<if test="filter eq 'refund'">
+			and type = 'refund'
+		</if>
+		order by transDate desc
+		) a
+		where rownum between 1 and #{pageInfo.end}
 	</select>
 	
 	<!-- 충전하기 -->

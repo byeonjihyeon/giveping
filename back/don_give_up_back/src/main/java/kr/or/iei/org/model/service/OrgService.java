@@ -1,5 +1,6 @@
 package kr.or.iei.org.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.LoginOrg;
 import kr.or.iei.common.util.JwtUtils;
+import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.org.model.dao.OrgDao;
 import kr.or.iei.org.model.dto.Org;
 
@@ -180,6 +182,17 @@ public class OrgService {
 	@Transactional
 	public int updateThumb(Org org) {
 		return dao.updateThumb(org);
+	}
+
+	// 단체 알림 리스트 조회
+	public ArrayList<MemberAlarm> selectOrgAlarmList(int orgNo) {
+		return dao.selectOrgAlarmList(orgNo);
+	}
+
+	//단체 알림 읽음 처리
+	@Transactional
+	public int updateAlarmRead(int alarmNo) {
+		return dao.updateAlarmRead(alarmNo);
 	}
 
 		
