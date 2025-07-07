@@ -232,25 +232,54 @@
 	</update>
 
 	<!-- 회원별 알림 리스트 조회 -->
-	<select id="selectAlarmList" parameterType="int"
-		resultType="Alarm">
-
+	<select id="selectAlarmList" parameterType="_int"
+		resultMap="AlarmMap">
 		SELECT
-		a.alarm_no AS alarmNo,
-		a.member_no AS memberNo,
-		a.biz_no AS bizNo,
-		a.news_no AS newsNo,
-		a.alarm_type AS alarmType,
-		a.alarm_date AS alarmDate,
-		a.alarm_read AS alarmRead,
-		d.biz_name AS bizName,
-		COALESCE(o.org_name, o2.org_name) AS orgName
+		a.alarm_no,
+		a.member_no,
+		a.biz_no,
+		a.news_no,
+		a.alarm_type,
+		a.alarm_date,
+		a.alarm_read,
+		d.biz_name,
+		COALESCE(o.org_name, o2.org_name) AS org_name
 		FROM tbl_alarm a
 		LEFT JOIN tbl_donate_biz d ON a.biz_no = d.biz_no
 		LEFT JOIN tbl_org o ON d.org_no = o.org_no
 		LEFT JOIN tbl_news n ON a.news_no = n.news_no
 		LEFT JOIN tbl_org o2 ON n.org_no = o2.org_no
-		WHERE a.member_no = #{memberNo}
+		WHERE a.member_no = #{_parameter}
+	</select>
+	
+	<resultMap type="Alarm" id="AlarmMap">
+		<result column="alarm_no" property="alarmNo"/>
+		<result column="member_no" property="memberNo"/>
+		<result column="biz_no" property="bizNo"/>
+		<result column="news_no" property="newsNo"/>
+		<result column="alarm_type" property="alarmType"/>
+		<result column="alarm_date" property="alarmDate"/>
+		<result column="alarm_read" property="alarmRead"/>
+		<result column="org_name" property="orgName"/>
+		
+		<collection property="surveyList"
+					select="selectSurveyHistory"
+					column="member_no"
+					javaType="java.util.List"
+					ofType="MemberSurveyAnswer">
+		</collection>
+	</resultMap>
+	
+	<!-- 회원 설문조사 리스트 조회 -->
+	<select id="selectSurveyHistory" parameterType="_int" resultType="MemberSurveyAnswer">
+	select answer_no as answerNo,
+	       question_no as questionNo,
+	       member_no as memberNo,
+	       biz_no as bizNo,
+	       answer_score as answerScore,
+	       answer_date as answerDate
+	from tbl_survey_answer
+	where member_no = #{_parameter}
 	</select>
 
 

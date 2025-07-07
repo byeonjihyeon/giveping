@@ -28,6 +28,7 @@ import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
+import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
@@ -472,5 +473,20 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 		
+	}
+	
+	// 회원별 설문조사 내역 조회
+	@GetMapping("/surveyHistory/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectSurveyHistory(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "설문조사 내역 조회 중 오류가 발생하였습니다.", false, "error");
+		try {
+			ArrayList<MemberSurveyAnswer> surveyList  = service.selectSurveyHistory(memberNo);
+			res = new ResponseDTO(HttpStatus.OK, "", surveyList, "");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 }
