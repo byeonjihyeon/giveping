@@ -90,6 +90,14 @@ public interface MemberDao {
 	
 	//회원 결제, 출금내역 조회
 	ArrayList<Wallet> selectWallectHistory(HashMap<String, Object> walletMap);
-	
 
+	//회원 아이디 찾기
+	String selectMemberId(Member member);
+
+	//회원 비밀번호 찾기
+	int selectMemberPw(Member member);
+
+	//임시 비밀번호로 변경
+	void updateRandomPw(Member member);
+	
 }

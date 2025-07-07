@@ -434,4 +434,26 @@
     where rownum between 1 and #{pageInfo.end}    
 	</select>
 
+	<!-- 회원 아이디 찾기 -->
+	<select id="selectMemberId" parameterType="Member" resultType="string">
+		select member_id as memberId
+		  from tbl_member
+		 where member_name = #{memberName}
+		   and member_phone = #{memberPhone}
+	</select>
+	
+	<!-- 회원 비밀번호 찾기 -->
+	<select id="selectMemberPw" parameterType="Member" resultType="_int">
+		select count(*)
+		  from tbl_member
+		 where member_id = #{memberId}
+		   and member_email = #{memberEmail}
+	</select>
+	
+	<!-- 임시 비밀번호로 변경 -->
+	<update id="updateRandomPw" parameterType="Member">
+		update tbl_member
+		   set member_pw = #{memberPw}
+		 where member_id = #{memberId}
+	</update>
 </mapper>	

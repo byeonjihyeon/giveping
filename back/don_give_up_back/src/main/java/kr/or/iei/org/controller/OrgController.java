@@ -25,6 +25,7 @@ import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.LoginOrg;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
+import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 import kr.or.iei.org.model.service.OrgService;
 
@@ -170,12 +171,12 @@ public class OrgController {
 	}	
 
 	//비밀번호 확인
-	@PostMapping("/chkPw/{orgNo}/{orgPw}")
-	public ResponseEntity<ResponseDTO> checkPw(@PathVariable int orgNo, @PathVariable String orgPw) {
+	@PostMapping("/chkPw")
+	public ResponseEntity<ResponseDTO> checkPw(@RequestBody Org org) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 확인 중 오류가 발생했습니다.", false, "error");
 
 		try {
-			int result = service.checkPw(orgNo, orgPw);
+			int result = service.checkPw(org);
 			
 			if(result > 0) {				
 				res = new ResponseDTO(HttpStatus.OK, "비밀번호가 확인되었습니다.", true, "success");
@@ -293,5 +294,52 @@ public class OrgController {
       
       return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
    }
+   
+	//단체 아이디 찾기
+	@PostMapping("/findId")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectOrgId(@RequestBody Org org) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "아이디 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			String orgId = service.selectOrgId(org);
+			
+			if(orgId != null) {
+				int idLength = orgId.length();
+				String first = orgId.substring(0,2);
+				String last = orgId.substring(idLength-2);
+				String marker = "*".repeat(idLength-4);
+				orgId = first + marker + last;
+				
+				res = new ResponseDTO(HttpStatus.OK, "아이디 : " + orgId, true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "단체명 또는 전화번호가 일치하지 않습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 	
+	//단체 비밀번호 찾기
+	@PostMapping("/findPw")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectOrgPw(@RequestBody Org org) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.selectOrgPw(org);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "이메일로 임시 비밀번호를 전송했습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "아이디 또는 이메일이 일치하지 않습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }

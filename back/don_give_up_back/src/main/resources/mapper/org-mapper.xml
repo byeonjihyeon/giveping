@@ -186,4 +186,27 @@
 						 order by biz_donate_start desc) a ) a
 		 where rnum between #{start} and #{end}
 	</select>
+	
+	<!-- 단체 아이디 찾기 -->
+	<select id="selectOrgId" parameterType="Org" resultType="string">
+		select org_id as orgId
+		  from tbl_org
+		 where org_name = #{orgName}
+		   and org_phone = #{orgPhone}
+	</select>
+	
+	<!-- 단체 비밀번호 찾기 -->
+	<select id="selectOrgPw" parameterType="Org" resultType="_int">
+		select count(*)
+		  from tbl_org
+		 where org_id = #{orgId}
+		   and org_email = #{orgEmail}
+	</select>
+	
+	<!-- 임시 비밀번호로 변경 -->
+	<update id="updateRandomPw" parameterType="Org">
+		update tbl_org
+		   set org_pw = #{orgPw}
+		 where org_id = #{orgId}
+	</update>
 </mapper>

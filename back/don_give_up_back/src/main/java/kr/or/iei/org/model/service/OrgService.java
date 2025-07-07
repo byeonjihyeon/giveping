@@ -1,10 +1,13 @@
 package kr.or.iei.org.model.service;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +34,9 @@ public class OrgService {
 	
 	@Autowired
 	private PageUtil pageUtil;
+	
+	@Autowired
+	private JavaMailSender mailSender;
 
 	//토큰 재발급
 	public String refreshToken(Org org) {
@@ -138,14 +144,14 @@ public class OrgService {
 	}
 
 	//비밀번호 확인
-	public int checkPw(int orgNo, String orgPw) {
+	public int checkPw(Org org) {
 		int result = 0;
 		
 		//1) 암호화된 비밀번호 가지고 오기
-		String encodePw = dao.checkPw(orgNo);
+		String encodePw = dao.checkPw(org.getOrgNo());
 		
 		//2) 평문 비밀번호 == 암호화 비밀번호인지 확인
-		if(encoder.matches(orgPw, encodePw)) {
+		if(encoder.matches(org.getOrgPw(), encodePw)) {
 			result = 1; //일치하면 결과값 1로 변경
 		}
 		
@@ -214,6 +220,74 @@ public class OrgService {
       bizMap.put("pageInfo", pageInfo);
       
       return bizMap;
+   }
+
+   //단체 아이디 찾기
+   public String selectOrgId(Org org) {
+	   return dao.selectOrgId(org);
+   }
+
+   //단체 비밀번호 찾기
+   public int selectOrgPw(Org org) {
+	   //1) 단체 비밀번호 찾기
+	   int result = dao.selectOrgPw(org);
+	   
+	   if(result > 0) {
+			//임시 비밀번호 10자리 : 영대/소문자, 숫자, 특수문자
+			String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			String lower = "abcdefghijklmnopqrstuvwxyz";
+			String digit = "0123456789";
+			String special = "!@#$";
+			
+			String allChar = upper + lower + digit + special;
+			
+			SecureRandom random = new SecureRandom(); //난수 발생 객체
+			StringBuilder randomPw = new StringBuilder(); //임시 비밀번호 10자리 저장 객체
+			
+			//각각 최소 1개씩 임시 비밀번호에 포함되도록 처리
+			randomPw.append(upper.charAt(random.nextInt(upper.length())));
+			randomPw.append(lower.charAt(random.nextInt(lower.length())));
+			randomPw.append(digit.charAt(random.nextInt(digit.length())));
+			randomPw.append(special.charAt(random.nextInt(special.length())));
+			
+			//위에서 4자리 추가 후 나머지 6자리 임시 비밀번호 발행 처리
+			for(int i=0; i<6; i++) {
+				//전체 문자열에 무작위 추출하여 추가
+				randomPw.append(allChar.charAt(random.nextInt(allChar.length())));
+			}
+			
+			//발행된 임시 비밀번호 10자리를 무작위로 섞기기
+			char [] charArr = randomPw.toString().toCharArray();
+			for(int i=0; i<charArr.length; i++) {
+				int randomIdx = random.nextInt(charArr.length);
+				
+				char temp = charArr[i];
+				charArr[i] = charArr[randomIdx];
+				charArr[randomIdx] = temp;
+			}
+			
+			//최종 임시 비밀번호
+			String newRandomPw = new String(charArr);
+			
+			System.out.println(newRandomPw);
+			
+			//메일로 보낼 메시지
+			SimpleMailMessage msg = new SimpleMailMessage();
+			msg.setTo("qor659659@gmail.com");
+			msg.setFrom("dongiveup00@gmail.com");
+			msg.setSubject("Don Give Up 임시 비밀번호 안내");
+			msg.setText(org.getOrgId() + "님의 임시 비밀번호는 " + newRandomPw + " 입니다.");
+			
+			mailSender.send(msg);
+			
+			String encodePw = encoder.encode(newRandomPw);
+			org.setOrgPw(encodePw);
+			
+			//2) 임시 비밀번호로 변경
+			dao.updateRandomPw(org);
+	   }
+	   
+	   return result;
    }
 
 		

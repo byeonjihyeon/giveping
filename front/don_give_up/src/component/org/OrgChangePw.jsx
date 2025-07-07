@@ -10,16 +10,16 @@ export default function OrgChangePw(){
     const axiosInstance = createInstance();
     const navigate = useNavigate();
 
-    const {loginOrg} = useUserStore();
+    const {loginOrg, setIsLogined, setLoginOrg} = useUserStore();
 
-    const [orgPw, setOrgPw] = useState("");             //현재 비밀번호
+    const [org, setOrg] = useState({orgNo : loginOrg.orgNo, orgPw : ""});
     const [newOrgPw, setNewOrgPw] = useState("");       //새 비밀번호
     const [newOrgPwRe, setNewOrgPwRe] = useState("");   //새 비밀번호 확인
     const [result, setResult] = useState(false);        //비밀번호 확인을 진행해야 새 비밀번호를 입력할 수 있도록 제어할 변수
 
     //비밀번호 변경 시 호출 함수
     function chgOrgPw(e){
-        setOrgPw(e.target.value);
+        setOrg({...org, orgPw : e.target.value});
     }
     function chgNewOrgPw(e){
         setNewOrgPw(e.target.value);
@@ -31,8 +31,9 @@ export default function OrgChangePw(){
     //현재 비밀번호 확인 버튼 클릭 시 실행 함수
     function checkPw(){
         let options = {};
-        options.url = serverUrl + "/org/chkPw/" + loginOrg.orgNo + "/" + orgPw;
+        options.url = serverUrl + "/org/chkPw";
         options.method = "post";
+        options.data = org;
 
         axiosInstance(options)
         .then(function(res){
@@ -129,12 +130,10 @@ export default function OrgChangePw(){
                         confirmButtonText : "확인"
                     })
                     .then(function(result){
-                        setOrgPw("");
-                        setNewOrgPw("");
-                        setNewOrgPwRe("");
-                        setResult(0);
-                        setPwChk(0);
-                    })
+                        setLoginOrg(null);
+                        setIsLogined(false);
+                        navigate("/login");
+                    });
                 });
             }
         }
@@ -145,7 +144,7 @@ export default function OrgChangePw(){
         <div>        
             <div>
                 <label htmlFor="orgPw">현재비밀번호</label>
-                <input type="password" id="orgPw" value={orgPw} onChange={chgOrgPw}/>
+                <input type="password" id="orgPw" value={org.orgPw} onChange={chgOrgPw}/>
                 <button type="button" onClick={checkPw}>확인</button>
             </div>
 

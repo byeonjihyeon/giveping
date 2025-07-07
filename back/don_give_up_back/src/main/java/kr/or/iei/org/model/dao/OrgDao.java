@@ -61,4 +61,13 @@ public interface OrgDao {
 	//기부 사업 리스트 조회
 	ArrayList<Biz> selectBizList(HashMap<String, Object> param);
 
+	//단체 아이디 찾기
+	String selectOrgId(Org org);
+
+	//단체 비밀번호 찾기
+	int selectOrgPw(Org org);
+
+	//임시 비밀번호로 변경
+	void updateRandomPw(Org org);
+
 }
