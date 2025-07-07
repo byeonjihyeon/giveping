@@ -324,8 +324,10 @@ public class MemberService {
 		return walletMap;
 	}
 
+	// 회원별 설문조사 내역 리스트 조회
 	public ArrayList<MemberSurveyAnswer> selectSurveyHistory(int memberNo) {
 		return dao.selectSurveyHistory(memberNo);
 	}
+
 
 }

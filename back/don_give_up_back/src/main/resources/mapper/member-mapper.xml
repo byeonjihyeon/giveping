@@ -284,7 +284,6 @@
 	where member_no = #{_parameter}
 	</select>
 
-
 	<!-- 회원 관심단체 전체수 조회 -->
 	<select id="selectOrgLikeCnt" parameterType="_int"
 		resultType="_int">
@@ -363,6 +362,7 @@
 		</if>
 	</select>
 
+	<!-- 회원 알림 읽음 처리 -->
 	<update id="updateAlarmRead" parameterType="_int">
 		update tbl_alarm
 		set alarm_read = 1
