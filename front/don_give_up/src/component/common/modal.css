@@ -1,0 +1,49 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0; /* == top, bottom, right, left: 0;*/
+    background-color: rbga(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    animation: fadeIn 0.3s ease; /* ease == 애니메이션 시작은 느리게, 중간은 빠르게, 끝부분 느리게 */
+}
+
+/* 애니메이션 */
+@keyframes fadeIn { /* 요소가 서서히 투명에서 불투명 */
+    from { opacity: 0;} /*opacity: 투명도 0 == 완전히 투명, 1 == 불투명*/ 
+    to {opacity: 1;}
+}
+
+.modal-wrap {
+    width: 500px;
+    background-color: white;
+    max-width: 90%;
+    border-radius: 8px;
+    overflow: hidden; /* 요소의 내용이 지정한 크기를 넘으면 보이지 않게*/
+}    
+
+.modal-header {
+    border: 1px solid black;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-close{
+    cursor: pointer;
+}
+
+.money-range {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.money-range>*{
+    width: 150px;
+    height: 50p;
+    border: 1px solid black;
+}
+
+
+
+

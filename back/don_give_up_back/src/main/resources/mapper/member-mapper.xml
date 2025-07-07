@@ -433,5 +433,10 @@
         ) a
     where rownum between 1 and #{pageInfo.end}    
 	</select>
-
+	
+	<!-- 충전하기 -->
+	<insert id="charge"
+	parameterType="map">
+	insert into tbl_charge values (seq_charge.nextval, #{memberNo}, #{charge}, sysdate) 
+	</insert>
 </mapper>	

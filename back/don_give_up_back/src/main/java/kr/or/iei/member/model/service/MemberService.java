@@ -322,5 +322,15 @@ public class MemberService {
 		
 		return walletMap;
 	}
+	
+	//충전하기
+	@Transactional
+	public int charge(int memberNo, int charge) {
+		HashMap<String, Integer> memberMap = new HashMap<>();
+		memberMap.put("memberNo", memberNo);
+		memberMap.put("charge", charge);
+		
+		return dao.charge(memberMap);
+	}
 
 }

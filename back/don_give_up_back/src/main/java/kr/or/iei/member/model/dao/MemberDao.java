@@ -91,5 +91,8 @@ public interface MemberDao {
 	//회원 결제, 출금내역 조회
 	ArrayList<Wallet> selectWallectHistory(HashMap<String, Object> walletMap);
 	
+	//충전하기
+	int charge(HashMap<String, Integer> memberMap);
+	
 
 }
