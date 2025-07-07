@@ -25,9 +25,27 @@ export default function NewsList(){
             axiosInstance(options)
             .then(function(res){
                 //console.log(res.data.resData);
-                setNewsList(res.data.resData);
+                
+                const alarms = res.data.resData;
+                setNewsList(alarms);
+                markAllAsRead(alarms.map(function(a) {
+                    return a.alarmNo;
+                }))
             });
         }, []);
+
+    // 알림 읽음 처리 함수
+    function markAllAsRead(alarmNos){
+        //console.log("alarmNo" , alarmNo);
+        let options={};
+        options.url= serverUrl + '/member/alarm/' + alarmNos.join(',');
+        options.method = "patch";
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+        });
+    }
    
     
     /*
@@ -62,7 +80,12 @@ function News(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
-
+    
+    // alarmRead가 0이 아닌 경우 렌더링하지 않음
+    if (news.alarmRead !== 0) {
+        return null;
+    }
+    
     
     let content;
     if(news.alarmType === 0){
@@ -75,9 +98,10 @@ function News(props){
         content = `[입금완료] ${news.bizNo} 의 모금액 입금이 완료되었습니다.`;
     }
 
+    
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
     function handleClick() {
-        markAsRead(news.alarmNo);
+        //markAsRead(news.alarmNo);
         if(news.alarmType === 0){
             var hasSurveyForBiz = false; // surveyList 중 bizNo가 news.bizNo와 같은 게 하나라도 있는지 검사하는 변수
 
@@ -97,29 +121,19 @@ function News(props){
         }else if(news.alarmType === 2){
             navigate('/news/view/' + news.newsNo);
         }else if(news.alarmType === 3){
-            console.log("type 3 클릭")
+            console.log("type 3 클릭");
         }
     }
+        
 
-    // 알림 읽음 처리 함수
-    function markAsRead(alarmNo){
-        //console.log("alarmNo" , alarmNo)
-        let options={};
-        options.url= serverUrl + '/member/alarm/' + alarmNo;
-        options.method = "patch";
-
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res.data.resData);
-        });
-    }
+    
 
     return (
         <div 
             className="news-info" 
-            onClick={handleClick} 
             style={{
                 cursor: 'pointer',
+                onClick : {handleClick},
                 color: news.alarmRead === 1 ? 'gray' : 'black',
                 backgroundColor: news.alarmRead === 1 ? '#f0f0f0' : 'white',
             }}

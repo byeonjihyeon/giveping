@@ -50,6 +50,7 @@ export default function MemberMain(){
         axiosInstance(options)
         .then(function(res){
             setMember(res.data.resData);
+            console.log(res.data.resData);
         })
     },[]);  
 
