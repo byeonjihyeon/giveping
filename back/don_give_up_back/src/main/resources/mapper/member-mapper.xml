@@ -67,7 +67,7 @@
 		member_addr_main ,
 		member_addr_detail ,
 		member_profile ,
-		to_char(total_money, '99,999,999') as total_money,
+		to_char(total_money, 'FM999,999,999PR') as total_money,
 		to_char((select sum(donate_money) from tbl_donation_list d where d.member_no =
 		m.member_no
 		), '99,999,999') as total_donate_money
@@ -250,6 +250,7 @@
 		LEFT JOIN tbl_news n ON a.news_no = n.news_no
 		LEFT JOIN tbl_org o2 ON n.org_no = o2.org_no
 		WHERE a.member_no = #{_parameter}
+		order by alarm_date desc
 	</select>
 	
 	<resultMap type="Alarm" id="AlarmMap">
@@ -260,6 +261,7 @@
 		<result column="alarm_type" property="alarmType"/>
 		<result column="alarm_date" property="alarmDate"/>
 		<result column="alarm_read" property="alarmRead"/>
+		<result column="biz_name" property="bizName"/>
 		<result column="org_name" property="orgName"/>
 		
 		<collection property="surveyList"
