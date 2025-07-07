@@ -1,6 +1,8 @@
 package kr.or.iei.org.controller;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -272,6 +274,24 @@ public class OrgController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-
+   //기부 사업 리스트
+   @GetMapping("/bizList/{orgNo}/{clickBtn}/{reqPage}")
+   public ResponseEntity<ResponseDTO> selectBizList(@PathVariable int orgNo, @PathVariable String clickBtn, @PathVariable int reqPage) {
+      ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 조회 중 오류가 발생했습니다.", null, "error");
+      
+      try {
+         Biz biz = new Biz();
+         biz.setOrgNo(orgNo);
+         biz.setClickBtn(clickBtn);
+         
+         HashMap<String, Object> bizMap = service.selectBizList(reqPage, biz);
+         
+         res = new ResponseDTO(HttpStatus.OK, "", bizMap, "");
+      }catch(Exception e) {
+         e.printStackTrace();
+      }
+      
+      return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+   }
 	
 }

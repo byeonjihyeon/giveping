@@ -135,4 +135,52 @@
 		   set org_thumb = #{orgThumbPath}
 		 where org_no = #{orgNo}
 	</update>
+	
+	<!-- 기부 사업 갯수 조회 -->
+	<select id="selectBizCount" parameterType="Biz" resultType="_int">
+		select count(*)
+		  from tbl_donate_biz
+		 where org_no = #{orgNo}
+		 <choose>
+		 	<when test="clickBtn != '' and clickBtn == 'ingBiz'">
+		 		and biz_status = 1
+		 		and biz_donate_end >= sysdate
+		 	</when>
+		 	<when test="clickBtn != '' and clickBtn == 'doneBiz'">
+		 		and biz_status = 1
+		 		and sysdate > biz_donate_end
+		 	</when>
+		 </choose>
+	</select>
+	
+	<!-- 기부 사업 리스트 조회 -->
+	<select id="selectBizList" parameterType="map" resultType="Biz">
+		select biz_no as bizNo,
+		       donate_code as donateCode,
+		       biz_name as bizName,
+		       to_char(biz_donate_start-7, 'YYYY-MM-DD') as bizEnrollDate,
+		       to_char(biz_donate_start, 'YYYY-MM-DD') as bizDonateStart,
+		       to_char(biz_donate_end,'YYYY-MM-DD') as bizDonateEnd,
+		       to_char(biz_start, 'YYYY-MM-DD') as bizSatrt,
+		       to_char(biz_end, 'YYYY-MM-DD') as bizEnd,
+		       biz_goal as bizGoal,
+		       biz_status as bizStatus,
+		       a.rnum as rnum
+		  from (select rownum rnum, a.*
+				  from (select *
+						  from tbl_donate_biz
+						 where org_no = #{orgNo}
+						 <choose>
+						 	<when test="clickBtn != '' and clickBtn == 'ingBiz'">
+						 		and biz_status = 1
+						 		and to_char(biz_donate_end, 'YYYY-MM-DD') >= to_char(sysdate, 'YYYY-MM-DD')
+						 	</when>
+						 	<when test="clickBtn != '' and clickBtn == 'doneBiz'">
+						 		and biz_status = 1
+						 		and to_char(sysdate, 'YYYY-MM-DD') > to_char(biz_donate_end, 'YYYY-MM-DD')
+						 	</when>
+						 </choose>
+						 order by biz_donate_start desc) a ) a
+		 where rnum between #{start} and #{end}
+	</select>
 </mapper>

@@ -44,4 +44,7 @@ public class Biz {
 	// 모인 기부금 액수
 	private int donateMoney;
 	
+	private String clickBtn;		//단체 페이지 기부 사업 보기에서 선택한 버튼 value
+	private String bizEnrollDate;	//사업 등록일
+	private int rnum;				//리스트 내 번호
 }									

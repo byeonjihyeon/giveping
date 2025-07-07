@@ -1,9 +1,12 @@
 package kr.or.iei.org.model.dao;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.org.model.dto.Org;
 
@@ -51,5 +54,11 @@ public interface OrgDao {
 
 	//단체 프로필 수정
 	int updateThumb(Org org);
+
+	//기부 사업 갯수 조회
+	int selectBizCount(Biz biz);
+
+	//기부 사업 리스트 조회
+	ArrayList<Biz> selectBizList(HashMap<String, Object> param);
 
 }

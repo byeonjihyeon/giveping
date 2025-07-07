@@ -1,5 +1,7 @@
 package kr.or.iei.org.model.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +9,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.LoginOrg;
+import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.JwtUtils;
+import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.org.model.dao.OrgDao;
 import kr.or.iei.org.model.dto.Org;
 
@@ -23,6 +28,9 @@ public class OrgService {
 	
 	@Autowired
 	private JwtUtils jwtUtils;
+	
+	@Autowired
+	private PageUtil pageUtil;
 
 	//토큰 재발급
 	public String refreshToken(Org org) {
@@ -181,6 +189,32 @@ public class OrgService {
 	public int updateThumb(Org org) {
 		return dao.updateThumb(org);
 	}
+
+	
+   //기부 사업 조회
+   public HashMap<String, Object> selectBizList(int reqPage, Biz biz) {
+      //1) 페이지 정보
+      int viewCnt = 10;                         //한 페이지 당 기부 사업 갯수
+      int pageNaviSize = 5;                    	//페이지 네비게이션 길이
+      int totalcount = dao.selectBizCount(biz);	//기부 사업 갯수 조회
+      
+      PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalcount);
+      
+      HashMap<String, Object> param = new HashMap<String, Object>();
+      param.put("start", pageInfo.getStart());
+      param.put("end", pageInfo.getEnd());
+      param.put("clickBtn", biz.getClickBtn());
+      param.put("orgNo", biz.getOrgNo());
+      
+      //2) 각 버튼 클릭 시 기부 사업 리스트 조회
+      ArrayList<Biz> bizList = dao.selectBizList(param);
+      
+      HashMap<String, Object> bizMap = new HashMap<String, Object>();
+      bizMap.put("bizList", bizList);
+      bizMap.put("pageInfo", pageInfo);
+      
+      return bizMap;
+   }
 
 		
 }
