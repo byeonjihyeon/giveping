@@ -165,10 +165,13 @@
 		       to_char(biz_end, 'YYYY-MM-DD') as bizEnd,
 		       biz_goal as bizGoal,
 		       biz_status as bizStatus,
-		       a.rnum as rnum
+		       a.rnum as rnum,
+		       a.payout_no as payoutYN
 		  from (select rownum rnum, a.*
-				  from (select *
-						  from tbl_donate_biz
+				  from (select d.*, p.payout_no
+						  from tbl_donate_biz d
+						  left join tbl_admin_payout_history p
+						    on d.biz_no = p.biz_no
 						 where org_no = #{orgNo}
 						 <choose>
 						 	<when test="clickBtn != '' and clickBtn == 'ingBiz'">
@@ -176,7 +179,7 @@
 						 		and to_char(biz_donate_end, 'YYYY-MM-DD') >= to_char(sysdate, 'YYYY-MM-DD')
 						 	</when>
 						 	<when test="clickBtn != '' and clickBtn == 'doneBiz'">
-						 		and biz_status = 1
+						 		and biz_status != 0
 						 		and to_char(sysdate, 'YYYY-MM-DD') > to_char(biz_donate_end, 'YYYY-MM-DD')
 						 	</when>
 						 </choose>

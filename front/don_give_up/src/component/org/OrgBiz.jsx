@@ -59,6 +59,12 @@ export default function OrgBiz(){
                         :   <>
                             <th>모금 시작일</th>
                             <th>모금 종료일</th>
+                            {clickBtn == "doneBiz"
+                            ? <>
+                              <th>상태</th> 
+                              <th>입금 여부</th>
+                              </>
+                            : ""}
                             </>}
                         <th>상세페이지</th>
                     </tr>
@@ -73,7 +79,7 @@ export default function OrgBiz(){
                                     <td>{biz.rnum}</td>
                                     <td>{biz.bizName}</td>
                                     {clickBtn == "allBiz" ? <AllBiz biz={biz}/>
-                                                          : <ApprovalBiz biz={biz}/>}
+                                                          : <ApprovalBiz biz={biz} clickBtn={clickBtn}/>}
                                     <td><button onClick={bizView}>상세 페이지</button></td>
                                 </tr>
                     })}
@@ -97,7 +103,8 @@ function AllBiz(props){
         <td>{biz.bizStatus == 0 ? "미승인" :
              biz.bizStatus == 1 ? "승인" :
              biz.bizStatus == 2 ? "반려" : 
-             biz.bizStatus == 3 ? "삭제 요청" : "삭제"}</td>
+             biz.bizStatus == 3 ? "삭제 요청" : "삭제"}
+        </td>
         </>
     )
 }
@@ -106,11 +113,22 @@ function AllBiz(props){
 //번호 사업명 모금시작일 모금종료일 상세페이지
 function ApprovalBiz(props){
     const biz = props.biz;
+    const clickBtn = props.clickBtn;
 
     return (
         <>
             <td>{biz.bizDonateStart}</td>
             <td>{biz.bizDonateEnd}</td>
+            {clickBtn == "doneBiz"
+            ? <>
+              <td>{biz.bizStatus == 0 ? "미승인" :
+                   biz.bizStatus == 1 ? "승인" :
+                   biz.bizStatus == 2 ? "반려" : 
+                   biz.bizStatus == 3 ? "삭제 요청" : "삭제"}
+              </td> 
+              <td>{biz.payoutYN != null ? "O" : "X"}</td>
+              </>
+            : ""}
         </>
     )
 }

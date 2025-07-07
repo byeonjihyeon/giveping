@@ -47,4 +47,5 @@ public class Biz {
 	private String clickBtn;		//단체 페이지 기부 사업 보기에서 선택한 버튼 value
 	private String bizEnrollDate;	//사업 등록일
 	private int rnum;				//리스트 내 번호
+	private String payoutYN;		//입금 여부
 }									
