@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.DonateCode;
+import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.org.model.dto.Org;
 
 @Mapper
@@ -69,5 +70,10 @@ public interface OrgDao {
 
 	//임시 비밀번호로 변경
 	void updateRandomPw(Org org);
+	//단체 알림 리스트 조회
+	ArrayList<MemberAlarm> selectOrgAlarmList(int orgNo);
+
+	//단체 알림 읽음 처리
+	int updateAlarmRead(int alarmNo);
 
 }

@@ -30,7 +30,7 @@ export default function NewsList(){
     }, [reqPage]);
 
     return(
-    <>
+     <div className="content-wrapper">
         <div className="page-title">소식</div>
         {(loginMember?.memberLevel === 1)
         ? <Link to="/news/write" className="btn-primary">글쓰기</Link>
@@ -46,14 +46,14 @@ export default function NewsList(){
             </thead>
             <tbody>
                 {newsList.map(function(news, index){
-                    return <NewsItem key={"news"+index} news={news} newsList={newsList} setNewsList={setNewsList}/>
+                    return <NewsItem key={"news"+index} news={news} newsList={newsList} setNewsList={setNewsList} index={index} />
                 })}
             </tbody>
         </table>
         <div className="admin-page-wrap" style={{marginTop : "30px"}}>
             <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
         </div>
-    </>
+    </div>
 
     )
 }
@@ -66,10 +66,11 @@ function NewsItem(props) {
     //const newsList = props.newsList;
     //const setNewsList = props.setNewsList;
     const navigate = useNavigate();
+    const index = props.index;
 
     return (
         <tr onClick={() => navigate('/news/view/' + news.newsNo)}>
-            <td>{news.newsNo}</td>
+            <td>{index+1}</td>
             <td>{news.newsName}</td>
             <td>{news.newsDate}</td>
             <td>{news.readCount}</td>

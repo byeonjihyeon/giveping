@@ -85,13 +85,14 @@ public class BizController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	@PostMapping("/search")
+	// 기부 사업 리스트 검색
+	@PostMapping("/search/{reqPage}")
 	@NoTokenCheck
-	public ResponseEntity<ResponseDTO> searchDonateBiz(@RequestBody Keyword keyword){
+	public ResponseEntity<ResponseDTO> searchDonateBiz(@PathVariable int reqPage, @RequestBody Keyword keyword){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 게시글 검색 결과 조회 중, 오류가 발생하였습니다.", null, "error");
 		
 		try {
-			HashMap<String, Object> boardMap = service.searchDonateBiz(keyword);
+			HashMap<String, Object> boardMap = service.searchDonateBiz(keyword, reqPage);
 			res = new ResponseDTO(HttpStatus.OK, "", boardMap, "");
 		}catch(Exception e) {
 			e.printStackTrace();

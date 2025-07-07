@@ -26,6 +26,7 @@ import kr.or.iei.common.model.dto.LoginOrg;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.member.model.dto.Member;
+import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.org.model.dto.Org;
 import kr.or.iei.org.model.service.OrgService;
 
@@ -321,7 +322,45 @@ public class OrgController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+
+	// 단체별 알림 리스트 조회
+	@GetMapping("/alarm/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectOrgAlarmList(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 조회 중, 오류가 발생하였습니다.", null, "error");
+
+		try {
+			ArrayList<MemberAlarm> alarmList = service.selectOrgAlarmList(orgNo);
+			System.out.println("최종 alarmList :" + alarmList);
+			res= new ResponseDTO(HttpStatus.OK, "", alarmList , uploadPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+
+// 알림 클릭 시, 알림 읽음 표시로 업데이트
+@PatchMapping("/alarm/{alarmNo}")
+public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable int alarmNo){
+	ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 읽음 처리 중, 오류가 발생하였습니다.", false, "error");
 	
+	try{
+		int result = service.updateAlarmRead(alarmNo);
+		
+		if(result > 0) {
+			res = new ResponseDTO(HttpStatus.OK, "", true, "");
+		}else {
+			res = new ResponseDTO(HttpStatus.OK, "", false, "");
+		}
+		
+	}catch(Exception e){
+		e.printStackTrace();
+	}
+	
+	return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+}
+	
+
 	//단체 비밀번호 찾기
 	@PostMapping("/findPw")
 	@NoTokenCheck

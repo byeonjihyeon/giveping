@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
+import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Wallet;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
@@ -91,6 +92,12 @@ public interface MemberDao {
 	//회원 결제, 출금내역 조회
 	ArrayList<Wallet> selectWallectHistory(HashMap<String, Object> walletMap);
 
+	//회원 설문조사 내역 조회
+	ArrayList<MemberSurveyAnswer> selectSurveyHistory(int memberNo);
+	
+	//충전하기
+	int charge(HashMap<String, Integer> memberMap);
+	
 	//회원 아이디 찾기
 	String selectMemberId(Member member);
 
