@@ -1,0 +1,36 @@
+/* pageNavi */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px; /* 버튼 사이 간격 */
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.pagination li {
+  display: inline-block;
+}
+
+.page-item {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+}
+
+.page-item:hover {
+  background-color: #f0f0f0;
+}
+
+.page-item.active-page {
+  background-color: #007BFF;
+  color: white;
+  border-color: #0056b3;
+}
