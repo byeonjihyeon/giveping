@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 
 // 알람 아이콘
 export default function DotBadge() {
-    const {isLogined, setIsLogined, loginMember} = useUserStore();
+    const {isLogined, setIsLogined, loginMember, loginOrg} = useUserStore();
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const { memberNo } = useParams();
@@ -18,9 +18,18 @@ export default function DotBadge() {
      const navigate = useNavigate();
 
     function handleClick() {
-      // 알림 아이콘 클릭 시, 마이페이지의 내소식으로 이동
-      navigate("/member/news");
+      if (loginMember?.memberNo && !loginOrg?.orgNo) {
+        navigate("/member/news");  // 개인회원
+      } else if (loginOrg?.orgNo && !loginMember?.memberNo) {
+        navigate("/org/news");     // 단체회원
+      } else if (!loginMember && !loginOrg) {
+        alert("로그인이 필요합니다.");
+        navigate("/login"); // 로그인 페이지로 보내는 것도 가능
+      } else {
+        alert("회원 정보가 올바르지 않습니다.");
+      }
     }
+
 
 
     // 알림 여부 상태

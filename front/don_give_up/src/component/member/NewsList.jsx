@@ -6,8 +6,8 @@ import useUserStore from "../../store/useUserStore";
 
 
 //마이페이지 소식페이지
-export default function NewsList(props){
-    const {loginMember} = useUserStore();
+export default function NewsList(){
+    const {loginMember, loginOrg} = useUserStore();
     // loginMember가 null일 때 대비
     if (!loginMember) {
         return <div>로그인 정보가 없습니다.</div>;
@@ -16,6 +16,18 @@ export default function NewsList(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const memberNo = loginMember.memberNo;
+
+    useEffect(function(){
+            let options = {};
+            options.url = serverUrl + '/member/alarm/' + memberNo;
+            options.method = 'get';
+
+            axiosInstance(options)
+            .then(function(res){
+                //console.log(res.data.resData);
+                setNewsList(res.data.resData);
+            });
+        }, []);
    
     
     /*
@@ -27,27 +39,10 @@ export default function NewsList(props){
         {title: '제목5', content: '내용5', date: '2025-06-30', sender: '운영자'}
     ]);
     */
+
     const [newsList, setNewsList] = useState([]);
-    const [isNewsRead, setIsNewsRead] = useState(false); // 소식 읽었는지 여부 (초기값 : false / 읽을 경우 true로 변경)
+    //const [isNewsRead, setIsNewsRead] = useState(false); // 소식 읽었는지 여부 (초기값 : false / 읽을 경우 true로 변경)
 
-
-
-    useEffect(function(){
-        let options = {};
-        options.url = serverUrl + '/member/alarm/' + memberNo;
-        options.method = 'get';
-
-        axiosInstance(options)
-        .then(function(res){
-            //console.log(res.data.resData);
-            setNewsList(res.data.resData);
-        });
-    }, []);
-
-    
-
-
-    
 
     return (
         <div className="newsList-wrap" >
@@ -68,7 +63,7 @@ function News(props){
     const axiosInstance = createInstance();
 
 
-
+    
     let content;
     if(news.alarmType === 0){
         content = `[사업종료] ${news.orgName} 의 "${news.bizName}" 사업이 종료되었습니다. 설문조사를 해주세요.`;
@@ -76,6 +71,8 @@ function News(props){
         content = `[첨부파일업로드] ${news.orgName} 의 "${news.bizName}" 사업이 업데이트 되었습니다.`;
     }else if(news.alarmType === 2){
         content = `[관심단체] ${news.orgName} 의 새로운 소식이 업데이트 되었습니다.`;
+    }else if(news.alarmType === 3){
+        content = `[입금완료] ${news.bizNo} 의 모금액 입금이 완료되었습니다.`;
     }
 
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
@@ -99,6 +96,8 @@ function News(props){
             navigate('/biz/view/' + news.bizNo);
         }else if(news.alarmType === 2){
             navigate('/news/view/' + news.newsNo);
+        }else if(news.alarmType === 3){
+            console.log("type 3 클릭")
         }
     }
 
@@ -131,5 +130,4 @@ function News(props){
             </div>
         </div>
     );
-
 }
