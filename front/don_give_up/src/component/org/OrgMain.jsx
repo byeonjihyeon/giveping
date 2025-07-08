@@ -12,6 +12,7 @@ import "./org.css";
 import useUserStore from "../../store/useUserStore";
 import createInstance from "../../axios/Interceptor";
 import OrgProfileUpdate from "./OrgProfileUpdate";
+import MyHome from "./MyHome";
 
 //단체 마이페이지 메인
 export default function OrgMain(){
@@ -50,6 +51,7 @@ export default function OrgMain(){
             <Sidebar menuList={menuList} org={org}/>
             <div className="org-main-mid-wrap">
                 <Routes>
+                    <Route path='/' element={<MyHome org={org} />}  />
                     <Route path="news" element={<OrgNewsList/>}/>
                     <Route path="update" element={<OrgUpdate org={org} setOrg={setOrg}/>}/>
                     <Route path="changePw" element={<OrgChangePw/>}/>
