@@ -26,4 +26,52 @@
 	  </where>
 	  	and alarm_read = 0
 	</select>
+	
+	<!-- 회원 관심 카테고리에 따라서 기부 사업 리스트 (6개) 출력 -->
+	<select id="selectMainBizList" parameterType="int" resultType="CommonBiz">
+	    SELECT * FROM (
+	        SELECT 
+	            b.biz_no AS bizNo,
+	            b.org_no AS orgNo,
+	            b.biz_name AS bizName,
+	            b.donate_code AS donateCode,
+	            d.donate_ctg AS donateCtg,
+	            b.biz_content AS bizContent,
+	            b.biz_donate_start AS bizDonateStart,
+	            b.biz_donate_end AS bizDonateEnd,
+	            b.biz_start AS bizStart,
+	            b.biz_end AS bizEnd,
+	            b.biz_goal AS bizGoal,
+	            b.biz_status AS bizStatus,
+	            b.biz_reg_date AS bizRegDate,
+	            b.biz_thumb AS bizThumbPath,
+	            o.org_name AS orgName,
+	            NVL((
+	                SELECT SUM(d.donate_money)
+	                FROM tbl_donation_list d
+	                WHERE d.biz_no = b.biz_no
+	            ), 0) AS donateMoney
+	        FROM tbl_donate_biz b
+	        JOIN tbl_org o ON b.org_no = o.org_no
+	        JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
+	        <where>
+	            b.biz_status = 1
+	            AND b.biz_end >= SYSDATE
+	            <if test="memberNo != null and memberNo != 0">
+	                AND b.donate_code IN (
+	                    SELECT donate_code 
+	                    FROM tbl_member m
+	                    JOIN tbl_member_donation md ON m.member_no = md.member_no
+	                    WHERE md.member_no = #{memberNo}
+	                )
+	            </if>
+	        </where>
+	        ORDER BY b.biz_reg_date DESC
+	    )
+	    WHERE ROWNUM &lt;= 8
+	</select>
+
+
+
+	
 </mapper>

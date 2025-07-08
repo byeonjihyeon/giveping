@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.iei.common.annotation.NoTokenCheck;
+import kr.or.iei.common.model.dto.CommonBiz;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.model.service.CommonService;
@@ -39,9 +40,8 @@ public class CommonController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	// (일반)회원별 안 읽은 알람 수 조회
+	// 일반/단체회원 별 안 읽은 알람 수 조회
 	@GetMapping("/countAlarm")
-	@NoTokenCheck
 	public ResponseEntity<ResponseDTO> countAlarm(@RequestParam Map<String, Object> param){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 조회 중 오류 발생", null, "error");
 		try {
@@ -53,4 +53,22 @@ public class CommonController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	
+	// 일반회원 관심 카테고리에 따라서 기부 사업 리스트 조회 (로그인 x시 or 단체 회원일 경우 => memberNo 를 0으로 보냄-> 기부 종료일 임박한 순서대로 리스트 조회)
+	@GetMapping("/bizList/{primaryNo}")
+	//@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectMainBizList(@PathVariable int primaryNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "리스트 조회 중 오류 발생", null, "error");
+		try {
+			ArrayList<CommonBiz> bizList = service.selectMainBizList(primaryNo);
+			res = new ResponseDTO(HttpStatus.OK, "", bizList, "");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	
 }
