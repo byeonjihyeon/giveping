@@ -192,7 +192,7 @@
 		select org_id as orgId
 		  from tbl_org
 		 where org_name = #{orgName}
-		   and org_phone = #{orgPhone}
+		   and org_email = #{orgEmail}
 	</select>
 	
 	<!-- 단체 비밀번호 찾기 -->
