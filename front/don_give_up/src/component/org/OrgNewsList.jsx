@@ -5,7 +5,7 @@ import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 //내 소식(단체)
 export default function OrgNewsList(){
-    const {loginOrg} = useUserStore();
+    const { loginOrg, unreadAlarmCount, setUnreadAlarmCount, setHasNewAlert} = useUserStore();
     // loginMember가 null일 때 대비
     if (!loginOrg) {
         return <div>로그인 정보가 없습니다.</div>;
@@ -25,9 +25,50 @@ export default function OrgNewsList(){
             axiosInstance(options)
             .then(function(res){
                 console.log(res.data.resData);
-                setNewsList(res.data.resData);
+                const alarms = res.data.resData;
+                setNewsList(alarms);
+                // 전체 다 읽음 처리
+                markAllAsRead(alarms.map(function(a) {
+                    return a.alarmNo;
+                }))
             });
         }, []);
+
+        // 알림 읽음 처리 함수
+    function markAllAsRead(alarmNos){
+        //console.log("alarmNo" , alarmNo);
+        let options={};
+        options.url= serverUrl + '/org/alarm/' + alarmNos.join(',');
+        options.method = "patch";
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+
+            // 안 읽은 알림 갯수 reload
+            let options = {};
+            options.url = serverUrl + '/countAlarm';
+            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
+            options.params = { orgNo: loginOrg.orgNo };
+            options.method = 'get';
+    
+            axiosInstance(options)
+            .then(function(res){
+                console.log(res.data.resData);
+
+                const count = res.data.resData;
+                if(count > 0){
+                    console.log("안읽은알림갯수 : ", count);
+                    setHasNewAlert(true);
+                    setUnreadAlarmCount(count);    // 결과 unreadAlarmCount 에 set 하기
+                }else{
+                    setHasNewAlert(false);
+                    setUnreadAlarmCount(count);
+                }
+            });
+        });
+    }
+
         
 
     const [newsList, setNewsList] = useState([]);
@@ -46,10 +87,22 @@ export default function OrgNewsList(){
 function News(props){
     const news = props.news;
     const navigate = useNavigate();
-
+    
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
+    // alarmType 3과 4가 아닌 경우 렌더링하지 않음
+    if (news.alarmType !== 3 && news.alarmType !== 4) {
+     return null;
+    }
+
+    /*
+    // alarmRead가 0이 아닌 경우 렌더링하지 않음
+    if (news.alarmRead !== 0) {
+        return null;
+    }
+    */
+    
     let content;
     if(news.alarmType === 3){
         content = `[입금완료] ${news.bizName} 기부사업의 모금액 입금이 완료되었습니다.`;
@@ -59,7 +112,7 @@ function News(props){
     
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
     function handleClick() {
-        markAsRead(news.alarmNo);
+        //markAsRead(news.alarmNo);
         if(news.alarmType === 3){
             navigate('/biz/view/' + news.bizNo);
         }else if(news.alarmType === 4){
@@ -68,19 +121,7 @@ function News(props){
     }
     
 
-    // 알림 읽음 처리 함수
-    function markAsRead(alarmNo){
-        //console.log("alarmNo" , alarmNo);
-        let options={};
-        options.url= serverUrl + '/org/alarm/' + alarmNo;
-        options.method = "patch";
-
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res.data.resData);
-        });
-    }
-
+    
 
 
     return (

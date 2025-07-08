@@ -23,6 +23,7 @@ public class Alarm {
 	// join 을 위한 변수 선언 
 	private String bizName;
 	private String orgName;
+	private String bizThumb;
 	
 	// 회원별 설문조사 내역 조회
 	private List<MemberSurveyAnswer> surveyList;

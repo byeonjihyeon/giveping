@@ -7,7 +7,7 @@ import useUserStore from "../../store/useUserStore";
 
 //마이페이지 소식페이지
 export default function NewsList(){
-    const {loginMember, loginOrg} = useUserStore();
+    const {loginMember, unreadAlarmCount, setUnreadAlarmCount, setHasNewAlert} = useUserStore();
     // loginMember가 null일 때 대비
     if (!loginMember) {
         return <div>로그인 정보가 없습니다.</div>;
@@ -44,6 +44,28 @@ export default function NewsList(){
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
+            
+            // 안 읽은 알림 갯수 reload
+            let options = {};
+            options.url = serverUrl + '/countAlarm';
+            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
+            options.params = { memberNo: loginMember.memberNo };
+            options.method = 'get';
+    
+            axiosInstance(options)
+            .then(function(res){
+                console.log(res.data.resData);
+
+                const count = res.data.resData;
+                if(count > 0){
+                    console.log("안읽은알림갯수 : ", count);
+                    setHasNewAlert(true);
+                    setUnreadAlarmCount(count);    // 결과 unreadAlarmCount 에 set 하기
+                }else{
+                    setHasNewAlert(false);
+                    setUnreadAlarmCount(count);
+                }
+            });
         });
     }
    
@@ -80,11 +102,17 @@ function News(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
-    
+    // alarmType 3과 4인 경우 렌더링하지 않음
+    if (news.alarmType == 3 || news.alarmType == 4) {
+     return null;
+    }
+
+    /*
     // alarmRead가 0이 아닌 경우 렌더링하지 않음
     if (news.alarmRead !== 0) {
         return null;
     }
+        */
     
     
     let content;
@@ -94,8 +122,8 @@ function News(props){
         content = `[첨부파일업로드] ${news.orgName} 의 "${news.bizName}" 사업이 업데이트 되었습니다.`;
     }else if(news.alarmType === 2){
         content = `[관심단체] ${news.orgName} 의 새로운 소식이 업데이트 되었습니다.`;
-    }else if(news.alarmType === 3){
-        content = `[입금완료] ${news.bizNo} 의 모금액 입금이 완료되었습니다.`;
+    }else if(news.alarmType === 5){
+        content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
     }
 
     
@@ -131,9 +159,9 @@ function News(props){
     return (
         <div 
             className="news-info" 
+            onClick = {handleClick}
             style={{
                 cursor: 'pointer',
-                onClick : {handleClick},
                 color: news.alarmRead === 1 ? 'gray' : 'black',
                 backgroundColor: news.alarmRead === 1 ? '#f0f0f0' : 'white',
             }}
@@ -145,3 +173,4 @@ function News(props){
         </div>
     );
 }
+

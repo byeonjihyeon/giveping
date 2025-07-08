@@ -9,7 +9,7 @@ export default function MyHome(props){
     const member = props.member;
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
-    const {loginMember} = useUserStore();
+    const {loginMember, unreadAlarmCount} = useUserStore();
     const [newsList, setNewsList] = useState([]);
     const [reLoadMember, setReLoadMember] = useState({}); 
 	//모달창 상태
@@ -43,6 +43,7 @@ export default function MyHome(props){
         .then(function(res){
             setReLoadMember(res.data.resData);
             console.log(res.data.resData);
+            //console.log(setReLoadMember.unreadAlarm);
         })
     }
 
@@ -101,7 +102,7 @@ export default function MyHome(props){
             <div className="myNews-wrap">
                 <div className="myNews-title-wrap">
                     <span>내 소식</span>
-                    <span> | 총 {setReLoadMember.unreadAlarm} 건</span>
+                    <span> | 총 {unreadAlarmCount} 건</span>
                 </div>
                 <div className="myNews-item">
                     <div className="newsList-wrap" >
@@ -125,7 +126,7 @@ export default function MyHome(props){
                     <span>설문조사</span>
                 </div>
                 <div className="myNews-item">
-                    <div className="newsList-wrap">
+                    <div className="mynewsList-wrap">
                             {
                                 newsList.filter(survey => 
                                 survey.alarmType === 0 &&
@@ -165,6 +166,8 @@ function News(props){
         content = `[관심단체] ${news.orgName} 의 새로운 소식이 업데이트 되었습니다.`;
     }else if(news.alarmType === 3){
         content = `[입금완료] ${news.bizNo} 의 모금액 입금이 완료되었습니다.`;
+    }else if(news.alarmType === 5){
+        content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
     }
 
     
@@ -197,7 +200,9 @@ function News(props){
             navigate('/news/view/' + news.newsNo);
         }else if(news.alarmType === 3){
             console.log("type 3 클릭")
-        }
+        }else if(news.alarmType === 5){
+        content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
+    }
     }
 
     // 알림 읽음 처리 함수
@@ -238,9 +243,6 @@ function Surveys(props){
     const navigate = useNavigate();
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
-    const axiosInstance = createInstance();
-
-    
 
     // alarmType이 0이 아닌 경우 렌더링하지 않음
     if (survey.alarmType !== 0) {
@@ -253,11 +255,6 @@ function Surveys(props){
         return null;
     }
 
-    let content;
-    if(survey.alarmType === 0){
-        content = `${survey.orgName} 의 "${survey.bizName}" 기부사업의 설문조사를 해주세요.`;
-    }
-
     function handleClick() {
         var hasSurveyForBiz = false; // surveyList 중 bizNo가 news.bizNo와 같은 게 하나라도 있는지 검사하는 변수
 
@@ -267,7 +264,7 @@ function Surveys(props){
                     break;
                 }
             }
-            if (hasSurveyForBiz) {  // 설문조사한 이력 있는 경우 -> alert 창
+            if (hasSurveyForBiz) {  // 설문조사한 이력 있는 경우 -> alert 창 경고
             alert('이미 설문조사에 참여했습니다.'); 
             } else {    // 설문조사한 이력 없는 경우 -> 설문조사창으로 이동
             navigate('/biz/view/' + survey.bizNo + '?survey=open');
@@ -277,12 +274,17 @@ function Surveys(props){
 
     return (
         <div className="survey-card" onClick={handleClick}>
-      <div className="posting-title">{survey.bizName}</div>
-      <div className="posting-sub-info">
-        <span>{survey.orgName}</span>
-        <br />
-        <span>{survey.alarmDate}</span>
-      </div>
+            <div className="posting-img">
+                <img
+                    src={survey.bizThumb
+                        ? serverUrl + "/biz/thumb/" + survey.bizThumb.substring(0, 8) + "/" + survey.bizThumb
+                        : "/images/default_img.png"}
+                />
+            </div> 
+            <div className="posting-title">{survey.bizName}</div>
+            <div className="posting-sub-info">
+                <span>{survey.orgName}</span>
+            </div>
     </div>
     );
 }

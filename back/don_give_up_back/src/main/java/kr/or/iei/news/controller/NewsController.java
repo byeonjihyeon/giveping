@@ -70,7 +70,6 @@ public class NewsController {
 
 		try {
 			News news = service.selectOneNews(newsNo);
-			System.out.println("news: "+news);
 			res = new ResponseDTO(HttpStatus.OK, "", news, "");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -257,7 +256,6 @@ public class NewsController {
 	// 댓글 수정
 	@PatchMapping("/comment")
 	public ResponseEntity<ResponseDTO> updateComment(@RequestBody Comment comment) {
-		System.out.println("update comment : " + comment.toString());
 		
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 수정 중, 오류가 발생하였습니다.", false, "error");
 
@@ -310,7 +308,6 @@ public class NewsController {
 	// 소식 게시판 댓글 등록
 	@PostMapping("/comment")
 	public ResponseEntity<ResponseDTO> regComment(@RequestBody Comment comment){
-		System.out.println("newsReport : " + comment.toString());
 		
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 등록 처리 중, 오류가 발생하였습니다.", false, "error");
 
