@@ -44,7 +44,6 @@ public class CommonController {
 	@NoTokenCheck
 	public ResponseEntity<ResponseDTO> countAlarm(@RequestParam Map<String, Object> param){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 조회 중 오류 발생", null, "error");
-		System.out.println("프런트에서 온 param : " + param);
 		try {
 			int countAlarm = service.countAlarm(param);
 			res = new ResponseDTO(HttpStatus.OK, "", countAlarm, "");

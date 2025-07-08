@@ -133,9 +133,7 @@ public class MemberController {
 	public ResponseEntity<ResponseDTO> selectMember(@PathVariable int memberNo){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 조회중, 오류가 발생하였습니다.", null, "error");
 		try {
-			System.out.println("memberNo : " + memberNo); // o
 			Member member = service.selectMember(memberNo);
-			System.out.println("member : " + member);
 			res = new ResponseDTO(HttpStatus.OK, "", member, "");
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -356,7 +354,6 @@ public class MemberController {
 
 		try {
 			ArrayList<MemberAlarm> alarmList = service.selectAlarmList(memberNo);
-			System.out.println("최종 alarmList :" + alarmList);
 			res= new ResponseDTO(HttpStatus.OK, "", alarmList , uploadPath);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -379,7 +376,6 @@ public class MemberController {
 	        }
 			
 			if(updateCount > 0) {
-				System.out.println(updateCount);
 				res = new ResponseDTO(HttpStatus.OK, "", true, "");
 			}else {
 				res = new ResponseDTO(HttpStatus.OK, "", false, "");

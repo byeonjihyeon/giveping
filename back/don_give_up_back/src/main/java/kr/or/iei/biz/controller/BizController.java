@@ -123,7 +123,7 @@ public class BizController {
 	@PostMapping("/donate")
 	public ResponseEntity<ResponseDTO> bizDonate(@RequestBody BizDonationList bizDonationList){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 처리 중, 오류가 발생하였습니다.", false, "error");
-		System.out.println("BizDonationList : " +bizDonationList.toString());
+		
 		try {
 			int result = service.bizDonate(bizDonationList);
 			if(result > 0) {
@@ -157,7 +157,7 @@ public class BizController {
 	@PostMapping("/survey")
 	public ResponseEntity<ResponseDTO> regSurveyAnswer(@RequestBody List<SurveyAnswer> answerList) throws DuplicateKeyException{
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "답변 저장 처리 중, 오류가 발생하였습니다.", false, "error");
-		System.out.println("answerList : " +answerList);
+		
 		try {
 			int result = service.regSurveyAnswer(answerList);
 			if(result > 0) {
@@ -215,9 +215,7 @@ public class BizController {
 												){
 		
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "첨부파일 처리 중, 오류가 발생하였습니다.", false, "error");
-		System.out.println("controller 도착");
-		System.out.println("biz" + biz);
-		System.out.println("bizFile" + bizFile);
+		
 		try {
 			
 			//추가 첨부파일 업로드 처리
