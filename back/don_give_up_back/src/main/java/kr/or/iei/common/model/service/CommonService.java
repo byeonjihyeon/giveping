@@ -1,6 +1,7 @@
 package kr.or.iei.common.model.service;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,7 @@ public class CommonService {
 		return dao.selectDonateCtg();
 	}
 
-	public int countAlarm(int memberNo) {
-		return dao.countAlarm(memberNo);
+	public int countAlarm(Map<String, Object> param) {
+		return dao.countAlarm(param);
 	}
 }

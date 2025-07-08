@@ -340,14 +340,19 @@ public class OrgController {
 	}
 
 // 알림 클릭 시, 알림 읽음 표시로 업데이트
-@PatchMapping("/alarm/{alarmNo}")
-public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable int alarmNo){
+@PatchMapping("/alarm/{alarmNos}")
+public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos){
 	ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 읽음 처리 중, 오류가 발생하였습니다.", false, "error");
 	
 	try{
-		int result = service.updateAlarmRead(alarmNo);
+		String[] alarmNoArr = alarmNos.split(",");
+        int updateCount = 0;
+        for (String alarmNoStr : alarmNoArr) {
+            int alarmNo = Integer.parseInt(alarmNoStr.trim());
+            updateCount += service.updateAlarmRead(alarmNo);
+        }
 		
-		if(result > 0) {
+		if(updateCount > 0) {
 			res = new ResponseDTO(HttpStatus.OK, "", true, "");
 		}else {
 			res = new ResponseDTO(HttpStatus.OK, "", false, "");

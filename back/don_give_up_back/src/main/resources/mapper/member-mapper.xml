@@ -252,6 +252,7 @@
 		a.alarm_date,
 		a.alarm_read,
 		d.biz_name,
+		d.biz_thumb,
 		COALESCE(o.org_name, o2.org_name) AS org_name
 		FROM tbl_alarm a
 		LEFT JOIN tbl_donate_biz d ON a.biz_no = d.biz_no
@@ -272,6 +273,7 @@
 		<result column="alarm_read" property="alarmRead"/>
 		<result column="biz_name" property="bizName"/>
 		<result column="org_name" property="orgName"/>
+		<result column="biz_thumb" property="bizThumb"/>
 		
 		<collection property="surveyList"
 					select="selectSurveyHistory"
