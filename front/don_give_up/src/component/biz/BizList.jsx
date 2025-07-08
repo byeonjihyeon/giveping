@@ -216,7 +216,7 @@ function BoardItem(props) {
                     <span> #{donateBiz.donateCtg}</span>
                     <br />
                     <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: percent }}></div>
+                        <div className="progress-fill" style={{ width: `${percent}%` }}></div>
                     </div>
                     <div className="donate-stats">
                         <span>{percent}%</span>
