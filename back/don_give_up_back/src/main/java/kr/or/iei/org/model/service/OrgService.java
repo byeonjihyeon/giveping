@@ -275,7 +275,7 @@ public class OrgService {
 			
 			//메일로 보낼 메시지
 			SimpleMailMessage msg = new SimpleMailMessage();
-			msg.setTo("qor659659@gmail.com");
+			msg.setTo("qor659659@gmail.com"); //메일을 받을 메일 주소 org.getOrgEmail();
 			msg.setFrom("dongiveup00@gmail.com");
 			msg.setSubject("Don Give Up 임시 비밀번호 안내");
 			msg.setText(org.getOrgId() + "님의 임시 비밀번호는 " + newRandomPw + " 입니다.");
@@ -300,6 +300,16 @@ public class OrgService {
 	@Transactional
 	public int updateAlarmRead(int alarmNo) {
 		return dao.updateAlarmRead(alarmNo);
+	}
+
+	//탈퇴하기 페이지에서 조회할 기부 사업 리스트
+	public ArrayList<Biz> selectIngBizList(int orgNo) {
+		return dao.selectIngBizList(orgNo);
+	}
+
+	//탈퇴 신청
+	public int deleteOrg(int orgNo) {
+		return dao.deleteOrg(orgNo);
 	}
 
 		

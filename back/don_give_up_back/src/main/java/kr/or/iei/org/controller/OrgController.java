@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizPlan;
 import kr.or.iei.common.annotation.NoTokenCheck;
+import kr.or.iei.common.aop.ValidateAOP;
 import kr.or.iei.common.model.dto.LoginOrg;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
@@ -34,6 +36,8 @@ import kr.or.iei.org.model.service.OrgService;
 @CrossOrigin("*")
 @RequestMapping("/org")
 public class OrgController {
+
+    private final ValidateAOP validateAOP;
 	@Autowired
 	private OrgService service;
 
@@ -42,6 +46,10 @@ public class OrgController {
 	
 	@Value("${file.uploadPath}")
 	private String uploadPath;
+
+    OrgController(ValidateAOP validateAOP) {
+        this.validateAOP = validateAOP;
+    }
 	
 	//토큰 재발급
 	@PostMapping("/refresh")
@@ -89,7 +97,7 @@ public class OrgController {
 			int result = service.insertOrg(org);
 			
 			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.", true, "success");
+				res = new ResponseDTO(HttpStatus.OK, "회원가입이 완료되었습니다. 관리자 승인 결과는 메일로 발송됩니다.", true, "success");
 			}else {
 				res = new ResponseDTO(HttpStatus.OK, "회원가입 중 오류가 발생했습니다.", false, "warning");
 			}
@@ -110,8 +118,12 @@ public class OrgController {
 			
 			if(loginOrg == null) {
 				res = new ResponseDTO(HttpStatus.OK, "아이디 및 비밀번호를 확인하세요", null, "warning");
-			}else {				
-				res = new ResponseDTO(HttpStatus.OK, "", loginOrg, "");
+			}else {
+				if(loginOrg.getOrg().getOrgStatus() == 1 || loginOrg.getOrg().getOrgStatus() == 3) {					
+					res = new ResponseDTO(HttpStatus.OK, "", loginOrg, "");
+				}else {
+					res = new ResponseDTO(HttpStatus.OK, "관리자 승인이 되지 않았습니다.", null, "warning");
+				}
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -375,6 +387,39 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable int alarmNo){
 			}else {
 				res = new ResponseDTO(HttpStatus.OK, "아이디 또는 이메일이 일치하지 않습니다.", false, "warning");
 			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//탈퇴하기 페이지에서 조회할 기부 사업 리스트
+	@GetMapping("/bizList/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectIngBizList(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 리스트 조회 중 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			ArrayList<Biz> bizList = service.selectIngBizList(orgNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", bizList, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//탈퇴 신청
+	@PatchMapping("/delete/{orgNo}")
+	public ResponseEntity<ResponseDTO> deleteOrg(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 리스트 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.deleteOrg(orgNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "탈퇴 신청이 완료되었습니다.", true, "success");
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
