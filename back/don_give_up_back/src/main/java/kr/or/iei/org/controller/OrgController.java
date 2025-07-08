@@ -426,4 +426,21 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable int alarmNo){
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//기부 사업 통계
+	@GetMapping("/data/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectBizData(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "통계 조회 중 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			HashMap<String, Object> bizMap = service.selectBizData(orgNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", bizMap, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }
