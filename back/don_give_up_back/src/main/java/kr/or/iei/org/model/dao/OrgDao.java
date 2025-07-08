@@ -82,4 +82,26 @@ public interface OrgDao {
 	//탈퇴 신청
 	int deleteOrg(int orgNo);
 
+	//기부 사업 통계
+	//전체 기부 사업 갯수
+	int selectAllBiz(int orgNo);
+	//미승인 기부 사업 갯수
+	int selectNotApproveBiz(int orgNo);
+	//반려된 기부 사업 갯수
+	int selectRejectBiz(int orgNo);
+	//승인된 기부 사업 갯수
+	int selectApproveBiz(int orgNo);
+	//진행 중인 기부 사업 갯수
+	int selectIngBiz(int orgNo);
+	//모금 종료된 기부 사업 갯수
+	int selectDonateEndBiz(int orgNo);
+	//사업 종료된 기부 사업 갯수
+	int selectEndBiz(int orgNo);
+	//입금 처리된 기부 사업 갯수
+	int selectPayEndBiz(int orgNo);
+	//카테고리별 기부 사업 갯수
+	ArrayList<DonateCode> selectDonateCodeCnt(int orgNo);
+	//기부 사업별 모금액
+	ArrayList<Biz> selectDonateMoneyList(int orgNo);
+
 }
