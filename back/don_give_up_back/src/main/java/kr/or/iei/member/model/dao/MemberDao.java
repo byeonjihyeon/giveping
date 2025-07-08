@@ -98,6 +98,7 @@ public interface MemberDao {
 	//충전하기
 	int charge(HashMap<String, Integer> memberMap);
 	
+
 	//회원 인증계좌 업데이트
 	int updateMemberAccount(Member member);
 	
@@ -105,4 +106,14 @@ public interface MemberDao {
 	int refund(HashMap<String, Object> refundMap);
 	
 
+	//회원 아이디 찾기
+	String selectMemberId(Member member);
+
+
+	//회원 비밀번호 찾기
+	int selectMemberPw(Member member);
+
+	//임시 비밀번호로 변경
+	void updateRandomPw(Member member);
+	
 }

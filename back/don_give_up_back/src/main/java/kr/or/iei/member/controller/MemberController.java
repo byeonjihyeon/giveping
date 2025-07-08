@@ -1,9 +1,11 @@
 package kr.or.iei.member.controller;
 
 import java.io.File;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,28 +36,19 @@ import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
 import kr.or.iei.member.model.service.MemberService;
-import kr.or.iei.org.model.dto.Org;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/member")
 public class MemberController {
-
-    private final JwtUtils jwtUtils;
-
 	@Autowired
 	private MemberService service;
-	
 
 	@Autowired
 	private FileUtil fileUtil;
 	
 	@Value("${file.uploadPath}")
 	private String uploadPath;
-
-    MemberController(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
-    }
 
 	//토큰 재발급
 	@PostMapping("/refresh")
@@ -141,7 +134,6 @@ public class MemberController {
 	public ResponseEntity<ResponseDTO> selectMember(@PathVariable int memberNo){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원 조회중, 오류가 발생하였습니다.", null, "error");
 		try {
-			
 			Member member = service.selectMember(memberNo);
 			res = new ResponseDTO(HttpStatus.OK, "", member, "");
 		}catch(Exception e) {
@@ -363,7 +355,6 @@ public class MemberController {
 
 		try {
 			ArrayList<MemberAlarm> alarmList = service.selectAlarmList(memberNo);
-			System.out.println("최종 alarmList :" + alarmList);
 			res= new ResponseDTO(HttpStatus.OK, "", alarmList , uploadPath);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -373,14 +364,19 @@ public class MemberController {
 	}
 	
 	// 알림 클릭 시, 알림 읽음 표시로 업데이트
-	@PatchMapping("/alarm/{alarmNo}")
-	public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable int alarmNo){
+	@PatchMapping("/alarm/{alarmNos}")
+	public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 읽음 처리 중, 오류가 발생하였습니다.", false, "error");
 		
 		try{
-			int result = service.updateAlarmRead(alarmNo);
+			String[] alarmNoArr = alarmNos.split(",");
+	        int updateCount = 0;
+	        for (String alarmNoStr : alarmNoArr) {
+	            int alarmNo = Integer.parseInt(alarmNoStr.trim());
+	            updateCount += service.updateAlarmRead(alarmNo);
+	        }
 			
-			if(result > 0) {
+			if(updateCount > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "", true, "");
 			}else {
 				res = new ResponseDTO(HttpStatus.OK, "", false, "");
@@ -511,6 +507,7 @@ public class MemberController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+
 	//회원 인증계좌 업데이트
 	@PatchMapping("/account")
 	public ResponseEntity<ResponseDTO> updateMemberAccount(@RequestBody Member member){
@@ -531,7 +528,35 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	//회원 아이디 찾기
+	@PostMapping("/searchId")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectMemberId(@RequestBody Member member) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "아이디 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			String memberId = service.selectMemberId(member);
+			
+			if(memberId != null) {
+				int idLength = memberId.length();
+				String first = memberId.substring(0,2);
+				String last = memberId.substring(idLength-2);
+				String marker = "*".repeat(idLength-4);
+				memberId = first + marker + last;
+				
+				res = new ResponseDTO(HttpStatus.OK, "아이디 : " + memberId, true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "이름 또는 전화번호가 일치하지 않습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 	
+
 	//환불신청하기 
 	@PostMapping("/refund/{memberNo}")
 	public ResponseEntity<ResponseDTO> refund(@PathVariable int memberNo,
@@ -553,5 +578,26 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
-						
+	//회원 비밀번호 찾기
+	@PostMapping("/searchPw")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectMemberPw(@RequestBody Member member) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.selectMemberPw(member);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "이메일로 임시 비밀번호를 전송했습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "아이디 또는 이메일이 일치하지 않습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+
 }

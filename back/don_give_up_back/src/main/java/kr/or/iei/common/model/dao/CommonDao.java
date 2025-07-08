@@ -1,9 +1,11 @@
 package kr.or.iei.common.model.dao;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.iei.common.model.dto.CommonBiz;
 import kr.or.iei.common.model.dto.DonateCode;
 
 @Mapper
@@ -11,6 +13,8 @@ public interface CommonDao {
 
 	ArrayList<DonateCode> selectDonateCtg(); //기부 카테고리 조회
 
-	int countAlarm(int memberNo);
+	int countAlarm(Map<String, Object> param);
+
+	ArrayList<CommonBiz> selectMainBizList(int memberNo);
 
 }

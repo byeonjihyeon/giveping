@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 
 // 알람 아이콘
 export default function DotBadge() {
-    const {isLogined, setIsLogined, loginMember, loginOrg} = useUserStore();
+    const {isLogined, setIsLogined, loginMember, loginOrg, unreadAlarmCount, setUnreadAlarmCount, hasNewAlert, setHasNewAlert} = useUserStore();
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const { memberNo } = useParams();
@@ -29,19 +29,21 @@ export default function DotBadge() {
         alert("회원 정보가 올바르지 않습니다.");
       }
     }
-
-
-
-    // 알림 여부 상태
-    const [hasNewAlert, setHasNewAlert] = useState(false);
     
 
     useEffect(function(){
         // 로그인 안 했거나 회원 정보 없을 경우 return
-        if (!isLogined || !loginMember) return;
+        if (!isLogined) return;
 
-            let options = {};
-            options.url = serverUrl + '/countAlarm/' + loginMember.memberNo;
+        
+          let options = {};
+            options.url = serverUrl + '/countAlarm';
+            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
+            if (loginMember && loginMember.memberNo) {
+                options.params = { memberNo: loginMember.memberNo };
+            } else if (loginOrg && loginOrg.orgNo) {
+                options.params = { orgNo: loginOrg.orgNo };
+            }
             options.method = 'get';
     
             axiosInstance(options)
@@ -50,13 +52,15 @@ export default function DotBadge() {
 
                 const count = res.data.resData;
                 if(count > 0){
+                    console.log("안읽은알림갯수 : ", count);
                     setHasNewAlert(true);
+                    setUnreadAlarmCount(count);    // 결과 unreadAlarmCount 에 set 하기
                 }else{
                     setHasNewAlert(false);
                 }
             });
-    
-        }, [isLogined, loginMember]);
+
+        }, [isLogined, loginMember, loginOrg]);
 
   return (
     <Box sx={{ color: 'action.active' }} onClick={handleClick} style={{cursor: 'pointer'}}>

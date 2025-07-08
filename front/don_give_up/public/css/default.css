@@ -184,3 +184,17 @@
     width: 800px;
     margin: 0 auto;
 }
+
+.pagination {
+    display: flex;
+}
+.page-item {
+    display: block;
+    width: 24px;
+    border-radius: 30px;
+    text-align: center;
+    cursor: pointer;
+}
+.page-item.active-page {
+    background-color: #007acc;
+}

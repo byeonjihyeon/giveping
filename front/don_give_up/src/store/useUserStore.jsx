@@ -46,6 +46,19 @@ const useUserStore = create(
                 set({
                     refreshToken : refreshToken
                 })
+                },
+            unreadAlarmCount : 0,
+            setUnreadAlarmCount : function(count){
+                set({
+                    unreadAlarmCount : count
+                })
+            }
+            ,
+            hasNewAlert : false,
+            setHasNewAlert : function(hasNewAlert){
+                set({
+                    hasNewAlert : hasNewAlert
+                })
             }
         })  
     )

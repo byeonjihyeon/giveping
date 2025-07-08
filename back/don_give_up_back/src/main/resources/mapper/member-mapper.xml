@@ -31,6 +31,8 @@
 		sysdate,
 		0,
 		0,
+		'',
+		'0',
 		'')
 	</insert>
 
@@ -57,24 +59,32 @@
 	<!-- 회원번호로 회원 상세조회 -->
 	<select id="selectMember" parameterType="map"
 		resultMap="memberMap">
-		select member_no ,
-		member_id ,
-		member_pw ,
-		member_name ,
-		member_phone ,
-		to_char(member_birth, 'yyyy-mm-dd') as member_birth,
-		member_email ,
-		member_addr_main ,
-		member_addr_detail ,
-		member_profile ,
-		to_char(total_money, 'FM999,999,999PR') as total_money,
-		to_char((select sum(donate_money) from tbl_donation_list d where d.member_no =
-		m.member_no
-		), '99,999,999') as total_donate_money,
-		member_bank_code,
-		member_bank_account
-		from tbl_member m
-		where member_no = #{memberNo}
+		SELECT 
+	    m.member_no,
+	    m.member_id,
+	    m.member_pw,
+	    m.member_name,
+	    m.member_phone,
+	    TO_CHAR(m.member_birth, 'yyyy-mm-dd') AS member_birth,
+	    m.member_email,
+	    m.member_addr_main,
+	    m.member_addr_detail,
+	    m.member_profile,
+	    TO_CHAR(m.total_money, 'FM999,999,999PR') AS total_money,
+	    TO_CHAR((
+	        SELECT SUM(d.donate_money)
+	        FROM tbl_donation_list d
+	        WHERE d.member_no = m.member_no
+	    ), '99,999,999') AS total_donate_money,
+	    m.member_bank_code,
+		m.member_bank_account,
+	    (
+	        SELECT COUNT(*)
+	        FROM tbl_alarm a
+	        WHERE a.member_no = m.member_no AND a.alarm_read = 0
+	    ) AS unread_alarm
+	FROM tbl_member m
+	WHERE m.member_no = #{memberNo}
 	</select>
 
 	<!-- 회원 기부내역 조회 -->
@@ -148,6 +158,7 @@
 		<result column="total_donate_money" property="totalDonateMoney" />
 		<result column="member_bank_code" property="memberBankCode" />
 		<result column="member_bank_account" property="memberBankAccount" />
+		<result column="unread_alarm" property="unreadAlarm" />
 
 		<collection property="donationHistory"
 			select="selectDonationHistory" column="{memberNo = member_no}"
@@ -247,6 +258,7 @@
 		a.alarm_date,
 		a.alarm_read,
 		d.biz_name,
+		d.biz_thumb,
 		COALESCE(o.org_name, o2.org_name) AS org_name
 		FROM tbl_alarm a
 		LEFT JOIN tbl_donate_biz d ON a.biz_no = d.biz_no
@@ -267,6 +279,7 @@
 		<result column="alarm_read" property="alarmRead"/>
 		<result column="biz_name" property="bizName"/>
 		<result column="org_name" property="orgName"/>
+		<result column="biz_thumb" property="bizThumb"/>
 		
 		<collection property="surveyList"
 					select="selectSurveyHistory"
@@ -402,6 +415,28 @@
 
 	</select>
 
+	<!-- 회원 아이디 찾기 -->
+	<select id="selectMemberId" parameterType="Member" resultType="string">
+		select member_id as memberId
+		  from tbl_member
+		 where member_name = #{memberName}
+		   and member_email = #{memberEmail}
+	</select>
+	
+	<!-- 회원 비밀번호 찾기 -->
+	<select id="selectMemberPw" parameterType="Member" resultType="_int">
+		select count(*)
+		  from tbl_member
+		 where member_id = #{memberId}
+		   and member_email = #{memberEmail}
+	</select>
+	
+	<!-- 임시 비밀번호로 변경 -->
+	<update id="updateRandomPw" parameterType="Member">
+		update tbl_member
+		   set member_pw = #{memberPw}
+		 where member_id = #{memberId}
+	</update>
 	<!-- 회원 충전, 충금 조회 -->
 	<select id="selectWallectHistory" parameterType="map"
 		resultType="Wallet">

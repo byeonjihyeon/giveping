@@ -2,12 +2,14 @@ package kr.or.iei.org.controller;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,9 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizPlan;
 import kr.or.iei.common.annotation.NoTokenCheck;
+import kr.or.iei.common.aop.ValidateAOP;
 import kr.or.iei.common.model.dto.LoginOrg;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
+import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.org.model.dto.Org;
 import kr.or.iei.org.model.service.OrgService;
@@ -32,6 +36,8 @@ import kr.or.iei.org.model.service.OrgService;
 @CrossOrigin("*")
 @RequestMapping("/org")
 public class OrgController {
+
+    private final ValidateAOP validateAOP;
 	@Autowired
 	private OrgService service;
 
@@ -40,6 +46,10 @@ public class OrgController {
 	
 	@Value("${file.uploadPath}")
 	private String uploadPath;
+
+    OrgController(ValidateAOP validateAOP) {
+        this.validateAOP = validateAOP;
+    }
 	
 	//토큰 재발급
 	@PostMapping("/refresh")
@@ -87,7 +97,7 @@ public class OrgController {
 			int result = service.insertOrg(org);
 			
 			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "회원가입이 완료되었습니다. 로그인 화면으로 이동합니다.", true, "success");
+				res = new ResponseDTO(HttpStatus.OK, "회원가입이 완료되었습니다. 관리자 승인 결과는 메일로 발송됩니다.", true, "success");
 			}else {
 				res = new ResponseDTO(HttpStatus.OK, "회원가입 중 오류가 발생했습니다.", false, "warning");
 			}
@@ -108,8 +118,12 @@ public class OrgController {
 			
 			if(loginOrg == null) {
 				res = new ResponseDTO(HttpStatus.OK, "아이디 및 비밀번호를 확인하세요", null, "warning");
-			}else {				
-				res = new ResponseDTO(HttpStatus.OK, "", loginOrg, "");
+			}else {
+				if(loginOrg.getOrg().getOrgStatus() == 1 || loginOrg.getOrg().getOrgStatus() == 3) {					
+					res = new ResponseDTO(HttpStatus.OK, "", loginOrg, "");
+				}else {
+					res = new ResponseDTO(HttpStatus.OK, "관리자 승인이 되지 않았습니다.", null, "warning");
+				}
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -170,12 +184,12 @@ public class OrgController {
 	}	
 
 	//비밀번호 확인
-	@PostMapping("/chkPw/{orgNo}/{orgPw}")
-	public ResponseEntity<ResponseDTO> checkPw(@PathVariable int orgNo, @PathVariable String orgPw) {
+	@PostMapping("/chkPw")
+	public ResponseEntity<ResponseDTO> checkPw(@RequestBody Org org) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 확인 중 오류가 발생했습니다.", false, "error");
 
 		try {
-			int result = service.checkPw(orgNo, orgPw);
+			int result = service.checkPw(org);
 			
 			if(result > 0) {				
 				res = new ResponseDTO(HttpStatus.OK, "비밀번호가 확인되었습니다.", true, "success");
@@ -274,6 +288,53 @@ public class OrgController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+   //기부 사업 리스트
+   @GetMapping("/bizList/{orgNo}/{clickBtn}/{reqPage}")
+   public ResponseEntity<ResponseDTO> selectBizList(@PathVariable int orgNo, @PathVariable String clickBtn, @PathVariable int reqPage) {
+      ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 조회 중 오류가 발생했습니다.", null, "error");
+      
+      try {
+         Biz biz = new Biz();
+         biz.setOrgNo(orgNo);
+         biz.setClickBtn(clickBtn);
+         
+         HashMap<String, Object> bizMap = service.selectBizList(reqPage, biz);
+         
+         res = new ResponseDTO(HttpStatus.OK, "", bizMap, "");
+      }catch(Exception e) {
+         e.printStackTrace();
+      }
+      
+      return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+   }
+   
+	//단체 아이디 찾기
+	@PostMapping("/searchId")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectOrgId(@RequestBody Org org) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "아이디 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			String orgId = service.selectOrgId(org);
+			
+			if(orgId != null) {
+				int idLength = orgId.length();
+				String first = orgId.substring(0,2);
+				String last = orgId.substring(idLength-2);
+				String marker = "*".repeat(idLength-4);
+				orgId = first + marker + last;
+				
+				res = new ResponseDTO(HttpStatus.OK, "아이디 : " + orgId, true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "단체명 또는 전화번호가 일치하지 않습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+
 	// 단체별 알림 리스트 조회
 	@GetMapping("/alarm/{orgNo}")
 	public ResponseEntity<ResponseDTO> selectOrgAlarmList(@PathVariable int orgNo) {
@@ -291,14 +352,19 @@ public class OrgController {
 	}
 
 // 알림 클릭 시, 알림 읽음 표시로 업데이트
-@PatchMapping("/alarm/{alarmNo}")
-public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable int alarmNo){
+@PatchMapping("/alarm/{alarmNos}")
+public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos){
 	ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "알림 읽음 처리 중, 오류가 발생하였습니다.", false, "error");
 	
 	try{
-		int result = service.updateAlarmRead(alarmNo);
+		String[] alarmNoArr = alarmNos.split(",");
+        int updateCount = 0;
+        for (String alarmNoStr : alarmNoArr) {
+            int alarmNo = Integer.parseInt(alarmNoStr.trim());
+            updateCount += service.updateAlarmRead(alarmNo);
+        }
 		
-		if(result > 0) {
+		if(updateCount > 0) {
 			res = new ResponseDTO(HttpStatus.OK, "", true, "");
 		}else {
 			res = new ResponseDTO(HttpStatus.OK, "", false, "");
@@ -312,5 +378,57 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable int alarmNo){
 }
 	
 
+	//단체 비밀번호 찾기
+	@PostMapping("/searchPw")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectOrgPw(@RequestBody Org org) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.selectOrgPw(org);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "이메일로 임시 비밀번호를 전송했습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "아이디 또는 이메일이 일치하지 않습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 	
+	//탈퇴하기 페이지에서 조회할 기부 사업 리스트
+	@GetMapping("/bizList/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectIngBizList(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 리스트 조회 중 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			ArrayList<Biz> bizList = service.selectIngBizList(orgNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", bizList, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//탈퇴 신청
+	@PatchMapping("/delete/{orgNo}")
+	public ResponseEntity<ResponseDTO> deleteOrg(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 리스트 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.deleteOrg(orgNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "탈퇴 신청이 완료되었습니다.", true, "success");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }

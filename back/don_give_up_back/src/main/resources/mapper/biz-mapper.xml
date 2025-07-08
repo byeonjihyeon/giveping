@@ -62,7 +62,8 @@
             FROM tbl_donate_biz b
             JOIN tbl_org o ON b.org_no = o.org_no
             JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
-            WHERE b.biz_status = 1
+            WHERE b.biz_status = 1 
+            	AND b.biz_end >= sysdate
             <if test="categories != null and categories.size() > 0">
                 AND b.donate_code IN
                 <foreach collection="categories" item="code" open="(" separator="," close=")">

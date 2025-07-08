@@ -12,6 +12,7 @@ import "./org.css";
 import useUserStore from "../../store/useUserStore";
 import createInstance from "../../axios/Interceptor";
 import OrgProfileUpdate from "./OrgProfileUpdate";
+import MyHome from "./MyHome";
 
 //단체 마이페이지 메인
 export default function OrgMain(){
@@ -21,8 +22,7 @@ export default function OrgMain(){
         {url : "/org", name : "MY홈"},
         {url : "/org/news", name : "내 소식"},
         {url : "/org/update", name : "내 정보", submenuList : [{url : "/org/update", name : "단체정보 수정"}, {url : "/org/changePw", name : "비밀번호 변경"}, {url : "/org/changeProfile", name : "프로필 사진 변경"}]},
-        {url : "/org/biz", name : "기부 사업 관리", submenuList : [{url : "/org/biz", name : "기부 사업 보기"}, {url : "/org/post", name : "기부 사업 등록"}, {url : "/org/data", name : "기부 사업 통계"}]},
-        {url : "/org/delete", name : "탈퇴하기"}
+        {url : "/org/biz", name : "기부 사업 관리", submenuList : [{url : "/org/biz", name : "기부 사업 보기"}, {url : "/org/post", name : "기부 사업 등록"}, {url : "/org/data", name : "기부 사업 통계"}]}
     ]);
 
     //자식 컴포넌트에 전달할 회원정보
@@ -50,6 +50,7 @@ export default function OrgMain(){
             <Sidebar menuList={menuList} org={org}/>
             <div className="org-main-mid-wrap">
                 <Routes>
+                    <Route path='/' element={<MyHome org={org} />}  />
                     <Route path="news" element={<OrgNewsList/>}/>
                     <Route path="update" element={<OrgUpdate org={org} setOrg={setOrg}/>}/>
                     <Route path="changePw" element={<OrgChangePw/>}/>

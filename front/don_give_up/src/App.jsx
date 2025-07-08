@@ -15,6 +15,7 @@ import Join from './component/join/Join';
 import JoinMember from './component/join/JoinMember';
 import JoinOrg from './component/join/JoinOrg';
 import JoinCategory from './component/join/JoinCategory';
+import SearchIdPw from './component/common/SearchIdPw';
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
             <Route path='/news/*' element={<NewsMain />} />
             <Route path='/admin/*' element={<AdminMain />} />
             <Route path="/org/*" element={<OrgMain/>}/>
+            <Route path="/search/:type" element={<SearchIdPw/>}/>
           </Routes>
         </main>
       <Footer/>

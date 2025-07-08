@@ -1,4 +1,4 @@
-package kr.or.iei.biz.model.dto;
+package kr.or.iei.common.model.dto;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Biz {
+public class CommonBiz {
 	private int bizNo;				// 사업 번호	
 	private int orgNo;				// 단체 번호(외래키)
 	private String bizName;			// 사업명
@@ -23,23 +23,12 @@ public class Biz {
 	private String bizRegDate;		// 사업 신청 검토일자 (사업 승인 여부가 미확인 상태에서, 수정사항이 추가될 경우 해당 칼럼에 sysdate값을 update)
 	private String bizEdit;			// 수정 사항(사업 승인 여부 확인 후 수정 사항 있을 경우에만 INSERT)
 	private String bizThumbPath;	// 사업 썸네일
-	
 	private int bizDonateTerm;		// 모금 기간(30일, 60일, 90일)
-	private List<BizPlan> bizPlanList; //모금액 사용 계획
 	
 	
 	// join 을 위해 선언한 변수
 	private String orgName;	// 사업명
 	private String donateCtg;	// 기부 카테고리명
-	
-	// 기부 사업 게시글에 대한 파일 정보 저장 변수 
-	private List<BizFile> fileList;
-	
-	// 삭제 파일 번호 배열 저장 변수
-	private int [] delBizFileNo;
-	
-	// 특정 기부 사업에 기부한 회원 리스트 변수
-	private List<BizMember> bizMemberList;
 	
 	// 모인 기부금 액수
 	private int donateMoney;

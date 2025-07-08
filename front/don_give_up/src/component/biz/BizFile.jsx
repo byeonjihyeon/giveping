@@ -6,13 +6,18 @@ import useUserStore from "../../store/useUserStore";
 export default function BizFile(props){
 
     //부모 컴포넌트에서 전달 받은 데이터 추출
-    const loginMember = props.loginMember;
+    const { loginMember, loginOrg } = useUserStore();
     const donateBiz = props.donateBiz;
     const bizNo = props.bizNo; // 잘 나옴
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const navigate = useNavigate();
+
+    // 로그인 했고, 관리자 이거나, 기부단체 계정인 경우에만 isManagerOrOrg 값 true
+    const isManagerOrOrg = 
+    (loginMember && loginMember.memberLevel === 1) ||
+    (loginOrg && donateBiz && loginOrg.orgNo === donateBiz.orgNo);
     
     // 첨부파일 관련 변수 선언 
     const bizFile = props.bizFile;
@@ -31,9 +36,8 @@ export default function BizFile(props){
 
     const [isEditMode, setIsEditMode] = useState(false); // 첨부파일 수정 모드 여부 상태값 변수 선언
 
-    // 로그인 했고, 관리자 이거나, 기부단체 계정인 경우에만 isManagerOrOrg 값 true
-    const isManagerOrOrg = loginMember &&
-        (loginMember.memberLevel === 1 || loginMember.orgNo === donateBiz.orgNo);
+  
+  
 
 
     //첨부파일 업로드 시, 동작 함수(onChange)
@@ -156,14 +160,12 @@ export default function BizFile(props){
                                 <th>
                                     <label>첨부파일</label>
                                 </th>
-                                {loginMember != null && (loginMember.memberLevel == 1 || loginMember.orgNo ==  donateBiz.orgNo)
-                                ?
+                                {isManagerOrOrg && (
                                 <td className="left">
                                     <label htmlFor="bizFile" className="btn-primary sm">파일첨부</label>
                                     <input type="file" id="bizFile" style={{display : 'none'}} multiple onChange={chgBizFile} />
                                 </td>
-                                :''
-                                }
+                                )}
                             </tr>
                             <tr>
                                 <th>첨부파일 목록</th>
@@ -191,13 +193,11 @@ export default function BizFile(props){
                                                 //oldFile == BizFile 객체
                                                 return <p key={"old-file"+index}>
                                                             <span className="fileName">{oldFile.fileName}</span>
-                                                            {loginMember != null && (loginMember.memberLevel == 1 || loginMember.orgNo ==  donateBiz.orgNo)
-                                                            ?
+                                                           {isManagerOrOrg && (
                                                                 <span className="material-icons del-file-icon" onClick={deleteFile}>
                                                                     delete
                                                                 </span>
-                                                            :''
-                                                            }
+                                                            )}
                                                     </p>
                                             })
                                             : ''
@@ -234,15 +234,13 @@ export default function BizFile(props){
                 </div>
        </div>
 
-            {loginMember != null && (loginMember.memberLevel == 1 || loginMember.orgNo ==  donateBiz.orgNo)
-            ?
+            {isManagerOrOrg && (
             <div className="button-zone">
                 <button type="submit" className="btn-primary lg">
                     저장
                 </button>
             </div>
-            :''
-            }
+           )}
         </form>
     </section>
     </div>  

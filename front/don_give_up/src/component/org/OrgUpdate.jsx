@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import { useEffect, useRef, useState } from "react";
 import useUserStore from "../../store/useUserStore";
@@ -18,7 +18,7 @@ export default function OrgUpdate(props){
     //단체 1개 정보를 저장할 State 변수
     const [org, setOrg] = useState({
         orgNo : "", orgId : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "", orgAddrMain : "",
-        orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", orgUrl : "", categoryList : []
+        orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", orgUrl : "", categoryList : [], orgStatus : ""
     });
 
     const [donateCtgList, setDonateCtgList] = useState([]); //DB에서 조회한 카테고리 리스트를 저장할 State 변수
@@ -278,6 +278,7 @@ export default function OrgUpdate(props){
                     <tr>
                         <th colSpan={2}>
                             <button type="submit">수정</button>
+                            {org.orgStatus == 3 ? "" : <Link to="/org/delete">탈퇴하기</Link>}
                         </th>
                     </tr>
                 </tfoot>
