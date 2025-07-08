@@ -22,13 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
 import kr.or.iei.biz.model.dto.BizFile;
 import kr.or.iei.biz.model.dto.BizMember;
-import kr.or.iei.biz.model.dto.BizPlan;
-import kr.or.iei.biz.model.dto.BizNo;
 import kr.or.iei.biz.model.dto.Keyword;
 import kr.or.iei.biz.model.dto.SurveyAnswer;
 import kr.or.iei.biz.model.dto.SurveyQuestion;
