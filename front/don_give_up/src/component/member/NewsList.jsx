@@ -102,6 +102,11 @@ function News(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
+    // alarmType 3과 4인 경우 렌더링하지 않음
+    if (news.alarmType == 3 || news.alarmType == 4) {
+     return null;
+    }
+
     /*
     // alarmRead가 0이 아닌 경우 렌더링하지 않음
     if (news.alarmRead !== 0) {

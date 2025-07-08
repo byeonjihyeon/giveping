@@ -9,7 +9,7 @@ export default function MyHome(props){
     const member = props.member;
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
-    const {loginMember, orgNo, unreadAlarmCount} = useUserStore();
+    const {loginMember, unreadAlarmCount} = useUserStore();
     const [newsList, setNewsList] = useState([]);
     const [reLoadMember, setReLoadMember] = useState({}); 
 	//모달창 상태

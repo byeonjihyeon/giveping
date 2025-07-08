@@ -87,10 +87,22 @@ export default function OrgNewsList(){
 function News(props){
     const news = props.news;
     const navigate = useNavigate();
-
+    
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
+    // alarmType 3과 4가 아닌 경우 렌더링하지 않음
+    if (news.alarmType !== 3 && news.alarmType !== 4) {
+     return null;
+    }
+
+    /*
+    // alarmRead가 0이 아닌 경우 렌더링하지 않음
+    if (news.alarmRead !== 0) {
+        return null;
+    }
+    */
+    
     let content;
     if(news.alarmType === 3){
         content = `[입금완료] ${news.bizName} 기부사업의 모금액 입금이 완료되었습니다.`;
