@@ -357,3 +357,8 @@
 .filter-wrap > div {
     border: 1px solid black;
 }
+
+.account-info{
+    display: flex;
+    gap: 20px
+}

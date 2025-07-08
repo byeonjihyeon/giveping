@@ -98,5 +98,11 @@ public interface MemberDao {
 	//충전하기
 	int charge(HashMap<String, Integer> memberMap);
 	
+	//회원 인증계좌 업데이트
+	int updateMemberAccount(Member member);
+	
+	//환불 신청하기
+	int refund(HashMap<String, Object> refundMap);
+	
 
 }

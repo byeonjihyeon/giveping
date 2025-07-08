@@ -18,6 +18,7 @@ import kr.or.iei.member.model.dao.MemberDao;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
+import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.member.model.dto.Wallet;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
@@ -337,6 +338,22 @@ public class MemberService {
 	// 회원별 설문조사 내역 리스트 조회
 	public ArrayList<MemberSurveyAnswer> selectSurveyHistory(int memberNo) {
 		return dao.selectSurveyHistory(memberNo);
+	}
+	
+	//회원 인증계좌 업데이트
+	@Transactional
+	public int updateMemberAccount(Member member) {
+		return dao.updateMemberAccount(member);
+	}
+	
+	//환불 신청하기
+	@Transactional
+	public int refund(int memberNo, Refund refund) {
+		HashMap<String, Object> refundMap = new HashMap<>();
+		refundMap.put("memberNo", memberNo);
+		refundMap.put("refund", refund);
+		
+		return dao.refund(refundMap);
 	}
 
 

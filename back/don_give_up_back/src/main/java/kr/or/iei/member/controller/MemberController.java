@@ -29,6 +29,7 @@ import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
+import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
@@ -509,4 +510,48 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//회원 인증계좌 업데이트
+	@PatchMapping("/account")
+	public ResponseEntity<ResponseDTO> updateMemberAccount(@RequestBody Member member){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "업데이트중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			
+			int result = service.updateMemberAccount(member);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "계좌 업데이트 완료하였습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "작업중, 오류가 발생하였습니다.", false, "warning");
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//환불신청하기 
+	@PostMapping("/refund/{memberNo}")
+	public ResponseEntity<ResponseDTO> refund(@PathVariable int memberNo,
+												@RequestBody Refund refund){
+		ResponseDTO res= new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신청중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.refund(memberNo, refund);
+			
+			if(result > 0) {
+				res= new ResponseDTO(HttpStatus.OK, "환불신청 완료하였습니다.", true, "");
+			}else {
+				res= new ResponseDTO(HttpStatus.OK, "신청중, 오류가 발생하였습니다.", false, "");
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+						
 }
