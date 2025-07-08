@@ -414,7 +414,7 @@
 		select member_id as memberId
 		  from tbl_member
 		 where member_name = #{memberName}
-		   and member_phone = #{memberPhone}
+		   and member_email = #{memberEmail}
 	</select>
 	
 	<!-- 회원 비밀번호 찾기 -->

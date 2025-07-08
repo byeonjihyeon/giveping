@@ -5,31 +5,44 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 
 //비밀번호 찾기
-export default function FindPW(){
+export default function SearchIdPw(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const navigate = useNavigate();
+
+    //아이디 찾기인지 비밀비호 찾기인지 구별할 변수
+    const param = useParams();
+    const type = param.type;
+
+    useEffect(function(){
+        setMember({memberId : "", memberName : "", memberEmail : ""});
+        setOrg({orgId : "", orgName : "", orgEmail : ""});
+        setMemberEmailId("");
+        setMemberEmailDomain("");
+        setOrgEmailId("");
+        setOrgEmailDomain("");
+    }, [type]);
 
     //선택한 라디오 버튼 value값을 저장할 변수
     const [selectRadio, setSelectRadio] = useState("member");
 
     function chgRadio(e){
         setSelectRadio(e.target.value);
-        setMember({memberId : "", memberEmail : ""});
-        setOrg({orgId : "", orgEmail : ""});
+        setMember({memberId : "", memberName : "", memberEmail : ""});
+        setOrg({orgId : "", orgName : "", orgEmail : ""});
         setMemberEmailId("");
         setMemberEmailDomain("");
         setOrgEmailId("");
         setOrgEmailDomain("");
     }
 
-    const [member, setMember] = useState({memberId : "", memberEmail : ""});
-    const [org, setOrg] = useState({orgId : "", orgEmail : ""});
+    const [member, setMember] = useState({memberId : "", memberName : "", memberEmail : ""});
+    const [org, setOrg] = useState({orgId : "", orgName : "", orgEmail : ""});
 
     const [memberEmailId, setMemberEmailId] = useState("");
     const [memberEmailDomain, setMemberEmailDomain] = useState("");
@@ -39,12 +52,22 @@ export default function FindPW(){
     //확인 버튼 클릭 시 실행 함수
     function findPw(){
         let options = {};
-        if(selectRadio == "member"){
-            options.url = serverUrl + "/member/findPw";
-            options.data = member;
+        if(type == "id"){
+            if(selectRadio == "member"){
+                options.url = serverUrl + "/member/searchId";
+                options.data = member;
+            }else{
+                options.url = serverUrl + "/org/searchId";
+                options.data = org;
+            }
         }else {
-            options.url = serverUrl + "/org/findPw";
-            options.data = org;
+            if(selectRadio == "member"){
+                options.url = serverUrl + "/member/searchPw";
+                options.data = member;
+            }else {
+                options.url = serverUrl + "/org/searchPw";
+                options.data = org;
+            }
         }
         options.method = "post";
 
@@ -56,14 +79,16 @@ export default function FindPW(){
                 icon : res.data.alertIcon,
                 confirmButtonText : "확인"
             }).then(function(result){
-                navigate("/login");
+                if(res.data.alertIcon == "success"){
+                    navigate("/login");
+                }
             });
         });
     }
     
     return (
         <section className="section find-wrap">
-            <div className="page-title">비밀번호 찾기</div>
+            <div className="page-title">{type == "id" ? "아이디 찾기" : "비밀번호 찾기"}</div>
             <div>
                 <FormControl>
                     <RadioGroup row defaultValue="member" name="login-radio" onChange={chgRadio}>
@@ -77,21 +102,22 @@ export default function FindPW(){
                     e.preventDefault();
                     findPw(); //확인 버튼 클릭 시 실행 함수
                 }}>
-                    <DoFindPW selectRadio={selectRadio} member={member} setMember={setMember} org={org} setOrg={setOrg}
+                    <Search selectRadio={selectRadio} type={type} member={member} setMember={setMember} org={org} setOrg={setOrg}
                             memberEmailId={memberEmailId} setMemberEmailId={setMemberEmailId} memberEmailDomain={memberEmailDomain} setMemberEmailDomain={setMemberEmailDomain}
                             orgEmailId={orgEmailId} setOrgEmailId={setOrgEmailId} orgEmailDomain={orgEmailDomain} setOrgEmailDomain={setOrgEmailDomain}/>
                     <button type="submit">확인</button>
                 </form>
             </div>
             <div>
-                <Link to="/login">로그인</Link> | <Link to="/findId">아이디 찾기</Link> | <Link to="/join">회원가입</Link>
+                <Link to="/login">로그인</Link> | {type == "id" ? <Link to="/search/pw">비밀번호 찾기</Link> : <Link to="/search/id">아이디 찾기</Link>} | <Link to="/join">회원가입</Link>
             </div>
         </section>
     )
 }
 
-function DoFindPW(props){
+function Search(props){
     const selectRadio = props.selectRadio;
+    const type = props.type;
     const member = props.member;
     const setMember = props.setMember;
     const org = props.org;
@@ -108,12 +134,14 @@ function DoFindPW(props){
     //이메일 도메인 직접 입력 선택 여부
     const [isCustom, setIsCustom] = useState(true);
 
-    //아이디 입력 시 onChange 함수
-    function chgId(e){
+    //이름, 아이디 입력 시 onChange 함수
+    function chgValue(e){
         if(selectRadio == "member"){
-            setMember({...member, memberId : e.target.value});
+            member[e.target.id] = e.target.value;
+            setMember({...member});
         }else{
-            setOrg({...org, orgId : e.target.value});
+            org[e.target.id] = e.target.value;
+            setOrg({...org});
         }
     }
 
@@ -174,13 +202,24 @@ function DoFindPW(props){
     return (
         <table border={1}>
             <tbody>
+                {type == "id"
+                ?
+                <tr>
+                    <th>{selectRadio == "member" ? "이름" : "단체명"}</th>
+                    <td>
+                        <input type="text" id={selectRadio == "member" ? "memberName" : "orgName"}
+                            value={selectRadio == "member" ? member.memberName : org.orgName} onChange={chgValue}/>
+                    </td>
+                </tr>
+                :
                 <tr>
                     <th>아이디</th>
                     <td>
                         <input type="text" id={selectRadio == "member" ? "memberId" : "orgId"}
-                            value={selectRadio == "member" ? member.memberId : org.orgId} onChange={chgId}/>
+                            value={selectRadio == "member" ? member.memberId : org.orgId} onChange={chgValue}/>
                     </td>
                 </tr>
+                }
                 <tr>
                     <th>이메일</th>
                     <td>

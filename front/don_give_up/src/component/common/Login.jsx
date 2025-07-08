@@ -56,7 +56,7 @@ export default function Login(){
                 <DoLogin selectRadio={selectRadio} member={member} setMember={setMember} org={org} setOrg={setOrg}/>
             </div>
             <div>
-                <Link to="/findId">아이디 찾기</Link> | <Link to="/findPw">비밀번호 찾기</Link> | <Link to="/join">회원가입</Link>
+                <Link to="/search/id">아이디 찾기</Link> | <Link to="/search/pw">비밀번호 찾기</Link> | <Link to="/join">회원가입</Link>
             </div>
         </section>
     )

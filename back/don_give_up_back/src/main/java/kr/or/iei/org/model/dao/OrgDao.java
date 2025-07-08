@@ -76,4 +76,10 @@ public interface OrgDao {
 	//단체 알림 읽음 처리
 	int updateAlarmRead(int alarmNo);
 
+	//탈퇴하기 페이지에서 조회할 기부 사업 리스트
+	ArrayList<Biz> selectIngBizList(int orgNo);
+
+	//탈퇴 신청
+	int deleteOrg(int orgNo);
+
 }

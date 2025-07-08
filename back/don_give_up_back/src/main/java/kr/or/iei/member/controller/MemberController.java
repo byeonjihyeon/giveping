@@ -511,7 +511,7 @@ public class MemberController {
 	}
 	
 	//회원 아이디 찾기
-	@PostMapping("/findId")
+	@PostMapping("/searchId")
 	@NoTokenCheck
 	public ResponseEntity<ResponseDTO> selectMemberId(@RequestBody Member member) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "아이디 조회 중 오류가 발생하였습니다.", false, "error");
@@ -538,7 +538,7 @@ public class MemberController {
 	}
 	
 	//회원 비밀번호 찾기
-	@PostMapping("/findPw")
+	@PostMapping("/searchPw")
 	@NoTokenCheck
 	public ResponseEntity<ResponseDTO> selectMemberPw(@RequestBody Member member) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "비밀번호 조회 중 오류가 발생하였습니다.", false, "error");

@@ -47,7 +47,8 @@
 	<select id="orgLogin" parameterType="string" resultType="Org">
 		select org_no as orgNo,
 		       org_pw as orgPw,
-		       org_name as orgName
+		       org_name as orgName,
+		       org_status as orgStatus
 		  from tbl_org
 		 where org_id = #{orgId}
 	</select>
@@ -67,7 +68,8 @@
 		       org_account_bank as orgAccountBank,
 		       org_temperature as orgTemperature,
 		       org_thumb as orgThumbPath,
-		       org_url as orgUrl
+		       org_url as orgUrl,
+		       org_status as orgStatus
 		  from tbl_org
 		 where org_no = #{orgNo}
 	</select>
@@ -192,7 +194,7 @@
 		select org_id as orgId
 		  from tbl_org
 		 where org_name = #{orgName}
-		   and org_phone = #{orgPhone}
+		   and org_email = #{orgEmail}
 	</select>
 	
 	<!-- 단체 비밀번호 찾기 -->
@@ -229,5 +231,28 @@
 		update tbl_alarm
 		set alarm_read = 1
 		where alarm_no = #{_parameter}
+	</update>
+	
+	<!-- 탈퇴하기 페이지에서 조회할 기부 사업 리스트 -->
+	<select id="selectIngBizList" parameterType="_int" resultType="Biz">
+		select biz_name as bizName,
+		       to_char(biz_donate_end, 'YYYY-MM-DD') as bizDonateEnd,
+		       to_char(biz_end, 'YYYY-MM-DD') as bizEnd,
+		       payout_no as payoutYN
+		  from tbl_donate_biz d
+		  left join tbl_admin_payout_history p
+		    on d.biz_no = p.biz_no
+		 where org_no = #{orgNo}
+		   and payout_no is null
+		   and biz_end >= sysdate
+		   and biz_status = 1
+		 order by biz_end
+	</select>
+	
+	<!-- 탈퇴 신청 -->
+	<update id="deleteOrg" parameterType="_int">
+		update tbl_org
+		   set org_status = 3
+		 where org_no = #{orgNo}
 	</update>
 </mapper>
