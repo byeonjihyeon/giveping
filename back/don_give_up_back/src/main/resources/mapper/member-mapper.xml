@@ -57,22 +57,30 @@
 	<!-- 회원번호로 회원 상세조회 -->
 	<select id="selectMember" parameterType="map"
 		resultMap="memberMap">
-		select member_no ,
-		member_id ,
-		member_pw ,
-		member_name ,
-		member_phone ,
-		to_char(member_birth, 'yyyy-mm-dd') as member_birth,
-		member_email ,
-		member_addr_main ,
-		member_addr_detail ,
-		member_profile ,
-		to_char(total_money, 'FM999,999,999PR') as total_money,
-		to_char((select sum(donate_money) from tbl_donation_list d where d.member_no =
-		m.member_no
-		), '99,999,999') as total_donate_money
-		from tbl_member m
-		where member_no = #{memberNo}
+		SELECT 
+	    m.member_no,
+	    m.member_id,
+	    m.member_pw,
+	    m.member_name,
+	    m.member_phone,
+	    TO_CHAR(m.member_birth, 'yyyy-mm-dd') AS member_birth,
+	    m.member_email,
+	    m.member_addr_main,
+	    m.member_addr_detail,
+	    m.member_profile,
+	    TO_CHAR(m.total_money, 'FM999,999,999PR') AS total_money,
+	    TO_CHAR((
+	        SELECT SUM(d.donate_money)
+	        FROM tbl_donation_list d
+	        WHERE d.member_no = m.member_no
+	    ), '99,999,999') AS total_donate_money,
+	    (
+	        SELECT COUNT(*)
+	        FROM tbl_alarm a
+	        WHERE a.member_no = m.member_no AND a.alarm_read = 0
+	    ) AS unread_alarm
+	FROM tbl_member m
+	WHERE m.member_no = #{memberNo}
 	</select>
 
 	<!-- 회원 기부내역 조회 -->
@@ -144,6 +152,7 @@
 		<result column="member_profile" property="memberProfile" />
 		<result column="total_money" property="totalMoney" />
 		<result column="total_donate_money" property="totalDonateMoney" />
+		<result column="unread_alarm" property="unreadAlarm" />
 
 		<collection property="donationHistory"
 			select="selectDonationHistory" column="{memberNo = member_no}"

@@ -31,4 +31,6 @@ public class Member {
 	private List<MemberDonation> donationHistory;	//기부내역
 	private List<Charge> chargeHistory;				//충전내역
 	private List<Refund> refundHistory;				//출금내역
+	
+	private int unreadAlarm;						// 아직 읽지 않은 소식 갯수
 }

@@ -7,7 +7,7 @@ import Survey from './Survey';
 import BizFile from './BizFile';
 
 export default function BizView(){
-    const {loginMember} = useUserStore();
+    const {loginMember, loginOrg, isLogined} = useUserStore();
     const param = useParams();
     const bizNo = param.bizNo;
     //console.log(bizNo);
@@ -151,16 +151,17 @@ export default function BizView(){
                         {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
                     </div>
                         
-                        <BizFile loginMember={loginMember}
-                                                bizFile={bizFile}
-                                                setBizFile={setBizFile}
-                                                prevBizFileList={prevBizFileList}
-                                                setPrevBizFileList={setPrevBizFileList}
-                                                delBizFileNo={delBizFileNo}
-                                                setDelBizFileNo={setDelBizFileNo}
-                                                donateBiz={donateBiz}
-                                                bizNo={bizNo}
-                                                />
+                        <BizFile  loginMember={loginMember}
+                                  loginOrg={loginOrg}
+                                  bizFile={bizFile}
+                                    setBizFile={setBizFile}
+                                    prevBizFileList={prevBizFileList}
+                                    setPrevBizFileList={setPrevBizFileList}
+                                    delBizFileNo={delBizFileNo}
+                                    setDelBizFileNo={setDelBizFileNo}
+                                    donateBiz={donateBiz}
+                                    bizNo={bizNo}
+                                    />
                         
                 </div>
                 
