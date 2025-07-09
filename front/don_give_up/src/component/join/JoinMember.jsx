@@ -2,6 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import Swal from "sweetalert2";
+import * as React from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 //개인 회원 회원가입 페이지
 export default function JoinMember(props){
@@ -178,85 +184,107 @@ export default function JoinMember(props){
 
     return (
         <section className="section join-wrap">
-            <div className="page-title">개인 회원가입</div>
-            <form autoComplete="off" onSubmit={function(e){
-                e.preventDefault(); //기본 submit 이벤트 제어
-                insertMember();     //다음 버튼 클릭 시 호출 함수
-            }}>
-                <table className="tbl-join">
-                    <tbody>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberId">아이디</label>
-                            </th>
-                            <td>
-                                <MemberId member={member} chgMember={chgMember} idChk={idChk} setIdChk={setIdChk}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberPw">비밀번호</label>
-                            </th>
-                            <td>
-                                <input type="password" id="memberPw" value={member.memberPw} onChange={chgMember} onBlur={checkMemberPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
-                                <p>{pwChk == 2 ? "비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberPwRe">비밀번호 확인</label>
-                            </th>
-                            <td>
-                                <input type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={checkMemberPw}/>
-                                <p>{pwChk == 3 ? "비밀번호와 일치하지 않습니다." : ""}</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberName">이름</label>
-                            </th>
-                            <td>
-                                <input type="text" id="memberName" value={member.memberName} onChange={chgMember} onBlur={checkMemberName}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberPhone">전화번호</label>
-                            </th>
-                            <td>
-                                <input type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>생년월일</th>
-                            <td>
-                                <MemberBirth member={member} setMember={setMember} currentYear={currentYear} currentMonth={currentMonth} currentDay={currentDay}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="memberEmailId">이메일</label>
-                            </th>
-                            <td>
-                                <MemberEmail member={member} setMember={setMember} setEmailChk={setEmailChk}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>주소</th>
-                            <td>
-                                <MemberAddr member={member} setMember={setMember}/>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colSpan={2}>
-                                <button type="submit">다음</button>
-                            </th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </form>
+            <div className="page-title"><h1>개인 회원가입</h1></div>
+            <div className="join-form">
+                <form autoComplete="off" onSubmit={function(e){
+                    e.preventDefault(); //기본 submit 이벤트 제어
+                    insertMember();     //다음 버튼 클릭 시 호출 함수
+                }}>
+                    <table className="tbl-join">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <label htmlFor="memberId" className="label">아이디</label>
+                                </th>
+                                <td>
+                                    <MemberId member={member} chgMember={chgMember} idChk={idChk} setIdChk={setIdChk}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <p style={{color : "red"}}>{idChk == 2 ? "*아이디는 영대소문자와 숫자로 이루어진 6~20글자입니다." : ""}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="memberPw" className="label">비밀번호</label>
+                                </th>
+                                <td>
+                                    <TextField type="password" id="memberPw" value={member.memberPw} onChange={chgMember} onBlur={checkMemberPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <p style={{color : "red"}}>{pwChk == 2 ? "*비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : " "}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="memberPwRe" className="label">비밀번호 확인</label>
+                                </th>
+                                <td>
+                                    <TextField type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={checkMemberPw}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <p style={{color : "red"}}>{pwChk == 3 ? "*비밀번호와 일치하지 않습니다." : ""}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="memberName" className="label">이름</label>
+                                </th>
+                                <td>
+                                    <TextField type="text" id="memberName" value={member.memberName} onChange={chgMember} onBlur={checkMemberName}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="memberPhone" className="label">전화번호</label>
+                                </th>
+                                <td>
+                                    <TextField type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요"/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">생년월일</label></th>
+                                <td>
+                                    <MemberBirth member={member} setMember={setMember} currentYear={currentYear} currentMonth={currentMonth} currentDay={currentDay}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="memberEmailId" className="label">이메일</label>
+                                </th>
+                                <td>
+                                    <MemberEmail member={member} setMember={setMember} setEmailChk={setEmailChk}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">주소</label></th>
+                                <td>
+                                    <MemberAddr member={member} setMember={setMember}/>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colSpan={2}>
+                                    <Button variant="contained" type="submit" className="nextBtn" style={{margin : "10px 0", height : "40px", fontSize : "20px"}}>다음</Button>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
         </section>
     )
 }
@@ -328,9 +356,8 @@ function MemberId(props){
 
     return (
         <>
-            <input type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
-            <button type="button" onClick={checkMemberIdUnique}>중복체크</button>
-            <p>{idChk == 2 ? "아이디는 영대소문자와 숫자로 이루어진 6~20글자입니다." : ""}</p>
+            <TextField type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
+            <Button variant="contained" type="button" onClick={checkMemberIdUnique} className="checkBtn" style={{marginLeft : "10px"}}>중복체크</Button>
         </>
     )
 }
@@ -406,21 +433,27 @@ function MemberBirth(props){
 
     return (
         <>
-        <select name="birthYear" value={birthYear} onChange={handleYearChange}>
-            {years.map(function(y, index){
-                return  <option key={"y"+index} value={y}>{y}년</option>
-            })}
-        </select>
-        <select name="birthMonth" value={birthMonth} onChange={handleMonthChange}>
-            {months.map(function(m, index){
-                return  <option key={"m"+index} value={m}>{m}월</option>
-            })}
-        </select>
-        <select name="birthDay" value={birthDay} onChange={handleDayChange}>
-            {days.map(function(d, index){
-                return  <option key={"d"+index} value={d}>{d}일</option>
-            })}
-        </select>
+            <FormControl>
+                <Select name="birthYear" value={birthYear} onChange={handleYearChange}>
+                    {years.map(function(y, index){
+                        return  <MenuItem key={"y"+index} value={y}>{y}년</MenuItem>
+                    })}
+                </Select>
+            </FormControl>
+            <FormControl>
+                <Select name="birthMonth" value={birthMonth} onChange={handleMonthChange} style={{margin : "0 9px"}}>
+                    {months.map(function(m, index){
+                        return  <MenuItem key={"m"+index} value={m}>{m}월</MenuItem>
+                    })}
+                </Select>
+            </FormControl>
+            <FormControl>
+                <Select name="birthDay" value={birthDay} onChange={handleDayChange}>
+                    {days.map(function(d, index){
+                        return  <MenuItem key={"d"+index} value={d}>{d}일</MenuItem>
+                    })}
+                </Select>
+            </FormControl>
         </>
     )
 }
@@ -503,16 +536,18 @@ function MemberEmail(props){
 
     return (
         <>
-        <input type="text" id="memberEmailId" value={memberEmailId} onChange={chgEmailId}/>@
-        <input type="text" id="memberEmailDomain" value={memberEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
-        <select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : memberEmailDomain}>
-            <option value="custom">직접 입력</option>
-            <option value="naver.com">naver.com</option>
-            <option value="gmail.com">gmail.com</option>
-            <option value="daum.net">daum.net</option>
-            <option value="kakao.com">kakao.com</option>
-            <option value="nate.com">nate.com</option>
-        </select>
+        <TextField type="text" id="memberEmailId" value={memberEmailId} onChange={chgEmailId}/>&nbsp;@&nbsp;
+        <TextField type="text" id="memberEmailDomain" value={memberEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
+        <FormControl>
+            <Select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : memberEmailDomain} style={{marginLeft : "5px", width : "125px"}}>
+                <MenuItem value="custom">직접 입력</MenuItem>
+                <MenuItem value="naver.com">naver.com</MenuItem>
+                <MenuItem value="gmail.com">gmail.com</MenuItem>
+                <MenuItem value="daum.net">daum.net</MenuItem>
+                <MenuItem value="kakao.com">kakao.com</MenuItem>
+                <MenuItem value="nate.com">nate.com</MenuItem>
+            </Select>
+        </FormControl>
         </>
     )
 }
@@ -530,15 +565,13 @@ function MemberAddr(props){
         document.body.appendChild(script);
     }, []);
     
-    //주소, 상세주소 useRef
-    const addressRef = useRef(null);
-    const detailAddressRef = useRef(null);
     
-    //상세 주소 값 변경 시 저장 변수
-    const [addrDetail, setAddrDetail] = useState("");
-
     //다음 주소 API 실행 코드
     function execDaumPostcode (){
+        //주소, 상세주소
+        const addressRef = document.getElementById("memberAddrMain");
+        const detailAddressRef = document.getElementById("memberAddrDetail");
+
         new window.daum.Postcode({
             oncomplete: function (data) {
                 let addr = ''; // 주소
@@ -549,12 +582,12 @@ function MemberAddr(props){
                     addr = data.jibunAddress;
                 }
 
-                addressRef.current.value = addr;
+                addressRef.value = addr;
                 
                 //주소 값 State 변수에 저장
                 setMember({...member, memberAddrMain : addr})
 
-                detailAddressRef.current.focus();
+                detailAddressRef.focus();
             }
         }).open();
     }
@@ -567,9 +600,9 @@ function MemberAddr(props){
 
     return (
         <>
-            <input type="text" ref={addressRef} placeholder="주소" readOnly/>
-            <button type="button" onClick={execDaumPostcode}>주소 찾기</button> <br/>
-            <input type="text" ref={detailAddressRef} placeholder="상세주소" value={member.memberAddrDetail} onChange={chgAddrDetail}/>
+            <TextField type="text" id="memberAddrMain" placeholder="주소" readOnly/>
+            <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
+            <TextField type="text" id="memberAddrDetail" placeholder="상세주소" value={member.memberAddrDetail} onChange={chgAddrDetail}/>
         </>
     )
 }

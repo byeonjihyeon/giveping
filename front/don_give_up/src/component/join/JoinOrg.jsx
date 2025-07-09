@@ -2,6 +2,13 @@ import { useNavigate } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import Swal from "sweetalert2";
 import { useEffect, useRef, useState } from "react";
+import * as React from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 //단체 회원 회원가입 페이지
 export default function JoinOrg(props){
@@ -133,8 +140,11 @@ export default function JoinOrg(props){
 
 
     /*계좌번호 관련 코드*/
+    const [bankSelect, setBankSelect] = useState("select");
+
     //은행 선택 시 State 변수에 저장
     function selectAccountBank(e){
+        setBankSelect(e.target.value);
         setOrg({...org, orgAccountBank : e.target.value});
     }
 
@@ -194,119 +204,143 @@ function insertOrg() {
 
     return (
         <section className="section join-wrap">
-            <div className="page-title">단체 회원가입</div>
-            <form autoComplete="off" onSubmit={function(e){
-                e.preventDefault(); //기본 submit 이벤트 제어
-                insertOrg();     //다음 버튼 클릭 시 호출 함수
-            }}>
-                <table className="tbl-join">
-                    <tbody>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgId">아이디</label>
-                            </th>
-                            <td>
-                                <OrgId org={org} chgOrg={chgOrg} idChk={idChk} setIdChk={setIdChk}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgPw">비밀번호</label>
-                            </th>
-                            <td>
-                                <input type="password" id="orgPw" value={org.orgPw} onChange={chgOrg} onBlur={checkOrgPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
-                                <p>{pwChk == 2 ? "비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgPwRe">비밀번호 확인</label>
-                            </th>
-                            <td>
-                                <input type="password" id="orgPwRe" value={orgPwRe} onChange={chgOrgPwRe} onBlur={checkOrgPw}/>
-                                <p>{pwChk == 3 ? "비밀번호와 일치하지 않습니다." : ""}</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgName">단체명</label>
-                            </th>
-                            <td>
-                                <input type="text" id="orgName" value={org.orgName} onChange={chgOrg}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgBiznum">사업자 번호</label>
-                            </th>
-                            <td>
-                                <input type="text" id="orgBiznum" value={org.orgBiznum} onChange={chgOrg} onBlur={checkOrgBiznum} placeholder="'-'를 포함해서 작성해주세요"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgPhone">전화번호</label>
-                            </th>
-                            <td>
-                                <input type="text" id="orgPhone" value={org.org} onChange={chgOrg} onBlur={checkOrgPhone} placeholder="'-'를 포함해서 작성해주세요"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgEmail">이메일</label>
-                            </th>
-                            <td>
-                                <OrgEmail org={org} setOrg={setOrg} setEmailChk={setEmailChk}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label>주소</label>
-                            </th>
-                            <td>
-                                <OrgAddr org={org} setOrg={setOrg}/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgIntroduce">단체 설명</label>
-                            </th>
-                            <td>
-                                <textarea id="orgIntroduce" value={org.orgIntroduce} onChange={chgOrg}></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>
-                                <label htmlFor="orgAccount">계좌번호</label>
-                            </th>
-                            <td>
-                                <select name="orgAccountBank" id="orgAccountBank" onChange={selectAccountBank}>
-                                    <option value="select">--선택--</option>
-                                    <option value="국민은행">국민은행</option>
-                                    <option value="신한은행">신한은행</option>
-                                    <option value="하나은행">하나은행</option>
-                                    <option value="우리은행">우리은행</option>
-                                    <option value="iM뱅크">iM뱅크</option>
-                                    <option value="기업은행">기업은행</option>
-                                    <option value="농협은행">농협은행</option>
-                                    <option value="우체국">우체국</option>
-                                    <option value="카카오뱅크">카카오뱅크</option>
-                                    <option value="토스뱅크">토스뱅크</option>
-                                </select>
-                                <input type="text" id="orgAccount" value={org.orgAccount} onChange={chgOrg} onBlur={checkAccount} placeholder="'-'를 제외하고 숫자만 입력해주세요"/>
-                                <p>*잘못 입력 시 송금에 차질이 생길 수 있습니다.</p>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th colSpan={2}>
-                                <button type="submit">다음</button>
-                            </th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </form>
+            <div className="page-title"><h1>단체 회원가입</h1></div>
+            <div className="join-form">
+                <form autoComplete="off" onSubmit={function(e){
+                    e.preventDefault(); //기본 submit 이벤트 제어
+                    insertOrg();     //다음 버튼 클릭 시 호출 함수
+                }}>
+                    <table className="tbl-join">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgId" className="label">아이디</label>
+                                </th>
+                                <td>
+                                    <OrgId org={org} chgOrg={chgOrg} idChk={idChk} setIdChk={setIdChk}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <p style={{color : "red"}}>{idChk == 2 ? "*아이디는 영대소문자와 숫자로 이루어진 6~20글자입니다." : ""}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgPw" className="label">비밀번호</label>
+                                </th>
+                                <td>
+                                    <TextField type="password" id="orgPw" value={org.orgPw} onChange={chgOrg} onBlur={checkOrgPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <p style={{color : "red"}}>{pwChk == 2 ? "*비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgPwRe" className="label">비밀번호 확인</label>
+                                </th>
+                                <td>
+                                    <TextField type="password" id="orgPwRe" value={orgPwRe} onChange={chgOrgPwRe} onBlur={checkOrgPw}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <p style={{color : "red"}}>{pwChk == 3 ? "*비밀번호와 일치하지 않습니다." : ""}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgName" className="label">단체명</label>
+                                </th>
+                                <td>
+                                    <TextField type="text" id="orgName" value={org.orgName} onChange={chgOrg}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgBiznum" className="label">사업자 번호</label>
+                                </th>
+                                <td>
+                                    <TextField type="text" id="orgBiznum" value={org.orgBiznum} onChange={chgOrg} onBlur={checkOrgBiznum} placeholder="'-'를 포함해서 작성해주세요"/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgPhone" className="label">전화번호</label>
+                                </th>
+                                <td>
+                                    <TextField type="text" id="orgPhone" value={org.org} onChange={chgOrg} onBlur={checkOrgPhone} placeholder="'-'를 포함해서 작성해주세요"/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgEmail" className="label">이메일</label>
+                                </th>
+                                <td>
+                                    <OrgEmail org={org} setOrg={setOrg} setEmailChk={setEmailChk}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th>
+                                    <label className="label">주소</label>
+                                </th>
+                                <td>
+                                    <OrgAddr org={org} setOrg={setOrg}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgIntroduce" className="label">단체 설명</label>
+                                </th>
+                                <td>
+                                    <TextField id="orgIntroduce" multiline rows={4} value={org.orgIntroduce} onChange={chgOrg}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th>
+                                    <label htmlFor="orgAccount" className="label">계좌번호</label>
+                                </th>
+                                <td>
+                                    <Select name="orgAccountBank" id="orgAccountBank" value={bankSelect} onChange={selectAccountBank} style={{marginRight : "5px", width : "125px"}}>
+                                        <MenuItem  value="select">--선택--</MenuItem >
+                                        <MenuItem  value="국민은행">국민은행</MenuItem >
+                                        <MenuItem  value="신한은행">신한은행</MenuItem >
+                                        <MenuItem  value="하나은행">하나은행</MenuItem >
+                                        <MenuItem  value="우리은행">우리은행</MenuItem >
+                                        <MenuItem  value="iM뱅크">iM뱅크</MenuItem >
+                                        <MenuItem  value="기업은행">기업은행</MenuItem >
+                                        <MenuItem  value="농협은행">농협은행</MenuItem >
+                                        <MenuItem  value="우체국">우체국</MenuItem >
+                                        <MenuItem  value="카카오뱅크">카카오뱅크</MenuItem >
+                                        <MenuItem  value="토스뱅크">토스뱅크</MenuItem >
+                                    </Select>
+                                    <TextField type="text" id="orgAccount" value={org.orgAccount} onChange={chgOrg} onBlur={checkAccount} placeholder="'-'를 제외하고 숫자만 입력해주세요"/>
+                                    <p style={{color : "red"}}>*잘못 입력 시 송금에 차질이 생길 수 있습니다.</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colSpan={2}>
+                                    <Button variant="contained" type="submit" className="nextBtn" style={{margin : "10px 0", height : "40px", fontSize : "20px"}}>다음</Button>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
         </section>
     )
 }
@@ -378,9 +412,8 @@ function OrgId(props){
 
     return (
         <>
-            <input type="text" id="orgId" value={org.orgId} onChange={chgOrg} onBlur={checkOrgId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
-            <button type="button" onClick={checkOrgIdUnique}>중복체크</button>
-            <p>{idChk == 2 ? "아이디는 영대소문자와 숫자로 이루어진 6~20글자입니다." : ""}</p>
+            <TextField type="text" id="orgId" value={org.orgId} onChange={chgOrg} onBlur={checkOrgId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
+            <Button variant="contained" type="button" onClick={checkOrgIdUnique} style={{marginLeft : "10px"}}>중복체크</Button>
         </>
     )
 }
@@ -464,16 +497,16 @@ function OrgEmail(props){
 
     return (
         <>
-            <input type="text" id="orgEmail" value={orgEmailId} onChange={chgEmailId}/>@
-            <input type="text" id="orgEmailDomain" value={orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
-            <select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : orgEmailDomain}>
-                <option value="custom">직접 입력</option>
-                <option value="naver.com">naver.com</option>
-                <option value="gmail.com">gmail.com</option>
-                <option value="daum.net">daum.net</option>
-                <option value="kakao.com">kakao.com</option>
-                <option value="nate.com">nate.com</option>
-            </select>
+            <TextField type="text" id="orgEmailId" value={orgEmailId} onChange={chgEmailId}/>&nbsp;@&nbsp;
+            <TextField type="text" id="orgEmailDomain" value={orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
+            <Select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : orgEmailDomain} style={{marginLeft : "5px", width : "125px"}}>
+                <MenuItem  value="custom">직접 입력</MenuItem >
+                <MenuItem  value="naver.com">naver.com</MenuItem >
+                <MenuItem  value="gmail.com">gmail.com</MenuItem >
+                <MenuItem  value="daum.net">daum.net</MenuItem >
+                <MenuItem  value="kakao.com">kakao.com</MenuItem >
+                <MenuItem  value="nate.com">nate.com</MenuItem >
+            </Select>
         </>
     )
 }
@@ -491,12 +524,13 @@ function OrgAddr(props){
         document.body.appendChild(script);
     }, []);
     
-    //주소, 상세주소 useRef
-    const addressRef = useRef(null);
-    const detailAddressRef = useRef(null);
-
+    
     //다음 주소 API 실행 코드
     function execDaumPostcode (){
+        //주소, 상세주소
+        const addressRef = document.getElementById("orgAddrMain");
+        const detailAddressRef = document.getElementById("orgAddrDetail");
+
         new window.daum.Postcode({
             oncomplete: function (data) {
                 let addr = ''; // 주소
@@ -507,12 +541,12 @@ function OrgAddr(props){
                     addr = data.jibunAddress;
                 }
 
-                addressRef.current.value = addr;
+                addressRef.value = addr;
                 
                 //주소 값 State 변수에 저장
                 setOrg({...org, orgAddrMain : addr})
 
-                detailAddressRef.current.focus();
+                detailAddressRef.focus();
             }
         }).open();
     }
@@ -525,9 +559,9 @@ function OrgAddr(props){
 
     return (
         <>
-            <input type="text" ref={addressRef} placeholder="주소" readOnly/>
-            <button type="button" onClick={execDaumPostcode}>주소 찾기</button> <br/>
-            <input type="text" ref={detailAddressRef} placeholder="상세주소" value={org.orgAddrDetail} onChange={chgAddrDetail}/>
+            <TextField type="text" id="orgAddrMain" placeholder="주소" readOnly/>
+            <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
+            <TextField type="text" id="orgAddrDetail" placeholder="상세주소" value={org.orgAddrDetail} onChange={chgAddrDetail}/>
         </>
     )
 }

@@ -43,7 +43,7 @@ export default function Login(){
 
     return (
         <section className="section login-wrap">
-            <div className="page-title">로그인</div>
+            <div className="page-title"><h1>로그인</h1></div>
             <div>
                 <FormControl>
                     <RadioGroup row defaultValue="member" name="login-radio" onChange={chgRadio}>

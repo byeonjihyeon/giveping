@@ -67,6 +67,7 @@
 }
 .main-menu a:hover {
     text-decoration: underline;
+    font-weight: bold;
 }
 
 /*Main 화면*/
@@ -113,12 +114,23 @@
     margin: 0 auto;
 }
 .page-title {
+    width: 100%;
     text-align: center;
+    margin-top: 30px;
 }
 
 /*회원가입*/
+/*회원가입 메인*/
+.join-wrap {
+    width: 800px;
+    min-height: 600px;
+    margin: 20px auto;
+    border: 1px solid #999;
+    border-radius: 50px;
+}
 .join-select {
     text-align: center;
+    line-height: 450px;
 }
 .join-select>a {
     display: inline-block;
@@ -140,31 +152,109 @@
     background-color: #007acc;
     color: #fff;
 }
-.join-wrap {
-    width: 800px;
-    margin: 0 auto;
-    border: 1px solid black;
+/*회원가입 입력 페이지*/
+.join-form {
+    margin-top: 20px;
 }
 .tbl-join {
-    border: 1px solid black;
     margin: 0 auto;
 }
+.label {
+    display: block;
+    width: 120px;
+    height: 35px;
+    line-height: 35px;
+    text-align: right;
+    padding-right: 10px;
+}
+.tbl-join p {
+    display: block;
+    height: 15px;
+    font-size: 12px;
+}
+.nextBtn {
+    width: 150px;
+}
+.tbl-join input {
+    height: 30px;
+}
+.MuiInputBase-root {
+    height: 35px;
+}
+.MuiInputBase-multiline {
+    height: 125px;
+}
+.MuiButton-root {
+    height: 34px;
+}
+.MuiSelect-root {
+    width: 143.5px;
+}
+.MuiPaper-root {
+    height: 200px;
+}
+.tbl-join 
+#memberId,
+#orgId {
+    width: 325px;
+}
+.tbl-join
+#memberPw,
+#memberPwRe,
+#memberName,
+#memberPhone,
+#memberAddrDetail,
+#orgPw,
+#orgPwRe,
+#orgName, 
+#orgBiznum,
+#orgPhone,
+#orgIntroduce,
+#orgAddrDetail {
+    width: 420px;
+}
+.tbl-join
+#memberEmailId,
+#memberEmailDomain,
+#orgEmailId,
+#orgEmailDomain {
+    width: 120px;
+}
+.tbl-join
+#memberAddrMain,
+#orgAddrMain {
+    width: 320px;
+}
+.tbl-join
+#orgAccount {
+    width: 290px;
+}
+.MuiSelect-select {
+    text-align: center;
+}
+
 
 /*회원가입-카테고리 선택*/
 .section.category-wrap {
     width: 800px;
-    margin: 0 auto;
+    min-height: 600px;
     display: block;
+    margin: 20px auto;
+    border: 1px solid #999;
+    border-radius: 50px;
 }
 .select-ctg-wrap {
-    padding: 10px;
     width: 600px;
+    margin: 0 auto;
+    margin-top: 130px;
+    align-content: center;
 }
 .select-ctg-wrap>.select-ctg {
-    margin: 30px;
-    width: 100px;
+    width: 108px;
+    height: 40px;
+    line-height: 40px;
     float: left;
-    margin: 5px;
+    margin: 10px 5px;
     padding: 10px 15px;
     border: 1px solid #999;
     border-radius: 10px;
@@ -172,11 +262,15 @@
     background-color: #fff;
     text-align: center;
 }
+.section.category-wrap p {
+    font-size: 14px;
+    padding-left: 10px;
+}
 
 .select-ctg-wrap>.select-ctg.active {
-  background-color: #007acc;
+  background-color: #3082ce;
   color: white;
-  border-color: #007acc;
+  border-color: #3082ce;
 }
 
 /*로그인*/
@@ -196,5 +290,5 @@
     cursor: pointer;
 }
 .page-item.active-page {
-    background-color: #007acc;
+    background-color: #218cd3;
 }
