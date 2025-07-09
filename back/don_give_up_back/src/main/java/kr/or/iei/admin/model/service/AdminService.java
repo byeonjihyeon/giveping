@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.or.iei.admin.model.dao.AdminDao;
 import kr.or.iei.admin.model.dto.AdminPayout;
 import kr.or.iei.admin.model.dto.AdminBiz;
+import kr.or.iei.admin.model.dto.AdminMember;
 import kr.or.iei.admin.model.dto.AdminOrg;
 import kr.or.iei.admin.model.dto.AdminRefund;
 import kr.or.iei.admin.model.dto.AdminReport;
@@ -54,7 +55,7 @@ public class AdminService {
 		    listMap.put("end", pageInfo.getEnd());
 
 		    // 실제 회원 리스트 조회
-		    ArrayList<Member> memberList = dao.selectMemberList(listMap);
+		    ArrayList<AdminMember> memberList = dao.selectMemberList(listMap);
 		    System.out.println("멤버 리스트 크기: " + memberList.size());
 
 		    // 결과 맵 생성
@@ -69,7 +70,7 @@ public class AdminService {
 	
 	// 회원 등급 변경
 	@Transactional
-	public int changeMemberLevel(Member member) {
+	public int changeMemberLevel(AdminMember member) {
 		
 		return dao.changeMemberLevel(member);
 	}

@@ -11,11 +11,12 @@ import org.apache.ibatis.session.SqlSession;
 
 import kr.or.iei.admin.model.dto.AdminPayout;
 import kr.or.iei.admin.model.dto.AdminBiz;
+import kr.or.iei.admin.model.dto.AdminMember;
 import kr.or.iei.admin.model.dto.AdminOrg;
 import kr.or.iei.admin.model.dto.AdminRefund;
 import kr.or.iei.admin.model.dto.AdminReport;
 import kr.or.iei.common.model.dto.PageInfo;
-import kr.or.iei.member.model.dto.Member;
+
 
 @Mapper
 public interface AdminDao {
@@ -28,11 +29,11 @@ public interface AdminDao {
 */
 	int selectMemberCount(Map<String, Object> listMap);
 	
-	ArrayList<Member> selectMemberList(Map<String, Object> listMap);
+	ArrayList<AdminMember> selectMemberList(Map<String, Object> listMap);
 
 	//ArrayList<Member> selectMemberList(PageInfo pageInfo, String searchType, String keyword);
 
-	int changeMemberLevel(Member member);
+	int changeMemberLevel(AdminMember member);
 
 	
 	int selectOrgCount();

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.iei.admin.model.dto.AdminPayout;
 import kr.or.iei.admin.model.dto.AdminBiz;
+import kr.or.iei.admin.model.dto.AdminMember;
 import kr.or.iei.admin.model.dto.AdminOrg;
 import kr.or.iei.admin.model.dto.AdminRefund;
 import kr.or.iei.admin.model.service.AdminService;
@@ -56,7 +57,7 @@ public class AdminController {
 	
 	// 회원 등급 변경
 	 @PatchMapping("/memberManage") public ResponseEntity<ResponseDTO>
-	  changeMemberStatus(@RequestBody Member member){ ResponseDTO res= new
+	  changeMemberStatus(@RequestBody AdminMember member){ ResponseDTO res= new
 	  ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원등급 상태 변경 중 오류가 생겼습니다",false,
 	 "error");
 	  

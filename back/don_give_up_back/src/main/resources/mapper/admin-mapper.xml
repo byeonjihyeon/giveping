@@ -72,7 +72,7 @@
 	</select>
 	
    <!--  전체 단체 목록 조회  -->
-    <select id="selectOrgList" parameterType="PageInfo" resultType="Org">
+    <select id="selectOrgList" parameterType="PageInfo" resultType="AdminOrg">
 	 select org_no as orgNo,
 	        org_id as orgId,
 	        org_name as orgName, 
@@ -115,7 +115,7 @@
 	</select>
 	 
    <!--  전체 기부사업 목록 조회  -->
-    <select id="selectBizList" parameterType="PageInfo" resultType="Biz">
+    <select id="selectBizList" parameterType="PageInfo" resultType="AdminBiz">
 	 SELECT *
 		FROM (
 		    SELECT ROWNUM AS rnum, a.*
@@ -147,7 +147,7 @@
  
    <!-- 기부 사업 상태 변경 -->
     <update id="updateBizStatus"
-	    parameterType="Biz">
+	    parameterType="AdminBiz">
      update tbl_donate_biz
      set biz_status = #{bizStatus}
      where biz_no = #{bizNo}
@@ -184,7 +184,7 @@
 	</select>
 	
      <!--  환불신청/내역 조회  -->
-    <select id="selectRefundList" parameterType="map" resultType="Refund">
+    <select id="selectRefundList" parameterType="map" resultType="AdminRefund">
     SELECT *
 		  FROM (
 		    SELECT ROWNUM AS rnum, a.*
@@ -237,7 +237,7 @@
    </select>-->
  
     <!-- 환불 상태 변경  -->
-	<update id="updateRefundStatus" parameterType="Refund">
+	<update id="updateRefundStatus" parameterType="AdminRefund">
 	    UPDATE tbl_refund
 	    SET 
 	        refund_status = #{refundStatus},
@@ -259,7 +259,7 @@
 	</select>
 	
    <!-- 전체 신고내역 조회  -->
-    <select id="selectReportList" parameterType="PageInfo" resultType="Report">
+    <select id="selectReportList" parameterType="PageInfo" resultType="AdminReport">
 	 SELECT *
 		FROM (
 		    SELECT ROWNUM AS rnum, a.*
@@ -359,7 +359,7 @@
     </select>
     
     <!-- 한 단체의 기부사업 리스트 조회(탈퇴 요청 단체의 사업 정보 조회) -->
-    <select id= 'selectOneOrgBizList' parameterType='_int' resultType='Biz'>
+    <select id= 'selectOneOrgBizList' parameterType='_int' resultType='AdminBiz'>
      select 
      biz_name as bizName, biz_end as bizEnd, payout_status as payoutStatus
      FROM tbl_donate_biz b join tbl_admin_payout_history h on b.biz_no=h.biz_no
@@ -369,7 +369,7 @@
     
     <!-- 탈퇴 상태 변경 -->
     <update id="updateDelStatus"
-	    parameterType="Org">
+	    parameterType="AdminOrg">
      update tbl_org
      set org_status = #{orgStatus}
      where org_no = #{orgNo}
