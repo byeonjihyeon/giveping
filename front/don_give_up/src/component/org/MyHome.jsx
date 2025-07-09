@@ -19,8 +19,10 @@ export default function MyHome(props){
     const [likeMember, setLikeMember] = useState(0);        //관심 회원 수
     const [categoryList, setCategoryList] = useState([]);   //주요 카테고리명
     const [bizList, setBizList] = useState([{}]);           //최근 사업 리스트
+    const [reLoadOrg, setReLoadOrg] = useState({}); 
+    console.log("MyHome에서 count : ", unreadAlarmCount);
 
-    //알림
+    //알림 리스트 가져오기
     useEffect(function(){
         let options = {};
         options.url = serverUrl + '/org/alarm/' + orgNo;
@@ -32,6 +34,8 @@ export default function MyHome(props){
             setNewsList(res.data.resData);
         });
     }, []);
+
+
 
     //메인에 출력될 정보 조회
     useEffect(function(){

@@ -17,7 +17,6 @@ export default function MyHome(props){
     const axiosInstance = createInstance();
     const {loginMember, unreadAlarmCount} = useUserStore();
     const [newsList, setNewsList] = useState([]);
-    const [reLoadMember, setReLoadMember] = useState({}); 
 	//모달창 상태
     const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
      const navigate = useNavigate();
@@ -35,25 +34,7 @@ export default function MyHome(props){
                 });
             }, []);
 
-    useEffect(() => {
-        //fetchAlarmList();
-        fetchMemberInfo(); 
-    }, []);
     
-    // 알림 안 읽은 갯수 업데이트를 위해 회원 정보 다시 가져오기
-    function fetchMemberInfo(){
-        let options = {};
-        options.url = serverUrl + '/member/' + loginMember.memberNo;
-        options.method = 'get';
-        
-        axiosInstance(options)
-        .then(function(res){
-            setReLoadMember(res.data.resData);
-            console.log(res.data.resData);
-            //console.log(setReLoadMember.unreadAlarm);
-        })
-    }
-
     return (
         <div className="myHome-wrap">
             <div className="myHome-wrap-top">

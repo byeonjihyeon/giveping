@@ -28,6 +28,7 @@ public interface NewsDao {
 
 	int updateNews(News news);
 
+	//소식 글 '삭제' 상태로 업데이트
 	int deleteNews(int newsNo);
 
 	int deleteComment(int commentNo);

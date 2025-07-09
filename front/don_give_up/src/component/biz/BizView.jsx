@@ -5,6 +5,7 @@ import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 import Survey from './Survey';
 import BizFile from './BizFile';
+import Swal from "sweetalert2";
 
 export default function BizView(){
     const {loginMember, loginOrg, isLogined} = useUserStore();
@@ -43,8 +44,19 @@ export default function BizView(){
     function openDonatePopup() {
         //console.log("기부하기 버튼 클릭");
         if(loginMember.orgNo == donateBiz.orgNo){
+            Swal.fire({
+                        title : '알림',
+                        text : '같은 단체의 사업에 기부할 수 없습니다.',
+                        icon : 'warning',
+                        showCancelButton : false,
+                        confirmButtonText : '확인'
+                    });
+                    return; 
+                    
+            /*
             alert("같은 단체의 사업에 기부할 수 없습니다.");
             return;
+            */
         }else{
             setIsDonateOpen(true);
         }
@@ -88,6 +100,14 @@ export default function BizView(){
         }
     }, [searchParams]);
 
+    useEffect(function () {
+        if (donateBiz.fileList && Array.isArray(donateBiz.fileList)) {
+            setPrevBizFileList(donateBiz.fileList);
+        }
+    }, [donateBiz.fileList]);
+
+
+/*
     useEffect(function(){
         let options = {};
         options.url = serverUrl + '/biz/file/' + bizNo;
@@ -101,6 +121,7 @@ export default function BizView(){
         });
         console.log("삭제 대상 파일 번호 배열 변경됨:", delBizFileNo);
     }, []);
+    */
 
     const navigate = useNavigate();
 
@@ -178,12 +199,8 @@ export default function BizView(){
                         <tr>
                             <th style={{ width: '20%' }}>기부카테고리</th>
                             <td style={{ width: '30%' }}>{donateBiz.donateCtg}</td>
-                            <th style={{ width: '20%' }}>모금 시작일</th>
-                            <td style={{ width: '30%' }}>{donateBiz.bizDonateStart}</td>
-                        </tr>
-                        <tr>
-                            <th>모금 종료일</th>
-                            <td>{donateBiz.bizDonateEnd}</td>
+                            <th style={{ width: '20%' }}>모금 기간</th>
+                            <td style={{ width: '30%' }}>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</td>
                             <th>기부사업 시작일</th>
                             <td>{donateBiz.bizStart}</td>
                         </tr>
@@ -284,6 +301,7 @@ function Donate(props){
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
+    const navigate = useNavigate();
 
     // 회원 예치금 저장 변수
     const [totalMoney, setTotalMoney] = useState(0);
@@ -334,14 +352,19 @@ function Donate(props){
     }, []);
 
     // 결제 버튼 클릭 시 호출되는 함수
-    function donatePay(){
+    async function donatePay(){
         // 잔여 예치금 - 결제 금액이 마이너스인 경우, 결제 못함
         if (totalMoney <= 0 || totalMoney - selectedAmount < 0) {
-        alert("잔액이 부족합니다. 예치금을 충전해주세요.");
-        // 이후 충전 페이지로 리다이렉션 돼야 함
-        onClose();  // (test용)
-        return;
-}
+            await Swal.fire({
+                        title : '알림',
+                        text : '잔액이 부족합니다. 예치금을 충전해주세요.',
+                        icon : 'warning',
+                        showCancelButton : false,
+                        confirmButtonText : '확인'
+                    });
+                    navigate("/member");    // 충전하기 위해 /member 로 이동
+                    return; 
+                    }
 
     // 기부 정보 객체 재구성
     const updatedPayInfo = {
@@ -359,7 +382,6 @@ function Donate(props){
         .then(function(res){
             console.log(res.data.resData);
             if(res.data.resData){
-                alert("기부 완료!");
                 //성공할 경우, 팝업 닫음
                 onClose();
             }

@@ -14,7 +14,9 @@ public class Biz {
 	private String bizName;			// 사업명
 	private String donateCode;		// 기부 코드(외래키, tbl_donate_code에서 해당 기부 코드 삭제 이전에 'D99'(기타)로 변경)	
 	private String bizContent;		// 사업 내용
+
 	private String bizDonateStart;	//모금 시작 날짜(기부 사업 등록일부터 플러스 7일)
+
 	private String bizDonateEnd;	//모금 종료 날짜(모금 시작 날짜에서 단체가 선택한 30, 60, 90일 플러스)
 	private String bizStart;		// 사업 시작 날짜
 	private String bizEnd;			// 사업 종료 날짜(react에서 사업 시작 날짜가 사업 종료 날짜보다 늦지 않도록 알림창 띄워주기)
