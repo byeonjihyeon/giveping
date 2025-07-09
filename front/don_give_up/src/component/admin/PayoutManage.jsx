@@ -11,15 +11,15 @@ import { blue } from "@mui/material/colors";
 
 
 
-//환불 신청 목록
-export default function RefundManage(){
+//관리자 모금액 송금 목록
+export default function PayoutManage(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
-    //환불 신청 또는 내역 버튼 눌렀을 때 쓰이는 변수
-    const [showType, setShowType] = useState("request");  // "request" or "done"
-    //환불 신청 목록 저장 변수
-    const [refundList, setRefundList] = useState([]);
+    //모금액 미송금내역 또는 입금내역버튼 눌렀을 때 쓰이는 변수
+    const [showType, setShowType] = useState("todo");  // "todo" or "done"
+    //모금액 미송금 목록 저장 변수
+    const [payoutList, setPayoutList] = useState([]);
     //요청 페이지(초기에 1페이지 요청하므로 초기값은 1)
     const [reqPage, setReqPage] = useState(1);
     //페이지 하단 페이지 네비게이션 저장 변수
@@ -30,20 +30,20 @@ export default function RefundManage(){
     useEffect(function(){
 
         let options = {};
-        options.url = serverUrl + '/admin/refundManage/' + reqPage +'/'+ showType;
+        options.url = serverUrl + '/admin/payoutManage/' + reqPage +'/'+ showType;
         options.method = 'get';
 
         axiosInstance(options)
         .then(function(res){
             //res.data.resData == boardMap
-            setRefundList(res.data.resData.refundList);
+            setPayoutList(res.data.resData.payoutList);
             setPageInfo(res.data.resData.pageInfo);
         });
 
         //reqPage 변경 시, useEffect 내부 함수 재실행
     }, [reqPage, showType, updStatus]);
 
-  // 환불 상태에 따라 목록 필터링
+  // 입금 상태에 따라 목록 필터링
   /*
     const filterList = refundList.filter(function(refund){
 
@@ -61,14 +61,14 @@ export default function RefundManage(){
 */
     return (
         <>
-            <div className="page-title">환불 신청 관리</div>
-        <div className="refund-nav">
+            <div className="page-title">관리자 모금액 송금 관리</div>
+        <div className="payout-nav">
             <ul>
                  <li>
-                    <button onClick={() =>{ setShowType("request"); setReqPage(1);}}>환불신청</button>
+                    <button onClick={() =>{ setShowType("todo"); setReqPage(1);}}>미송금내역</button>
                  </li>
                  <li>
-                     <button onClick={() =>{ setShowType("done"); setReqPage(1);}}>환불내역</button>
+                     <button onClick={() =>{ setShowType("done"); setReqPage(1);}}>송금내역</button>
                  </li>
          
             </ul>
@@ -76,20 +76,21 @@ export default function RefundManage(){
             <table className="tbl">
                 <thead>
                     <tr>
-                        <th style={{width:"5%"}}>번호</th>
-                        <th style={{width:"12%"}}>회원명</th>
-                        <th style={{width:"12%"}}>환불금액</th>
-                        <th style={{width:"12%"}}>은행</th>
-                        <th style={{width:"20%"}}>계좌</th>
-                        <th style={{width:"15%"}}>환불요청일</th>
-                        {showType === "done" && <th style={{ width: "15%" }}>환불완료일</th>}
-                        <th style={{width:"15%"}}>환불여부</th>
+                        <th style={{width:"5%"}}>송금번호</th>
+                        <th style={{width:"12%"}}>단체명</th>
+                        <th style={{width:"12%"}}>기부사업</th>
+                        <th style={{width:"12%"}}>모금종료날짜</th>
+                        <th style={{width:"20%"}}>목표후원금</th>
+                        <th style={{width:"15%"}}>모금액(송금액)</th>
+                        <th style={{width:"15%"}}>송금여부</th>
+                        {showType === "done" && <th style={{ width: "15%" }}>송금완료일</th>}
+                        
                     </tr>
                 </thead>
                 <tbody>
                     
-                   {refundList.map(function(refund, index){
-                        return <BoardItem key={"refund"+index} showType={showType} refund={refund} refundList={refundList} setRefundList={setRefundList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
+                   {payoutList.map(function(payout, index){
+                        return <BoardItem key={"payout"+index} showType={showType} payout={payout} payoutList={payoutList} setPayoutList={setPayoutList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
                     
                    })}
                   
@@ -104,10 +105,10 @@ export default function RefundManage(){
 }
 
 function BoardItem(props) {
-    const refund = props.refund;
+    const payout = props.payout;
     
-    const refundList = props.refundList;
-    const setRefundList = props.setRefundList;
+    const payoutList = props.payoutList;
+    const setPayoutList = props.setPayoutList;
     const showType =props.showType;
     const reqPage =props.reqPage;
 
@@ -121,39 +122,36 @@ function BoardItem(props) {
     //상태 값을 변경했을 때, 호출 함수  (onChange)
     function handleChange(e){
         
-      refund.refundStatus = e.target.value;
+      payout.payoutStatus = e.target.value;
 
         let options = {};
-        options.url = serverUrl + '/admin/refundManage';
+        options.url = serverUrl + '/admin/payoutManage';
         options.method = 'patch';
-        options.data = {refundNo : refund.refundNo, refundStatus : refund.refundStatus};
+        options.data = {payoutNo : payout.payoutNo, payoutStatus : payout.payoutStatus};
 
         axiosInstance(options)
 
         .then(function(res){
             //DB 정상 변경되었을 때, 화면에 반영
             if(res.data.resData){
-                setRefundList([...refundList]);
+                setPayoutList([...payoutList]);
                 setUpdStatus(!updStatus);
             }
         });
-    
-
     }
     return (
         <tr>
-            <td>{refund.refundNo}</td>
-            <td>{refund.memberName}</td>
-            <td>{refund.refundMoney}원</td>
-            <td>{refund.memberAccountBank}</td>
-            <td>{refund.memberAccount}</td>
-            <td>{refund.refundDate ? refund.refundDate.substring(0,10) : ''}</td>
-            {showType === "done" ? <td>{refund.refundFinDate ? refund.refundFinDate.substring(0,10) : ''}</td> : ''}
+            <td>{payout.payoutNo}</td>
+            <td>{payout.orgName}</td>
+            <td>{payout.bizName}</td>
+            <td>{payout.bizDonateEnd.substring(0,10)}</td>
+            <td>{payout.bizGoal}</td>
+            <td>{payout.payoutAmount}</td>
             <td>
-                {showType === "request" ? (
+                {showType === "todo" ? (
                  <FormControl sx={{ m:1, minWidth: 80}}fullWidth> 
                             <Select
-                                    value={refund.refundStatus}
+                                    value={payout.payoutStatus}
                                     onChange={handleChange}
                                     displayEmpty
                                     inputProps={{ 'aria-label': 'Without label' }}
@@ -165,12 +163,8 @@ function BoardItem(props) {
        
                 ):("완료")}
             </td>
+            {showType === "done" ? <td>{payout.payoutDate ? payout.payoutDate.substring(0,10) : ''}</td> : ''}
         </tr>
     );
 
 }
-
-
-
-
-

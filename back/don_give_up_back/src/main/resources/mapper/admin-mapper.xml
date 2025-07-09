@@ -2,42 +2,501 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.or.iei.admin.model.dao.AdminDao">
 
-
-<!--  전체 회원 수 조회  -->
-<select id="selectMemberCount" resultType="_int">
- select count(*) from tbl_member
+    
+  <!-- 전체 회원수 조회 -->
+   <select id="selectMemberCount"
+	resultType ='_int'>
+	select count(*)
+	   from tbl_member
+  <if test="keyword != null and keyword != ''">
+          <choose>
+              <when test ="searchType != null and searchType == 'name'">
+         where member_name like '%' || #{keyword} || '%'
+              </when>
+              <when test ="searchType != null and searchType == 'id'">
+         where member_id like'%' || #{keyword} || '%'
+       </when>
+          </choose>
+       </if>
 </select>
 
+   
+  <!--전체 회원 목록 조회 -->
+   <select id="selectMemberList"
+	parameterType="map"
+	resultType="AdminMember">
+			
+   select member_no as memberNo,
+	      member_Id as memberId,
+	      member_name as memberName,
+	      member_phone as memberPhone,
+	      member_email as memberEmail,
+	      member_addr_main as memberAddrMain,
+	      member_addr_detail as memberAddrDetail,
+	      member_birth as memberBirth,
+	      member_enroll_date as memberEnrollDate, 
+	      member_level as memberLevel
+   from 
+	 ( select rownum as rnum, a.* from 
+	 ( select * from tbl_member 
+	   <if test="keyword != null and keyword != ''">
+          <choose>
+              <when test ="searchType != null and searchType == 'name'">
+         where member_name like '%' || #{keyword} || '%'
+              </when>
+              <when test ="searchType != null and searchType == 'id'">
+         where member_id like'%' || #{keyword} || '%'
+       </when>
+          </choose>
+       </if>
+	 order by member_level
+	 
+	  ) a 
+	 ) a
+   where rnum between #{start} and #{end} 
+    </select>
+    
+   <!--회원 등급 변경 -->
+    <update id="changeMemberLevel"
+    parameterType="AdminMember">
+      update tbl_member
+      set member_level = #{memberLevel}
+      where member_id = #{memberId}
+    </update>
+    
+                                                   
+    
+   <!--  전체 단체 수   -->
+	<select id="selectOrgCount" resultType="_int">
+	 select count(*) from tbl_org
+	</select>
+	
+   <!--  전체 단체 목록 조회  -->
+    <select id="selectOrgList" parameterType="PageInfo" resultType="Org">
+	 select org_no as orgNo,
+	        org_id as orgId,
+	        org_name as orgName, 
+	        org_biznum as orgBiznum,
+	        org_phone as orgPhone,
+            org_email as orgEmail, 
+	        org_addr_main as orgAddrMain, 
+	        org_addr_detail as orgAddrDetail, 
+	        org_introduce as orgIntroduce,
+	        org_account as orgAccount,
+	        org_account_bank as orgAccountBank,
+	        org_enroll_date as orgEnrollDate,
+	        org_temperature as orgTemperature, 
+	        org_url as orgUrl,
+	        org_status as orgStatus  
+	       
+	 from 
+		 ( select rownum as rnum, a.* 
+		   from 
+		 ( select * from tbl_org 
+		 WHERE org_status IN (0, 1, 2)
+		 order by org_status
+		  ) a 
+		 ) a
+	 where rnum between #{start} and #{end} 
+    </select>
+    
+    <!-- 단체 상태 변경 -->
+    <update id="updateOrgStatus"
+	    parameterType="Org">
+     update tbl_org
+     set org_status = #{orgStatus}
+     where org_no = #{orgNo}
+    </update>
+    
 
-<!--  전체 회원 목록 조회  -->
-<select id="selectMemberList" parameterType="PageInfo" resultType="Member">
- select member_no as memberNo,
-  member_Id as memberId, member_name as memberName,
-  member_phone as memberPhone, member_email as memberEmail,
-   member_addr as memberAddr, member_birth as memberBirth,
-    member_enroll_date as memberEnrollDate, member_level as memberLevel
- from 
- ( select rownum as rnum, a.* from 
- ( select * from tbl_member order by member_id ) a 
- ) a
-  where rnum between #{start} and #{end} 
- </select>
+   <!--  전체 기부사업 수   -->
+	<select id="selectBizCount" resultType="_int">
+	 select count(*) from tbl_donate_biz
+	</select>
+	 
+   <!--  전체 기부사업 목록 조회  -->
+    <select id="selectBizList" parameterType="PageInfo" resultType="Biz">
+	 SELECT *
+		FROM (
+		    SELECT ROWNUM AS rnum, a.*
+		    FROM (
+		        SELECT 
+		            biz_no AS bizNo,
+		            org_name AS orgName,
+		            org_email as orgEmail,
+		            donate_ctg as bizCtg,
+		            biz_content as bizContent,
+		            biz_donate_start as bizDonateStart,
+		            biz_donate_end as bizDonateEnd,
+		            biz_start as bizStart,
+		            biz_end as bizEnd,
+		            biz_goal as bizGoal,
+		            biz_reg_date AS bizRegDate,
+		            biz_name AS bizName,
+		            biz_status AS bizStatus,
+		            biz_edit AS bizEdit
+		        FROM tbl_donate_biz
+		        JOIN tbl_org ON tbl_donate_biz.org_no = tbl_org.org_no
+		        JOIN tbl_donate_code ON tbl_donate_biz.donate_code = tbl_donate_code.donate_code
+		        ORDER BY bizStatus
+		    ) a
+		) a
+	 WHERE rnum BETWEEN #{start} AND #{end}
+		   
+   </select>
  
- <!--  전체 단체 수 조회  -->
-<select id="selectOrgCount" resultType="_int">
- select count(*) from tbl_org
-</select>
+   <!-- 기부 사업 상태 변경 -->
+    <update id="updateBizStatus"
+	    parameterType="Biz">
+     update tbl_donate_biz
+     set biz_status = #{bizStatus}
+     where biz_no = #{bizNo}
+    </update>
+    
+    <resultMap id="bizResultMap" type="Biz">
+	  <result property="bizStatus" column="BIZ_STATUS"/>
+	  <result property="orgName" column="ORG_NAME"/>
+	  <result property="orgEmail" column="ORG_EMAIL"/>
+	  <result property="bizName" column="BIZ_NAME"/>
+  </resultMap>
+    
+    <!--현재 기부 사업 상태 조회 -->
+    <select id= "selectBizStatus" parameterType="_int" resultMap="bizResultMap">
+    select b.biz_status,
+           o.org_name,
+		   o.org_email,
+           b.biz_name
+    from tbl_donate_biz b join tbl_org o on b.org_no=o.org_no
+    where biz_no = #{bizNo}
+    </select>
+    
+    <!--  전체 환불신청/내역 수  -->
+	<select id="selectRefundCount" resultType="_int">
+	   SELECT COUNT(*) FROM tbl_refund
+     <where>
+    <if test="showType.equals('request')">
+      refund_status = 0
+    </if>
+    <if test="showType.equals('done')">
+      refund_status = 1
+    </if>
+  </where>
+	</select>
+	
+     <!--  환불신청/내역 조회  -->
+    <select id="selectRefundList" parameterType="map" resultType="Refund">
+    SELECT *
+		  FROM (
+		    SELECT ROWNUM AS rnum, a.*
+		    FROM (
+		      SELECT 
+		        refund_no AS refundNo,
+		        member_name AS memberName,
+		        refund_money AS refundMoney,
+		        member_account_bank AS memberAccountBank,
+		        member_account AS memberAccount,
+		        refund_date AS refundDate,
+		        refund_fin_date AS refundFinDate,
+		        refund_status AS refundStatus
+		      FROM tbl_refund
+		      JOIN tbl_member ON tbl_refund.member_no = tbl_member.member_no
+		      <where>
+		        <if test="showType.equals('request')">
+		          refund_status = 0
+		        </if>
+		        <if test="showType.equals('done')">
+		          refund_status = 1
+		        </if>
+		      </where>
+		      ORDER BY refund_fin_date DESC, refund_date DESC
+		    ) a
+		  ) a
+		  WHERE rnum BETWEEN #{start} AND #{end}
+  </select>
+
+  <!--  SELECT *
+		FROM (
+		    SELECT ROWNUM AS rnum, a.*
+		    FROM (
+		        SELECT 
+		            refund_no AS refundNo,
+		            member_name AS memberName,
+		            refund_money AS refundMoney,
+		            member_account_bank AS memberAccountBank,
+		            member_account AS memberAccount,
+		            refund_date AS refundDate,
+		            refund_fin_date AS refundFinDate,
+		            refund_status AS refundStatus
+		        FROM tbl_refund
+		        JOIN tbl_member ON tbl_refund.member_no = tbl_member.member_no
+		        ORDER BY refundStatus
+		    ) a
+		) a
+	   WHERE rnum BETWEEN #{start} AND #{end}
+	        
+   </select>-->
  
- <!--  전체 단체 목록 조회  -->
-<select id="selectOrgList" parameterType="PageInfo" resultType="Org">
- select org_no as orgNo, org_name as orgName, org_enroll_date as orgEnrollDate, org_status as orgStatus 
- from 
- ( select rownum as rnum, a.* from 
- ( select * from tbl_org order by org_status ) a 
- ) a
-  where rnum between #{start} and #{end} 
- </select>
+    <!-- 환불 상태 변경  -->
+	<update id="updateRefundStatus" parameterType="Refund">
+	    UPDATE tbl_refund
+	    SET 
+	        refund_status = #{refundStatus},
+	        refund_fin_date = 
+	        <choose>
+	            <when test="refundStatus == 1">
+	                SYSDATE
+	            </when>
+	            <otherwise>
+	                NULL
+	            </otherwise>
+	        </choose>
+	    WHERE refund_no = #{refundNo}
+	</update>
+
+   <!--  전체 신고내역 수  -->
+	<select id="selectReportCount" resultType="_int">
+	 select count(*) from tbl_report
+	</select>
+	
+   <!-- 전체 신고내역 조회  -->
+    <select id="selectReportList" parameterType="PageInfo" resultType="Report">
+	 SELECT *
+		FROM (
+		    SELECT ROWNUM AS rnum, a.*
+		    FROM (
+		        SELECT 
+		            report_no AS reportNo,
+		            member_name AS memberName,
+		            org_name AS orgName,
+		            comment_content AS commentContent,
+		            report_reason AS reportReason,
+		            report_detail_reason AS reportDetailReason,
+		            report_date AS reportDate
+		          
+		        FROM tbl_report r  left join tbl_member m on r.report_member_no = m.member_no
+                                   left join tbl_org o on r.org_no = o.org_no
+                                   left join tbl_comment c on r.comment_no = c.comment_no
+                                   left join tbl_report_code d on r.report_code = d.report_code
+                order by report_date desc
+		    ) a
+		) a
+	 WHERE rnum BETWEEN #{start} AND #{end}   
+	       
+   </select>
  
+    <!--  전체 탈퇴요청 수  -->
+	<select id="selectDeleteCount" resultType="_int">
+	 select count(*) from tbl_org 
+	 <where>
+    <if test="showType.equals('request')">
+      org_status = 3
+    </if>
+    <if test="showType.equals('done')">
+      org_status = 4
+    </if>
+  </where>
+	</select>
+	
+	
+   <!--  탈퇴 요청 단체의 정보를 열람하기 위해 필요한 resultMap -->
+<resultMap id="deleteMap" type="Org">
+  <id property="orgNo" column="orgNo"/>
+  <result property="orgId" column="orgId"/>
+  <result property="orgName" column="orgName"/>
+  <result property="orgBiznum" column="orgBiznum"/>
+  <result property="orgPhone" column="orgPhone"/>
+  <result property="orgEmail" column="orgEmail"/>
+  <result property="orgAddrMain" column="orgAddrMain"/>
+  <result property="orgAddrDetail" column="orgAddrDetail"/>
+  <result property="orgIntroduce" column="orgIntroduce"/>
+  <result property="orgAccount" column="orgAccount"/>
+  <result property="orgAccountBank" column="orgAccountBank"/>
+  <result property="orgEnrollDate" column="orgEnrollDate"/>
+  <result property="orgTemperature" column="orgTemperature"/>
+  <result property="orgUrl" column="orgUrl"/>
+  <result property="orgStatus" column="orgStatus"/>
+</resultMap>
+
+
+  <!--  탈퇴 요청 목록 조회  -->
+    <select id="selectDeleteList" parameterType="map" resultMap="deleteMap">
+ select * 
+    FROM (
+       SELECT ROWNUM AS rnum, a.*
+       FROM (
+         SELECT  
+	        o.org_no as orgNo, 
+	        o.org_id as orgId,
+	        o.org_name as orgName, 
+	        o.org_biznum as orgBiznum,
+	        o.org_phone as orgPhone,
+            o.org_email as orgEmail, 
+	        o.org_addr_main as orgAddrMain, 
+	        o.org_addr_detail as orgAddrDetail, 
+	        o.org_introduce as orgIntroduce,
+	        o.org_account as orgAccount,
+	        o.org_account_bank as orgAccountBank,
+	        o.org_enroll_date as orgEnrollDate,
+	        o.org_temperature as orgTemperature, 
+	        o.org_url as orgUrl,
+	        o.org_status as orgStatus
+	 from tbl_org o 
+   WHERE 
+      <choose>
+        <when test="showType == 'request'">
+          o.org_status = 3
+        </when>
+        <when test="showType == 'done'">
+          o.org_status = 4
+        </when>
+        <otherwise>
+          o.org_status IN (3, 4)
+        </otherwise>
+      </choose>
+		  ) a 
+		 ) a
+	  WHERE rnum BETWEEN #{start} AND #{end} 
+    </select>
+    
+    <!-- 한 단체의 기부사업 리스트 조회(탈퇴 요청 단체의 사업 정보 조회) -->
+    <select id= 'selectOneOrgBizList' parameterType='_int' resultType='Biz'>
+     select 
+     biz_name as bizName, biz_end as bizEnd, payout_status as payoutStatus
+     FROM tbl_donate_biz b join tbl_admin_payout_history h on b.biz_no=h.biz_no
+     WHERE org_no = #{orgNo}
+     ORDER BY biz_end   
+    </select>
+    
+    <!-- 탈퇴 상태 변경 -->
+    <update id="updateDelStatus"
+	    parameterType="Org">
+     update tbl_org
+     set org_status = #{orgStatus}
+     where org_no = #{orgNo}
+    </update>
+    
+ <!-- 탈퇴처리된 단체에 보낼 메일에 쓰일 정보들 -->
+    <resultMap id="DelOrgResultMap" type="Org">
+	  <result property="orgName" column="orgName"/>
+	  <result property="orgEmail" column="orgEmail"/>
+	  <result property="orgStatus" column="orgStatus"/>
+  </resultMap>
+    
+    <!--현재 단체(탈퇴요청) 상태 조회 -->
+    <select id= "selectOrgStatus" parameterType="_int" resultMap="DelOrgResultMap">
+    select 
+           org_name as orgName,
+		   org_email as orgEmail,
+		   org_status as orgStatus     
+    from tbl_org 
+    where org_no = #{orgNo}
+    </select>
+     
+    
+    <!--  전체 관리자 송금/내역 수  -->
+	<select id="selectPayoutCount" resultType="_int">
+	   SELECT COUNT(*) FROM tbl_admin_payout_history
+     <where>
+    <if test="showType.equals('todo')">
+      payout_status = 0
+    </if>
+    <if test="showType.equals('done')">
+      payout_status = 1
+    </if>
+  </where>
+	</select>
+	
+    <!-- 관리자 송금/내역 조회  -->
+    <select id="selectPayoutList" parameterType="map" resultType="adminPayout">
+    SELECT *
+		  FROM (
+		    SELECT ROWNUM AS rnum, a.*
+		    FROM (
+		      SELECT 
+		        payout_no AS payoutNo,
+		        org_name AS orgName,
+		        biz_name AS bizName,
+		        biz_donate_end AS bizDonateEnd,
+		        biz_goal AS bizGoal,
+		        payout_amount AS payoutAmount,
+		        payout_status AS payoutStatus,
+		        payout_date AS payoutDate
+		      FROM tbl_admin_payout_history h
+		      JOIN tbl_donate_biz b ON h.biz_no = b.biz_no
+              JOIN tbl_org o on b.org_no = o.org_no
+		      <where>
+		        <if test="showType.equals('todo')">
+		           payout_status = 0
+		        </if>
+		        <if test="showType.equals('done')">
+		           payout_status = 1
+		        </if>
+		      </where>
+		      ORDER BY payout_date DESC, bizDonateEnd 
+		    ) a
+		  ) a
+		  WHERE rnum BETWEEN #{start} AND #{end}
+  </select>
+  
+  
+  <!--관리자 송금 상태 변경 -->
+   <update id="updatePayoutStatus" parameterType="adminPayout">
+    UPDATE tbl_admin_payout_history
+	    SET 
+	        payout_status = #{payoutStatus},
+	        payout_date = 
+	        <choose>
+	            <when test="payoutStatus == 1">
+	                SYSDATE
+	            </when>
+	            <otherwise>
+	                NULL
+	            </otherwise>
+	        </choose>
+   WHERE payout_no = #{payoutNo}
+   </update>
+    
+
+    <!-- 게시글 갯수 
+	<select id="selectBoardCount"
+	resultType ='_int'>
+	select count(*)
+	   from tbl_board
+	</select>-->
+
+
+	<!--게시글 목록 조회 
+	<select id="selectBoardList"
+	parameterType="pageInfo"
+	resultType="Board">
+	
+	select board_no as boardNo,
+	       board_title as boardTitle,
+	       board_thumb as boardThumbPath,
+	       board_writer as boardWriter,
+	       board_date as boardDate,
+	       board_status as boardStatus
+	     from (
+	           select rownum as rnum,
+	                   a.*
+	               from (
+	                     select *
+	                     from tbl_board
+	                     order by board_date desc
+	                     )a
+	               )a
+	               where rnum between #{start} and #{end}     
+	    
+	     
+	    </select>-->
+    
+   <!-- 게시글 조회 상태 변경
+   <update id ="changeBoardStatus"
+   parameterType="Board">
+   
+   update tbl_board
+      set board_status = #{boardStatus}
+      where board_no = #{boardNo}
+   </update>-->
+
  </mapper>
- 
- 
