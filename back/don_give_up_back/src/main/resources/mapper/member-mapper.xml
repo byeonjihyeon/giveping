@@ -253,7 +253,7 @@
 		a.alarm_no,
 		a.member_no,
 		a.biz_no,
-		a.news_no,
+		a.news_no, 
 		a.alarm_type,
 		a.alarm_date,
 		a.alarm_read,
@@ -265,7 +265,7 @@
 		LEFT JOIN tbl_org o ON d.org_no = o.org_no
 		LEFT JOIN tbl_news n ON a.news_no = n.news_no
 		LEFT JOIN tbl_org o2 ON n.org_no = o2.org_no
-		WHERE a.member_no = #{_parameter}
+		WHERE a.member_no = #{_parameter} and a.alarm_type not in (3,4)
 		order by alarm_date desc
 	</select>
 	

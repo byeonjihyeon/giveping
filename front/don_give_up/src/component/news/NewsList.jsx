@@ -30,31 +30,34 @@ export default function NewsList(){
     }, [reqPage]);
 
     return(
-     <div className="content-wrapper">
-        <div className="page-title">소식</div>
-        {(loginMember?.memberLevel === 1)
-        ? <Link to="/news/write" className="btn-primary">글쓰기</Link>
-        : ''}
-        <table className="tbl">
-            <thead>
-                <tr>
-                    <th style={{width:"10%"}}>소식번호</th>
-                    <th style={{width:"40%"}}>제목</th>
-                    <th style={{width:"15%"}}>작성일</th>
-                    <th style={{width:"10%"}}>조회수</th>
-                </tr>
-            </thead>
-            <tbody>
-                {newsList.map(function(news, index){
-                    return <NewsItem key={"news"+index} news={news} newsList={newsList} setNewsList={setNewsList} index={index} />
-                })}
-            </tbody>
-        </table>
-        <div className="admin-page-wrap" style={{marginTop : "30px"}}>
-            <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
+    <>
+    <section className="section news-list-wrap">
+        <div className="content-wrapper">
+            <div className="page-title">소식</div>
+            {(loginMember?.memberLevel === 1)
+            ? <Link to="/news/write" className="btn-primary">글쓰기</Link>
+            : ''}
+            <table className="tbl">
+                <thead>
+                    <tr>
+                        <th style={{width:"10%"}}>소식번호</th>
+                        <th style={{width:"40%"}}>제목</th>
+                        <th style={{width:"15%"}}>작성일</th>
+                        <th style={{width:"10%"}}>조회수</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {newsList.map(function(news, index){
+                        return <NewsItem key={"news"+index} news={news} newsList={newsList} setNewsList={setNewsList} index={index} />
+                    })}
+                </tbody>
+            </table>
+            <div className="admin-page-wrap" style={{marginTop : "30px"}}>
+                <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
+            </div>
         </div>
-    </div>
-
+    </section>
+    </>
     )
 }
 

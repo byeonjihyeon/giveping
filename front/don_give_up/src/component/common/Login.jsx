@@ -9,6 +9,8 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import useUserStore from '../../store/useUserStore';
 import { useEffect } from 'react';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 //로그인 페이지
 export default function Login(){
@@ -43,20 +45,22 @@ export default function Login(){
 
     return (
         <section className="section login-wrap">
-            <div className="page-title">로그인</div>
-            <div>
-                <FormControl>
-                    <RadioGroup row defaultValue="member" name="login-radio" onChange={chgRadio}>
-                        <FormControlLabel value="member" control={<Radio />} label="개인 회원" />
-                        <FormControlLabel value="org" control={<Radio />} label="단체 회원" />
-                    </RadioGroup>
-                </FormControl>
-            </div>
-            <div>
-                <DoLogin selectRadio={selectRadio} member={member} setMember={setMember} org={org} setOrg={setOrg}/>
-            </div>
-            <div>
-                <Link to="/search/id">아이디 찾기</Link> | <Link to="/search/pw">비밀번호 찾기</Link> | <Link to="/join">회원가입</Link>
+            <div className="page-title"><h1>로그인</h1></div>
+            <div className="login-div">
+                <div>
+                    <FormControl>
+                        <RadioGroup row defaultValue="member" name="login-radio" onChange={chgRadio}>
+                            <FormControlLabel value="member" control={<Radio />} label="개인 회원" />
+                            <FormControlLabel value="org" control={<Radio />} label="단체 회원" />
+                        </RadioGroup>
+                    </FormControl>
+                </div>
+                <div>
+                    <DoLogin selectRadio={selectRadio} member={member} setMember={setMember} org={org} setOrg={setOrg}/>
+                </div>
+                <div style={{marginTop : "10px"}}>
+                    <Link to="/search/id">아이디 찾기</Link> &nbsp;|&nbsp; <Link to="/search/pw">비밀번호 찾기</Link> &nbsp;|&nbsp; <Link to="/join">회원가입</Link>
+                </div>
             </div>
         </section>
     )
@@ -182,25 +186,26 @@ function DoLogin(props){
             e.preventDefault(); //기본 이벤트 제어
             login(); //로그인 버튼 클릭시 실행 함수
         }}>
-            <table border={1}>
+            <table className="tbl-login">
                 <tbody>
                     <tr>
                         <th>
-                            <label htmlFor={selectRadio == "member" ? "memberId" : "orgId"}>아이디</label>
+                            <label htmlFor={selectRadio == "member" ? "memberId" : "orgId"} className="login-label">아이디</label>
                         </th>
                         <td>
-                            <input type="text" id={selectRadio == "member" ? "memberId" : "orgId"} 
+                            <TextField type="text" id={selectRadio == "member" ? "memberId" : "orgId"} 
                                    value={selectRadio == "member" ? member.memberId : org.orgId}
                                    onChange={selectRadio == "member" ? chgMember : chgOrg}
+                                   style={{marginBottom : "5px"}}
                             />
                         </td>
                     </tr>
                     <tr>
                         <th>
-                            <label htmlFor={selectRadio == "member" ? "memberPw" : "orgPw"}>비밀번호</label>
+                            <label htmlFor={selectRadio == "member" ? "memberPw" : "orgPw"} className="login-label">비밀번호</label>
                         </th>
                         <td>
-                            <input type="password" id={selectRadio == "member" ? "memberPw" : "orgPw"} 
+                            <TextField type="password" id={selectRadio == "member" ? "memberPw" : "orgPw"} 
                                    value={selectRadio == "member" ? member.memberPw : org.orgPw} 
                                    onChange={selectRadio == "member" ? chgMember : chgOrg}
                             />
@@ -208,7 +213,7 @@ function DoLogin(props){
                     </tr>
                 </tbody>
             </table>
-            <button type="submit">로그인</button>
+            <Button variant="contained" type="submit" style={{height : "80px", width : "90px"}}>로그인</Button>
         </form>
     )
 }

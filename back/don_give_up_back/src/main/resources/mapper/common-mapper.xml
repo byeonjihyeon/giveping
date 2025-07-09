@@ -10,24 +10,28 @@
 		 where donate_code != 'D99'
 	</select>
 	
-	<!-- 회원별 안 읽은 알림 갯수 조회 -->
 	<select id="countAlarm" parameterType="map">
 	  SELECT COUNT(*)
 	  FROM tbl_alarm
 	  <where>
 	    <if test="memberNo != null">
-	      member_no = #{memberNo} 
+	      member_no = #{memberNo}
+	      AND alarm_type NOT IN (3,4)
 	    </if>
 	    <if test="orgNo != null">
 	      biz_no IN (
 	        SELECT biz_no FROM tbl_donate_biz WHERE org_no = #{orgNo}
 	      )
+	      AND member_no IS NULL
+	      AND alarm_type NOT IN (1,2,5)
 	    </if>
+	    AND alarm_read = 0
 	  </where>
-	  	and alarm_read = 0
 	</select>
+
+
 	
-	<!-- 회원 관심 카테고리에 따라서 기부 사업 리스트 (6개) 출력 -->
+	<!-- 회원 관심 카테고리에 따라서 기부 사업 리스트 (8개) 출력 -->
 	<select id="selectMainBizList" parameterType="int" resultType="CommonBiz">
 	    SELECT * FROM (
 	        SELECT 
@@ -66,12 +70,13 @@
 	                )
 	            </if>
 	        </where>
-	        ORDER BY b.biz_reg_date DESC
+	        ORDER BY o.org_temperature DESC, b.biz_reg_date DESC
 	    )
 	    WHERE ROWNUM &lt;= 8
 	</select>
 
 
+	<!-- 회원 관심 카테고리에 따라서 기부단체 리스트 (8개) 출력 -->
 
 	
 </mapper>

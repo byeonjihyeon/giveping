@@ -67,6 +67,9 @@ public interface BizDao {
 	//모금액 사용 계획 등록
 	int insertBizPlan(BizPlan bizPlan);
 
+	// 첨부파일 다운로드
+	BizFile selectBizFile(int bizFileNo);
+
 	
 
 }

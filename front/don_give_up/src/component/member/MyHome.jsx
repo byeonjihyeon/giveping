@@ -19,21 +19,12 @@ export default function MyHome(props){
     const axiosInstance = createInstance();
     const {loginMember, unreadAlarmCount} = useUserStore();
     const [newsList, setNewsList] = useState([]);
-    const [reLoadMember, setReLoadMember] = useState({}); 
-	
-    
-    //결제 상태에 따라 모달에 보여줄 컴포넌트를 지정할 변수
-    const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'success' or 'fail' or 'null' 
-    //결제완료후, 모달창을 닫을 때, 쿼리파라미터를 지워주기 위함. 
-    const navigate = useNavigate();
-    const [params] = useSearchParams();
 
-    // 결제완료후, 쿼리파라미터에 paymentkey가 포함되어있다면, 모달창 타입 완료페이지로 변경
-    useEffect(function(){
-        if(params.get("paymentKey")){
-            setModalType("success");
-        }
-    }, [params])
+    const [reLoadMember, setReLoadMember] = useState({}); 
+
+	//모달창 상태
+    const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
+     const navigate = useNavigate();
 
 
     // 알림 리스트 가져오기
@@ -49,25 +40,7 @@ export default function MyHome(props){
                 });
             }, []);
 
-    useEffect(() => {
-        //fetchAlarmList();
-        fetchMemberInfo(); 
-    }, []);
     
-    // 알림 안 읽은 갯수 업데이트를 위해 회원 정보 다시 가져오기
-    function fetchMemberInfo(){
-        let options = {};
-        options.url = serverUrl + '/member/' + loginMember.memberNo;
-        options.method = 'get';
-        
-        axiosInstance(options)
-        .then(function(res){
-            setReLoadMember(res.data.resData);
-            console.log(res.data.resData);
-            //console.log(setReLoadMember.unreadAlarm);
-        })
-    }
-
     return (
         <div className="myHome-wrap">
             <div className="myHome-wrap-top">

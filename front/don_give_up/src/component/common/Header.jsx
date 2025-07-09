@@ -32,7 +32,7 @@ function HeaderLink(){
     const navigate = useNavigate();
 
     //스토리지에 저장한 데이터 추출하기
-    const {isLogined, setIsLogined, loginMember, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken} = useUserStore();
+    const {isLogined, setIsLogined, loginMember, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken, setUnreadAlarmCount} = useUserStore();
 
     //로그아웃 Link 클릭 시 동작 함수
     function logout(e){
@@ -44,6 +44,7 @@ function HeaderLink(){
         setLoginOrg(null);
         setAccessToken(null);
         setRefreshToken(null);
+        setUnreadAlarmCount(0);
         
         navigate("/login");
     }
@@ -157,16 +158,16 @@ function MemberMyPage(){
     return (
         <ul className="sub-menu">
             <li>
-                <Link to="#">회원 정보 수정</Link>
+                <Link to="/member/update">내 정보 수정</Link>
             </li>
             <li>
-                <Link to="#">기부 내역 조회</Link>
+                <Link to="/member/donateList">기부 내역 조회</Link>
             </li>
             <li>
-                <Link to="#">관심 단체</Link>
+                <Link to="/member/likeOrgList">관심 단체</Link>
             </li>
             <li>
-                <Link to="#">예치금 충전/환불</Link>
+                <Link to="/member/money/charge">예치금 충전/환불</Link>
             </li>
             <li>
                 <Link to="#">회원 탈퇴</Link>
@@ -181,13 +182,10 @@ function OrgMyPage(){
     return (
         <ul className="sub-menu">
             <li>
-                <Link to="#">회원 정보 수정</Link>
+                <Link to="/org/update">단체 정보 수정</Link>
             </li>
             <li>
-                <Link to="#">기업 정보 수정</Link>
-            </li>
-            <li>
-                <Link to="#">기부 사업 관리</Link>
+                <Link to="/org/biz">기부 사업 관리</Link>
             </li>
             <li>
                 <Link to="#">회원 탈퇴</Link>

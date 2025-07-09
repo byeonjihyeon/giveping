@@ -24,19 +24,20 @@ export default function NewsList(){
 
             axiosInstance(options)
             .then(function(res){
-                //console.log(res.data.resData);
                 
                 const alarms = res.data.resData;
                 setNewsList(alarms);
+                /*
                 markAllAsRead(alarms.map(function(a) {
                     return a.alarmNo;
                 }))
+                    */
             });
         }, []);
 
     // 알림 읽음 처리 함수
+    /*
     function markAllAsRead(alarmNos){
-        //console.log("alarmNo" , alarmNo);
         let options={};
         options.url= serverUrl + '/member/alarm/' + alarmNos.join(',');
         options.method = "patch";
@@ -68,6 +69,7 @@ export default function NewsList(){
             });
         });
     }
+        */
    
     
     /*
@@ -87,7 +89,7 @@ export default function NewsList(){
     return (
         <div className="newsList-wrap" >
                 {newsList.map(function(news, index){
-                     return <News key={"news" + index} news={news} />   
+                     return <News key={"news" + index} news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
                 })}
         </div>
     )
@@ -98,21 +100,32 @@ function News(props){
     const news = props.news;
     const navigate = useNavigate();
     console.log(news);
+    const setHasNewAlert = props.setHasNewAlert;
+    const setUnreadAlarmCount = props.setUnreadAlarmCount;
+    const loginMember = props.loginMember;
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
+
+    // 날짜 계산
+    const now = new Date();
+    const alarmDate = new Date(news.alarmDate);
+
+    // 두 날짜 차이 계산 (밀리초 단위)
+    const diffTime = now.getTime() - alarmDate.getTime();
+
+    // 하루는 86400000 밀리초
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
 
     // alarmType 3과 4인 경우 렌더링하지 않음
     if (news.alarmType == 3 || news.alarmType == 4) {
      return null;
     }
-
-    /*
-    // alarmRead가 0이 아닌 경우 렌더링하지 않음
-    if (news.alarmRead !== 0) {
+    // 2일 이상 지난 알림이면 렌더링하지 않음
+    if (diffDays >= 2) {
         return null;
     }
-        */
     
     
     let content;
@@ -129,7 +142,8 @@ function News(props){
     
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
     function handleClick() {
-        //markAsRead(news.alarmNo);
+        markAsRead(news.alarmNo);
+        
         if(news.alarmType === 0){
             var hasSurveyForBiz = false; // surveyList 중 bizNo가 news.bizNo와 같은 게 하나라도 있는지 검사하는 변수
 
@@ -151,6 +165,41 @@ function News(props){
         }else if(news.alarmType === 3){
             console.log("type 3 클릭");
         }
+    }
+
+        // 알림 읽음 처리 함수
+    function markAsRead(alarmNo){
+        //console.log("alarmNo" , alarmNo)
+        let options={};
+        options.url= serverUrl + '/member/alarm/' + alarmNo;
+        options.method = "patch";
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+
+            // 안 읽은 알림 갯수 reload
+            let options = {};
+            options.url = serverUrl + '/countAlarm';
+            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
+            options.params = { memberNo: loginMember.memberNo };
+            options.method = 'get';
+    
+            axiosInstance(options)
+            .then(function(res){
+                console.log(res.data.resData);
+
+                const count = res.data.resData;
+                if(count > 0){
+                    console.log("안읽은알림갯수 : ", count);
+                    setHasNewAlert(true);
+                    setUnreadAlarmCount(count);    // 결과 unreadAlarmCount 에 set 하기
+                }else{
+                    setHasNewAlert(false);
+                    setUnreadAlarmCount(count);
+                }
+            });
+        });
     }
         
 

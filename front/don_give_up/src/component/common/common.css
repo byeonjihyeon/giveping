@@ -58,7 +58,7 @@
 }
 
 .posting-item {
-    flex: 0 0 calc(25% - 15px); /* 4개씩 보이게 */
+    flex: 0 0 calc(25% - 15px); /* 4개씩 보이게 설정 */
     border: 1px solid #ccc;
     border-radius: 12px;
     overflow: hidden;

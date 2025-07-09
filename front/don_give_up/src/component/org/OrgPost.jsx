@@ -12,6 +12,7 @@ import { Editor } from '@toast-ui/react-editor';
 import "@toast-ui/editor/dist/toastui-editor.css";
 import ToastEditor from '../news/ToastEditor';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 
 //기부 사업 등록
@@ -20,11 +21,13 @@ export default function OrgPost(){
     const axiosInstance = createInstance();
     
     const {loginOrg} = useUserStore();
+    const orgNo = loginOrg.orgNo;
+    const navigate = useNavigate();
 
     //기부 사업 내용
     const [donateBiz, setDonateBiz] = useState({
         bizNo : 0,             //사업 번호
-        orgNo : loginOrg.orgNo, //단체 번호
+        orgNo : orgNo, //단체 번호
         donateCode : "",        //기부 코드
         bizName : "",           //사업명
         bizContent : "",        //사업 내용
@@ -171,7 +174,7 @@ export default function OrgPost(){
 
                 if(bizImg != null){
                     form.append("bizImg", bizImg);
-                    form.append("orgNo", loginOrg.orgNo);
+                    form.append("orgNo", orgNo);
 
                     let options = {};
                     options.url = serverUrl + "/biz/thumb";
@@ -280,7 +283,7 @@ export default function OrgPost(){
                         confirmButtonText : "확인"
                     })
                     .then(function(result){
-                        
+                         navigate("/org/biz"); // 기부 사업 보기 메뉴로 이동
                     });
                 });
             }

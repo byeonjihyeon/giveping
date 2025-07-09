@@ -12,12 +12,13 @@ export default function OrgDelete(){
     const navigate = useNavigate();
 
     const {loginOrg} = useUserStore();
+    const orgNo = loginOrg.orgNo;
 
     //진행 중인 기부 사업 리스트
     const [bizList, setBizList] = useState([{bizName : "", bizDonateEnd : "", bizEnd : "", payoutYN : ""}]);
 
     //입력하는 비밀번호
-    const [org, setOrg] = useState({orgNo : loginOrg.orgNo, orgPw : ""});
+    const [org, setOrg] = useState({orgNo : orgNo, orgPw : ""});
 
     //비밀번호 확인 여부
     const [type, setType] = useState(0);
@@ -25,7 +26,7 @@ export default function OrgDelete(){
     //단체의 진행 중 또는 입금 처리 안된 기부 사업 리스트 가져오기
     useEffect(function(){
         let options = {};
-        options.url = serverUrl + "/org/bizList/" + loginOrg.orgNo;
+        options.url = serverUrl + "/org/bizList/" + orgNo;
         options.method = "get";
 
         axiosInstance(options)
@@ -71,7 +72,7 @@ export default function OrgDelete(){
         .then(function(result){
             if(result.isConfirmed){
                 let options = {};
-                options.url = serverUrl + "/org/delete/" + loginOrg.orgNo;
+                options.url = serverUrl + "/org/delete/" + orgNo;
                 options.method = "patch";
         
                 axiosInstance(options)

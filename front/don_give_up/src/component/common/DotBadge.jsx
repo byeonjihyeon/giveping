@@ -43,6 +43,8 @@ export default function DotBadge() {
                 options.params = { memberNo: loginMember.memberNo };
             } else if (loginOrg && loginOrg.orgNo) {
                 options.params = { orgNo: loginOrg.orgNo };
+            }else {
+              return; // 요청 중단
             }
             options.method = 'get';
     
@@ -51,6 +53,7 @@ export default function DotBadge() {
                 console.log(res.data.resData);
 
                 const count = res.data.resData;
+                console.log("DotBadge에서 count : ", count);
                 if(count > 0){
                     console.log("안읽은알림갯수 : ", count);
                     setHasNewAlert(true);

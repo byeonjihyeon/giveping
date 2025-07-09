@@ -3,6 +3,23 @@ import createInstance from "../../axios/Interceptor";
 import PageNavi from "../common/PageNavi";
 import * as React from 'react';
 import Switch from '@mui/material/Switch';
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import Modal from '@mui/material/Modal';
+
+//상세보기 모달 스타일
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 500,
+  height: 500,
+  bgcolor: 'background.paper',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: 2,
+};
+
 
 //기부 사업 목록
 export default function BizManage(){
@@ -19,7 +36,7 @@ export default function BizManage(){
     useEffect(function(){
 
         let options = {};
-        options.url = serverUrl + '/admin/bizList/' + reqPage;
+        options.url = serverUrl + "/admin/bizManage/" + reqPage;
         options.method = 'get';
 
         axiosInstance(options)
@@ -43,7 +60,7 @@ export default function BizManage(){
                         <th style={{width:"15%"}}>신청일</th>
                         <th style={{width:"15%"}}>사업명</th>
                         <th style={{width:"15%"}}>신청정보열람</th>
-                        <th style={{width:"15%"}}>상태변경</th>
+                        <th style={{width:"15%"}}>상태</th>
                         <th style={{width:"15%"}}>수정사항</th>
                     </tr>
                 </thead>
@@ -65,15 +82,29 @@ function BoardItem(props) {
     const biz = props.biz;
     const bizList = props.bizList;
     const setBizList = props.setBizList;
+    const [open, setOpen] = useState(false);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
+
+
+// 사업정보 상세보기 버튼 눌렀을 때 뜨는 모달창
+  function bizDetail() {
+        setOpen(true);
+    }
+
+    function handleClose() {
+        setOpen(false);
+    }
+
+
+ /*   
 // 사업정보 정보 상세보기 버튼
 function bizDetail(props) {
     const biz = props.biz;
         let options = {};
-        options.url = serverUrl + '/biz/' + biz.orgNo;
+        options.url = serverUrl + '/biz/' + biz.bizNo;
         options.method = 'get';
 
         axiosInstance(options)
@@ -83,9 +114,11 @@ function bizDetail(props) {
             }
         });
     }
+ */
     //상태 값을 변경했을 때, 호출 함수  (onChange)
-    function handleChange(){
-      //  biz.boardStatus = board.boardStatus == 1 ? 2 : 1; //현재값이 1이면 2로 변경하고, 아니면 1로 변경
+    function handleChange(e){
+      const biz = props.biz;
+      biz.bizStatus = e.target.value;
 
         let options = {};
         options.url = serverUrl + '/admin/bizManage';
@@ -102,13 +135,14 @@ function bizDetail(props) {
     }
 
     return (
+        <>
         <tr>
             <td>{biz.bizNo}</td>
             <td>{biz.orgName}</td>
-            <td>{biz.bizRegDate}</td>
+            <td>{biz.bizRegDate.substring(0,10)}</td>
             <td>{biz.bizName}</td>
             <td>
-                <button onClick={BizDetail}>열람</button>
+                <button onClick={bizDetail}>열람</button>
             </td>
      
             <td>
@@ -133,5 +167,41 @@ function bizDetail(props) {
             </td>
                    <td>{biz.bizEdit}</td>
         </tr>
+       
+       <Modal open={open} onClose={handleClose}>
+            <Box sx={modalStyle}>
+                    <h2>{biz.bizName} 상세 정보</h2>    
+            <table className='detail' border={1}> 
+                         <tbody>
+                                <tr>
+                                    <th>단체명</th>
+                                    <td> {biz.orgName}</td>
+                                </tr>
+                                 <tr>
+                                    <th>기부 카테고리</th> 
+                                    <td> {biz.bizCtg}</td>
+                                </tr>
+                                 <tr>
+                                   <th>사업 내용</th> 
+                                    <td> {biz.bizContent}</td>
+                                 </tr>
+                                  <tr>
+                                    <th>모금 기간</th>  
+                                    <td>{biz.bizDonateStart.substring(0,10)}~{biz.bizDonateEnd.substring(0,10)}</td>
+                                 </tr>
+                                  <tr>
+                                    <th>사업 기간</th>
+                                     <td>{biz.bizStart.substring(0,10)}~{biz.bizEnd.substring(0,10)}</td>
+                                 </tr>
+                                  <tr>
+                                    <th>목표 후원 금액</th> 
+                                    <td>{biz.bizGoal}</td>
+                                </tr>         
+                           </tbody>
+                         </table>
+                             <button onClick={handleClose}>닫기</button>    
+                     </Box>
+             </Modal>
+             </>
     );
 }

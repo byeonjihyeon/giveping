@@ -11,6 +11,7 @@ export default function OrgBiz(){
     const navigate = useNavigate();
 
     const {loginOrg} = useUserStore();
+    const orgNo = loginOrg.orgNo;
 
     //페이지 정보를 저장할 변수
     const [reqPage, setReqPage] = useState(1);
@@ -26,7 +27,7 @@ export default function OrgBiz(){
     //버튼 클릭할 때마다 clickBtn 값이 바뀌면 해당하는 리스트 보여주기
     useEffect(function(){
         let options = {};
-        options.url = serverUrl + "/org/bizList/" + loginOrg.orgNo + "/" + clickBtn + "/" + reqPage;
+        options.url = serverUrl + "/org/bizList/" + orgNo + "/" + clickBtn + "/" + reqPage;
         options.method = "get";
     
         axiosInstance(options)

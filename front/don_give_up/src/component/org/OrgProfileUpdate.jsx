@@ -9,6 +9,7 @@ export default function OrgProfileUpdate(props){
     
     //스토리지에서 회원번호 추출용도
     const {loginOrg} = useUserStore();
+    const orgNo = loginOrg.orgNo;
     
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -51,7 +52,7 @@ export default function OrgProfileUpdate(props){
             return;
         }
         const form = new FormData();
-        form.append("orgNo", loginOrg.orgNo);      //회원 정보(번호, 아이디, 이름, 전화번호, 생년월일, 이메일, 주소)
+        form.append("orgNo", orgNo);      //회원 정보(번호, 아이디, 이름, 전화번호, 생년월일, 이메일, 주소)
         form.append("profile", profile);                    //업로드할 프로필 사진 '객체'
         
         if(org.orgThumbPath != null){
@@ -111,7 +112,7 @@ export default function OrgProfileUpdate(props){
                     }).then(function(res){
                         if(res.isConfirmed){
                             let options = {};
-                            options.url = serverUrl + '/org/thumb/' + loginOrg.orgNo;
+                            options.url = serverUrl + '/org/thumb/' + orgNo;
                             options.method = 'patch';
                             
                             axiosInstance(options)

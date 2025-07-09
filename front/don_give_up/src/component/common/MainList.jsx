@@ -8,15 +8,17 @@ export default function MainList(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const [bizList, setBizList] = useState([]);     // 기부 사업 리스트
+    const [orgList, setOrgList] = useState([]);     // 기부 사업 리스트
+
     const sliderRef = useRef(null);
 
 
-    // 조건에 따라 primaryNo 설정
+    // 조건에 따라 primaryNo 설정 (회원으로 로그인 한 경우만 memberNo 보내기, 나머지는 0 값 보냄)
     const primaryNo = (isLogined && loginMember && loginMember.memberNo)
                         ? loginMember.memberNo
                         : 0;
 
-    // 기부 사업 리스트 (6개) 조회해오기
+    // 기부 사업 리스트 (8개) 조회해오기
     useEffect(function(){
         let options = {};
         options.url = serverUrl +'/bizList/'+ primaryNo;
@@ -25,9 +27,25 @@ export default function MainList(){
         .then(function(res){
             console.log(res.data.resData);
             setBizList(res.data.resData);
-        })
+        });
 
     }, []);
+
+    
+    /*
+    // 기부 단체 리스트 (8개) 조회해오기
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl +'/orgList/'+ primaryNo;
+        options.method = 'get';
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+            setOrgList(res.data.resData);
+            })
+            
+            }, []);
+            */
 
     const scroll = (direction) => {
         const scrollAmount = sliderRef.current.offsetWidth;
@@ -36,8 +54,7 @@ export default function MainList(){
             behavior: "smooth"
         });
     };
-
-
+           
     return(
         <div className="biz-list-container">
             <button className="scroll-btn left" onClick={() => scroll("left")}>{"<"}</button>

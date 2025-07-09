@@ -7,21 +7,31 @@ import OrgManage from "./OrgManage.jsx";
 import BizManage from './BizManage.jsx';
 import RefundManage from'./RefundManage.jsx';
 import ReportManage from'./ReportManage.jsx';
+import DeleteManage from'./DeleteManage.jsx';
+import PayoutManage from'./PayoutManage.jsx';
+import "./admin.css";
+
 
 import { Link } from "react-router-dom";
 
 
 //관리자 메인
 export default function AdminMain(){
+
+        const [member, setMember] = useState({
+            // memberName : memberName
+        });
     const [menuList, setMenuList] = useState([
         {url : '/admin/memberManage',         text : "회원 관리"},
         {url : '/admin/orgManage',      text: '단체 관리'},
         {url : '/admin/bizManage' ,         text : '기부 사업 관리'},
         {url : '/admin/refundManage' ,         text : '환불 신청 관리'},
         {url : '/admin/reportManage' ,         text : '신고 내역 관리'},
-        {url : '/admin/deleteManage' ,         text : '탈퇴 신청 관리'}
-    ]);
+        {url : '/admin/deleteManage' ,         text : '탈퇴 신청 관리'},
+        {url : '/admin/payoutManage' ,         text : '관리자 송금 관리'}
 
+    ]);
+   
 
     return (
         <div className="mypage-wrap">
@@ -32,8 +42,6 @@ export default function AdminMain(){
                         <span className="member-name">관리자 페이지</span>
                     </div>
                      <div className="refund">
-                        <Link to={'/admin/refundManage/'} className="refund-request">환불 요청 내역</Link>
-                        <Link to={'/admin/refundDone/'} className="refund-done">환불 완료 내역</Link>
                     </div>
                 </section>
                 <section className="section">  
@@ -49,7 +57,9 @@ export default function AdminMain(){
                         <Route path="bizManage" element={<BizManage />} />
                         <Route path="refundManage" element={<RefundManage />}  />
                         <Route path="reportManage" element={<ReportManage />}  />
-                   
+                         <Route path="deleteManage" element={<DeleteManage />}  />
+                         <Route path="payoutManage" element={<PayoutManage />}  />
+                         
                     </Routes>
                 </section>
             </div>
