@@ -17,6 +17,7 @@ import JoinOrg from './component/join/JoinOrg';
 import JoinCategory from './component/join/JoinCategory';
 import SearchIdPw from './component/common/SearchIdPw';
 
+
 function App() {
 
   //개인 회원 정보 저장 변수(서버 전송용)

@@ -477,7 +477,7 @@
 		where rownum between 1 and #{pageInfo.end}
 	</select>
 	
-	<!-- 충전하기 -->
+	<!-- 회원 충전하기 버튼 클릭시, 주문번호 미리 생성 및 금액 입력 + 회원번호 get-->
 	<insert id="charge"
 	parameterType="map">
 	insert into tbl_charge values (seq_charge.nextval, #{memberNo}, #{charge}, sysdate) 
@@ -500,6 +500,7 @@
     where member_no = #{memberNo}		 
 	</update>
 	
+	<!-- 출금하기 -->
 	<insert id="refund"
 	parameterType="map">
 	insert into tbl_refund values (
@@ -513,4 +514,10 @@
 	null
 	)
 	</insert>
+	
+	<!-- 결제 실패시, 미리 생성한 주문번호 행 지우기 -->
+	<delete id="deleteCharge"
+	parameterType="String">
+	delete from tbl_charge where charge_no = #{orderId}
+	</delete>
 </mapper>	

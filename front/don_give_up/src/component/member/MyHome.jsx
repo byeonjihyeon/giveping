@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
@@ -8,6 +8,8 @@ import Modal from "../common/Modal";
 import ChargeFrm from "../common/ChargeFrm";
 import RefundFrm from "../common/RefundFrm";
 import Swal from "sweetalert2";
+
+
 
 //마이홈 컴포넌트
 export default function MyHome(props){
@@ -18,9 +20,21 @@ export default function MyHome(props){
     const {loginMember, unreadAlarmCount} = useUserStore();
     const [newsList, setNewsList] = useState([]);
     const [reLoadMember, setReLoadMember] = useState({}); 
-	//모달창 상태
-    const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
-     const navigate = useNavigate();
+	
+    
+    //결제 상태에 따라 모달에 보여줄 컴포넌트를 지정할 변수
+    const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'success' or 'fail' or 'null' 
+    //결제완료후, 모달창을 닫을 때, 쿼리파라미터를 지워주기 위함. 
+    const navigate = useNavigate();
+    const [params] = useSearchParams();
+
+    // 결제완료후, 쿼리파라미터에 paymentkey가 포함되어있다면, 모달창 타입 완료페이지로 변경
+    useEffect(function(){
+        if(params.get("paymentKey")){
+            setModalType("success");
+        }
+    }, [params])
+
 
     // 알림 리스트 가져오기
     useEffect(function(){
@@ -107,14 +121,15 @@ export default function MyHome(props){
                             <Modal modalType={modalType} isOpen={modalType !== null} onClose={function(){
                                 setModalType(null);
                             }}>
-                                {modalType === 'charge' ?
-                                <ChargeFrm onClose={setModalType} member={member} setMember={setMember}  />
+                                
+                                {modalType === 'charge' ?   //충전 페이지
+                                <ChargeFrm member={member} setMember={setMember} onClose={setModalType} />
                                 :
-                                modalType === 'refund' ?
-                                <RefundFrm onClose={setModalType} member={member} setMember={setMember} title='출금신청'/>
+                                modalType === 'refund' ?    //출금 페이지
+                                <RefundFrm member={member} setMember={setMember} onClose={setModalType} />
                                 :
                                 ""
-                            }
+                                }
                             </Modal>                     
                         </div>                       
                     </div>

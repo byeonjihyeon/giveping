@@ -33,9 +33,30 @@ import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.common.util.JwtUtils;
+import kr.or.iei.member.model.dto.Charge;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
 import kr.or.iei.member.model.service.MemberService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 
 @RestController
 @CrossOrigin("*")
@@ -49,6 +70,8 @@ public class MemberController {
 	
 	@Value("${file.uploadPath}")
 	private String uploadPath;
+	
+	private final Logger logger = LoggerFactory.getLogger(this.getClass()); //toss에 필요한 변수
 
 	//토큰 재발급
 	@PostMapping("/refresh")
@@ -471,26 +494,7 @@ public class MemberController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	//회원 충전하기
-	@PostMapping("/charge/{memberNo}")
-	public ResponseEntity<ResponseDTO> charge(@PathVariable int memberNo, @RequestParam int charge){
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "결제 중, 오류가 발생하였습니다.", false, "error");
-		
-		try {
-			int result = service.charge(memberNo, charge);
-			
-			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "결제 완료하였습니다.", true, "success");
-			}else {
-				res = new ResponseDTO(HttpStatus.OK, "결제 중, 오류가 발생하였습니다..", false, "warning");
-			}
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
-	}
+	
 	
 	// 회원별 설문조사 내역 조회
 	@GetMapping("/surveyHistory/{memberNo}")
@@ -599,5 +603,29 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//회원 충전하기
+	@PostMapping("/charge/{memberNo}")
+	public ResponseEntity<ResponseDTO> charge(@PathVariable int memberNo, @RequestParam int charge){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "결제 중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.charge(memberNo, charge);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "결제 완료하였습니다.", true, "");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "결제중 오류가 발생하였습니다.", false, "");
+			}
+			
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 
+	
 }
