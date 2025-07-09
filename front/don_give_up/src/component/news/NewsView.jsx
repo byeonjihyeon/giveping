@@ -43,6 +43,10 @@ export default function NewsView(){
             commentContent : newComment
         };
 
+        console.log("loginMember.memberNo", loginMember.memberNo);
+        console.log("newsNo", newsNo);
+        console.log("newComment", newComment);
+        
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData); // 등록 완료 시, true 반환
@@ -52,17 +56,19 @@ export default function NewsView(){
                 setNewComment(""); // 입력창 비우기
             }
         })
+            
     }
 
     // 댓글 조회 reload
     function reloadCommentList() {
         let options = {};
-        options.url = serverUrl + '/news/comment/' + newsNo;
+        options.url = serverUrl + '/news/' + newsNo;
         options.method = 'get';
 
         axiosInstance(options)
-        .then(function(res) {
-            setCommentList(res.data.resData);
+        .then(function(res){
+            console.log(res.data.resData);
+            setNews(res.data.resData);
         });
     }
 
@@ -181,7 +187,7 @@ export default function NewsView(){
             <tbody>
                 {Array.isArray(news.commentList) &&
                 news.commentList.map(function(comment, index){
-                    return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList}/>
+                    return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList} newsNo={newsNo} reloadCommentList={reloadCommentList}/>
                 })}
             </tbody>
         </table>
@@ -197,6 +203,7 @@ function Comment(props){
     const comment = props.comment;
     const commentList = props.commentList;
     const setCommentList = props.setCommentList;
+    const newsNo = props.newsNo;
 
 
     //수정 여부 판단하는 변수 (기본값 : false/ 수정 버튼 클릭 : true로 변경)
@@ -248,16 +255,12 @@ function Comment(props){
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
-
+ 
             if(res.data.resData){
-                const updatedList = commentList.map((c) =>
-                    c.commentNo === comment.commentNo
-                        ? { ...c, commentContent: editedContent }
-                        : c
-            );
-            setCommentList(updatedList);
-            setEditMode(false);
+                setEditMode(false);
+                props.reloadCommentList();  // 댓글 목록 수정된 상태 (최신 상태)로 다시 불러오기
             }
+            
         });
     }
 
@@ -378,10 +381,12 @@ function Report(props){
 
      // 댓글 신고하기
     function handleReportClick(){
-        //console.log("신고 버튼 클릭");
 
         if (!selectedCode) {
         alert("신고 사유를 선택해주세요.");
+        return;
+        }else if (!detailReason) {
+        alert("신고 상세 사유를 입력해주세요.");
         return;
         }
         

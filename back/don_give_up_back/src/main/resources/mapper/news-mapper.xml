@@ -173,12 +173,27 @@
 	</select>
 	
 	<!-- 댓글 신고 등록 -->
+	<!-- detailReason 이 null 일 경우, 오류 발생 -> 경우에 따라서 빈 문자열 넣기 -->
 	<insert id="regCommentReport" parameterType="NewsReport">
-		insert into tbl_report
-			(report_no, report_code, comment_no, report_member_no, DETAIL_REASON)
-    	values 
-    		(seq_report.nextval, #{reportCode}, #{commentNo}, #{reportMemberNo}, #{detailReason})
+	    insert into tbl_report (
+	        report_no, report_code, comment_no, report_member_no, report_detail_reason
+	    )
+	    values (
+	        seq_report.nextval,
+	        #{reportCode},
+	        #{commentNo},
+	        #{reportMemberNo},
+	        <choose>
+	            <when test="detailReason != null">
+	                #{detailReason}
+	            </when>
+	            <otherwise>
+	                ''
+	            </otherwise>
+	        </choose>
+	    )
 	</insert>
+
 	
 	<!-- 댓글 등록 -->
 	<insert id="regComment" parameterType="Comment">

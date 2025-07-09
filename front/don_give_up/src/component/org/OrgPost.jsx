@@ -12,6 +12,7 @@ import { Editor } from '@toast-ui/react-editor';
 import "@toast-ui/editor/dist/toastui-editor.css";
 import ToastEditor from '../news/ToastEditor';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 
 //기부 사업 등록
@@ -21,6 +22,7 @@ export default function OrgPost(){
     
     const {loginOrg} = useUserStore();
     const orgNo = loginOrg.orgNo;
+    const navigate = useNavigate();
 
     //기부 사업 내용
     const [donateBiz, setDonateBiz] = useState({
@@ -281,7 +283,7 @@ export default function OrgPost(){
                         confirmButtonText : "확인"
                     })
                     .then(function(result){
-                        
+                         navigate("/org/biz"); // 기부 사업 보기 메뉴로 이동
                     });
                 });
             }

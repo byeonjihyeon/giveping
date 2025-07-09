@@ -219,8 +219,8 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	/*
 	
+	/*
 	// 댓글 리스트 조회
 	@GetMapping("/comment/{newsNo}")
 	@NoTokenCheck // 소식에 달린 댓글 조회 : 로그인 필요 x
@@ -236,6 +236,7 @@ public class NewsController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	*/
+	
 	
 	// 댓글 삭제
 	@PatchMapping("/comment/{commentNo}")
@@ -308,7 +309,7 @@ public class NewsController {
 	// 소식 게시판 댓글 등록
 	@PostMapping("/comment")
 	public ResponseEntity<ResponseDTO> regComment(@RequestBody Comment comment){
-		
+		System.out.println("comment : " + comment);
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 등록 처리 중, 오류가 발생하였습니다.", false, "error");
 
 		try {
