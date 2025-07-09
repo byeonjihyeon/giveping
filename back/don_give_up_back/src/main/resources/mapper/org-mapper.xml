@@ -223,7 +223,7 @@
 	         a.alarm_read AS alarmRead
 	    FROM tbl_alarm a
 	    JOIN tbl_donate_biz b ON a.biz_no = b.biz_no
-	   WHERE b.org_no = #{_parameter}
+	   WHERE b.org_no = #{_parameter} and a.alarm_type not in (1,2,5)
 	</select>
 	
 	<!-- 단체 알림 읽음 처리 -->

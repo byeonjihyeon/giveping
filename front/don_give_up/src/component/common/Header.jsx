@@ -32,7 +32,7 @@ function HeaderLink(){
     const navigate = useNavigate();
 
     //스토리지에 저장한 데이터 추출하기
-    const {isLogined, setIsLogined, loginMember, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken} = useUserStore();
+    const {isLogined, setIsLogined, loginMember, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken, setUnreadAlarmCount} = useUserStore();
 
     //로그아웃 Link 클릭 시 동작 함수
     function logout(e){
@@ -44,6 +44,7 @@ function HeaderLink(){
         setLoginOrg(null);
         setAccessToken(null);
         setRefreshToken(null);
+        setUnreadAlarmCount(0);
         
         navigate("/login");
     }

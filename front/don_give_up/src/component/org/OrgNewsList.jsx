@@ -26,14 +26,17 @@ export default function OrgNewsList(){
                 console.log(res.data.resData);
                 const alarms = res.data.resData;
                 setNewsList(alarms);
+                /*
                 // 전체 다 읽음 처리
                 markAllAsRead(alarms.map(function(a) {
                     return a.alarmNo;
                 }))
+                */
             });
         }, []);
 
         // 알림 읽음 처리 함수
+        /*
     function markAllAsRead(alarmNos){
         //console.log("alarmNo" , alarmNo);
         let options={};
@@ -67,6 +70,7 @@ export default function OrgNewsList(){
             });
         });
     }
+    */
 
         
 
@@ -90,9 +94,24 @@ function News(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
-    // alarmType 3과 4가 아닌 경우 렌더링하지 않음
-    if (news.alarmType !== 3 && news.alarmType !== 4) {
+    // 날짜 계산
+    const now = new Date();
+    const alarmDate = new Date(news.alarmDate);
+
+    // 두 날짜 차이 계산 (밀리초 단위)
+    const diffTime = now.getTime() - alarmDate.getTime();
+
+    // 하루는 86400000 밀리초
+    const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+    // alarmType 1,2,5인 경우 랜더링x
+    if (news.alarmType == 1 || news.alarmType == 2 || news.alarmType == 5) {
      return null;
+    }
+
+    // 만약 2일 이상 지난 알림이면 렌더링하지 않음
+    if (diffDays >= 2) {
+        return null;
     }
 
     /*
@@ -111,12 +130,26 @@ function News(props){
     
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
     function handleClick() {
-        //markAsRead(news.alarmNo);
+        markAsRead(news.alarmNo);
         if(news.alarmType === 3){
             navigate('/biz/view/' + news.bizNo);
         }else if(news.alarmType === 4){
             navigate('/biz/view/' + news.bizNo);
         }
+    }
+
+    
+        // 알림 읽음 처리 함수
+    function markAsRead(alarmNo){
+        //console.log("alarmNo" , alarmNo)
+        let options={};
+        options.url= serverUrl + '/org/alarm/' + alarmNo;
+        options.method = "patch";
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+        });
     }
     
 
