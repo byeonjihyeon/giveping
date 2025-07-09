@@ -23,6 +23,7 @@
 			from (
 				select *
 				from tbl_news
+				where news_name != '삭제'
 				order by news_date desc
 			)a
 		)a
@@ -143,10 +144,12 @@
 		where news_no = #{newsNo}
 	</update>
 
-	<!--  소식 글 삭제 -->
-	<delete id="deleteNews" parameterType="_int">
-		delete from tbl_news where news_no = #{_parameter}
-	</delete>
+	<!--  소식 글 '삭제' 상태로 업데이트 -->
+	<update id="deleteNews" parameterType="_int">
+		update tbl_news 
+		set news_name = '삭제'
+		where news_no = #{_parameter}
+	</update>
 	
 
 	

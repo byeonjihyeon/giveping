@@ -83,6 +83,7 @@ public class NewsService {
 		return dao.updateNews(news);
 	}
 
+	//소식 글 '삭제' 상태로 업데이트
 	@Transactional
 	public News deleteNews(int newsNo) {
 		News news = dao.selectOneNews(newsNo);

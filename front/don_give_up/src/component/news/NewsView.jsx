@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 import './news.css';
-import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function NewsView(){
     const param = useParams();
@@ -90,18 +90,33 @@ export default function NewsView(){
     //삭제하기 클릭 시, 동작 함수
 
     function deleteNews(){
-        let options = {};
-        options.url = serverUrl + '/news/' + news.newsNo;
-        options.method = 'delete';
-
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res.data.resData);
-            if(res.data.resData){
-                navigate('/news/list');
+        Swal.fire({
+            title : '알림',
+            text : '소식글을 삭제 하시겠습니까?',
+            icon : 'question',
+            showCancelButton : true,
+            confirmButtonText : '삭제',
+            cancelButtonText : '취소'
+        }).then(function(res){
+            if(res.isConfirmed){
+            
+                let options = {};
+                options.url = serverUrl + '/news/' + news.newsNo;
+                options.method = 'delete';
+    
+                axiosInstance(options)
+                .then(function(res){
+                    console.log(res.data.resData);
+                    if(res.data.resData){
+                        navigate('/news/list');
+                    }
+                });
             }
-        });
-    }
+            }
+    )};
+
+
+        
 
 
     return(
@@ -268,18 +283,29 @@ function Comment(props){
     function delComment(commentNo){
         // filter 로 댓글 저장 변수에서 클릭한 대상의 댓글 없애기
 
-        if(!window.confirm("댓글을 삭제하시겠습니까?")) return; // 댓글 삭제 ok 일 경우에만 axios 실행
+        Swal.fire({
+            title : '알림',
+            text : '댓글을 삭제하시겠습니까?',
+            icon : 'question',
+            showCancelButton : true,
+            confirmButtonText : '삭제',
+            cancelButtonText : '취소'
+        }).then(function(res){
+            if(res.isConfirmed){
+                let options = {};
+                options.url = serverUrl + "/news/comment/" + commentNo;
+                options.method = "patch";
+                axiosInstance(options)
+                .then(function(res){
+                    // 삭제한 대상 댓글을 ui에서 필터로 삭제 처리
+                    if(res.data.resData) {
+                        props.reloadCommentList();
+                    }
+                    console.log(res.data.resData);
+                });
 
-        let options = {};
-        options.url = serverUrl + "/news/comment/" + commentNo;
-        options.method = "patch";
-        axiosInstance(options)
-        .then(function(res){
-            // 삭제한 대상 댓글을 ui에서 필터로 삭제 처리
-            if(res.data.resData) {
-                setCommentList(prevList => prevList.filter(c => c.commentNo !== commentNo));
             }
-            console.log(res.data.resData);
+
         });
     }
 
@@ -380,37 +406,61 @@ function Report(props){
     }
 
      // 댓글 신고하기
-    function handleReportClick(){
+    async function handleReportClick(){
 
         if (!selectedCode) {
-        alert("신고 사유를 선택해주세요.");
-        return;
-        }else if (!detailReason) {
-        alert("신고 상세 사유를 입력해주세요.");
-        return;
-        }
-        
-        if(!window.confirm("댓글을 신고하시겠습니까?")) return; // 댓글 신고 ok 일 경우에만 axios 실행
-
-        
-        // 댓글 신고 axios
-        let options = {};
-        options.url = serverUrl + "/news/comment/report";
-        options.method = "post";
-        options.data = {
-            commentNo : comment.commentNo,
-            reportCode : selectedCode,
-            reportMemberNo : loginMember.memberNo,
-            detailReason : detailReason
-        }
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res.data.resData);
-            // 성공 -> 팝업 닫기
-            onClose();
+        Swal.fire({
+            title : '알림',
+            text : '신고 사유를 선택해주세요.',
+            icon : 'warning',
+            showCancelButton : false,
+            confirmButtonText : '확인'
         });
+            return;
+        }
         
-    }
+        if (!detailReason) {
+        Swal.fire({
+            title : '알림',
+            text : '신고 상세 사유를 입력해주세요.',
+            icon : 'warning',
+            showCancelButton : false,
+            confirmButtonText : '확인'
+        });
+            return;
+        }
+
+        const res = await Swal.fire({
+        title: '댓글을 신고하시겠습니까?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '신고',
+        cancelButtonText: '취소'
+    });
+
+    if (!res.isConfirmed) return;
+
+    // 신고 요청
+    let options = {};
+    options.url = serverUrl + "/news/comment/report";
+    options.method = "post";
+    options.data = {
+        commentNo: comment.commentNo,
+        reportCode: selectedCode,
+        reportMemberNo: loginMember.memberNo,
+        detailReason: detailReason
+    };
+
+    axiosInstance(options)
+    .then(function(res){
+        console.log(res.data.resData);
+        // 성공 -> 팝업 닫기
+        onClose();
+    });
+}
+
+    
+
 
     function chgDetailReason(e){
         setDetailReason(e.target.value);
