@@ -5,8 +5,8 @@ import './modal.css';
 export default function Modal(props){
     const isOpen = props.isOpen; 
     const onClose = props.onClose;
-    const title = props.title;
     const children = props.children;
+    const modalType = props.modalType;
 
     //Modal 열릴때, 스크롤 막기
     useEffect(function(){
@@ -24,7 +24,7 @@ export default function Modal(props){
         <div className='modal-overlay'>
             <div className='modal-wrap'>
                 <div className='modal-header'>
-                    <h2>{title}</h2>
+                    <h2>{modalType == 'charge' ? '충전하기': '출금하기'}</h2>
                     {/* onClose: 부모컴포넌트로 받은 함수(== 모달창 닫기) */}
                     <div className='modal-close' onClick={onClose}>x</div> 
                 </div>

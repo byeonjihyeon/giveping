@@ -1,11 +1,12 @@
 import { useRef, useState } from "react"
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
-import { useNavigate } from "react-router-dom";
 
 //충전 컴포넌트
 export default function ChargeFrm(props){
     const onClose = props.onClose; // ==setModalType
+    const member = props.member;
+    const setMember = props.setMember;
 
     //결제하기 버튼시, 회원번호 추출용도
     const {loginMember} = useUserStore();
@@ -23,7 +24,7 @@ export default function ChargeFrm(props){
     const max = "1000000";
     
     //입력폼에 콤마로 단위찍어서 보여줄 변수
-    const [commaCharge, setCommaCharge] = useState("");
+    const [commaCharge, setCommaCharge] = useState("0");
 
     //직접입력 선택시 금액입력칸으로 이동
     let inputEl = useRef(null);
@@ -63,8 +64,6 @@ export default function ChargeFrm(props){
         {add : 50000, content: "+50,000원"}
     ])
 
-    const navigate = useNavigate();
-
     //충전하기 버튼 클릭시 동작함수
     function recharge(){
         
@@ -80,8 +79,14 @@ export default function ChargeFrm(props){
         
         axiosInstance(options)
         .then(function(res){
-            onClose(null);
-            navigate('/member/');
+            //console.log(member.totalMoney); 1,000,000 
+            let prevMoneyStr = member.totalMoney.split(',').join(''); //충전전 금액 1,000,000 => 1000000
+            let prevMoney = Number(prevMoneyStr);
+            let sum = prevMoney + Number(charge); 
+            let sumStr = addCommas(sum);   //1,200,000
+            
+            setMember({...member, totalMoney: sumStr});
+            onClose(null);         
         })
         
     }

@@ -358,6 +358,12 @@
     border: 1px solid black;
 }
 
+
+.account-info{
+    display: flex;
+    gap: 20px
+}
+
 /* myHome.css */
 .mynewsList-wrap {
   display: grid;
@@ -378,4 +384,5 @@
 
 .survey-card:hover {
   transform: translateY(-3px);
+
 }

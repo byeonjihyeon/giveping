@@ -15,6 +15,7 @@ import MemberDelete from './MemberDelete';
 import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
 import MyHome from './MyHome';
+import AccountInfo from './AccountInfo';
 
 //회원 메인 페이지
 export default function MemberMain(){
@@ -25,12 +26,9 @@ export default function MemberMain(){
         {url: '/member', name: 'MY홈' },
         {url: '/member/news', name: '내 소식' },
         {url: '/member/likeOrgList', name: '관심단체' },
-        {url: '/member/donateList', name: '내 활동', submenuList: [{url: '/member/donateList' , name: '기부내역'}]  },
-        {url: '/member/money/charge', name: '예치금', submenuList: [{url: '/member/money/charge' , name: '예치금 충전하기'},  {url: '/member/money/refund' , name: '예치금 출금하기'}
-                                                                          , {url: '/member/money/history' , name: '충전 / 출금내역'}]},
-
+        {url: '/member/donateList', name: '내 활동', submenuList: [{url: '/member/donateList' , name: '기부내역'}, , {url: '/member/money/history' , name: '충전 / 출금내역'}]  },
         {url: '/member/update', name: '내 정보', submenuList: [{url: '/member/update' , name: '회원정보 수정'}, {url: '/member/changePw' , name: '비밀번호 변경'}, 
-                                                              {url: '/member/changeProfile' , name: '프로필사진 변경'}]}
+                                                              {url: '/member/changeProfile' , name: '프로필사진 변경'}, {url: '/member/accountInfo' , name: '출금계좌 조회 / 변경'}]}
     ])
 
     //자식컴포넌트에 전달할 회원정보
@@ -58,7 +56,7 @@ export default function MemberMain(){
             <Sidebar menuList={menuList} member={member}/>
             <div className='member-main-mid-wrap'>
                 <Routes>
-                    <Route path='/' element={<MyHome member={member} />}  />
+                    <Route path='/' element={<MyHome member={member} setMember={setMember}/>}  />
                     <Route path='update' element={<MemberUpdate member={member} setMember={setMember} />} /> 
                     <Route path='changePw' element={<MemberChangePw/>} />
                     <Route path='likeOrgList' element={<LikeOrgList />} />
@@ -68,6 +66,7 @@ export default function MemberMain(){
                     <Route path='changeProfile' element={<ProfileUpdate member={member} setMember={setMember}/>} />
                     <Route path='delete' element={<MemberDelete member={member} />} />
                     <Route path='money/history' element={<WalletHistory member={member} />} />
+                    <Route path='accountInfo' element={<AccountInfo member={member} setMember={setMember} />} />
                 </Routes>
             </div>
         </div>

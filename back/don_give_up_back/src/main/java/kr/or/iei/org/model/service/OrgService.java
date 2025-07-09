@@ -312,5 +312,52 @@ public class OrgService {
 		return dao.deleteOrg(orgNo);
 	}
 
+	//기부 사업 통계
+	public HashMap<String, Object> selectBizData(int orgNo) {
+		//전체 기부 사업 갯수
+		int allBiz = dao.selectAllBiz(orgNo);
+		
+		//미승인 기부 사업 갯수
+		int notApproveBiz = dao.selectNotApproveBiz(orgNo);
+		
+		//반려된 기부 사업 갯수
+		int rejectBiz = dao.selectRejectBiz(orgNo);
+		
+		//승인된 기부 사업 갯수
+		int approveBiz = dao.selectApproveBiz(orgNo);
+		
+		//진행 중인 기부 사업 갯수
+		int ingBiz = dao.selectIngBiz(orgNo);
+		
+		//모금 종료된 기부 사업 갯수
+		int donateEndBiz = dao.selectDonateEndBiz(orgNo);
+		
+		//사업 종료된 기부 사업 갯수
+		int endBiz = dao.selectEndBiz(orgNo);
+		
+		//입금 처리된 기부 사업 갯수
+		int payEndBiz = dao.selectPayEndBiz(orgNo);
+		
+		//카테고리별 기부 사업 갯수
+		ArrayList<DonateCode> donateCodeCnt = dao.selectDonateCodeCnt(orgNo);
+		
+		//기부 사업별 모금액
+		ArrayList<Biz> donateMoneyList = dao.selectDonateMoneyList(orgNo);
+		
+		HashMap<String, Object> bizMap = new HashMap<String, Object>();
+		bizMap.put("allBiz", allBiz);
+		bizMap.put("notApproveBiz", notApproveBiz);
+		bizMap.put("rejectBiz", rejectBiz);
+		bizMap.put("approveBiz", approveBiz);
+		bizMap.put("ingBiz", ingBiz);
+		bizMap.put("donateEndBiz", donateEndBiz);
+		bizMap.put("endBiz", endBiz);
+		bizMap.put("payEndBiz", payEndBiz);
+		bizMap.put("donateCodeCnt", donateCodeCnt);
+		bizMap.put("donateMoneyList", donateMoneyList);
+		
+		return bizMap;
+	}
+
 		
 }

@@ -26,6 +26,9 @@ public class Member {
 	private String totalDonateMoney; 	//총 기부금액 (단위를 99,999,999로 표현하기 위해 타입 String)
 	private int memberDeleted;			//회원 탈퇴 여부(0:정상, 1:탈퇴)
 	private String memberProfile;		//회원 프로필 사진 경로
+	private String memberBankCode;		//회원 등록은행(은행명)
+	private String memberBankAccount;	//등록 계좌명
+	
 	
 	private List<String> categoryList;				//관심 카테고리 리스트
 	private List<MemberDonation> donationHistory;	//기부내역

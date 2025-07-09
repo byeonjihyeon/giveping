@@ -76,6 +76,8 @@
 	        FROM tbl_donation_list d
 	        WHERE d.member_no = m.member_no
 	    ), '99,999,999') AS total_donate_money,
+	    m.member_bank_code,
+		m.member_bank_account,
 	    (
 	        SELECT COUNT(*)
 	        FROM tbl_alarm a
@@ -154,6 +156,8 @@
 		<result column="member_profile" property="memberProfile" />
 		<result column="total_money" property="totalMoney" />
 		<result column="total_donate_money" property="totalDonateMoney" />
+		<result column="member_bank_code" property="memberBankCode" />
+		<result column="member_bank_account" property="memberBankAccount" />
 		<result column="unread_alarm" property="unreadAlarm" />
 
 		<collection property="donationHistory"
@@ -477,5 +481,36 @@
 	<insert id="charge"
 	parameterType="map">
 	insert into tbl_charge values (seq_charge.nextval, #{memberNo}, #{charge}, sysdate) 
+	</insert>
+	
+	<!-- 회원 인증계좌 업데이트 -->
+	<update id="updateMemberAccount"
+	parameterType="Member">
+	update tbl_member 
+	set  
+		<choose>
+			<when test='memberBankCode == "0"'>
+			member_bank_code = '0',
+			</when>
+			<when test ='memberBankCode != "0"'>
+			member_bank_code = #{memberBankCode},
+			</when>
+		</choose>
+		 member_bank_account = #{memberBankAccount}
+    where member_no = #{memberNo}		 
+	</update>
+	
+	<insert id="refund"
+	parameterType="map">
+	insert into tbl_refund values (
+	seq_refund.nextval, 
+	#{memberNo}, 
+	#{refund.refundMoney},
+	#{refund.memberAccount},
+	#{refund.memberAccountBank},
+	sysdate,
+	0,
+	null
+	)
 	</insert>
 </mapper>	

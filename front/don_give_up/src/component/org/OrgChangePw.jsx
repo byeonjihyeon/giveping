@@ -58,6 +58,7 @@ export default function OrgChangePw(){
     2 : 유효성 체크 실패
     3 : 비밀번호 확인값 불일치
     4 : 유효성 체크 통과 && 비밀번호 확인값 미입력
+    5 : 기존 비밀번호와 동일
     */
     const [pwChk, setPwChk] = useState(0);
 
@@ -70,7 +71,11 @@ export default function OrgChangePw(){
                 setPwChk(2); //유효성 체크 실패
             }else if(newOrgPwRe != ""){ //새 비밀번호 확인 입력한 경우
                 if(e.target.value == newOrgPwRe){ //새 비밀번호 == 새 비밀번호 확인
-                    setPwChk(1);
+                    if(e.target.value == org.orgPw){ //새 비밀번호 == 기존 비밀번호
+                        setPwChk(5);
+                    }else{
+                        setPwChk(1);
+                    }
                 }else{
                     setPwChk(3);
                 }
@@ -80,7 +85,11 @@ export default function OrgChangePw(){
         }else{ //새 비밀번호 확인 입력
             if(newOrgPw == e.target.value){ //새 비밀번호 == 새 비밀번호 확인
                 if(regExp.test(newOrgPw)){
-                    setPwChk(1);
+                    if(newOrgPw == org.orgPw){ //새 비밀번호 == 기존 비밀번호
+                        setPwChk(5);
+                    }else{
+                        setPwChk(1);
+                    }
                 }
             }else{ //새 비밀번호와 불일치
                 setPwChk(3);
@@ -102,7 +111,8 @@ export default function OrgChangePw(){
                 const validations = [
                     {valid : pwChk == 2, message : "변경할 비밀번호가 올바르지 않습니다."},
                     {valid : pwChk == 3, message : "변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다."},
-                    {valid : pwChk == 4, message : "비밀번호 확인을 입력하세요."}
+                    {valid : pwChk == 4, message : "비밀번호 확인을 입력하세요."},
+                    {valid : pwChk == 5, message : "변경할 비밀번호가 기존 비밀번호와 같습니다."}
                 ];
 
                 for(let i=0; i<validations.length; i++){
@@ -141,25 +151,37 @@ export default function OrgChangePw(){
 
     return (
         //현재 비밀번호 입력창
-        <div>        
-            <div>
-                <label htmlFor="orgPw">현재비밀번호</label>
-                <input type="password" id="orgPw" value={org.orgPw} onChange={chgOrgPw}/>
-                <button type="button" onClick={checkPw}>확인</button>
-            </div>
-
-        {/* 새 비밀번호 입력창 */}
-            <div>
-                <label htmlFor="newOrgPw">변경할 비밀번호</label>
-                <input type="password" id="newOrgPw" value={newOrgPw} onChange={chgNewOrgPw} onBlur={checkNewPw} readOnly={result ? false : true}/>
-                <p>{pwChk == 2 ? "비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
-            </div>
-            <div>
-                <label htmlFor="newOrgPwRe">비밀번호 확인</label>
-                <input type="password" id="newOrgPwRe" value={newOrgPwRe} onChange={chgNewOrgPwRe} onBlur={checkNewPw} readOnly={result ? false : true}/>
-                <button type="button" onClick={updatePw}>변경</button>
-                <p>{pwChk == 3 ? "비밀번호와 일치하지 않습니다." : ""}</p>
-            </div>
+        <div>
+            {!result
+            ?
+            <form autoComplete="off" onSubmit={function(e){
+                e.preventDefault();
+                checkPw();
+            }}>
+                <div>
+                    <label htmlFor="orgPw">현재비밀번호</label>
+                    <input type="password" id="orgPw" value={org.orgPw} onChange={chgOrgPw}/>
+                    <button type="submit">확인</button>
+                </div>
+            </form>
+            ://새 비밀번호 입력창
+            <form autoComplete="off" onSubmit={function(e){
+                e.preventDefault();
+                updatePw();
+            }}>
+                <div>
+                    <label htmlFor="newOrgPw">변경할 비밀번호</label>
+                    <input type="password" id="newOrgPw" value={newOrgPw} onChange={chgNewOrgPw} onBlur={checkNewPw} readOnly={result ? false : true}/>
+                    <p>{pwChk == 2 ? "비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
+                </div>
+                <div>
+                    <label htmlFor="newOrgPwRe">비밀번호 확인</label>
+                    <input type="password" id="newOrgPwRe" value={newOrgPwRe} onChange={chgNewOrgPwRe} onBlur={checkNewPw} readOnly={result ? false : true}/>
+                    <button type="submit">변경</button>
+                    <p>{pwChk == 3 ? "비밀번호와 일치하지 않습니다." : ""}</p>
+                </div>
+            </form>
+            }
         </div>
         
     )
