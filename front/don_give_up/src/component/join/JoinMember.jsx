@@ -248,7 +248,7 @@ export default function JoinMember(props){
                                     <label htmlFor="memberPhone" className="label">전화번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요"/>
+                                    <TextField type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요. (010-XXXX-XXXX)"/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>

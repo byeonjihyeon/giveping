@@ -268,7 +268,7 @@ function insertOrg() {
                                     <label htmlFor="orgBiznum" className="label">사업자 번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="orgBiznum" value={org.orgBiznum} onChange={chgOrg} onBlur={checkOrgBiznum} placeholder="'-'를 포함해서 작성해주세요"/>
+                                    <TextField type="text" id="orgBiznum" value={org.orgBiznum} onChange={chgOrg} onBlur={checkOrgBiznum} placeholder="'-'를 포함해서 작성해주세요. (XXX-XX-XXXXX)"/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -277,7 +277,7 @@ function insertOrg() {
                                     <label htmlFor="orgPhone" className="label">전화번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="orgPhone" value={org.org} onChange={chgOrg} onBlur={checkOrgPhone} placeholder="'-'를 포함해서 작성해주세요"/>
+                                    <TextField type="text" id="orgPhone" value={org.org} onChange={chgOrg} onBlur={checkOrgPhone} placeholder="'-'를 포함해서 작성해주세요."/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
