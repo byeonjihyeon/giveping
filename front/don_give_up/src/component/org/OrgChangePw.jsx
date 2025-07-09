@@ -11,8 +11,9 @@ export default function OrgChangePw(){
     const navigate = useNavigate();
 
     const {loginOrg, setIsLogined, setLoginOrg} = useUserStore();
+    const orgNo = loginOrg.orgNo;
 
-    const [org, setOrg] = useState({orgNo : loginOrg.orgNo, orgPw : ""});
+    const [org, setOrg] = useState({orgNo : orgNo, orgPw : ""});
     const [newOrgPw, setNewOrgPw] = useState("");       //새 비밀번호
     const [newOrgPwRe, setNewOrgPwRe] = useState("");   //새 비밀번호 확인
     const [result, setResult] = useState(false);        //비밀번호 확인을 진행해야 새 비밀번호를 입력할 수 있도록 제어할 변수
@@ -128,7 +129,7 @@ export default function OrgChangePw(){
                 }
             }else{ //유효성 체크 통과
                 let options = {};
-                options.url = serverUrl + "/org/updPw/" + loginOrg.orgNo + "/" + newOrgPw;
+                options.url = serverUrl + "/org/updPw/" + orgNo + "/" + newOrgPw;
                 options.method = "post";
 
                 axiosInstance(options)

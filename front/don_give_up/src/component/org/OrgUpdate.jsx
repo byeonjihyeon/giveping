@@ -14,6 +14,7 @@ export default function OrgUpdate(props){
 
     //단체 번호를 가져오기 위함
     const {loginOrg} = useUserStore();
+    const orgNo = loginOrg.orgNo;
 
     //단체 1개 정보를 저장할 State 변수
     const [org, setOrg] = useState({
@@ -33,7 +34,7 @@ export default function OrgUpdate(props){
     //단체 1개 정보 가져오기
     useEffect(function(){
         let options = {};
-        options.url = serverUrl + "/org/" + loginOrg.orgNo;
+        options.url = serverUrl + "/org/" + orgNo;
         options.method = "get";
 
         axiosInstance(options)

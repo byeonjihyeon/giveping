@@ -15,21 +15,55 @@ export default function MyHome(props){
 
     const [newsList, setNewsList] = useState([]);
 
-    useEffect(function(){
-            let options = {};
-            options.url = serverUrl + '/org/alarm/' + orgNo;
-            options.method = 'get';
+    const [todayDonate, setTodayDonate] = useState(0);      //오늘 모인 기부금
+    const [likeMember, setLikeMember] = useState(0);        //관심 회원 수
+    const [categoryList, setCategoryList] = useState([]);   //주요 카테고리명
+    const [bizList, setBizList] = useState([{}]);           //최근 사업 리스트
 
-            axiosInstance(options)
-            .then(function(res){
-                console.log(res.data.resData);
-                setNewsList(res.data.resData);
-            });
-        }, []);
+    //알림
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + '/org/alarm/' + orgNo;
+        options.method = 'get';
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+            setNewsList(res.data.resData);
+        });
+    }, []);
+
+    //메인에 출력될 정보 조회
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + "/org/main/" + orgNo;
+        options.method = "get";
+
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+            const main = res.data.resData;
+            setTodayDonate(main.todayDonate);
+            setLikeMember(main.likeMember);
+            setCategoryList(main.categoryList);
+            setBizList(main.bizList);
+        });
+    }, []);
 
     return(
 
         <div className="myNews-wrap">
+                <div>
+                    <span>Today 기부금 : {todayDonate} 원</span>
+                </div>
+                <div>
+                    <span>관심 회원 수 : {likeMember} 명</span>
+                </div>
+                <div>
+                    {categoryList.map(function(ctg, index){
+                        return  <span key={"ctg"+index}>#{ctg}</span>
+                    })}
+                </div>
                 <div className="myNews-title-wrap">
                     <span>내 소식</span>
                     <span> | 총 { unreadAlarmCount }  건</span>
@@ -49,6 +83,29 @@ export default function MyHome(props){
                                 )
                             }
                     </div>
+                </div>
+                <div>
+                    <span>최근 등록 기부 사업</span>
+                    <table border={1}>
+                        <thead>
+                            <tr>
+                                <th>사업명</th>
+                                <th>모금 시작일</th>
+                                <th>모금 종료일</th>
+                                <th>목표 모금액</th>
+                                <th>모금액</th>
+                                <th>입금 여부</th>
+                                <th>사업 시작일</th>
+                                <th>사업 종료일</th>
+                                <th>상세 페이지</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {bizList.map(function(biz, index){
+                                return  <Biz key={"biz"+index} biz={biz}/>
+                            })}
+                        </tbody>
+                    </table>
                 </div>
             </div>
     )
@@ -114,4 +171,30 @@ function News(props){
         </div>
     );
 
+}
+
+//사업 1개
+function Biz(props){
+    const biz = props.biz;
+
+    const navigate = useNavigate();
+
+    //상세 페이지로 이동
+    function clickBtn(){
+        navigate("/biz/view/" + biz.bizNo);
+    }
+
+    return (
+        <tr>
+            <td>{biz.bizName}</td>
+            <td>{biz.bizDonateStart}</td>
+            <td>{biz.bizDonateEnd}</td>
+            <td>{biz.bizGoal != null ? biz.bizGoal.toLocaleString("ko-KR") : 0}원</td>
+            <td>{biz.donateMoney != null ? biz.donateMoney.toLocaleString("ko-KR") : 0}원</td>
+            <td>{biz.payoutYN != null ? "O" : "X"}</td>
+            <td>{biz.bizStart}</td>
+            <td>{biz.bizEnd}</td>
+            <td><button type="button" onClick={clickBtn}>상세 페이지</button></td>
+        </tr>
+    )
 }

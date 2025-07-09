@@ -8,6 +8,7 @@ export default function OrgData(){
     const axiosInstance = createInstance();
 
     const {loginOrg} = useUserStore();
+    const orgNo = loginOrg.orgNo;
 
     //조회한 데이터 저장할 변수
     const [data, setData] = useState({});
@@ -18,7 +19,7 @@ export default function OrgData(){
 
     useEffect(function(){
         let options = {};
-        options.url = serverUrl + "/org/data/" + loginOrg.orgNo;
+        options.url = serverUrl + "/org/data/" + orgNo;
         options.method = "get";
         
         axiosInstance(options)

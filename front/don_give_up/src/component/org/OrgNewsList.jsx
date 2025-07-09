@@ -14,7 +14,6 @@ export default function OrgNewsList(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const orgNo = loginOrg.orgNo;
-    console.log(orgNo); // o
 
     
     useEffect(function(){
@@ -49,7 +48,7 @@ export default function OrgNewsList(){
             let options = {};
             options.url = serverUrl + '/countAlarm';
             // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
-            options.params = { orgNo: loginOrg.orgNo };
+            options.params = { orgNo: orgNo };
             options.method = 'get';
     
             axiosInstance(options)
