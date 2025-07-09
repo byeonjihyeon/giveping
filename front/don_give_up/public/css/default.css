@@ -69,6 +69,44 @@
     text-decoration: underline;
 }
 
+/*Main 화면*/
+.wrap {
+    min-height: 100vh;	
+    display: flex;
+    flex-direction: column; 
+    min-width: 800px;
+    position: relative;
+}
+.content {
+  width: 100%; 
+  max-width: 1400px;
+  margin: 0px auto;
+  flex: 1; 
+}
+
+/*Footer 부분*/
+.footer {
+  background-color: #d6d6d6;;
+}
+.footer > div {
+  max-width: 1400px;
+  padding: 20px 10px;
+  margin: 0 auto;
+}
+.footer ul {
+  display: flex;
+  gap : 30px;
+}
+.footer li>a {
+  font-weight: bold;
+}
+.footer > div > p {
+  margin: 10px 0px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+
 /*공통 부분*/
 .section {
     width: 1200px;
@@ -103,7 +141,6 @@
     color: #fff;
 }
 .join-wrap {
-    background-color: #eee;
     width: 800px;
     margin: 0 auto;
     border: 1px solid black;
@@ -114,14 +151,14 @@
 }
 
 /*회원가입-카테고리 선택*/
-.category-wrap {
+.section.category-wrap {
     width: 800px;
     margin: 0 auto;
+    display: block;
 }
 .select-ctg-wrap {
     padding: 10px;
     width: 600px;
-    height: 300px;
 }
 .select-ctg-wrap>.select-ctg {
     margin: 30px;
@@ -146,4 +183,18 @@
 .login-wrap {
     width: 800px;
     margin: 0 auto;
+}
+
+.pagination {
+    display: flex;
+}
+.page-item {
+    display: block;
+    width: 24px;
+    border-radius: 30px;
+    text-align: center;
+    cursor: pointer;
+}
+.page-item.active-page {
+    background-color: #007acc;
 }

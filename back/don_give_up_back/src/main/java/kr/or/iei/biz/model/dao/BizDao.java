@@ -7,7 +7,14 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.or.iei.biz.model.dto.Biz;
+import kr.or.iei.biz.model.dto.BizDonationList;
+import kr.or.iei.biz.model.dto.BizFile;
+import kr.or.iei.biz.model.dto.BizMember;
+import kr.or.iei.biz.model.dto.BizPlan;
+import kr.or.iei.biz.model.dto.BizNo;
 import kr.or.iei.biz.model.dto.Keyword;
+import kr.or.iei.biz.model.dto.SurveyAnswer;
+import kr.or.iei.biz.model.dto.SurveyQuestion;
 
 @Mapper
 public interface BizDao {
@@ -21,6 +28,48 @@ public interface BizDao {
 	int selectSearchCount(Keyword keyword);
 
 	ArrayList<Biz> selectSearchBizList(Keyword keyword);
+
+	List<BizMember> selectDonateMember(int bizNo);
+
+	BizMember selectMemberMoney(int memberNo);
+
+	int bizDonate(BizDonationList bizDonationList);
+
+	ArrayList<SurveyQuestion> selectSurveyQuestion();
+
+	int regSurveyAnswer(SurveyAnswer answer);
+
+	BizNo selectPk(Biz biz);
+
+	int regPkNo(int bizNo);
+
+	ArrayList<BizFile> selectBizFileList(int bizNo);
+
+	ArrayList<BizFile> selectDelBizFile(int[] delBizFileNo);
+
+	int deleteBizFile(int[] delBizFileNo);
+
+	// 사업 번호로 pkNo 조회
+	BizNo getBizNoFromBizNo(Biz biz);
+
+	// 첨부파일 추가
+	void insertBizFile(BizFile file);
+	
+	//사업 번호 조회
+	int selectBizNo();
+
+	//대표 사진 업로드
+	int uploadThumb(Biz biz);
+
+	//기부 사업 등록
+	int insertBiz(Biz biz);
+
+	//모금액 사용 계획 등록
+	int insertBizPlan(BizPlan bizPlan);
+
+	// 첨부파일 다운로드
+	BizFile selectBizFile(int bizFileNo);
+
 	
 
 }

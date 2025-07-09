@@ -9,9 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class BizFile {
 	
-	private int bizFileNo;
-	private int bizNo;
+	private int fileNo;
+	private int pkNo;
 	private String fileName;
 	private String filePath;
+	
+	// 조인을 위한 변수 선언
+	private int bizNo;
 
 }

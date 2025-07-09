@@ -1,0 +1,113 @@
+/* pageNavi */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px; /* 버튼 사이 간격 */
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.pagination li {
+  display: inline-block;
+}
+
+.page-item {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+}
+
+.page-item:hover {
+  background-color: #f0f0f0;
+}
+
+.page-item.active-page {
+  background-color: #007BFF;
+  color: white;
+  border-color: #0056b3;
+}
+
+/* MainList.jsx */
+.biz-list-container {
+    position: relative;
+    width: 90%;
+    overflow: hidden;
+    padding: 20px 40px;
+    box-sizing: border-box;
+}
+
+.biz-slider {
+    overflow-x: hidden; /* 스크롤 제거 */
+    scroll-behavior: smooth;
+}
+
+.biz-list {
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.posting-item {
+    flex: 0 0 calc(25% - 15px); /* 4개씩 보이게 설정 */
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.posting-img img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.posting-info {
+    padding: 10px;
+}
+
+.progress-bar {
+    background-color: #eee;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 5px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #4caf50;
+}
+
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(0,0,0,0.2);
+}
+
+.scroll-btn.left {
+    left: 0;
+}
+
+.scroll-btn.right {
+    right: 0;
+}
+

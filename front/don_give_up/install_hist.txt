@@ -15,3 +15,7 @@ npm install @mui/material @emotion/react @emotion/styled --force    -> MUI(Mater
 
 npm install react-datepicker --save --force                         -> 달력 라이브러리 사용을 위해 설치
 npm i date-fns --force                                              -> 날짜/시간을 쉽게 다루도록 도와주는 라이브러리 설치
+
+25-07-02 김은서
+
+npm install @mui/icons-material --force                             -> 알람 아이콘 사용을 위해 설치

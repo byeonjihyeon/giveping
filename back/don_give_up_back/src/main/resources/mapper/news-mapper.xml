@@ -10,42 +10,80 @@
 	<select id="selectNewsList" parameterType="PageInfo"
 		resultType="News">
 		select news_no as newsNo,
-		member_no as memberNo,
-		org_no as orgNo,
-		news_name as newsName,
-		news_content as newsContent,
-		news_thumb as newsThumbPath,
-		TO_CHAR(news_date, 'YYYY-MM-DD') as newsDate,
-		read_count as readCount
+			member_no as memberNo,
+			org_no as orgNo,
+			news_name as newsName,
+			news_content as newsContent,
+			news_thumb as newsThumbPath,
+			TO_CHAR(news_date, 'YYYY-MM-DD') as newsDate,
+			read_count as readCount
 		from(
-		select rownum as rnum,
-		a.*
-		from (
-		select *
-		from tbl_news
-		order by news_date desc
-		)a
+			select rownum as rnum,
+			a.*
+			from (
+				select *
+				from tbl_news
+				where news_name != '삭제'
+				order by news_date desc
+			)a
 		)a
 		where rnum between #{start} and #{end}
 	</select>
 
 	<!-- 한 개의 소식글 정보 조회 -->
 	<select id="selectOneNews" parameterType="_int"
-		resultType="News">
-		SELECT n.news_no AS newsNo,
-		n.member_no AS memberNo,
-		n.org_no AS orgNo,
-		n.news_name AS newsName,
-		n.news_content AS newsContent,
-		n.news_thumb AS newsThumbPath,
-		TO_CHAR(n.news_date, 'YYYY-MM-DD') AS newsDate,
-		n.read_count AS readCount,
-		m.member_name AS memberName,
-		o.org_name AS orgName  <!-- 추가된 부분 -->
+		resultMap="NewsMap">
+		SELECT n.news_no,
+		n.member_no,
+		n.org_no,
+		n.news_name,
+		n.news_content,
+		n.news_thumb,
+		TO_CHAR(n.news_date, 'YYYY-MM-DD') AS news_date,
+		n.read_count,
+		m.member_name,
+		o.org_name
 		FROM tbl_news n
 		JOIN tbl_member m ON n.member_no = m.member_no
-		JOIN tbl_org o ON n.org_no = o.org_no  <!-- 추가된 JOIN -->
+		JOIN tbl_org o ON n.org_no = o.org_no
 		WHERE n.news_no = #{_parameter}
+	</select>
+	
+	<resultMap type="News" id="NewsMap">
+	<result column="news_no" property="newsNo"/>
+	<result column="member_no" property="memberNo"/>
+	<result column="org_no" property="orgNo"/>
+	<result column="news_name" property="newsName"/>
+	<result column="news_content" property="newsContent"/>
+	<result column="news_thumb" property="newsThumbPath"/>
+	<result column="news_date" property="newsDate"/>
+	<result column="read_count" property="readCount"/>
+	<result column="member_name" property="memberName"/>
+	<result column="org_name" property="orgName"/>
+	
+	
+	<collection property="commentList"
+					select="selectCommentList"
+					column="news_no"
+					javaType="java.util.List"
+					ofType="Comment">
+	</collection>
+	</resultMap>
+	
+	
+	<!-- 소식 글에 달린 댓글 리스트 조회 -->
+	<select id="selectCommentList" parameterType="_int" resultType="Comment">
+	    SELECT c.comment_no AS commentNo,
+	           c.member_no AS memberNo,
+	           m.member_id AS memberId,
+	           c.comment_content AS commentContent,
+	           TO_CHAR(c.comment_time, 'YYYY-MM-DD HH24:MI:SS') AS commentTime,
+	           c.comment_deleted AS commentDeleted,
+			   m.member_profile AS memberProfile
+	    FROM tbl_comment c
+	    JOIN tbl_member m ON c.member_no = m.member_no
+	    WHERE c.news_no = #{_parameter} and c.comment_deleted = 0
+	    ORDER BY COMMENT_TIME DESC
 	</select>
 
 	<!-- 소식 게시글 번호 조회 -->
@@ -67,7 +105,7 @@
 		)
 		values (
 		#{newsNo},
-		1,
+		#{memberNo},
 		<if test="orgNo != null or orgNo !=''">
 			#{orgNo},
 		</if>
@@ -80,6 +118,11 @@
 		sysdate
 		)
 	</insert>
+	
+	<!-- 조회수 업데이트 -->
+	<update id="updateReadCount" parameterType="_int">
+		update tbl_news set read_count = read_count + 1 where news_no = #{parameter}
+	</update>
 
 	<!-- 단체명으로 단체 객체 조회하기 -->
 	<select id="selectOneOrg" parameterType="string"
@@ -102,35 +145,63 @@
 		where news_no = #{newsNo}
 	</update>
 
-	<!--  소식 글 삭제 -->
-	<delete id="deleteNews" parameterType="_int">
-		delete from tbl_news where news_no = #{_parameter}
-	</delete>
+	<!--  소식 글 '삭제' 상태로 업데이트 -->
+	<update id="deleteNews" parameterType="_int">
+		update tbl_news 
+		set news_name = '삭제'
+		where news_no = #{_parameter}
+	</update>
 	
-	<!-- 소식 글에 달린 댓글 리스트 조회 -->
-	<select id="selectCommentList" parameterType="_int" resultType="Comment">
-	    SELECT c.comment_no AS commentNo,
-	           c.member_no AS memberNo,
-	           m.member_id AS memberId,
-	           c.news_no AS newsNo,
-	           c.comment_content AS commentContent,
-	           TO_CHAR(c.comment_time, 'YYYY-MM-DD HH24:MI:SS') AS commentTime,
-	           c.comment_deleted AS commentDeleted
-	    FROM tbl_comment c
-	    JOIN tbl_member m ON c.member_no = m.member_no
-	    WHERE c.news_no = #{_parameter} and c.comment_deleted = 0
-	</select>
+
 	
-	<!-- 댓글 삭제 : 상태 삭제 상태로 업데이트 -->
+	<!-- 댓글 삭제 : 상태를 '삭제' 상태로 업데이트 -->
 	<update id="deleteComment" parameterType="_int">
 		update tbl_comment
 		set comment_deleted = 1
 		where comment_no = #{_parameter}
 	</update>
 	
+	<!-- 댓글 수정 -->
 	<update id="updateComment" parameterType="Comment">
 	update tbl_comment
 		set comment_content = #{commentContent}
 	    where comment_no = #{commentNo}
 	</update>
+	
+	<!-- 댓글 신고 코드 조회 -->
+	<select id="selectReportCode" resultType="NewsReport">
+	    SELECT report_code AS reportCode,
+	           report_reason AS reportReason
+	    FROM tbl_report_code
+	    WHERE (report_code LIKE 'A%' OR report_code LIKE 'C%')
+	</select>
+	
+	<!-- 댓글 신고 등록 -->
+	<!-- detailReason 이 null 일 경우, 오류 발생 -> 경우에 따라서 빈 문자열 넣기 -->
+	<insert id="regCommentReport" parameterType="NewsReport">
+	    insert into tbl_report (
+	        report_no, report_code, comment_no, report_member_no, report_detail_reason
+	    )
+	    values (
+	        seq_report.nextval,
+	        #{reportCode},
+	        #{commentNo},
+	        #{reportMemberNo},
+	        <choose>
+	            <when test="detailReason != null">
+	                #{detailReason}
+	            </when>
+	            <otherwise>
+	                ''
+	            </otherwise>
+	        </choose>
+	    )
+	</insert>
+
+	
+	<!-- 댓글 등록 -->
+	<insert id="regComment" parameterType="Comment">
+		insert into tbl_comment (comment_no, member_no, news_no, comment_content)
+	    values (seq_comment.nextval, #{memberNo}, #{newsNo}, #{commentContent})
+	</insert>
 </mapper>

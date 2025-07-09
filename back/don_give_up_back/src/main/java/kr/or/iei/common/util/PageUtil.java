@@ -33,4 +33,17 @@ public class PageUtil {
 		
 		return new PageInfo(start, end, pageNo, pageNaviSize, totalPage);
 	}
+	
+	//더보기 클릭시 추가글 나올수 있게 하는 페이지네비게이션
+	public PageInfo getPageInfoVer2(int reqPage,		 //요청페이지 번호
+									int viewCnt, 		//한 페이지에 보여줄 게시글 갯수
+									int totalCount 		//전체 게시글 갯수
+									) {
+
+	int end = reqPage * viewCnt;			//마지막 번호
+	
+	int totalPage = (int) Math.ceil(totalCount / (double) viewCnt);
+	
+	return new PageInfo(1, end, 0, 0, totalPage);
+	}
 }

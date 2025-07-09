@@ -14,6 +14,7 @@ import kr.or.iei.news.model.dao.NewsDao;
 import kr.or.iei.news.model.dto.Comment;
 import kr.or.iei.news.model.dto.News;
 import kr.or.iei.news.model.dto.NewsOrg;
+import kr.or.iei.news.model.dto.NewsReport;
 
 @Service
 public class NewsService {
@@ -41,9 +42,17 @@ public class NewsService {
 		return newsMap;
 	}
 
+	// 소식글 상세 조회
 	public News selectOneNews(int newsNo) {
-		// TODO Auto-generated method stub
-		return dao.selectOneNews(newsNo);
+		// 조회수 증가 로직
+		int result = dao.updateReadCount(newsNo);
+
+		if (result > 0) {
+			// 조회수 증가 성공했을 경우만 상세 조회
+			return dao.selectOneNews(newsNo);
+		} else {
+			return null;
+		}
 	}
 
 	@Transactional
@@ -74,6 +83,7 @@ public class NewsService {
 		return dao.updateNews(news);
 	}
 
+	//소식 글 '삭제' 상태로 업데이트
 	@Transactional
 	public News deleteNews(int newsNo) {
 		News news = dao.selectOneNews(newsNo);
@@ -90,9 +100,11 @@ public class NewsService {
 		return null;	
 	}
 
+	/*
 	public ArrayList<Comment> selectCommentList(int newsNo) {
 		return dao.selectCommentList(newsNo);
 	}
+	*/
 
 	@Transactional
 	public int deleteComment(int commentNo) {
@@ -102,5 +114,19 @@ public class NewsService {
 	@Transactional
 	public int updateComment(Comment comment) {
 		return dao.updateComment(comment);
+	}
+
+	public ArrayList<NewsReport> selectReportCode() {
+		return dao.selectReportCode();
+	}
+
+	@Transactional
+	public int regCommentReport(NewsReport newsReport) {
+		return dao.regCommentReport(newsReport);
+	}
+
+	@Transactional
+	public int regComment(Comment comment) {
+		return dao.regComment(comment);
 	}
 }

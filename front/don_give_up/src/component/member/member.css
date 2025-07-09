@@ -13,11 +13,8 @@
 /* 사이드 메뉴 CSS */
 .sidebar-wrap {
     width: 200px;
-    border: 1px solid black;
-}
-
-.sidebar-wrap {
     border: 1px solid #dcdcdc;
+    background-color: #fafafa;
 }
 
 .profile-wrap {
@@ -32,7 +29,8 @@
 
 .profile-wrap>img {
     border-radius: 50%;
-    width: 35%;
+    width: 80px;
+    height: 80px;
     margin-bottom: 10px;
 }
 
@@ -79,10 +77,6 @@
     font-weight: bold;
 }
 
-.side-menu-wrap {
-    background-color: #fafafa;
-}
-
 .side-menu {
     display: flex;
     flex-direction: column;
@@ -110,21 +104,85 @@
     text-decoration: none;
 }
 
-.side-menu>a:last-of-type {
-    border-top: 1px solid #dcdcdc;
-    border-bottom: none;
+/* MyHome */
+.myHome-wrap {
+    width: 900px;
+}
+.myHome-wrap-top {
+    display: flex;
+    gap: 10px;
+}
+.top-info {
+    width: 50%;
+    padding: 15px 15px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+}
+
+.detail-left > div:first-of-type {
+    font-size: 20px;
+}
+.detail-right {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.donation-cnt {
+    display: flex;
+    gap: 30px
+}
+
+.money>span:first-of-type{
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.money>span:nth-of-type(2){
+    font-size: 20px;
 }
 
 
+.chargeOrRefund-btn{
+    display: flex;
+    gap: 10px;
+}
+.chargeOrRefund-btn>*{
+    width: 80px;
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.charge-btn {
+    background-color: #91C8E4;
+    border: none;
+    color: white;
+}
+.refund-btn {
+    background-color: #dcdcdc;
+    border: none;
+}
+
+
+
+
+/* 관심기부단체 리스트 */
 .likeOrgList-wrap {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 30px;
 }
 
 /* 관심기부단체 카드*/
 .likeOrg-wrap {
     width: 250px;
+    cursor: pointer;
+    border: 1px solid #dcdcdc;
+}
+
+.likeOrg-wrap:hover {
+    border: 1px solid #848b91;
 }
 
 .likeOrg-logo {
@@ -133,12 +191,16 @@
     border: 1px solid black;
 }
 
-.likeOrg-logo>#likeIcon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
+.org-ctg-wrap {
+    display: flex;
+    border: 1px solid black;
+    
 }
+.org-ctg {
+    border: 1px solid black;
+}
+
+
 
 .likeOrg-name {
     height: 100px;
@@ -149,6 +211,16 @@
 .member-donate-period{
     border: 1px solid black;
 }
+
+.likeOrg-logo  > img:first-of-type {
+    width: 100%;
+    height: 100%;
+}
+
+.likeOrg-name img {
+    width: 10%;
+}
+
 
 /* 기부 내역 */
 .donate-info-wrap {
@@ -169,11 +241,12 @@
     border-radius: 50%;
     border: 1px solid #91C8E4;
     text-align: center;
+    
 }
 
 .state>span {
     line-height: 80px;
-    font-size: 20px;
+    font-size: 15px;
     color: #91C8E4;
     font-weight: bold;
 }
@@ -225,4 +298,91 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
+}
+
+
+
+
+/* 회원 수정 페이지 */
+.update-frm-wrap {
+    width: 600px;
+}
+
+.input-wrap {
+    display: flex;
+    border: 1px solid black;
+}
+
+.input-title-wrap {
+    width: 20%;
+}
+.input-wrap > div{
+    height: 80px;
+}
+
+.category-wrap {
+    border: 1px solid black;
+    display: flex;
+    gap: 10px;
+}
+
+.category-name {
+    border: 1px solid black;
+    height: 50%;
+    width: 20%;
+    cursor: pointer;
+}
+
+.chosed-category {
+    background-color: lightblue;
+}
+
+.update-frm-wrap input {
+    width: 200px;
+}
+
+/* 결제내역 페이지 */
+.history-wrap {
+    display: flex;
+    border: 1px solid black;
+    gap: 30px;
+}
+
+/* 기간조회 필터창 */
+.filter-wrap {
+    display: flex;
+    gap: 10px;
+    
+}
+.filter-wrap > div {
+    border: 1px solid black;
+}
+
+
+.account-info{
+    display: flex;
+    gap: 20px
+}
+
+/* myHome.css */
+.mynewsList-wrap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3개씩 */
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.survey-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.survey-card:hover {
+  transform: translateY(-3px);
+
 }

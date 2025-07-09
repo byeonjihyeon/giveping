@@ -14,8 +14,9 @@ public class Biz {
 	private String bizName;			// 사업명
 	private String donateCode;		// 기부 코드(외래키, tbl_donate_code에서 해당 기부 코드 삭제 이전에 'D99'(기타)로 변경)	
 	private String bizContent;		// 사업 내용
-	private String bizDonateStart;	//모금 시작 날짜(사업 승인 날짜)
-	private String bizDonateStart;	//모금 시작 날짜(사업 등록날짜 + 7일 (자동설정))
+
+	private String bizDonateStart;	//모금 시작 날짜(기부 사업 등록일부터 플러스 7일)
+
 	private String bizDonateEnd;	//모금 종료 날짜(모금 시작 날짜에서 단체가 선택한 30, 60, 90일 플러스)
 	private String bizStart;		// 사업 시작 날짜
 	private String bizEnd;			// 사업 종료 날짜(react에서 사업 시작 날짜가 사업 종료 날짜보다 늦지 않도록 알림창 띄워주기)
@@ -25,15 +26,28 @@ public class Biz {
 	private String bizEdit;			// 수정 사항(사업 승인 여부 확인 후 수정 사항 있을 경우에만 INSERT)
 	private String bizThumbPath;	// 사업 썸네일
 	
+	private int bizDonateTerm;		// 모금 기간(30일, 60일, 90일)
+	private List<BizPlan> bizPlanList; //모금액 사용 계획
+	
 	
 	// join 을 위해 선언한 변수
 	private String orgName;	// 사업명
 	private String donateCtg;	// 기부 카테고리명
 	
 	// 기부 사업 게시글에 대한 파일 정보 저장 변수 
-	private List<BizFile> bizList;
+	private List<BizFile> fileList;
 	
 	// 삭제 파일 번호 배열 저장 변수
 	private int [] delBizFileNo;
 	
+	// 특정 기부 사업에 기부한 회원 리스트 변수
+	private List<BizMember> bizMemberList;
+	
+	// 모인 기부금 액수
+	private int donateMoney;
+	
+	private String clickBtn;		//단체 페이지 기부 사업 보기에서 선택한 버튼 value
+	private String bizEnrollDate;	//사업 등록일
+	private int rnum;				//리스트 내 번호
+	private String payoutYN;		//입금 여부
 }									

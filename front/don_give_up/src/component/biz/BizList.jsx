@@ -15,6 +15,7 @@ export default function BizList() {
     const { isLogined } = useUserStore();
     const [searchType, setSearchType] = useState("bizTitle");
     const [categories, setCategories] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);  // 검색 상태 여부
 
     const [keyWord, setKeyWord] = useState({
         bizTitle: "",
@@ -51,19 +52,24 @@ export default function BizList() {
 }
 
     useEffect(function () {
-    async function fetchData() {
-        const res = await axiosInstance.get(
-        serverUrl + "/biz/list/" + reqPage,
-        {
-            params: { categories },
-            paramsSerializer: paramsSerializer
-        }
-        );
-        setDonateBizList(res.data.resData.donateBizList);
-        setPageInfo(res.data.resData.pageInfo);
-    }
+        if(isSearching){    // isSearching 이 true => 검색 상태
+            fetchSearchData(reqPage);
+        }else{
 
-    fetchData();
+            async function fetchData() {
+                const res = await axiosInstance.get(
+                serverUrl + "/biz/list/" + reqPage,
+                {
+                    params: { categories },
+                    paramsSerializer: paramsSerializer
+                }
+                );
+                setDonateBizList(res.data.resData.donateBizList);
+                setPageInfo(res.data.resData.pageInfo);
+            }
+        
+            fetchData();
+        }
     }, [reqPage, categories]);
 
 
@@ -81,6 +87,11 @@ export default function BizList() {
     }
 
     function toggleCategory(code) {
+
+        // 카테고리 클릭 시 -> 검색창 초기화, 검색 상태 해제
+        setKeyWord({ bizTitle: "", orgName: "" });
+        setIsSearching(false);
+
         setCategories(prev =>
             prev.includes(code)
                 ? prev.filter(c => c !== code)
@@ -90,8 +101,14 @@ export default function BizList() {
     }
 
     function srchSubmit() {
+    setIsSearching(true);
+    setReqPage(1);  // 검색은 첫 페이지부터
+    fetchSearchData(1);
+    }
+
+    function fetchSearchData(page) {
     let options = {
-      url: serverUrl + "/biz/search",
+      url: serverUrl + "/biz/search/"+page,
       method: 'post',
       data: {
         bizTitle: keyWord.bizTitle,
@@ -169,13 +186,10 @@ function BoardItem(props) {
     const { donateBiz, serverUrl } = props;
     const navigate = useNavigate();
 
-    const bizStatusMap = {
-        0: '미승인',
-        1: '승인',
-        2: '반려',
-        3: '탈퇴 요청',
-        4: '탈퇴',
-    };
+    // 기부금 달성률 계산
+    const goal = donateBiz.bizGoal || 0;
+    const donated = donateBiz.donateMoney || 0;
+    const percent = goal > 0 ? Math.floor((donated / goal) * 100) : 0;
 
     return (
         <li className="posting-item" onClick={() => navigate('/biz/view/' + donateBiz.bizNo)}>
@@ -190,14 +204,15 @@ function BoardItem(props) {
                 <div className="posting-title">{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
                     <span>{donateBiz.orgName}</span>
+                    <span> #{donateBiz.donateCtg}</span>
                     <br />
-                    <span>{donateBiz.donateCtg}</span>
-                    <br />
-                    <span>{donateBiz.bizContent}</span>
-                    <br />
-                    <span>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
-                    <br />
-                    <span>{donateBiz.bizGoal}</span>
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: `${percent}%` }}></div>
+                    </div>
+                    <div className="donate-stats">
+                        <span>{percent}%</span>
+                        <span>{donated.toLocaleString()}원</span>
+                    </div>
                 </div>
             </div>
         </li>

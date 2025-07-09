@@ -1,6 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
 import Swal from "sweetalert2";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Badge from '@mui/material/Badge';
+import MailIcon from '@mui/icons-material/Mail';
+import DotBadge from "./DotBadge";
 
 //헤더 JSX
 export default function Header(){
@@ -27,20 +32,21 @@ function HeaderLink(){
     const navigate = useNavigate();
 
     //스토리지에 저장한 데이터 추출하기
-    const {isLogined, setIsLogined, loginMember, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken} = useUserStore();
+    const {isLogined, setIsLogined, loginMember, setLoginMember, loginOrg, setLoginOrg, setAccessToken, setRefreshToken, setUnreadAlarmCount} = useUserStore();
 
     //로그아웃 Link 클릭 시 동작 함수
     function logout(e){
         //기본 이벤트 제어
         e.preventDefault();
-       
-       setIsLogined(false);
-       setLoginMember(null);
-       setLoginOrg(null);
-       setAccessToken(null);
-       setRefreshToken(null);
-       
-       navigate("/login");
+    
+        setIsLogined(false);
+        setLoginMember(null);
+        setLoginOrg(null);
+        setAccessToken(null);
+        setRefreshToken(null);
+        setUnreadAlarmCount(0);
+        
+        navigate("/login");
     }
     
     return (
@@ -53,6 +59,15 @@ function HeaderLink(){
                     {loginMember
                      ? loginMember.memberName
                      : loginOrg.orgName
+                    }
+                </li>
+                <li>
+                    {/*알림 아이콘 => 일반 회원들에게만 보임*/}
+                    {loginOrg || loginMember.memberLevel == 2
+                     ?
+                    <DotBadge />
+                    : 
+                    ""
                     }
                 </li>
                 <li>
@@ -111,7 +126,7 @@ function MainNavi(){
                 <Link to="#">후원 단체</Link>
             </li>
             <li>
-                <Link to="/biz/list">후원 사업</Link>
+                <Link to="/biz/list">기부 사업</Link>
             </li>
             <li>
                 <Link to="/news/list">소식</Link>
@@ -143,16 +158,16 @@ function MemberMyPage(){
     return (
         <ul className="sub-menu">
             <li>
-                <Link to="#">회원 정보 수정</Link>
+                <Link to="/member/update">내 정보 수정</Link>
             </li>
             <li>
-                <Link to="#">기부 내역 조회</Link>
+                <Link to="/member/donateList">기부 내역 조회</Link>
             </li>
             <li>
-                <Link to="#">관심 단체</Link>
+                <Link to="/member/likeOrgList">관심 단체</Link>
             </li>
             <li>
-                <Link to="#">예치금 충전/환불</Link>
+                <Link to="/member/money/charge">예치금 충전/환불</Link>
             </li>
             <li>
                 <Link to="#">회원 탈퇴</Link>
@@ -167,13 +182,10 @@ function OrgMyPage(){
     return (
         <ul className="sub-menu">
             <li>
-                <Link to="#">회원 정보 수정</Link>
+                <Link to="/org/update">단체 정보 수정</Link>
             </li>
             <li>
-                <Link to="#">기업 정보 수정</Link>
-            </li>
-            <li>
-                <Link to="#">기부 사업 관리</Link>
+                <Link to="/org/biz">기부 사업 관리</Link>
             </li>
             <li>
                 <Link to="#">회원 탈퇴</Link>
