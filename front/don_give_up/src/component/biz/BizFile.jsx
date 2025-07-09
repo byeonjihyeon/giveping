@@ -272,6 +272,7 @@ function FileItem(props) {
         .then(function(res){
             //res.data => 서버에서 응답해준 리소스
             const fileData = res.data;
+
             const blob = new Blob([fileData]); //단건이여도, 배열로 전달해야 함.
             const url = window.URL.createObjectURL(blob); //브라우저에 요청하기 위한 URL 생성
 

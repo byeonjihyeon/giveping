@@ -100,6 +100,14 @@ export default function BizView(){
         }
     }, [searchParams]);
 
+    useEffect(function () {
+        if (donateBiz.fileList && Array.isArray(donateBiz.fileList)) {
+            setPrevBizFileList(donateBiz.fileList);
+        }
+    }, [donateBiz.fileList]);
+
+
+/*
     useEffect(function(){
         let options = {};
         options.url = serverUrl + '/biz/file/' + bizNo;
@@ -113,6 +121,7 @@ export default function BizView(){
         });
         console.log("삭제 대상 파일 번호 배열 변경됨:", delBizFileNo);
     }, []);
+    */
 
     const navigate = useNavigate();
 
@@ -190,12 +199,8 @@ export default function BizView(){
                         <tr>
                             <th style={{ width: '20%' }}>기부카테고리</th>
                             <td style={{ width: '30%' }}>{donateBiz.donateCtg}</td>
-                            <th style={{ width: '20%' }}>모금 시작일</th>
-                            <td style={{ width: '30%' }}>{donateBiz.bizDonateStart}</td>
-                        </tr>
-                        <tr>
-                            <th>모금 종료일</th>
-                            <td>{donateBiz.bizDonateEnd}</td>
+                            <th style={{ width: '20%' }}>모금 기간</th>
+                            <td style={{ width: '30%' }}>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</td>
                             <th>기부사업 시작일</th>
                             <td>{donateBiz.bizStart}</td>
                         </tr>

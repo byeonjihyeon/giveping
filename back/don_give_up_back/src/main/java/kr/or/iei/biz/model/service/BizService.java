@@ -139,10 +139,11 @@ public class BizService {
 	}
 
 	
-	
+	/*
 	public ArrayList<BizFile> selectBizFileList(int bizNo) {
 		return dao.selectBizFileList(bizNo);
 	}
+	*/
 
 	@Transactional
 	// 첨부파일 등록 / 수정 / 삭제
@@ -199,6 +200,11 @@ public class BizService {
 		// 사업 번호로 pkNo 조회하는 메서드
 		public BizNo getBizNoFromBizNo(Biz biz) {
 			return dao.selectPk(biz);
+		}
+
+		// 첨부파일 다운로드
+		public BizFile selectBizFile(int bizFileNo) {
+			return dao.selectBizFile(bizFileNo);
 		}
 	
 	

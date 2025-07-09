@@ -1,6 +1,8 @@
 package kr.or.iei.biz.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,8 +10,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -263,20 +269,32 @@ public class BizController {
 	
 	
 	
-	// 특정 기부사업의 첨부파일 리스트 조회
-	@GetMapping("/file/{bizNo}")
+	// 첨부파일 다운로드
+	@GetMapping("/file/{bizFileNo}")
 	@NoTokenCheck // 기부 사업 리스트 조회 : 로그인 필요 x
-	public ResponseEntity<ResponseDTO> selectBoardList(@PathVariable int bizNo){
+	public ResponseEntity<Resource> selectBizList(@PathVariable int bizFileNo) throws FileNotFoundException{
 		
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "첨부파일 조회 중, 오류가 발생하였습니다.", null, "error");
+		//DB에서 파일 1개 정보를 조회
+		BizFile bizFile = service.selectBizFile(bizFileNo);
+		System.out.println("bizFile : " + bizFile);
 		
-		try {
-			ArrayList<BizFile> bizFileList = service.selectBizFileList(bizNo);
-			res = new ResponseDTO(HttpStatus.OK, "", bizFileList, "");
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+		//응답할 리소스로 만들어줄 파일 객체 생성
+		String savePath = uploadPath + "/biz/board/"; 
+		File file = new File(savePath + bizFile.getFilePath().substring(0, 8) + File.separator + bizFile.getFilePath());
+		
+		//응답할 리소스 생성
+		Resource resource = new InputStreamResource(new FileInputStream(file));
+		
+		//응답 헤더 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;"); //파일 다운로드임을 명시
+		headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE); //응답 데이터가 바이너리 타입임을 명시
+		
+		return ResponseEntity.status(HttpStatus.OK)
+							 .headers(headers)
+							 .contentLength(file.length())
+							 .body(resource);
+		
 	}
 	
 	//기부 사업 등록

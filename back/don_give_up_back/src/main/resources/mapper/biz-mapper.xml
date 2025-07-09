@@ -155,6 +155,18 @@ select sum(donate_money) AS donateMoney
 		join tbl_no n on f.pk_no = n.pk_no
 		where n.biz_no = #{_parameter}
 	</select>
+	
+	<!-- 파일 1개 정보 조회 (첨부파일 다운로드)-->
+	<select id="selectBizFile"
+		    parameterType="_int"
+		    resultType="BizFile">
+	select file_no as fileNo,
+			   pk_no as pkNo,
+			   file_name as fileName,
+			   file_path as filePath
+		from tbl_file 
+		where file_no = #{_parameter}
+	</select>
 
 <!-- 게시글에 대한 기부한 멤버 리스트 조회 -->
 <select id="selectMemberList"
