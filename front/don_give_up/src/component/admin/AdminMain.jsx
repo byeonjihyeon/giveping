@@ -49,7 +49,6 @@ export default function AdminMain(){
                         <Route path="bizManage" element={<BizManage />} />
                         <Route path="refundManage" element={<RefundManage />}  />
                         <Route path="reportManage" element={<ReportManage />}  />
-                   
                     </Routes>
                 </section>
             </div>

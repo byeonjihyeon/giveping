@@ -113,7 +113,7 @@ function OrgDetail(props) {
         <tr>
             <td>{org.orgNo}</td>
             <td>{org.orgName}</td>
-            <td>{org.orgEnrollDate}</td>
+            <td>{org.orgEnrollDate.substring(0,10)}</td>
             <td>
                 <button onClick={OrgDetail}>보기</button>
             </td>
