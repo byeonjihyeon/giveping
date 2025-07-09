@@ -162,8 +162,8 @@ function BoardItem(props) {
         <>
         <tr>
             <td>{org.orgName}</td>
-            <td><button onClick={orgDetail}>보기</button></td>
-             <td><button onClick={orgBiz}>보기</button></td>
+            <td><button className="show" onClick={orgDetail}>보기</button></td>
+             <td><button className="show" onClick={orgBiz}>보기</button></td>
             
        <td>
           {showType === "request" ? (

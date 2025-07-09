@@ -48,7 +48,7 @@
     width: 450;
     height: 450;
 }
-button{
+.show{
     all:unset;
     appearance: none;
     background-color: #EEEFE0;
