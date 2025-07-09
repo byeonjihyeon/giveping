@@ -68,7 +68,7 @@ export default function BizFile(props){
 
     // 파일 업로드 버튼 클릭 시 호출되는 함수
     function updateFile(){
-        console.log("updateFile 함수 호출")
+        console.log("updateFile 함수 호출");
         const form = new FormData();
         
         // bizNo 보내기
@@ -87,18 +87,20 @@ export default function BizFile(props){
             options.url = serverUrl + '/biz/file';
             options.method = 'post'; //수정 == PUT or PATCH == 일부 컬럼 정보 수정 == PATCH
             options.data = form;
+            
             options.headers = {};
             options.headers.contentType = 'multipart/form-data';
             options.headers.processData = false; //쿼리 스트링 변환 X
+            
 
             axiosInstance(options)
             .then(function(res){
                 console.log(res.data.resData); //true or false
                 if(res.data.resData){
                     console.log("resData", res.data.resData)
-                    //navigate('/biz/view/'+bizNo);
 
                     fetchBizFileList(); //수정사항 반영 -> 재조회 
+                    window.location.reload();
                 }
             });
         
@@ -150,7 +152,7 @@ export default function BizFile(props){
                                 e.preventDefault();
                                 updateFile(); //파일 업로드 함수 호출
                                 setIsEditMode(false); // 수정 완료 -> 다시 비수정 모드로
-                                window.location.reload();   // 새로고침 -> 파일 변경사항 반영
+                                //window.location.reload();   // 새로고침 -> 파일 변경사항 반영
                             }}> 
             <div>
                 <div>

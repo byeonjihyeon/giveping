@@ -124,7 +124,9 @@ public class BizController {
 		try {
 			int result = service.bizDonate(bizDonationList);
 			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "", true, "");				
+				res = new ResponseDTO(HttpStatus.OK, "기부가 성공적으로 처리되었습니다.", true, "");				
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "기부 처리 중, 오류가 발생하였습니다.", false, "");		
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
