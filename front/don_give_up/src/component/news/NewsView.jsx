@@ -122,91 +122,83 @@ export default function NewsView(){
     return(
         <>
     <section className="section board-view-wrap">
-            <div className="page-title">게시글 상세 보기</div>
-            <div className="board-view-content">
+                <div className="board-view-content">
                 <div className="board-view-info">
                     <div className="board-thumbnail">
-                        <img src={
-                            news.newsThumbPath
-                            ? serverUrl + "/news/thumb/" + news.newsThumbPath.substring(0,8) + "/" + news.newsThumbPath
+                    <img
+                        src={
+                        news.newsThumbPath
+                            ? serverUrl + "/news/thumb/" + news.newsThumbPath.substring(0, 8) + "/" + news.newsThumbPath
                             : "/images/default_img.png"
-                        } />
+                        }
+                        alt="뉴스 썸네일"
+                    />
                     </div>
+
                     <div className="board-view-preview">
-                        <table className="tbl">
-                            <tbody>
-                                <tr>
-                                    <td className="left" colSpan={4}>
-                                        {news.newsName}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style={{width:"20%"}}>단체명</th>
-                                    <td style={{width:"20%"}}>{news.orgName}</td>
-                                    <th style={{width:"20%"}}>작성일</th>
-                                    <td style={{width:"20%"}}>{news.newsDate}</td>
-                                    <th style={{width:"20%"}}>조회수</th>
-                                    <td style={{width:"20%"}}>{news.readCount}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h2 className="news-title">{news.newsName}</h2>
+                            <div className="info-row">
+                                <span className="info-item">{news.orgName}</span><br/>
+                                <span className="info-item">작성시간 | </span>
+                                <span className="info-item">{news.newsDate}</span><br/>
+                                <span className="info-item">조회수 | </span>
+                                <span className="info-item">{news.readCount}</span>
+                            </div>
                     </div>
                 </div>
-                
-                <hr/>
+
+                <hr />
 
                 <div className="board-content-wrap">
-                    {
-                        news.newsContent
-                        ? <Viewer initialValue={news.newsContent} />
-                        : ''
-                    }
+                    {news.newsContent ? <Viewer initialValue={news.newsContent} /> : ""}
                 </div>
-                {
-                    loginMember != null && (loginMember.memberLevel == 1 || loginOrg != null)
-                    ?
-                    <div className="view-btn-zone">
-                        <Link to={"/news/update/" + news.newsNo} className="btn-primary lg">수정</Link>
-                        <button type="button" className="btn-secondary lg" onClick={deleteNews}>삭제</button>
-                    </div>
-                    : ''
-                }
-            </div>
 
-            <hr /><hr /><hr /><hr />
+                {(loginMember != null && (loginMember.memberLevel === 1 || loginOrg != null)) && (
+                    <div className="view-btn-zone">
+                    <Link to={"/news/update/" + news.newsNo} className="btn-primary lg">
+                        수정
+                    </Link>
+                    <button type="button" className="btn-secondary lg" onClick={deleteNews}>
+                        삭제
+                    </button>
+                    </div>
+                )}
+                </div>
+
+            </section>
+            
+            <section className="section board-comment-wrap">
+            <br />
+            <hr />
+            <br />
+            <h3>댓글</h3>
+            <br />
             {
                 loginMember !=null && loginMember.memberLevel ==2
                 ?
                 <div className="comment-write-box">
-                            <input type="text" value={newComment} 
+                            <input type="text" 
+                                   value={newComment} 
                                     onChange={function(e) {setNewComment(e.target.value);
                                                 }}
-                                    placeholder="댓글을 입력하세요" style={{width: '70%', marginRight: '10px'}}/>
-                            <button className="btn-primary" onClick={submitComment}>댓글등록</button>
+                                    placeholder="댓글을 입력하세요" 
+                                    style={{width: '70%', marginRight: '10px'}}
+                                    className="comment-input"/>
+                            <button className="btn-primary" onClick={submitComment}>등록</button>
                 </div>
                 :
                 ''
             }
-            <table className="tbl">
-            <thead>
-                <tr>
-                    <th style={{width:"10%"}}>회원프로필</th>
-                    <th style={{width:"10%"}}>회원아이디</th>
-                    <th style={{width:"30%"}}>댓글내용</th>
-                    <th style={{width:"15%"}}>작성시간</th>
-                    <th style={{width:"10%"}}>수정</th>
-                    <th style={{width:"10%"}}>삭제</th>
-                    <th style={{width:"10%"}}>신고</th>
-                </tr>
-            </thead>
-            <tbody>
-                {Array.isArray(news.commentList) &&
-                news.commentList.map(function(comment, index){
-                    return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList} newsNo={newsNo} reloadCommentList={reloadCommentList}/>
-                })}
-            </tbody>
-        </table>
-        </section>
+        
+                <div className="comment-list-wrap">
+                    <br />
+                    {Array.isArray(news.commentList) &&
+                    news.commentList.map(function(comment, index){
+                        return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList} newsNo={newsNo} reloadCommentList={reloadCommentList}/>
+                    })}
+                </div>
+                </section>
+        
 </>
     )
 }
@@ -322,51 +314,72 @@ function Comment(props){
         setIsReportOpen(false);
     }
 
-    return(
-        <tr>
-            <td>
-                <img src={
-                            comment.memberProfile
-                            ? serverUrl + "/member/" + comment.memberProfile.substring(0,8) + "/" + comment.memberProfile
-                            : "/images/default_img.png"
-                        } />
-            </td>
-            <td>{comment.memberId}</td>
-            <td>
-                {editMode ? (
-                    <input type="text" value={editedContent} onChange={function(e){
-                        setEditedContent(e.target.value)
-                    }} />
-                ) : (
-                    comment.commentContent
-                )}
-            </td>
-            <td>{comment.commentTime}</td>
-            <td>
-                {isAuthor && !editMode && <button onClick={handleEditClick}>수정</button>}
-                {isAuthor && editMode && (
-                    <>
-                        <button onClick={handleSaveEdit}>완료</button>
-                        <button onClick={handleCancelEdit}>취소</button>
-                    </>
-                )}
-            </td>
-            <td>
-                {isAuthor && !editMode && <button onClick={() => delComment(comment.commentNo)}>삭제</button>}
-            </td>
+    return (
+    <div className="comment-item">
+        <img
+        src={
+            comment.memberProfile
+            ? serverUrl + "/member/" + comment.memberProfile.substring(0, 8) + "/" + comment.memberProfile
+            : "/images/default_img.png"
+        }
+        alt="프로필"
+        />
 
-            {
-                isLogined &&
-                loginMember?.memberNo != null && // 일반 회원인지 확인
-                loginMember.memberNo !== comment.memberNo && // 본인이 작성한 댓글 아님
-                <td>
-                    <button onClick={openReportPopup}>신고</button>
-                    {isReportOpen && <Report onClose={closeReportPopup} comment={comment} />}
-                </td>
-            }
+        <div className="comment-body">
+        <div className="comment-meta">
+            <span className="comment-author">{comment.memberId}</span>
+            <span className="comment-time">{comment.commentTime}</span>
 
-        </tr>
+            {isAuthor && !editMode && (
+            <div className="comment-actions">
+                <span className="comment-action-text" onClick={handleEditClick} style={{ marginLeft: "auto" }}>
+                수정
+                </span>
+                <span className="comment-action-text" onClick={() => delComment(comment.commentNo)}>
+                삭제
+                </span>
+            </div>
+            )}
+            {isAuthor && editMode && (
+            <div className="comment-actions">
+                <span className="comment-action-text" onClick={handleSaveEdit} style={{ marginLeft: "auto" }}>
+                완료
+                </span>
+                <span className="comment-action-text" onClick={handleCancelEdit}>
+                취소
+                </span>
+            </div>
+            )}
+
+            {isLogined &&
+            loginMember?.memberNo != null &&
+            loginMember.memberNo !== comment.memberNo && (
+                <div className="comment-actions">
+                <span className="comment-action-text" onClick={openReportPopup} style={{ marginLeft: "auto" }}>
+                    신고
+                </span>
+                {isReportOpen && <Report onClose={closeReportPopup} comment={comment} />}
+                </div>
+            )}
+        </div>
+
+        <div className="comment-content">
+            {editMode ? (
+            <input
+                type="text"
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="comment-edit-input"
+            />
+            ) : (
+            <p>{comment.commentContent}</p>
+            )}
+        </div>
+        </div>
+    </div>
     );
+
+
 }
 
 // 신고 팝업

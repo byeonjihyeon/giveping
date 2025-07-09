@@ -45,7 +45,7 @@
 		o.org_name
 		FROM tbl_news n
 		JOIN tbl_member m ON n.member_no = m.member_no
-		JOIN tbl_org o ON n.org_no = o.org_no  
+		JOIN tbl_org o ON n.org_no = o.org_no
 		WHERE n.news_no = #{_parameter}
 	</select>
 	
@@ -83,6 +83,7 @@
 	    FROM tbl_comment c
 	    JOIN tbl_member m ON c.member_no = m.member_no
 	    WHERE c.news_no = #{_parameter} and c.comment_deleted = 0
+	    ORDER BY COMMENT_TIME DESC
 	</select>
 
 	<!-- 소식 게시글 번호 조회 -->
