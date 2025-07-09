@@ -20,11 +20,12 @@ export default function OrgPost(){
     const axiosInstance = createInstance();
     
     const {loginOrg} = useUserStore();
+    const orgNo = loginOrg.orgNo;
 
     //기부 사업 내용
     const [donateBiz, setDonateBiz] = useState({
         bizNo : 0,             //사업 번호
-        orgNo : loginOrg.orgNo, //단체 번호
+        orgNo : orgNo, //단체 번호
         donateCode : "",        //기부 코드
         bizName : "",           //사업명
         bizContent : "",        //사업 내용
@@ -171,7 +172,7 @@ export default function OrgPost(){
 
                 if(bizImg != null){
                     form.append("bizImg", bizImg);
-                    form.append("orgNo", loginOrg.orgNo);
+                    form.append("orgNo", orgNo);
 
                     let options = {};
                     options.url = serverUrl + "/biz/thumb";

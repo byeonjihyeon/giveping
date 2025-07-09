@@ -256,6 +256,7 @@
 		 where org_no = #{orgNo}
 	</update>
 	
+	<!-- 기부 사업 통계 -->
 	<!-- 전체 기부 사업 갯수 -->
 	<select id="selectAllBiz" parameterType="_int" resultType="_int">
 		select count(*) from tbl_donate_biz where org_no = #{orgNo}
@@ -315,5 +316,53 @@
 		 where org_no = #{orgNo}
 		   and to_char(sysdate, 'YYYY-MM-DD') > to_char(biz_donate_end, 'YYYY-MM-DD')
 		 group by biz_goal
+	</select>
+	
+	<!-- 오늘 모인 기부금 -->
+	<select id="selectTodayDonate" parameterType="_int" resultType="Biz">
+		select sum(donate_money) as donateMoney
+		  from tbl_donate_biz
+		  left join tbl_donation_list
+		 using (biz_no)
+		 where org_no = #{orgNo}
+		   and to_char(donate_date, 'YYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')
+	</select>
+	<!-- 관심 회원 수 -->
+	<select id="selectLikeMember" parameterType="_int" resultType="_int">
+		select count(*)
+		  from tbl_member_org
+		 where org_no = #{orgNo}
+	</select>
+	<!-- 단체 주요 카테고리명 -->
+	<select id="selectOrgCategory" parameterType="_int" resultType="string">
+		select donate_ctg
+		  from tbl_donate_code
+		  left join tbl_org_donation
+		 using (donate_code)
+		 where org_no = #{orgNo}
+	</select>
+	<!-- 승인된 최근 기부 사업 리스트 5개 조회 -->
+	<select id="selectCurrentBizList" parameterType="_int" resultType="Biz">
+		select *
+		  from (select rownum rnum, a.*
+				  from (select biz_no as bizNo,
+						       biz_name as bizName,
+						       to_char(biz_donate_start, 'YYYY-MM-DD') as bizDonateStart,
+						       to_char(biz_donate_end, 'YYYY-MM-DD') as bizDonateEnd,
+						       to_char(biz_start, 'YYYY-MM-DD') as bizStart,
+						       to_char(biz_end, 'YYYY-MM-DD') as bizEnd,
+						       biz_goal as bizGoal,
+						       sum(donate_money) as donateMoney,
+						       payout_no as payoutYN
+						  from tbl_donate_biz
+						  left join tbl_donation_list
+						 using (biz_no)
+						  left join tbl_admin_payout_history
+						 using (biz_no)
+						 where org_no = #{orgNo}
+						   and biz_status = 1
+						 group by biz_no, biz_name, biz_donate_start, biz_donate_end, biz_start, biz_end, biz_goal, payout_no
+						 order by bizDonateStart desc, bizDonateEnd desc) a )
+		 where rnum between 1 and 5
 	</select>
 </mapper>

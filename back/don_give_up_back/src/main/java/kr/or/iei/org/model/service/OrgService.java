@@ -316,31 +316,22 @@ public class OrgService {
 	public HashMap<String, Object> selectBizData(int orgNo) {
 		//전체 기부 사업 갯수
 		int allBiz = dao.selectAllBiz(orgNo);
-		
 		//미승인 기부 사업 갯수
 		int notApproveBiz = dao.selectNotApproveBiz(orgNo);
-		
 		//반려된 기부 사업 갯수
 		int rejectBiz = dao.selectRejectBiz(orgNo);
-		
 		//승인된 기부 사업 갯수
 		int approveBiz = dao.selectApproveBiz(orgNo);
-		
 		//진행 중인 기부 사업 갯수
 		int ingBiz = dao.selectIngBiz(orgNo);
-		
 		//모금 종료된 기부 사업 갯수
 		int donateEndBiz = dao.selectDonateEndBiz(orgNo);
-		
 		//사업 종료된 기부 사업 갯수
 		int endBiz = dao.selectEndBiz(orgNo);
-		
 		//입금 처리된 기부 사업 갯수
 		int payEndBiz = dao.selectPayEndBiz(orgNo);
-		
 		//카테고리별 기부 사업 갯수
 		ArrayList<DonateCode> donateCodeCnt = dao.selectDonateCodeCnt(orgNo);
-		
 		//기부 사업별 모금액
 		ArrayList<Biz> donateMoneyList = dao.selectDonateMoneyList(orgNo);
 		
@@ -357,6 +348,30 @@ public class OrgService {
 		bizMap.put("donateMoneyList", donateMoneyList);
 		
 		return bizMap;
+	}
+
+	//단체 마이페이지 메인에 보여질 정보 조회
+	public HashMap<String, Object> selectOrgMain(int orgNo) {
+		//오늘 모인 기부금
+		Biz biz = dao.selectTodayDonate(orgNo);
+		int todayDonate = 0;
+		if(biz != null) {
+			todayDonate = biz.getDonateMoney();
+		}
+		//관심 회원 수
+		int likeMember = dao.selectLikeMember(orgNo);
+		//단체 주요 카테고리명
+		List<String> categoryList = dao.selectOrgCategory(orgNo);
+		//승인된 최근 기부 사업 리스트 5개 조회
+		ArrayList<Biz> bizList = dao.selectCurrentBizList(orgNo);
+		
+		HashMap<String, Object> orgMap = new HashMap<String, Object>();
+		orgMap.put("todayDonate", todayDonate);
+		orgMap.put("likeMember", likeMember);
+		orgMap.put("categoryList", categoryList);
+		orgMap.put("bizList", bizList);
+		
+		return orgMap;
 	}
 
 		

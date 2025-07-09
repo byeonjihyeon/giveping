@@ -104,4 +104,13 @@ public interface OrgDao {
 	//기부 사업별 모금액
 	ArrayList<Biz> selectDonateMoneyList(int orgNo);
 
+	//오늘 모인 기부금
+	Biz selectTodayDonate(int orgNo);
+	//관심 회원 수
+	int selectLikeMember(int orgNo);
+	//단체 주요 카테고리명
+	List<String> selectOrgCategory(int orgNo);
+	//승인된 최근 기부 사업 리스트 5개 조회
+	ArrayList<Biz> selectCurrentBizList(int orgNo);
+
 }

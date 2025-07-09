@@ -448,4 +448,21 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//단체 마이페이지 메인에 보여질 정보 조회
+	@GetMapping("/main/{orgNo}")
+	public ResponseEntity<ResponseDTO> selectOrgMain(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "정보 조회 중 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			HashMap<String, Object> orgMap = service.selectOrgMain(orgNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", orgMap, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }
