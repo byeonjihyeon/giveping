@@ -23,10 +23,12 @@ export default function OrgUpdate(props){
 
     //단체 1개 정보를 저장할 State 변수
     const [org, setOrg] = useState({
-        orgNo : "", orgId : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "", orgAddrMain : "",
+        orgNo : "", orgId : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "", orgAddrMain : "", orgThumbPath : "",
         orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", orgUrl : "", categoryList : [], orgStatus : ""
     });
 
+    const [profileImg, setProfileImg] = useState(null);     //프로필 이미지 미리보기용 변수 (서버 전송 X)
+    const [profile, setProfile] = useState(null);           //프로필 파일 객체 (서버 전송용)
     const [donateCtgList, setDonateCtgList] = useState([]); //DB에서 조회한 카테고리 리스트를 저장할 State 변수
     const [checkCtgList, setCheckCtgList] = useState([]);   //체크한 카테고리 정보를 저장할 State 변수
 
@@ -183,15 +185,30 @@ export default function OrgUpdate(props){
 
         axiosInstance(options)
         .then(function(res){
-            Swal.fire({
-                title : "알림",
-                text : res.data.clientMsg,
-                icon : res.data.alertIcon,
-                confirmButtonText : "확인"
-            })
-            .then(function(result){
-                setMainOrg({...mainOrg, orgName : org.orgName, orgEmail : org.orgEmail});
-            });
+            if(res.data.resData){
+                const form = new FormData();
+
+                form.append("orgNo", orgNo);
+                form.append("profile", profile);
+
+                if(org.orgThumbPath != null){
+                    form.append("orgThumbPath", org.orgThumbPath);
+                }
+
+                let options = {};
+                options.url = serverUrl + "/org/thumb";
+                options.method = "post";
+                options.data = form;
+                options.headers = {};
+                options.headers.contentType = "multipart/form-data";
+                options.headers.processData = false;
+
+                axiosInstance(options)
+                .then(function(res){
+                    setProfile(null);
+                    setMainOrg({...mainOrg, orgName : org.orgName, orgEmail : org.orgEmail, orgThumbPath : res.data.resData});
+                })
+            }
         });
  
     }
@@ -206,6 +223,9 @@ export default function OrgUpdate(props){
                 }}>
                     <table className="tbl-org">
                         <tbody>
+                            <tr>
+                                <Profile orgNo={orgNo} org={org} setOrg={setOrg} profileImg={profileImg} setProfileImg={setProfileImg} profile={profile} setProfile={setProfile}/>
+                            </tr>
                             <tr>
                                 <th><label className="label">아이디</label></th>
                                 <td><TextField className="input-first" value={org.orgId} readOnly></TextField></td>
@@ -309,6 +329,92 @@ export default function OrgUpdate(props){
                 </form>
             </div>
         </div>
+    )
+}
+
+/*프로필 관련 코드*/
+function Profile(props){
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
+
+    const orgNo = props.orgNo;
+    const org = props.org;
+    const setOrg = props.setOrg;
+    const profileImg = props.profileImg;
+    const setProfileImg = props.setProfileImg;
+    const profile = props.profile;
+    const setProfile = props.setProfile;
+
+    const profileImgEl = useRef(null);
+
+    //대표 이미지 변경 시 호출 함수
+    function chgProfileImg(e){
+        const files = e.target.files;
+
+        if(files.length != 0 && files[0] != null){
+            setProfile(files[0]);       //서버에 전송될 이미지 파일 객체 세팅
+
+            //프로필 이미지 화면에 보여주기
+            const reader = new FileReader();    //브라우저에서 파일을 비동기적으로 읽어오기
+            reader.readAsDataURL(files[0]);     //파일 데이터 읽어오기
+            reader.onloadend = function(){      //모두 읽어오면 실행할 함수
+                setProfileImg(reader.result);   //미리보기용 state 변수에 세팅
+            }
+        }else { //업로드 팝업 취소한 경우 썸네일 파일 객체와 미리보기용 변수 초기화
+            setProfile(null);
+            setProfileImg(null);
+        }
+    }
+
+    //기본 이미지로 변경 클릭 시 호출 함수
+    function chgDefault(){
+        if(org.orgThumbPath == null || org.orgThumbPath == ""){
+            setProfile(null);
+            setProfileImg(null);
+            return;
+        }
+
+        Swal.fire({
+            title : "알림",
+            text : "기본 이미지로 변경하시겠습니까?",
+            icon : "warning",
+            showCancelButton : true,
+            confirmButtonText : "변경",
+            cancelButtonText : "취소"
+        })
+        .then(function(res){
+            if(res.isConfirmed){
+                let options = {};
+                options.url = serverUrl + "/org/thumb/" + orgNo;
+                options.method = "patch";
+
+                axiosInstance(options)
+                .then(function(res){
+                    if(res.data.resData){
+                        setOrg({...org, orgThumbPath : null});
+                    }
+                });
+            }
+        });
+    }
+
+    return (
+        <td colSpan={2}>
+            <div style={{display : "flex"}}>
+                <div>
+                    <img src={profileImg 
+                            ? profileImg
+                            : org.orgThumbPath
+                                ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0, 8) + "/" + org.orgThumbPath
+                                : "/images/default_profile.jpg"}
+                        onClick={function(e){profileImgEl.current.click();}}/>
+                    <input type="file" accept="image/*" id="orgThumbPath" style={{display : "none"}} ref={profileImgEl} onChange={chgProfileImg}/>
+                </div>
+                <div>
+                    <Button variant="contained" onClick={chgDefault}>기본 사진으로 변경</Button>
+                </div>
+            </div>
+        </td>
     )
 }
 

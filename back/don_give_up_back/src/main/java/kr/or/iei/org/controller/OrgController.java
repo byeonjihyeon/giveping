@@ -161,7 +161,7 @@ public class OrgController {
 			int result = service.updateOrg(org);
 			
 			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", true, "success");
+				res = new ResponseDTO(HttpStatus.OK, "", true, "");
 			}else {				
 				res = new ResponseDTO(HttpStatus.OK, "단체 정보 수정 중 오류가 발생했습니다.", false, "warning");
 			}
