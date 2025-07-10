@@ -68,11 +68,11 @@ export default function OrgData(){
 
     return (
         <section className="section data-wrap">
-            <div className="page-title">기부 사업 통계</div>
+            <h2 className="page-title">기부 사업 통계</h2>
             {data.allBiz == 0 ? "" :
             <div>
                 <span>전체 기부 사업 {data.allBiz}건</span>
-                <div style={{width : "800px", display : "flex", border : "1px solid black"}}>
+                <div>
                     {data.notApproveBiz == 0 ? "" : <div style={{width : notApprove + "%", backgroundColor : "red"}}>미승인 {data.notApproveBiz}건<br/>({notApprove}%)</div>}
                     {data.rejectBiz == 0 ? "" : <div style={{width : reject + "%", backgroundColor : "blue"}}>반려 {data.rejectBiz}건<br/>({reject}%)</div>}
                     {data.approveBiz == 0 ? "" : <div style={{width : approve + "%", backgroundColor : "green"}}>승인 {data.approveBiz}건<br/>({approve}%)</div>}
@@ -83,7 +83,7 @@ export default function OrgData(){
             {data.approveBiz == 0 ? "" :
             <div>
                 <span>승인 기부 사업 {data.approveBiz}건</span>
-                <div style={{width : "800px", display : "flex", border : "1px solid black"}}>
+                <div>
                     {data.ingBiz == 0 ? "" : <div style={{width : ing + "%", backgroundColor : "orange"}}>진행 중 {data.ingBiz}건<br/>({ing}%)</div>}
                     {data.donateEndBiz == 0 ? "" : <div style={{width : donateEnd + "%", backgroundColor : "purple"}}>모금 종료 {data.donateEndBiz}건<br/>({donateEnd}%)</div>}
                     {data.endBiz == 0 ? "" : <div style={{width : end + "%", backgroundColor : "pink"}}>사업 종료 {data.endBiz}건<br/>({end}%)</div>}
@@ -93,7 +93,7 @@ export default function OrgData(){
             {data.donateEndBiz == 0 ? "" :
             <div>
                 <span>모금 종료 사업 {data.donateEndBiz}건</span>
-                <div style={{width : "800px", display : "flex", border : "1px solid black"}}>
+                <div>
                     {notPay == 0 ? "" : <div style={{width : payNotEnd + "%", backgroundColor : "yellow"}}>미입금 {notPay}건<br/>({payNotEnd}%)</div>}
                     {data.payEndBiz == 0 ? "" : <div style={{width : payEnd + "%", backgroundColor : "skyblue"}}>입금 완료 {data.payEndBiz}건<br/>({payEnd}%)</div>}
                 </div>
@@ -102,7 +102,7 @@ export default function OrgData(){
             {data.donateCodeCnt == null ? "" :
             <div>
                 <span>기부 카테고리 비율</span>
-                <div style={{width : "800px", display : "flex", border : "1px solid black"}}>
+                <div>
                     {data.donateCodeCnt.map(function(code, index){
                         const codePct = Math.round(code.codeCount / data.approveBiz * 100 * 10) / 10;
                         const bgColor = colors[index % colors.length];
@@ -115,7 +115,7 @@ export default function OrgData(){
             {goal == 0 ? "" :
             <div>
                 <span>모금 종료 사업 평균 모금 진행률</span>
-                <div style={{width : "800px", display : "flex", border : "1px solid black"}}>
+                <div>
                     <div style={{width : avgMoney + "%", backgroundColor : "darkblue", color : "white"}}>{avgMoney}%</div>
                 </div>
             </div>

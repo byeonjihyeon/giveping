@@ -61,6 +61,21 @@
     width: 80px;
 }
 
+/*기부 사업 통계*/
+.data-wrap {
+    width: 100%;
+}
+.data-wrap>div {
+    width: 800px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+.data-wrap>div>div {
+    display: flex;
+    margin: 0 auto;
+    border: 1px solid black;
+}
+
 /*단체 정보 수정*/
 .org-form {
     margin-top: 20px;
