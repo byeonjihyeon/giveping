@@ -3,10 +3,13 @@ package kr.or.iei.admin.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@AllArgsConstructor
+
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class AdminBiz {
+
+	
 	private int bizNo;				// 사업 번호	
 	private int orgNo;				// 단체 번호(외래키)
 	private String bizName;			// 사업명
@@ -23,12 +26,16 @@ public class AdminBiz {
 	private String bizThumbPath;	// 사업 썸네일
 	
 	
-	// 
-	private String orgName;	// 사업명
+	//기부사업 상세보기에서 필요한 변수
+	private String orgName;	// 단체명
+	private String bizCtg;//사업 카테고리
+	private String orgEmail; //단체 이메일
 	
-	// 기부 사업 게시글에 대한 파일 정보 저장 변수 
 	
+	//탈퇴단체 기부사업리스트에서 필요한 변수
+	private int payoutStatus;
 	
-	// 삭제 파일 번호 배열 저장 변수
 
-}									
+		
+	
+}

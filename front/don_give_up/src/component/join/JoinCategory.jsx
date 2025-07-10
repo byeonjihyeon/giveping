@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import createInstance from "../../axios/Interceptor";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Button from '@mui/material/Button';
 
 //회원가입 시 기부 카테고리 선택 페이지
 export default function JoinCategory(props) {
@@ -76,20 +77,19 @@ export default function JoinCategory(props) {
         <section className="section category-wrap">
             {member.memberId != ""
             ?
-            <div className="page-title">관심 카테고리 선택</div>
+            <div className="page-title"><h1>관심 카테고리 선택</h1></div>
             :
-            <div className="page-title">주요 카테고리 선택</div>
+            <div className="page-title"><h1>주요 카테고리 선택</h1></div>
             }
-            <p>중복 선택 가능</p>
 
-            <ul className="select-ctg-wrap">
+            <ul className="select-ctg-wrap" style={{marginTop : "130px"}}>
+                <p>*중복 선택 가능</p>
                 {donateCtgList.map(function (category, index) {
                     return  <DonateCtg key={"category"+index} category={category} checkCtgList={checkCtgList} setCheckCtgList={setCheckCtgList}/>
                 })}
             </ul>
-
-            <div style={{ marginTop: '20px' }}>
-                <button onClick={join}>회원가입</button>
+            <div style={{marginTop : "140px", textAlign : "center"}}>
+                <Button variant="contained" onClick={join} style={{width : "180px", height : "50px", fontSize : "20px"}}>회원가입</Button>
             </div>
         </section>
         );

@@ -23,10 +23,10 @@ export default function Join(props){
 
     return (
         <section className="section join-wrap">
-            <div className="page-title">회원가입</div>
+            <div className="page-title"><h1>회원가입</h1></div>
             <div className="join-select">
-                <Link to="/join/member">개인 회원가입</Link>
-                <Link to="/join/org">단체 회원가입</Link>
+                <Link to="/join/member"><h3>개인 회원가입</h3></Link>
+                <Link to="/join/org"><h3>단체 회원가입</h3></Link>
             </div>
         </section>
     )

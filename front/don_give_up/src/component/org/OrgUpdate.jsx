@@ -3,6 +3,11 @@ import createInstance from "../../axios/Interceptor";
 import { useEffect, useRef, useState } from "react";
 import useUserStore from "../../store/useUserStore";
 import Swal from "sweetalert2";
+import * as React from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 //단체 정보 수정
 export default function OrgUpdate(props){
@@ -192,99 +197,118 @@ export default function OrgUpdate(props){
     }
 
     return (
-        <form autoComplete="off" onSubmit={function(e){
-            e.preventDefault();
-            updateOrg();
-        }}>
-            <table className="tbl-org" border={1}>
-                <tbody>
-                    <tr>
-                        <th>아이디</th>
-                        <td>{org.orgId}</td>
-                    </tr>
-                    <tr>
-                        <th>단체명</th>
-                        <td>
-                            <input type="text" id="orgName" value={org.orgName} onChange={chgOrg}/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>사업자 번호</th>
-                        <td>
-                            <input type="text" id="orgBiznum" value={org.orgBiznum} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>전화번호</th>
-                        <td>
-                            <input type="text" id="orgPhone" value={org.orgPhone} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>이메일</th>
-                        <td>
-                            <MemberEamil org={org} setOrg={setOrg} orgEmailId={orgEmailId} setOrgEmailId={setOrgEmailId} 
-                                orgEmailDomain={orgEmailDomain} setOrgEmailDomain={setOrgEmailDomain} setEmailChk={setEmailChk}/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>주소</th>
-                        <td>
-                            <MemberAddr org={org} setOrg={setOrg}/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>단체 설명</th>
-                        <td>
-                            <textarea id="orgIntroduce" value={org.orgIntroduce} onChange={chgOrg}></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>계좌번호</th>
-                        <td>
-                            <select name="orgAccountBank" id="orgAccountBank" value={org.orgAccountBank} onChange={selectAccountBank}>
-                                <option value="select">--선택--</option>
-                                <option value="국민은행">국민은행</option>
-                                <option value="신한은행">신한은행</option>
-                                <option value="하나은행">하나은행</option>
-                                <option value="우리은행">우리은행</option>
-                                <option value="iM뱅크">iM뱅크</option>
-                                <option value="기업은행">기업은행</option>
-                                <option value="농협은행">농협은행</option>
-                                <option value="우체국">우체국</option>
-                                <option value="카카오뱅크">카카오뱅크</option>
-                                <option value="토스뱅크">토스뱅크</option>
-                            </select>
-                            <input type="text" id="orgAccount" value={org.orgAccount} onChange={chgOrg}/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>단체 홈페이지 URL</th>
-                        <td>
-                            <input type="text" id="orgUrl" value={org.orgUrl} onChange={chgOrg}/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th colSpan={2}>
-                            <ul className="select-ctg-wrap">
-                                {donateCtgList.map(function(category, index){
-                                    return <DonateCtg key={"category"+index} category={category} org={org} setOrg={setOrg}
-                                                                             checkCtgList={checkCtgList} setCheckCtgList={setCheckCtgList}/>
-                                })}
-                            </ul>
-                        </th>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th colSpan={2}>
-                            <button type="submit">수정</button>
-                            {org.orgStatus == 3 ? "" : <Link to="/org/delete">탈퇴하기</Link>}
-                        </th>
-                    </tr>
-                </tfoot>
-            </table>
-        </form>
+        <div>
+            <h2 className="page-title">단체 정보 수정</h2>
+            <div>
+                <form autoComplete="off" className="org-form" onSubmit={function(e){
+                    e.preventDefault();
+                    updateOrg();
+                }}>
+                    <table className="tbl-org">
+                        <tbody>
+                            <tr>
+                                <th><label className="label">아이디</label></th>
+                                <td><TextField className="input-first" value={org.orgId} readOnly></TextField></td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">단체명</label></th>
+                                <td>
+                                    <TextField type="text" id="orgName" className="input-first" value={org.orgName} onChange={chgOrg}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">사업자 번호</label></th>
+                                <td>
+                                    <TextField type="text" id="orgBiznum" className="input-first" value={org.orgBiznum} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요"/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">전화번호</label></th>
+                                <td>
+                                    <TextField type="text" id="orgPhone" className="input-first" value={org.orgPhone} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요"/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">이메일</label></th>
+                                <td>
+                                    <MemberEamil org={org} setOrg={setOrg} orgEmailId={orgEmailId} setOrgEmailId={setOrgEmailId} 
+                                        orgEmailDomain={orgEmailDomain} setOrgEmailDomain={setOrgEmailDomain} setEmailChk={setEmailChk}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">주소</label></th>
+                                <td>
+                                    <MemberAddr org={org} setOrg={setOrg}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">단체 설명</label></th>
+                                <td>
+                                    <TextField id="orgIntroduce" className="input-first" multiline rows={4} value={org.orgIntroduce} onChange={chgOrg}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">계좌번호</label></th>
+                                <td>
+                                    <Select name="orgAccountBank" id="orgAccountBank" value={org.orgAccountBank} onChange={selectAccountBank} style={{marginRight : "5px", width : "125px"}}>
+                                        <MenuItem value="select">--선택--</MenuItem>
+                                        <MenuItem value="국민은행">국민은행</MenuItem>
+                                        <MenuItem value="신한은행">신한은행</MenuItem>
+                                        <MenuItem value="하나은행">하나은행</MenuItem>
+                                        <MenuItem value="우리은행">우리은행</MenuItem>
+                                        <MenuItem value="iM뱅크">iM뱅크</MenuItem>
+                                        <MenuItem value="기업은행">기업은행</MenuItem>
+                                        <MenuItem value="농협은행">농협은행</MenuItem>
+                                        <MenuItem value="우체국">우체국</MenuItem>
+                                        <MenuItem value="카카오뱅크">카카오뱅크</MenuItem>
+                                        <MenuItem value="토스뱅크">토스뱅크</MenuItem>
+                                    </Select>
+                                    <TextField type="text" id="orgAccount" className="input-account" value={org.orgAccount} onChange={chgOrg}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">홈페이지 URL</label></th>
+                                <td>
+                                    <TextField type="text" id="orgUrl" className="input-first" value={org.orgUrl} onChange={chgOrg}/>
+                                </td>
+                            </tr>
+                            <tr><td></td><td><p></p></td></tr>
+                            <tr>
+                                <th><label className="label">주요 카테고리</label></th>
+                                <th>
+                                    <ul className="select-ctg-wrap" style={{width : "420px"}}>
+                                        {donateCtgList.map(function(category, index){
+                                            return <DonateCtg key={"category"+index} category={category} org={org} setOrg={setOrg}
+                                                                                    checkCtgList={checkCtgList} setCheckCtgList={setCheckCtgList}/>
+                                        })}
+                                    </ul>
+                                </th>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colSpan={2}>
+                                    <div style={{margin : "20px auto"}}>
+                                        <Button variant="contained" type="submit" className="orgBtn" style={{marginRight : "10px", height : "40px", fontSize : "20px"}}>수정</Button>
+                                        <Button variant="contained" className="orgBtn" style={{height : "40px", fontSize : "20px"}}>
+                                            {org.orgStatus == 3 ? "" : <Link to="/org/delete">탈퇴하기</Link>}
+                                        </Button>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+        </div>
     )
 }
 
@@ -368,16 +392,18 @@ function MemberEamil(props){
 
     return (
         <>
-            <input type="text" id="orgEmail" value={orgEmailId} onChange={chgEmailId}/>@
-            <input type="text" id="orgEmailDomain" value={orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
-            <select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? "custom" : orgEmailDomain}>
-                <option value="custom">직접 입력</option>
-                <option value="naver.com">naver.com</option>
-                <option value="gmail.com">gmail.com</option>
-                <option value="daum.net">daum.net</option>
-                <option value="kakao.com">kakao.com</option>
-                <option value="nate.com">nate.com</option>
-            </select>
+            <TextField type="text" id="orgEmail" className="input-email"
+            value={orgEmailId} onChange={chgEmailId}/>&nbsp;@&nbsp;
+            <TextField type="text" id="orgEmailDomain" className="input-email"
+            value={orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
+            <Select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? "custom" : orgEmailDomain} style={{marginLeft : "5px", width : "125px"}}>
+                <MenuItem value="custom">직접 입력</MenuItem>
+                <MenuItem value="naver.com">naver.com</MenuItem>
+                <MenuItem value="gmail.com">gmail.com</MenuItem>
+                <MenuItem value="daum.net">daum.net</MenuItem>
+                <MenuItem value="kakao.com">kakao.com</MenuItem>
+                <MenuItem value="nate.com">nate.com</MenuItem>
+            </Select>
         </>
     )
 }
@@ -395,12 +421,12 @@ function MemberAddr(props){
         document.body.appendChild(script);
     }, []);
     
-    //주소, 상세주소 useRef
-    const addressRef = useRef(null);
-    const detailAddressRef = useRef(null);
-    
     //다음 주소 API 실행 코드
     function execDaumPostcode (){
+        //주소, 상세주소
+        const addressMain = document.getElementById("orgAddrMain");
+        const addressDetail = document.getElementById("orgAddrDetail");
+
         new window.daum.Postcode({
             oncomplete: function (data) {
                 let addr = ''; // 주소
@@ -411,12 +437,12 @@ function MemberAddr(props){
                     addr = data.jibunAddress;
                 }
 
-                addressRef.current.value = addr;
+                addressMain.value = addr;
                 
                 //주소 값 State 변수에 저장
                 setOrg({...org, orgAddrMain : addr})
 
-                detailAddressRef.current.focus();
+                addressDetail.focus();
             }
         }).open();
     }
@@ -429,9 +455,9 @@ function MemberAddr(props){
 
     return (
         <>
-            <input type="text" ref={addressRef} value={org.orgAddrMain} placeholder="주소" readOnly/>
-            <button type="button" onClick={execDaumPostcode}>주소 찾기</button> <br/>
-            <input type="text" ref={detailAddressRef} value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" />
+            <TextField type="text" id="orgAddrMain" className="input-addr" value={org.orgAddrMain} placeholder="주소" readOnly/>
+            <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
+            <TextField type="text"id="orgAddrDetail" className="input-first" value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" />
         </>
     )
 }
@@ -464,7 +490,7 @@ function DonateCtg(props){
 
     return (
         <li className={"select-ctg" + (!checkCtgList ? "" : checkCtgList.includes(category.donateCode) ? " active" : "")}
-            onClick={function(){ toggleCategory(category.donateCode); }}>
+            onClick={function(){ toggleCategory(category.donateCode); }} style={{width : "63px", height : "25px", lineHeight : "25px", margin : "5px 5px"}}>
             {category.donateCtg}
         </li>
     )
