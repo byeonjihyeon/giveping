@@ -109,32 +109,33 @@ public class BizService {
 
 	// 대표 사진 업로드
 	@Transactional
-	public Biz uploadThumb(Biz biz) {
-		// 1) 사업 번호 조회
-		int bizNo = dao.selectBizNo();
-		biz.setBizNo(bizNo);
-
-		// 2) 대표 사진 업로드
+	public int uploadThumb(Biz biz) {
 		int result = dao.uploadThumb(biz);
-
-		return biz;
+		
+		return result;
 	}
 
 	// 기부 사업 등록
 	public int insertBiz(Biz biz) {
-		// 1) 기부 사업 등록
+		//1)사업 번호 조회
+		int bizNo = dao.selectBizNo();
+		biz.setBizNo(bizNo);
+		
+		//2) 기부 사업 등록
 		int result = dao.insertBiz(biz);
-
-		// 2) 모금액 사용 계획 등록
-		if (result > 0) {
-			for (int i = 0; i < biz.getBizPlanList().size(); i++) {
+		
+		//3) 모금액 사용 계획 등록
+		if(result > 0) {			
+			for(int i=0; i<biz.getBizPlanList().size(); i++) {
 				BizPlan bizPlan = biz.getBizPlanList().get(i);
 				bizPlan.setBizNo(biz.getBizNo());
 				result = dao.insertBizPlan(bizPlan);
 			}
+		}else {
+			return 0;
 		}
-
-		return result;
+		
+		return bizNo;
 	}
 
 	/*
