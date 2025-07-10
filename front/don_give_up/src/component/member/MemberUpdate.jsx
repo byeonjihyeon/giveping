@@ -272,14 +272,14 @@ export default function MemberUpdate(props) {
             </div>
             <div className="input-wrap">
                 <div className="input-title-wrap">이름</div>
-                <div>
-                    <input type="text" id='memberName' value={member.memberName} onChange={updMember} onBlur={chkName} />
+               
+                    <input type="text" id='memberName' value={member.memberName} onChange={updMember} onBlur={chkName} />   
                     <p>{invalidMsg.id}</p>
-                </div>
             </div>
+        
             <div className="input-wrap">
                 <div className="input-title-wrap">생년월일</div>
-                <div>
+                <div className="input-content-wrap">
                     <input type='type' id='memberBirth' value={member.memberBirth} placeholder="생년월일 8자리" onChange={updMember} onBlur={chkBirth}/>
                     <p>{invalidMsg.birth}</p>
                 </div>
@@ -287,14 +287,14 @@ export default function MemberUpdate(props) {
             </div>
             <div className="input-wrap">
                 <div className="input-title-wrap" >전화번호</div>
-                <div>
+                <div className="input-content-wrap">
                     <input type="text" id='memberPhone' value={member.memberPhone} onChange={updMember} onBlur={chkPhone}/>
                     <p>{invalidMsg.phone}</p>
                 </div>
             </div>
             <div className="input-wrap">
                 <div className="input-title-wrap">이메일</div>
-                <div>
+                <div className="input-content-wrap">
                     <input type="text" id='memberEmail' maxLength={100} value={member.memberEmail} onChange={updMember} onBlur={chkEmail}/>
                     <p>{invalidMsg.email}</p>
                 </div>   

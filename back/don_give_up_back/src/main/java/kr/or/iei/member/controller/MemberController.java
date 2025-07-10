@@ -1,11 +1,9 @@
 package kr.or.iei.member.controller;
 
 import java.io.File;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,33 +27,11 @@ import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.member.model.dto.MemberAlarm;
-import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Refund;
-import kr.or.iei.common.util.JwtUtils;
-import kr.or.iei.member.model.dto.Charge;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
 import kr.or.iei.member.model.service.MemberService;
-
-import jakarta.servlet.http.HttpServletRequest;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 
 @RestController
@@ -70,8 +46,6 @@ public class MemberController {
 	
 	@Value("${file.uploadPath}")
 	private String uploadPath;
-	
-	private final Logger logger = LoggerFactory.getLogger(this.getClass()); //toss에 필요한 변수
 
 	//토큰 재발급
 	@PostMapping("/refresh")

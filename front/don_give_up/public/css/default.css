@@ -7,6 +7,11 @@
     /* color: black; */
 }
 
+body {
+  font-family: 'Pretendard', sans-serif;
+  color: #333333;
+}
+
 /*헤더*/
 .header-wrap {
     width: 1200px;
