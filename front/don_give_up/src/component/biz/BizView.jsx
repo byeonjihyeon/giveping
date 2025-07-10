@@ -216,20 +216,10 @@ export default function BizView(){
                         {/* 설문조사 팝업 */}
                         {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
                     </div>
-                        
-                        
-                        <div className="view-btn-zone">
-                            <Link to={"/biz/update/" + donateBiz.bizNo} className="btn-primary lg">
-                                글수정
-                            </Link>
-                            <button type="button" className="btn-secondary lg" onClick={deleteBiz}>
-                                글삭제
-                            </button>
-                        </div>
                     
                         
                          
-                    {/*{isOwnerOrAdmin && (
+                    {isOwnerOrAdmin && (
                         <div className="view-btn-zone">
 
                             {donateBiz.bizStatus !== 1 && (
@@ -244,7 +234,7 @@ export default function BizView(){
                             )}
                         </div>
                     )}
-                    */}
+                    
 
                         
                 </div>

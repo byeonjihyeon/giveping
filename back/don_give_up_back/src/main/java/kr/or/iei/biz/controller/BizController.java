@@ -194,6 +194,9 @@ public class BizController {
 	//대표 이미지 등록
 	@PostMapping("/thumb")
 	public ResponseEntity<ResponseDTO> uploadThumb(@ModelAttribute MultipartFile bizImg, int orgNo) {
+		System.out.println("대표 이미지 등록 도착!");
+		System.out.println("bizImg : " + bizImg);
+		System.out.println("orgNo : " + orgNo);
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "대표 이미지 업로드 중, 오류가 발생하였습니다.", null, "error");
 		
 		try {

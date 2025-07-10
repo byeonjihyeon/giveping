@@ -13,6 +13,7 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import ToastEditor from '../news/ToastEditor';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 export default function BizUpdate(){
 
@@ -241,45 +242,7 @@ export default function BizUpdate(){
     //대표 사진 변경 가능 여부를 다룰 변수
     const [fix, setFix] = useState(false);
 
-    //대표 사진 확정 버튼 클릭 시 호출 함수
-    function fixThumbImg(){
-        Swal.fire({
-            title : "알림",
-            text : "확정 시 대표 사진 이미지는 변경하지 못합니다.",
-            icon : "warning",
-            showCancelButton : true,
-            cancelButtonText : "취소",
-            confirmButtonText : "확정"
-        }).then(function(result){
-            if(result.isConfirmed){ //확정 버튼 클릭 시 
-                //대표 사진 변경 못하게 변수 변경
-                setFix(true);
-                
-                //DB에 대표 사진 저장
-                const form = new FormData();
-
-                if(bizImg != null){
-                    form.append("bizImg", bizImg);
-                    form.append("orgNo", orgNo);
-
-                    let options = {};
-                    options.url = serverUrl + "/biz/thumb";
-                    options.method = "post";
-                    options.data = form;
-                    options.headers = {};
-                    options.headers.contentType = "multipart/form-data";
-                    options.headers.processData = false; //쿼리스트링 X
-                    
-                    axiosInstance(options)
-                    .then(function(res){
-                        const newDonateBiz = res.data.resData;
-                        setDonateBiz({...donateBiz, bizNo : newDonateBiz.bizNo});
-                    })
-                }
-            };
-        });
-    }
-
+    
     useEffect(function(){
         setDonateBiz({...donateBiz, bizPlanList : bizPlanList});
     }, [bizPlanList]);
@@ -387,6 +350,63 @@ export default function BizUpdate(){
         })
     }
 
+    // 썸네일 함수 초기화
+    function resetThumbImage() {
+        setFix(false); // 다시 수정 가능 상태로 전환
+        setBizImg(null); // 서버로 전송할 이미지 초기화
+        setBizThumbImg(null); // 미리보기 이미지 제거
+        // 기존 donateBiz의 bizThumbPath 제거 (원하면)
+        setDonateBiz(prev => ({
+            ...prev,
+            bizThumbPath: ""  // or null
+        }));
+    }
+
+    //대표 사진 확정 버튼 클릭 시 호출 함수
+        function fixThumbImg(){
+            Swal.fire({
+                title : "알림",
+                text : "확정 시 대표 사진 이미지는 변경하지 못합니다.",
+                icon : "warning",
+                showCancelButton : true,
+                cancelButtonText : "취소",
+                confirmButtonText : "확정"
+            }).then(function(result){
+                if(result.isConfirmed){ //확정 버튼 클릭 시 
+                    //대표 사진 변경 못하게 변수 변경
+                    setFix(true);
+                    
+                    //DB에 대표 사진 저장
+                    const form = new FormData();
+    
+                    if(bizImg != null){
+                        form.append("bizImg", bizImg);
+                        form.append("orgNo", orgNo);
+    
+                        let options = {};
+                        options.url = serverUrl + "/biz/thumb";
+                        options.method = "post";
+                        options.data = form;
+                        options.headers = {};
+                        options.headers.contentType = "multipart/form-data";
+                        options.headers.processData = false; //쿼리스트링 X
+                        
+                        axiosInstance(options)
+                        .then(function(res){
+                            const newDonateBiz = res.data.resData;
+
+                            setDonateBiz(prev => ({
+                                ...prev,
+                                bizNo: newDonateBiz.bizNo,
+                                bizThumbPath: newDonateBiz.bizThumbPath // 서버에서 전달받은 새 썸네일 경로로 갱신
+                            }));
+                        });
+                    }
+                };
+            });
+        }
+
+
     return(
        <div>
             <form autoComplete="off" onSubmit={function(e){
@@ -445,10 +465,24 @@ export default function BizUpdate(){
                 </div>
                 <div>
                     <div>대표 사진 등록</div>
-                    <img src={serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0,8) + "/" + donateBiz.bizThumbPath} style={{width : "100px"}}
-                        onClick={fix ? null : function(e){thumbImg.current.click();}}/>
+                    <img 
+                        src={
+                            donateBiz.bizThumbPath
+                            ? serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0, 8) + "/" + donateBiz.bizThumbPath
+                            : bizThumbImg || "/images/default_img.png"
+                        }
+                        style={{ width: "100px", cursor: fix ? "default" : "pointer" }}
+                        onClick={fix ? null : () => thumbImg.current.click()}
+                    />
+
                     <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
-                    <button type="button" onClick={fixThumbImg}>확정</button>
+                    {fix && (
+                    <button type="button" onClick={resetThumbImage}>초기화</button>
+                    )}
+                    <div>
+                        <Button variant="contained" type="button" onClick={fixThumbImg} style={{bottom : "0", marginTop : "65px", marginLeft : "10px"}}>확정</Button>
+                    </div>
+                    
                 </div>
                 <div>
                     <div>본문</div>
