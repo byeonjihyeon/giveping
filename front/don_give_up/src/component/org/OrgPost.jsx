@@ -154,48 +154,7 @@ export default function OrgPost(){
         }
     }
 
-    //대표 사진 변경 가능 여부를 다룰 변수
-    const [fix, setFix] = useState(false);
-
-    //대표 사진 확정 버튼 클릭 시 호출 함수
-    function fixThumbImg(){
-        Swal.fire({
-            title : "알림",
-            text : "확정 시 대표 사진 이미지는 변경하지 못합니다.",
-            icon : "warning",
-            showCancelButton : true,
-            cancelButtonText : "취소",
-            confirmButtonText : "확정"
-        }).then(function(result){
-            if(result.isConfirmed){ //확정 버튼 클릭 시 
-                //대표 사진 변경 못하게 변수 변경
-                setFix(true);
-                
-                //DB에 대표 사진 저장
-                const form = new FormData();
-
-                if(bizImg != null){
-                    form.append("bizImg", bizImg);
-                    form.append("orgNo", orgNo);
-
-                    let options = {};
-                    options.url = serverUrl + "/biz/thumb";
-                    options.method = "post";
-                    options.data = form;
-                    options.headers = {};
-                    options.headers.contentType = "multipart/form-data";
-                    options.headers.processData = false; //쿼리스트링 X
-                    
-                    axiosInstance(options)
-                    .then(function(res){
-                        const newDonateBiz = res.data.resData;
-                        setDonateBiz({...donateBiz, bizNo : newDonateBiz.bizNo});
-                    })
-                }
-            };
-        });
-    }
-
+    //사용 계획 변경 시마다 변수에 변경된 값 저장
     useEffect(function(){
         setDonateBiz({...donateBiz, bizPlanList : bizPlanList});
     }, [bizPlanList]);
@@ -223,8 +182,7 @@ export default function OrgPost(){
             { valid: donateBiz.donateCode == "", message: "기부 코드를 선택하세요." },
             { valid: donateBiz.bizName == "", message: "사업명을 입력하세요." },
             { valid: donateBiz.bizContent == "", message: "사업 내용을 입력하세요." },
-            { valid: bizImg == null, message: "대표 사진 등록해주세요." },
-            { valid: !fix, message: "대표 사진 확정 처리를 해주세요." }
+            { valid: bizImg == null, message: "대표 사진 등록해주세요." }
         ];
     
         //검증 실패 시 첫 번째 오류 메시지 띄우고 return
@@ -263,7 +221,7 @@ export default function OrgPost(){
 
         Swal.fire({
             title : "알림",
-            text : "사업 신청 후 7일 경과 후에도 미승인 시 자동 반려처리됩니다." + "(마감 시한은 신청일 기준 7일 뒤 23:59까지)",
+            text : "사업 신청 후 7일 경과 후에도 미승인 시 자동 반려처리됩니다. (마감 시한은 신청일 기준 7일 뒤 23:59까지)",
             icon : "warning",
             showCancelButton : true,
             confirmButtonText : "확인",
@@ -273,20 +231,42 @@ export default function OrgPost(){
             if(result.isConfirmed){
                 let options = {};
                 options.url = serverUrl + "/biz/post";
-                options.method = "patch";
+                options.method = "post";
                 options.data = donateBiz
         
                 axiosInstance(options)
                 .then(function(res){
-                    Swal.fire({
-                        title : "알림",
-                        text : res.data.clientMsg,
-                        icon : res.data.alertIcon,
-                        confirmButtonText : "확인"
-                    })
-                    .then(function(result){
-                         navigate("/org"); // 기부 사업 보기 메뉴로 이동
-                    });
+                    const bizNo = res.data.resData;
+                    if(bizNo > 0){ //사업 번호가 있으면 등록
+                        const form = new FormData();
+
+                        if(bizImg != null){
+                            form.append("bizImg", bizImg);
+                            form.append("bizNo", bizNo);
+
+                            let options = {};
+                            options.url = serverUrl + "/biz/thumb";
+                            options.method = "post";
+                            options.data = form;
+                            options.headers = {};
+                            options.headers.contentType = "multipart/form-data";
+                            options.headers.processData = false; //쿼리스트링 X;
+
+                            axiosInstance(options)
+                            .then(function(res){
+                                Swal.fire({
+                                    title : "알림",
+                                    text : res.data.clientMsg,
+                                    icon : res.data.alertIcon,
+                                    confirmButtonText : "확인"
+                                })
+                                .then(function(result){
+                                     navigate("/org"); // 기부 사업 보기 메뉴로 이동
+                                });
+                            });
+                        }
+                    }
+
                 });
             }
         })
@@ -353,15 +333,10 @@ export default function OrgPost(){
                 <div>
                     <div style={{width : "180px", padding : "15px 0"}}>
                         <h3>대표 사진 등록</h3>
-                        <div style={{display : "flex"}}>
-                            <div style={{height : "100px"}}>
-                                <img src={bizThumbImg ? bizThumbImg : "/images/default_img.png"} style={{height : "100px"}}
-                                    onClick={fix ? null : function(e){thumbImg.current.click();}}/>
-                                <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
-                            </div>
-                            <div>
-                                <Button variant="contained" type="button" onClick={fixThumbImg} style={{bottom : "0", marginTop : "65px", marginLeft : "10px"}}>확정</Button>
-                            </div>
+                        <div style={{height : "100px"}}>
+                            <img src={bizThumbImg ? bizThumbImg : "/images/default_img.png"} style={{height : "100px"}}
+                                onClick={bizThumbImg ? null : function(e){thumbImg.current.click();}}/>
+                            <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
                         </div>
                     </div>
                     <div style={{padding : "15px 0"}}>
