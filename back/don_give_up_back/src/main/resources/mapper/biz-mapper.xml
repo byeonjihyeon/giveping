@@ -62,7 +62,7 @@
             FROM tbl_donate_biz b
             JOIN tbl_org o ON b.org_no = o.org_no
             JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
-            WHERE b.biz_status = 1 
+            WHERE b.biz_status = 1
             	AND b.biz_end >= sysdate
             <if test="categories != null and categories.size() > 0">
                 AND b.donate_code IN
@@ -139,8 +139,26 @@ select sum(donate_money) AS donateMoney
 					javaType="java.util.List"
 					ofType="BizMember">
 		</collection>
+		<collection property="bizPlanList"
+			   		select="selectPlanList"
+			   		column="biz_no"
+			   		javaType="java.util.List"
+			   		ofType="BizPlan">
+		</collection>
+		
 		
 	</resultMap>
+	
+	<!-- 기부사업글에 대한 사용계획 리스트 조회 -->
+	<select id="selectPlanList"
+			parameterType="_int"
+			resultType="BizPlan">
+		select 	biz_plan_no as planNo,
+				biz_plan_purpose as bizPlanPurpose,
+				biz_plan_money as bizPlanMoney
+			from tbl_biz_plan
+			where biz_no = #{_parameter}
+	</select>
 
 	<!-- 게시글에 대한 파일 리스트 조회 -->
 	<select id="selectBizFileList"
@@ -370,4 +388,42 @@ from tbl_survey_question
 	 	  			#{fileNo}
 	 	  </foreach>	     
 	 </delete>
+	 
+	 <!-- 기부사업글 삭제 요청 상태로 업데이트 -->
+	 <update id="deleteBiz" parameterType="_int">
+	 	update tbl_donate_biz
+		   set BIZ_STATUS = 3
+		 where biz_no = #{bizNo}
+	 </update>
+	 
+	 <!-- 모금액 사용 계획 삭제 -->
+	 <delete id="deleteBizPlans" parameterType="list">
+	  DELETE FROM tbl_biz_plan
+	  WHERE biz_plan_no IN
+	  <foreach item="planNo" collection="list" open="(" separator="," close=")">
+	    #{planNo}
+	  </foreach>
+	</delete>
+	
+	<!-- 모금액 사용 계획 수정 -->
+	<update id="updateBizPlan" parameterType="BizPlan">
+	update tbl_biz_plan
+		   set BIZ_PLAN_PURPOSE = #{bizPlanPurpose},
+		       BIZ_PLAN_MONEY = #{bizPlanMoney}
+		 where biz_plan_no = #{planNo}
+		</update>
+	
+	<!-- 기부 사업글 수정 -->
+	<update id="updateBiz" parameterType="Biz">
+	update tbl_donate_biz
+		   set DONATE_CODE = #{donateCode},
+		   	   BIZ_NAME = #{bizName},
+		   	   BIZ_CONTENT = #{bizContent},
+		   	   BIZ_START = #{bizStart},
+		   	   BIZ_END = #{bizEnd},
+		   	   BIZ_GOAL = #{bizGoal},
+		   	   BIZ_REG_DATE = sysdate,
+		   	   BIZ_THUMB = #{bizThumbPath}
+		 where biz_no = #{bizNo}
+	</update>
 </mapper>

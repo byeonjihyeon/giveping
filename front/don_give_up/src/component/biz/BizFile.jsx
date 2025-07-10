@@ -119,6 +119,9 @@ export default function BizFile(props){
 
     return(
         <>
+        <br/>
+        <hr/>
+        <br/>
         {/* 수정 모드 아닌 경우 */}
         {!isEditMode && 
             <div className="no-login">
