@@ -301,7 +301,7 @@ public class BizController {
 	}
 	
 	//기부 사업 등록
-	@PatchMapping("/post")
+	@PostMapping("/post")
 	public ResponseEntity<ResponseDTO> insertBiz(@RequestBody Biz biz) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "error");
 		
@@ -342,7 +342,7 @@ public class BizController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	// 기부사업글 삭제 요청 상태로 업데이트
+	// 기부사업글 수정 업데이트
 	@PatchMapping("/update")
 	public ResponseEntity<ResponseDTO> updateBiz(@RequestBody Biz biz) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "error");
