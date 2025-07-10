@@ -7,7 +7,7 @@
     /* color: black; */
 }
 
-/*헤더*/
+/*Header*/
 .header-wrap {
     width: 1200px;
     margin: 0 auto;
@@ -39,7 +39,7 @@
     gap: 20px;
 }
 
-/*헤더 메뉴*/
+/*Hader 메뉴*/
 .header-menu {
     width: 100%;
     border-top: 1px solid black;
@@ -61,6 +61,8 @@
 .sub-menu {
     position: absolute;
     display: none;
+    z-index: 5;
+    background-color: white;
 }
 .mypage-menu:hover>.sub-menu {
     display: block;
@@ -122,7 +124,7 @@
 /*회원가입*/
 /*회원가입 메인*/
 .join-wrap {
-    width: 700px;
+    width: 650px;
     min-height: 600px;
     margin: 20px auto;
     border: 1px solid #999;
@@ -175,9 +177,6 @@
 .nextBtn {
     width: 150px;
 }
-.tbl-join input {
-    height: 30px;
-}
 .MuiInputBase-root {
     height: 35px;
 }
@@ -188,40 +187,24 @@
     height: 34px;
 }
 .MuiSelect-root {
-    width: 143.5px;
+    width: 134px;
 }
 .MuiPaper-root {
     height: 200px;
 }
-.tbl-join #memberId,
-.tbl-join #orgId {
-    width: 325px;
-}
-.tbl-join #memberPw,
-.tbl-join #memberPwRe,
-.tbl-join #memberName,
-.tbl-join #memberPhone,
-.tbl-join #memberAddrDetail,
-.tbl-join #orgPw,
-.tbl-join #orgPwRe,
-.tbl-join #orgName, 
-.tbl-join #orgBiznum,
-.tbl-join #orgPhone,
-.tbl-join #orgIntroduce,
-.tbl-join #orgAddrDetail {
+.input-first {
     width: 420px;
 }
-.tbl-join #memberEmailId,
-.tbl-join #memberEmailDomain,
-.tbl-join #orgEmailId,
-.tbl-join #orgEmailDomain {
-    width: 120px;
+.input-id {
+    width: 325px;
 }
-.tbl-join #memberAddrMain,
-.tbl-join #orgAddrMain {
+.input-email {
+    width: 134px;
+}
+.input-addr {
     width: 320px;
 }
-.tbl-join #orgAccount {
+.input-account {
     width: 290px;
 }
 .MuiSelect-select {
@@ -241,7 +224,6 @@
 .select-ctg-wrap {
     width: 600px;
     margin: 0 auto;
-    margin-top: 130px;
     align-content: center;
 }
 .select-ctg-wrap>.select-ctg {
@@ -269,21 +251,28 @@
 }
 
 /*로그인*/
+/*아이디 비번 찾기*/
 .login-wrap {
-    width: 600px;
+    width: 650px;
     min-height: 500px;
     margin: 70px auto;
     border: 1px solid #999;
     border-radius: 50px;
 }
 .login-div {
-    width: 400px;
+    width: 467px;
     margin: 100px auto;
 }
-.login-div>div {
+.search-div {
+    width: 587px;
+    margin: 100px auto;
+}
+.login-div>div,
+.search-div>div {
     text-align: center;
 }
-.login-div>div>form {
+.login-div>div>form,
+.search-div>div>form {
     display: flex;
 }
 .login-label {
@@ -294,9 +283,6 @@
     text-align: right;
     padding-right: 10px;
 }
-.tbl-login #memberId,
-.tbl-login #memberPw,
-.tbl-login #orgId,
-.tbl-login #orgPw {
-    width: 200px;
+.input-login {
+    width:300px;
 }

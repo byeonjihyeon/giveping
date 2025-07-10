@@ -82,7 +82,7 @@ export default function JoinCategory(props) {
             <div className="page-title"><h1>주요 카테고리 선택</h1></div>
             }
 
-            <ul className="select-ctg-wrap">
+            <ul className="select-ctg-wrap" style={{marginTop : "130px"}}>
                 <p>*중복 선택 가능</p>
                 {donateCtgList.map(function (category, index) {
                     return  <DonateCtg key={"category"+index} category={category} checkCtgList={checkCtgList} setCheckCtgList={setCheckCtgList}/>

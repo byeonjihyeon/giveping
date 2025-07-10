@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import Swal from "sweetalert2";
+import Button from '@mui/material/Button';
 
 export default function OrgProfileUpdate(props){
     const org = props.org; //단체 수정완료후, 사이드메뉴 정보 변경하기 위함
@@ -77,8 +78,9 @@ export default function OrgProfileUpdate(props){
 
     return (
         <div>
-            <div className="input-wrap">
-                <img className="input-title-wrap"
+            <h2 className="page-title">프로필 사진 변경</h2>
+            <div className="change-wrap">
+                <img className="change-title-wrap"
                     src={profileImg //프로필 사진이 있는지
                         ? profileImg 
                         : org.orgThumbPath //기존 프로필이 있는지
@@ -91,9 +93,9 @@ export default function OrgProfileUpdate(props){
                 <input type='file' accept="image/*" id='orgThumbPath' style={{display: 'none'}} ref={profileImgEl} onChange={chgProfileImg} />
                 
             </div>
-            <div>
-                <button onClick={chgProfile}>프로필 변경하기</button>
-                <input type="button" value='기본이미지로 변경' onClick={function(e){
+            <div style={{width : "283px", margin : "15px auto"}}>
+                <Button variant="contained" type="button" onClick={chgProfile} style={{marginRight : "5px"}}>프로필 변경하기</Button>
+                <Button variant="contained" type="button" onClick={function(e){
                     //미리보기용, 서버전송용 변수 null 처리하여, 기본이미지로 변경 (서버에 저장된 파일이 없는경우!)
                     if(org.orgThumbPath == null || org.orgThumbPath == ""){
                         setProfileImg(null);
@@ -124,7 +126,7 @@ export default function OrgProfileUpdate(props){
                             })
                         }
                     })
-                    }}/>
+                    }}>기본 이미지로 변경</Button>
             </div>
         </div>
     )

@@ -13,6 +13,8 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import ToastEditor from '../news/ToastEditor';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 
 //기부 사업 등록
@@ -261,7 +263,7 @@ export default function OrgPost(){
 
         Swal.fire({
             title : "알림",
-            text : "사업신청후 7일 경과 후에도 승인처리 되지 않은 경우 자동 반려처리됩니다. (7일의 기준은 25-06-20 오후 3:00에 신청 시 마감 시한은 25-6-27 23:59)",
+            text : "사업 신청 후 7일 경과 후에도 미승인 시 자동 반려처리됩니다." + "(마감 시한은 신청일 기준 7일 뒤 23:59까지)",
             icon : "warning",
             showCancelButton : true,
             confirmButtonText : "확인",
@@ -283,7 +285,7 @@ export default function OrgPost(){
                         confirmButtonText : "확인"
                     })
                     .then(function(result){
-                         navigate("/org/biz"); // 기부 사업 보기 메뉴로 이동
+                         navigate("/org"); // 기부 사업 보기 메뉴로 이동
                     });
                 });
             }
@@ -292,13 +294,13 @@ export default function OrgPost(){
 
     return (
         <div>
+            <h2 className="page-title">기부 사업 등록</h2>
             <form autoComplete="off" onSubmit={function(e){
                 e.preventDefault();
                 insertBizPlan();//등록 버튼 클릭 시 실행 함수
-            }}>
+            }} className="post-form">
                 <div>
-                    <div>희망 모금 기간</div>
-                    <div>*모금 시작일은 등록일로부터 7일 뒤입니다.(예시 : 등록일 - 7월 5일 / 모금 시작일 - 7월 12일)</div>
+                    <h3>희망 모금 기간</h3>
                     <FormControl>
                         <RadioGroup row name="biz-donate-date" onChange={selectDonateDate}
                         aria-labelledby="demo-row-radio-buttons-group-label"
@@ -308,33 +310,35 @@ export default function OrgPost(){
                             <FormControlLabel value="90" control={<Radio />} label="90일" />
                         </RadioGroup>
                     </FormControl>
+                    <p>*모금 시작일은 등록일로부터 7일 뒤입니다.(예시 : 등록일 - 7월 5일 / 모금 시작일 - 7월 12일)</p>
                 </div>
                 <div>
-                    <div>사업 기간</div>
+                    <h3>사업 기간</h3>
                     <div style={{display : "flex"}}>
-                        <div className="biz-start">
+                        <div className="biz-date">
                             <div>시작일</div>
-                            <input type="date" id="bizStart" onChange={chgBiz}/> ~ &nbsp;
+                            <TextField type="date" id="bizStart" onChange={chgBiz}/>
                         </div>
-                        <div className="biz-end">
+                        <h4>~</h4>
+                        <div className="biz-date">
                             <div>종료일</div>
-                            <input type="date" id="bizEnd" onChange={chgBiz}/>
+                            <TextField type="date" id="bizEnd" onChange={chgBiz}/>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div>모금액 사용 계획</div>
+                    <h3>모금액 사용 계획</h3>
                     <div>
                         {bizPlanList.map(function(bizPlan, index){
                             return  <BizPlan key={"bizPlan"+index} bizPlan={bizPlan} index={index} bizPlanList={bizPlanList} setBizPlanList={setBizPlanList}
                                             donateBiz={donateBiz} setDonateBiz={setDonateBiz}/>
                         })}
-                        <button type="button" onClick={addBizPlan}>사용 계획 추가</button>
+                        <div style={{marginBottom : "5px"}}>목표 금액 : {(donateBiz.bizGoal || 0).toLocaleString("ko-KR")}원</div>
+                        <Button variant="contained" type="button" onClick={addBizPlan}>사용 계획 추가</Button>
                     </div>
-                    <span>목표 금액 : {(donateBiz.bizGoal || 0).toLocaleString("ko-KR")}원</span>
                 </div>
                 <div>
-                    <div>기부 카테고리 선택</div>
+                    <h3>기부 카테고리 선택</h3>
                     <FormControl>
                         <RadioGroup row name="biz-donate-date" onChange={selectDonateCtg}
                         aria-labelledby="demo-row-radio-buttons-group-label"
@@ -347,25 +351,33 @@ export default function OrgPost(){
                 </div>
                 <hr/>
                 <div>
-                    <div>기부 사업명</div>
-                    <input type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz}/>
+                    <div style={{width : "180px", padding : "15px 0"}}>
+                        <h3>대표 사진 등록</h3>
+                        <div style={{display : "flex"}}>
+                            <div style={{height : "100px"}}>
+                                <img src={bizThumbImg ? bizThumbImg : "/images/default_img.png"} style={{height : "100px"}}
+                                    onClick={fix ? null : function(e){thumbImg.current.click();}}/>
+                                <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
+                            </div>
+                            <div>
+                                <Button variant="contained" type="button" onClick={fixThumbImg} style={{bottom : "0", marginTop : "65px", marginLeft : "10px"}}>확정</Button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style={{padding : "15px 0"}}>
+                        <h3>기부 사업명</h3>
+                        <TextField type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz} style={{width : "600px"}}/>
+                    </div>
                 </div>
                 <div>
-                    <div>대표 사진 등록</div>
-                    <img src={bizThumbImg ? bizThumbImg : "/images/default_img.png"} style={{width : "100px"}}
-                        onClick={fix ? null : function(e){thumbImg.current.click();}}/>
-                    <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
-                    <button type="button" onClick={fixThumbImg}>확정</button>
-                </div>
-                <div>
-                    <div>본문</div>
+                    <h3>사업 내용</h3>
                     <div>
                         {/*news 폴더 안에 있는 ToastEditor 재사용*/}
                         <ToastEditor donateBiz={donateBiz} setDonateBiz={setDonateBiz} type={0}/>
                     </div>
                 </div>
-                <div>
-                    <button type="submit">등록</button>
+                <div style={{textAlign : "center"}}>
+                    <Button variant="contained" type="submit" style={{width : "180px", height : "50px", fontSize : "20px"}}>등록</Button>
                 </div>
             </form>
         </div>
@@ -439,10 +451,11 @@ function BizPlan(props){
 
     return(
         <div name="div-bizPlan">
-            <input type="text" name="bizPlanPurpose" placeholder="사용 용도 및 산출 근거" value={bizPlan.bizPlanPurpose} onChange={chgBizPlan}/>
-            <input type="text" name="bizPlanMoney" placeholder="금액" value={isNaN(bizPlan.bizPlanMoney) ? "" : bizPlan.bizPlanMoney} onChange={chgBizPlan}/>
+            <TextField type="text" name="bizPlanPurpose" className="plan-purpose" placeholder="사용 용도 및 산출 근거" value={bizPlan.bizPlanPurpose} onChange={chgBizPlan}/>
+            <TextField type="text" name="bizPlanMoney" className="plan-money" placeholder="금액"
+            value={isNaN(bizPlan.bizPlanMoney) ? "" : bizPlan.bizPlanMoney} onChange={chgBizPlan} style={{marginLeft : "10px", marginBottom : "5px"}}/>
             {index != 0
-            ?<span onClick={function(){deleteBizPlan(index)}} style={{cursor : "pointer"}}> ⛔</span>
+            ?<span onClick={function(){deleteBizPlan(index)}} style={{cursor : "pointer", lineHeight : "35px"}}> ⛔</span>
             : ""}
         </div>
     )

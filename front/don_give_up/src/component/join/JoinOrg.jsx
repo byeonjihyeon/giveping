@@ -4,11 +4,9 @@ import Swal from "sweetalert2";
 import { useEffect, useRef, useState } from "react";
 import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
 
 //단체 회원 회원가입 페이지
 export default function JoinOrg(props){
@@ -231,7 +229,8 @@ function insertOrg() {
                                     <label htmlFor="orgPw" className="label">비밀번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="password" id="orgPw" value={org.orgPw} onChange={chgOrg} onBlur={checkOrgPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
+                                    <TextField type="password" id="orgPw" className="input-first"
+                                    value={org.orgPw} onChange={chgOrg} onBlur={checkOrgPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
                                 </td>
                             </tr>
                             <tr>
@@ -245,7 +244,8 @@ function insertOrg() {
                                     <label htmlFor="orgPwRe" className="label">비밀번호 확인</label>
                                 </th>
                                 <td>
-                                    <TextField type="password" id="orgPwRe" value={orgPwRe} onChange={chgOrgPwRe} onBlur={checkOrgPw}/>
+                                    <TextField type="password" id="orgPwRe" className="input-first"
+                                    value={orgPwRe} onChange={chgOrgPwRe} onBlur={checkOrgPw}/>
                                 </td>
                             </tr>
                             <tr>
@@ -259,7 +259,8 @@ function insertOrg() {
                                     <label htmlFor="orgName" className="label">단체명</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="orgName" value={org.orgName} onChange={chgOrg}/>
+                                    <TextField type="text" id="orgName" className="input-first"
+                                    value={org.orgName} onChange={chgOrg}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -268,7 +269,8 @@ function insertOrg() {
                                     <label htmlFor="orgBiznum" className="label">사업자 번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="orgBiznum" value={org.orgBiznum} onChange={chgOrg} onBlur={checkOrgBiznum} placeholder="'-'를 포함해서 작성해주세요. (XXX-XX-XXXXX)"/>
+                                    <TextField type="text" id="orgBiznum" className="input-first"
+                                    value={org.orgBiznum} onChange={chgOrg} onBlur={checkOrgBiznum} placeholder="'-'를 포함해서 작성해주세요. (XXX-XX-XXXXX)"/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -277,7 +279,8 @@ function insertOrg() {
                                     <label htmlFor="orgPhone" className="label">전화번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="orgPhone" value={org.org} onChange={chgOrg} onBlur={checkOrgPhone} placeholder="'-'를 포함해서 작성해주세요."/>
+                                    <TextField type="text" id="orgPhone" className="input-first"
+                                    value={org.org} onChange={chgOrg} onBlur={checkOrgPhone} placeholder="'-'를 포함해서 작성해주세요."/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -304,7 +307,8 @@ function insertOrg() {
                                     <label htmlFor="orgIntroduce" className="label">단체 설명</label>
                                 </th>
                                 <td>
-                                    <TextField id="orgIntroduce" multiline rows={4} value={org.orgIntroduce} onChange={chgOrg}/>
+                                    <TextField id="orgIntroduce" className="input-first"
+                                    multiline rows={4} value={org.orgIntroduce} onChange={chgOrg}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -326,7 +330,7 @@ function insertOrg() {
                                         <MenuItem  value="카카오뱅크">카카오뱅크</MenuItem >
                                         <MenuItem  value="토스뱅크">토스뱅크</MenuItem >
                                     </Select>
-                                    <TextField type="text" id="orgAccount" value={org.orgAccount} onChange={chgOrg} onBlur={checkAccount} placeholder="'-'를 제외하고 숫자만 입력해주세요"/>
+                                    <TextField type="text" id="orgAccount" className="input-account" value={org.orgAccount} onChange={chgOrg} onBlur={checkAccount} placeholder="'-'를 제외하고 숫자만 입력해주세요"/>
                                     <p style={{color : "red"}}>*잘못 입력 시 송금에 차질이 생길 수 있습니다.</p>
                                 </td>
                             </tr>
@@ -412,7 +416,8 @@ function OrgId(props){
 
     return (
         <>
-            <TextField type="text" id="orgId" value={org.orgId} onChange={chgOrg} onBlur={checkOrgId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
+            <TextField type="text" id="orgId" className="input-id" value={org.orgId}
+            onChange={chgOrg} onBlur={checkOrgId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
             <Button variant="contained" type="button" onClick={checkOrgIdUnique} style={{marginLeft : "10px"}}>중복체크</Button>
         </>
     )
@@ -497,8 +502,11 @@ function OrgEmail(props){
 
     return (
         <>
-            <TextField type="text" id="orgEmailId" value={orgEmailId} onChange={chgEmailId}/>&nbsp;@&nbsp;
-            <TextField type="text" id="orgEmailDomain" value={orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
+            <TextField type="text" id="orgEmailId" className="input-email"
+            value={orgEmailId} onChange={chgEmailId}/>
+            &nbsp;@&nbsp;
+            <TextField type="text" id="orgEmailDomain" className="input-email"
+            value={orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
             <Select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : orgEmailDomain} style={{marginLeft : "5px", width : "125px"}}>
                 <MenuItem  value="custom">직접 입력</MenuItem >
                 <MenuItem  value="naver.com">naver.com</MenuItem >
@@ -559,9 +567,10 @@ function OrgAddr(props){
 
     return (
         <>
-            <TextField type="text" id="orgAddrMain" placeholder="주소" readOnly/>
+            <TextField type="text" id="orgAddrMain" className="input-addr" placeholder="주소" readOnly/>
             <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
-            <TextField type="text" id="orgAddrDetail" placeholder="상세주소" value={org.orgAddrDetail} onChange={chgAddrDetail}/>
+            <TextField type="text" id="orgAddrDetail" className="input-first"
+            value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
         </>
     )
 }
