@@ -22,7 +22,7 @@ export default function OrgMain(){
         {url : "/org", name : "MY홈"},
         {url : "/org/news", name : "내 소식"},
         {url : "/org/post", name : "기부 사업 관리", submenuList : [{url : "/org/post", name : "기부 사업 등록"}, {url : "/org/biz", name : "기부 사업 보기"}, {url : "/org/data", name : "기부 사업 통계"}]},
-        {url : "/org/update", name : "내 정보", submenuList : [{url : "/org/update", name : "단체정보 수정"}, {url : "/org/changePw", name : "비밀번호 변경"}, {url : "/org/changeProfile", name : "프로필 사진 변경"}]}
+        {url : "/org/update", name : "내 정보", submenuList : [{url : "/org/update", name : "단체정보 수정"}, {url : "/org/changePw", name : "비밀번호 변경"}]}
     ]);
 
     //자식 컴포넌트에 전달할 회원정보
@@ -56,7 +56,8 @@ export default function OrgMain(){
                     <Route path="news" element={<OrgNewsList/>}/>
                     <Route path="update" element={<OrgUpdate org={org} setOrg={setOrg}/>}/>
                     <Route path="changePw" element={<OrgChangePw/>}/>
-                    <Route path="changeProfile" element={<OrgProfileUpdate org={org} setOrg={setOrg}/>}/>
+                    {/* 단체 정보 수정으로 합침
+                    <Route path="changeProfile" element={<OrgProfileUpdate org={org} setOrg={setOrg}/>}/>*/}
                     <Route path="biz" element={<OrgBiz/>}/>
                     <Route path="post" element={<OrgPost/>}/>
                     <Route path="data" element={<OrgData/>}/>

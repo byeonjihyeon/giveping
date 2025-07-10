@@ -3,7 +3,10 @@ import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import Swal from "sweetalert2";
 import Button from '@mui/material/Button';
-
+/*
+프로필 변경을 단체 정보 수정으로 합쳐서
+이 jsx는 사용 안 함
+*/
 export default function OrgProfileUpdate(props){
     const org = props.org; //단체 수정완료후, 사이드메뉴 정보 변경하기 위함
     const setOrg = props.setOrg;
