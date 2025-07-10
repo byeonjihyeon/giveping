@@ -512,7 +512,6 @@ public class MemberController {
 	@PatchMapping("/account")
 	public ResponseEntity<ResponseDTO> updateMemberAccount(@RequestBody Member member){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "업데이트중, 오류가 발생하였습니다.", false, "error");
-		
 		try {
 			
 			int result = service.updateMemberAccount(member);
