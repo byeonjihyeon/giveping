@@ -136,6 +136,10 @@ export default function JoinOrg(props){
     */
     const [emailChk, setEmailChk] = useState(0);
 
+    //이메일 값 변경 시 저장 변수
+    const [orgEmailId, setOrgEmailId] = useState("");           //이메일 아이디
+    const [orgEmailDomain, setOrgEmailDomain] = useState("");   //이메일 도메인
+
 
     /*계좌번호 관련 코드*/
     const [bankSelect, setBankSelect] = useState("select");
@@ -164,22 +168,45 @@ export default function JoinOrg(props){
         }
     }
 
+    //input 별 useRef
+    const orgIdRef = useRef(null);              //아이디
+    const orgPwRef = useRef(null);              //비밀번호
+    const orgPwReRef = useRef(null);            //비밀번호 확인
+    const orgNameRef = useRef(null);            //단체명
+    const orgBiznumRef = useRef(null);          //사업자 번호
+    const orgPhoneRef = useRef(null);           //전화번호
+    const orgEmailIdRef = useRef(null);         //이메일 아이디
+    const orgEmailDomainRef = useRef(null);     //이메일 도메인
+    const addressRef = useRef(null);            //주소
+    const orgIntroduceRef = useRef(null);       //단체 설명
+    const orgAccountBankRef = useRef(null);    //은행
+    const orgAccountRef = useRef(null);         //계좌번호
 
 function insertOrg() {
     // 유효성 조건 리스트
     const validations = [
-        { valid: org.orgId !== "" && idChk !== 1, message: "아이디 중복체크를 하세요." },
-        { valid: idChk !== 1, message: "아이디를 확인하세요." },
-        { valid: pwChk !== 1 && orgPwRe !== "", message: "비밀번호를 확인하세요." },
-        { valid: orgPwRe === "", message: "비밀번호 확인을 입력하세요." },
-        { valid: org.orgName === "", message: "단체명을 입력하세요." },
-        { valid: biznumChk !== 1, message: "사업자번호를 확인하세요.(XXX-XX-XXXXX) 형식" },
-        { valid: phoneChk !== 1, message: "전화번호를 확인하세요." },
-        { valid: emailChk !== 1, message: "이메일을 확인하세요." },
-        { valid: org.orgAddrMain === "", message: "주소를 입력하세요." },
-        { valid: org.orgIntroduce === "", message: "단체설명을 입력하세요." },
-        { valid: org.orgAccountBank === "" || org.orgAccountBank === "select", message: "은행을 선택하세요." },
-        { valid: accountChk !== 1, message: "계좌번호를 확인하세요." }
+        { valid: org.orgId == "", message: "아이디를 입력하세요.", inputRef : orgIdRef},
+        { valid: org.orgId !== "" && idChk !== 1, message: "아이디 중복체크를 하세요.", inputRef : orgIdRef },
+        { valid: idChk !== 1, message: "아이디 형식이 올바르지 않습니다.", inputRef : orgIdRef },
+        { valid: org.orgPw == "", message: "비밀번호를 입력하세요.", inputRef : orgPwRef },
+        { valid: pwChk == 2, message: "비밀번호 형식이 올바르지 않습니다.", inputRef : orgPwRef },
+        { valid: orgPwRe === "", message: "비밀번호 확인을 입력하세요.", inputRef : orgPwReRef },
+        { valid: pwChk == 3, message: "비밀번호가 일치하지 않습니다.", inputRef : orgPwReRef},
+        { valid: org.orgName === "", message: "단체명을 입력하세요.", inputRef : orgNameRef },
+        { valid: org.orgBiznum == "", message: "사업자번호를 입력하세요.", inputRef : orgBiznumRef },
+        { valid: biznumChk !== 1, message: "사업자번호 형식이 올바르지 않습니다.(XXX-XX-XXXXX) 형식", inputRef : orgBiznumRef },
+        { valid: org.orgPhone == "", message: "전화번호를 입력하세요.", inputRef : orgPhoneRef },
+        { valid: phoneChk !== 1, message: "전화번호 형식이 올바르지 않습니다.", inputRef : orgPhoneRef },
+        { valid: orgEmailId == "" && orgEmailDomain == "", message: "이메일을 입력하세요.", inputRef : orgEmailIdRef},
+        { valid: orgEmailDomain != "" && orgEmailId == "", message: "이메일 아이디를 입력하세요.", inputRef : orgEmailIdRef},
+        { valid: emailChk == 2, message: "이메일 아이디 형식이 올바르지 않습니다.", inputRef : orgEmailIdRef},
+        { valid: orgEmailDomain == "", message: "이메일 주소를 입력하세요.", inputRef : orgEmailDomainRef },
+        { valid: emailChk !== 1, message: "이메일 주소 형식이 올바르지 않습니다.", inputRef : orgEmailDomainRef },
+        { valid: org.orgAddrMain === "", message: "주소를 입력하세요.", inputRef : addressRef },
+        { valid: org.orgIntroduce === "", message: "단체설명을 입력하세요.", inputRef : orgIntroduceRef },
+        { valid: org.orgAccountBank === "" || org.orgAccountBank === "select", message: "은행을 선택하세요.", inputRef : orgAccountBankRef },
+        { valid: org.orgAccount == "", message: "계좌번호를 입력하세요.", inputRef : orgAccountRef },
+        { valid: accountChk !== 1, message: "계좌번호 형식이 올바르지 않습니다.", inputRef : orgAccountRef }
     ];
 
     // 검증 실패 시 첫 번째 오류 메시지 띄우고 return
@@ -189,7 +216,8 @@ function insertOrg() {
                 title: "알림",
                 text: validations[i].message,
                 icon: "warning",
-                confirmButtonText: "확인"
+                confirmButtonText: "확인",
+                didClose : validations[i].inputRef.current.focus()
             });
             return;
         }
@@ -215,7 +243,7 @@ function insertOrg() {
                                     <label htmlFor="orgId" className="label">아이디</label>
                                 </th>
                                 <td>
-                                    <OrgId org={org} chgOrg={chgOrg} idChk={idChk} setIdChk={setIdChk}/>
+                                    <OrgId org={org} chgOrg={chgOrg} idChk={idChk} setIdChk={setIdChk} orgIdRef={orgIdRef}/>
                                 </td>
                             </tr>
                             <tr>
@@ -229,7 +257,7 @@ function insertOrg() {
                                     <label htmlFor="orgPw" className="label">비밀번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="password" id="orgPw" className="input-first"
+                                    <TextField type="password" id="orgPw" className="input-first" inputRef={orgPwRef}
                                     value={org.orgPw} onChange={chgOrg} onBlur={checkOrgPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
                                 </td>
                             </tr>
@@ -244,7 +272,7 @@ function insertOrg() {
                                     <label htmlFor="orgPwRe" className="label">비밀번호 확인</label>
                                 </th>
                                 <td>
-                                    <TextField type="password" id="orgPwRe" className="input-first"
+                                    <TextField type="password" id="orgPwRe" className="input-first" inputRef={orgPwReRef}
                                     value={orgPwRe} onChange={chgOrgPwRe} onBlur={checkOrgPw}/>
                                 </td>
                             </tr>
@@ -259,7 +287,7 @@ function insertOrg() {
                                     <label htmlFor="orgName" className="label">단체명</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="orgName" className="input-first"
+                                    <TextField type="text" id="orgName" className="input-first" inputRef={orgNameRef}
                                     value={org.orgName} onChange={chgOrg}/>
                                 </td>
                             </tr>
@@ -269,7 +297,7 @@ function insertOrg() {
                                     <label htmlFor="orgBiznum" className="label">사업자 번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="orgBiznum" className="input-first"
+                                    <TextField type="text" id="orgBiznum" className="input-first" inputRef={orgBiznumRef}
                                     value={org.orgBiznum} onChange={chgOrg} onBlur={checkOrgBiznum} placeholder="'-'를 포함해서 작성해주세요. (XXX-XX-XXXXX)"/>
                                 </td>
                             </tr>
@@ -279,7 +307,7 @@ function insertOrg() {
                                     <label htmlFor="orgPhone" className="label">전화번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="orgPhone" className="input-first"
+                                    <TextField type="text" id="orgPhone" className="input-first" inputRef={orgPhoneRef}
                                     value={org.org} onChange={chgOrg} onBlur={checkOrgPhone} placeholder="'-'를 포함해서 작성해주세요."/>
                                 </td>
                             </tr>
@@ -289,7 +317,8 @@ function insertOrg() {
                                     <label htmlFor="orgEmail" className="label">이메일</label>
                                 </th>
                                 <td>
-                                    <OrgEmail org={org} setOrg={setOrg} setEmailChk={setEmailChk}/>
+                                    <OrgEmail org={org} setOrg={setOrg} setEmailChk={setEmailChk} orgEmailId={orgEmailId} setOrgEmailId={setOrgEmailId}
+                                    orgEmailDomain={orgEmailDomain} setOrgEmailDomain={setOrgEmailDomain} orgEmailIdRef={orgEmailIdRef} orgEmailDomainRef={orgEmailDomainRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -298,7 +327,7 @@ function insertOrg() {
                                     <label className="label">주소</label>
                                 </th>
                                 <td>
-                                    <OrgAddr org={org} setOrg={setOrg}/>
+                                    <OrgAddr org={org} setOrg={setOrg} addressRef={addressRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -307,7 +336,7 @@ function insertOrg() {
                                     <label htmlFor="orgIntroduce" className="label">단체 설명</label>
                                 </th>
                                 <td>
-                                    <TextField id="orgIntroduce" className="input-first"
+                                    <TextField id="orgIntroduce" className="input-first" inputRef={orgIntroduceRef}
                                     multiline rows={4} value={org.orgIntroduce} onChange={chgOrg}/>
                                 </td>
                             </tr>
@@ -317,7 +346,8 @@ function insertOrg() {
                                     <label htmlFor="orgAccount" className="label">계좌번호</label>
                                 </th>
                                 <td>
-                                    <Select name="orgAccountBank" id="orgAccountBank" value={bankSelect} onChange={selectAccountBank} style={{marginRight : "5px", width : "125px"}}>
+                                    <Select name="orgAccountBank" id="orgAccountBank" value={bankSelect} inputRef={orgAccountBankRef}
+                                    onChange={selectAccountBank} style={{marginRight : "5px", width : "125px"}}>
                                         <MenuItem  value="select">--선택--</MenuItem >
                                         <MenuItem  value="국민은행">국민은행</MenuItem >
                                         <MenuItem  value="신한은행">신한은행</MenuItem >
@@ -330,7 +360,8 @@ function insertOrg() {
                                         <MenuItem  value="카카오뱅크">카카오뱅크</MenuItem >
                                         <MenuItem  value="토스뱅크">토스뱅크</MenuItem >
                                     </Select>
-                                    <TextField type="text" id="orgAccount" className="input-account" value={org.orgAccount} onChange={chgOrg} onBlur={checkAccount} placeholder="'-'를 제외하고 숫자만 입력해주세요"/>
+                                    <TextField type="text" id="orgAccount" className="input-account" inputRef={orgAccountRef}
+                                    value={org.orgAccount} onChange={chgOrg} onBlur={checkAccount} placeholder="'-'를 제외하고 숫자만 입력해주세요"/>
                                     <p style={{color : "red"}}>*잘못 입력 시 송금에 차질이 생길 수 있습니다.</p>
                                 </td>
                             </tr>
@@ -358,6 +389,7 @@ function OrgId(props){
     const chgOrg = props.chgOrg;
     const idChk = props.idChk;
     const setIdChk = props.setIdChk;
+    const orgIdRef = props.orgIdRef;
 
     //아이디 입력 후 포커스를 잃었을 때 호출함수 (onBlur)
     function checkOrgId(e){
@@ -389,7 +421,8 @@ function OrgId(props){
                         title : "알림",
                         text : "이미 사용중인 아이디입니다.",
                         icon : "warning",
-                        confirmButtonText : "확인"
+                        confirmButtonText : "확인",
+                        didClose : orgIdRef.current.focus()
                     });
                 }else if(res.data.resData == 0){ //중복된 아이디가 존재하지 않는 경우
                     setIdChk(1); //회원가입 가능한 상태
@@ -409,14 +442,15 @@ function OrgId(props){
                 title : "알림",
                 text : "아이디 형식이 올바르지 않습니다.",
                 icon : "warning",
-                confirmButtonText : "확인"
+                confirmButtonText : "확인",
+                didClose : orgIdRef.current.focus()
             });
         }
     }
 
     return (
         <>
-            <TextField type="text" id="orgId" className="input-id" value={org.orgId}
+            <TextField type="text" id="orgId" className="input-id" value={org.orgId} inputRef={orgIdRef}
             onChange={chgOrg} onBlur={checkOrgId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
             <Button variant="contained" type="button" onClick={checkOrgIdUnique} style={{marginLeft : "10px"}}>중복체크</Button>
         </>
@@ -428,10 +462,13 @@ function OrgEmail(props){
     const org = props.org;
     const setOrg = props.setOrg;
     const setEmailChk = props.setEmailChk;
+    const orgEmailId = props.orgEmailId;
+    const setOrgEmailId = props.setOrgEmailId;
+    const orgEmailDomain = props.orgEmailDomain;
+    const setOrgEmailDomain = props.setOrgEmailDomain;
+    const orgEmailIdRef = props.orgEmailIdRef;
+    const orgEmailDomainRef = props.orgEmailDomainRef;
 
-    //이메일 값 변경 시 저장 변수
-    const [orgEmailId, setOrgEmailId] = useState("");           //이메일 아이디
-    const [orgEmailDomain, setOrgEmailDomain] = useState("");   //이메일 도메인
     const [isCustom, setIsCustom] = useState(true);             //이메일 도메인 직접 입력 선택 여부
 
     //이메일 아이디 값 onChange 호출 함수
@@ -502,10 +539,10 @@ function OrgEmail(props){
 
     return (
         <>
-            <TextField type="text" id="orgEmailId" className="input-email"
+            <TextField type="text" id="orgEmailId" className="input-email" inputRef={orgEmailIdRef}
             value={orgEmailId} onChange={chgEmailId}/>
             &nbsp;@&nbsp;
-            <TextField type="text" id="orgEmailDomain" className="input-email"
+            <TextField type="text" id="orgEmailDomain" className="input-email" inputRef={orgEmailDomainRef}
             value={orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
             <Select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : orgEmailDomain} style={{marginLeft : "5px", width : "125px"}}>
                 <MenuItem  value="custom">직접 입력</MenuItem >
@@ -523,6 +560,7 @@ function OrgEmail(props){
 function OrgAddr(props){
     const org = props.org;
     const setOrg = props.setOrg;
+    const addressRef = props.addressRef;
 
     //다음 주소 API 불러오기
     useEffect(() => {
@@ -532,12 +570,11 @@ function OrgAddr(props){
         document.body.appendChild(script);
     }, []);
     
+    //상세주소
+    const detailAddressRef = useRef(null);
     
     //다음 주소 API 실행 코드
     function execDaumPostcode (){
-        //주소, 상세주소
-        const addressRef = document.getElementById("orgAddrMain");
-        const detailAddressRef = document.getElementById("orgAddrDetail");
 
         new window.daum.Postcode({
             oncomplete: function (data) {
@@ -549,12 +586,12 @@ function OrgAddr(props){
                     addr = data.jibunAddress;
                 }
 
-                addressRef.value = addr;
+                addressRef.current.value = addr;
                 
                 //주소 값 State 변수에 저장
                 setOrg({...org, orgAddrMain : addr})
 
-                detailAddressRef.focus();
+                detailAddressRef.current.focus();
             }
         }).open();
     }
@@ -567,9 +604,9 @@ function OrgAddr(props){
 
     return (
         <>
-            <TextField type="text" id="orgAddrMain" className="input-addr" placeholder="주소" readOnly/>
+            <TextField type="text" id="orgAddrMain" className="input-addr" inputRef={addressRef} placeholder="주소" slotProps={{input: {readOnly: true}}}/>
             <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
-            <TextField type="text" id="orgAddrDetail" className="input-first"
+            <TextField type="text" id="orgAddrDetail" className="input-first" inputRef={detailAddressRef}
             value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
         </>
     )

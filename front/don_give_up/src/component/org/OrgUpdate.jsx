@@ -31,6 +31,7 @@ export default function OrgUpdate(props){
     const [profile, setProfile] = useState(null);           //프로필 파일 객체 (서버 전송용)
     const [donateCtgList, setDonateCtgList] = useState([]); //DB에서 조회한 카테고리 리스트를 저장할 State 변수
     const [checkCtgList, setCheckCtgList] = useState([]);   //체크한 카테고리 정보를 저장할 State 변수
+    const [prevProfile, setPrevProfile] = useState(null);   //기존 대표 사진 정보를 저장할 변수
 
     //이메일 정보를 저장할 State 변수
     const [orgEmailId, setOrgEmailId] = useState("");
@@ -59,6 +60,8 @@ export default function OrgUpdate(props){
             setOrgEmailDomain(emailDomain);
 
             setCheckCtgList(newOrg.categoryList);
+
+            setPrevProfile(newOrg.orgThumbPath); //기본 이미지로 변경했을 때를 대비해서 저장
 
             setOrg(newOrg);
         });
@@ -150,19 +153,36 @@ export default function OrgUpdate(props){
     }, [org.orgAccount]);
 
 
+    //유효성 체크 실패 시 focus하기 위한 useRef
+    const orgNameRef = useRef(null);
+    const orgBiznumRef = useRef(null);
+    const orgPhoneRef = useRef(null);
+    const orgEmailIdRef = useRef(null);
+    const orgEmailDomainRef = useRef(null);
+    const addressRef = useRef(null);
+    const orgIntroduceRef = useRef(null);
+    const orgAccountBankRef = useRef(null);
+    const orgAccountRef = useRef(null);
+
     //수정 버튼 클릭 시 호출 함수
     function updateOrg(){
-
         // 유효성 조건 리스트
         const validations = [
-            { valid: org.orgName === "", message: "단체명을 입력하세요." },
-            { valid: biznumChk !== 1, message: "사업자번호를 확인하세요.(XXX-XX-XXXXX 형식)" },
-            { valid: phoneChk !== 1, message: "전화번호를 확인하세요." },
-            { valid: emailChk !== 1, message: "이메일을 확인하세요." },
-            { valid: org.orgAddrMain === "", message: "주소를 입력하세요." },
-            { valid: org.orgIntroduce === "", message: "단체설명을 입력하세요." },
-            { valid: org.orgAccountBank === "" || org.orgAccountBank === "select", message: "은행을 선택하세요." },
-            { valid: accountChk !== 1, message: "계좌번호를 확인하세요." }
+            { valid: org.orgName === "", message: "단체명을 입력하세요.", inputRef : orgNameRef },
+            { valid: org.orgBiznum == "", message: "사업자번호를 입력하세요.", inputRef : orgBiznumRef },
+            { valid: biznumChk !== 1, message: "사업자번호 형식이 올바르지 않습니다.(XXX-XX-XXXXX 형식)", inputRef : orgBiznumRef },
+            { valid: org.orgPhone == "", message: "전화번호를 입력하세요.", inputRef : orgPhoneRef },
+            { valid: phoneChk !== 1, message: "전화번호 형식이 올바르지 않습니다.", inputRef : orgPhoneRef },
+            { valid: orgEmailId == "" && orgEmailDomain == "", message: "이메일을 입력하세요.", inputRef : orgEmailIdRef },
+            { valid: orgEmailId == "" && orgEmailDomain != "", message: "이메일 아이디를 입력하세요.", inputRef : orgEmailIdRef },
+            { valid: emailChk == 2, message: "이메일 아이디 형식이 올바르지 않습니다.", inputRef : orgEmailIdRef},
+            { valid: orgEmailDomain == "", message: "이메일 주소를 입력하세요.", inputRef : orgEmailDomainRef },
+            { valid: emailChk !== 1, message: "이메일 주소 형식이 올바르지 않습니다.", inputRef : orgEmailDomainRef },
+            { valid: org.orgAddrMain === "", message: "주소를 입력하세요.", inputRef : addressRef },
+            { valid: org.orgIntroduce === "", message: "단체설명을 입력하세요.", inputRef : orgIntroduceRef },
+            { valid: org.orgAccountBank === "" || org.orgAccountBank === "select", message: "은행을 선택하세요.", inputRef : orgAccountBankRef },
+            { valid: org.orgAccount == "", message: "계좌번호를 입력하세요.", inputRef : orgAccountRef },
+            { valid: accountChk !== 1, message: "계좌번호 형식이 올바르지 않습니다.", inputRef : orgAccountRef }
         ];
 
         // 검증 실패 시 첫 번째 오류 메시지 띄우고 return
@@ -172,7 +192,8 @@ export default function OrgUpdate(props){
                     title: "알림",
                     text: validations[i].message,
                     icon: "warning",
-                    confirmButtonText: "확인"
+                    confirmButtonText: "확인",
+                    didClose : validations[i].inputRef.current.focus()
                 });
                 return;
             }
@@ -189,10 +210,19 @@ export default function OrgUpdate(props){
                 const form = new FormData();
 
                 form.append("orgNo", orgNo);
-                form.append("profile", profile);
 
-                if(org.orgThumbPath != null){
-                    form.append("orgThumbPath", org.orgThumbPath);
+                if(org.orgThumbPath != null){ //기본 이미지로 변경했는지 판단하기 위해
+                    form.append("isDefault", false); //기본 이미지로 변경 X
+                }else{
+                    form.append("isDefault", true); //기본 이미지로 변경 O
+                }
+
+                if(profile != null){ //대표 사진을 변경했을 때
+                    form.append("profile", profile); //변경할 대표 사진
+                }
+
+                if(prevProfile != null){ //기존 대표 사진 경로가 있을 때
+                    form.append("prevProfile", prevProfile); //기존 대표 사진 경로
                 }
 
                 let options = {};
@@ -207,6 +237,9 @@ export default function OrgUpdate(props){
                 .then(function(res){
                     setProfile(null);
                     setMainOrg({...mainOrg, orgName : org.orgName, orgEmail : org.orgEmail, orgThumbPath : res.data.resData});
+                    if(res.data.resData != null){
+                        setPrevProfile(res.data.resData);
+                    }
                 })
             }
         });
@@ -229,34 +262,34 @@ export default function OrgUpdate(props){
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">아이디</label></th>
-                                <td><TextField className="input-first" value={org.orgId} readOnly></TextField></td>
+                                <td><TextField className="input-first" value={org.orgId}></TextField></td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">단체명</label></th>
                                 <td>
-                                    <TextField type="text" id="orgName" className="input-first" value={org.orgName} onChange={chgOrg}/>
+                                    <TextField type="text" id="orgName" className="input-first" value={org.orgName} onChange={chgOrg} inputRef={orgNameRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">사업자 번호</label></th>
                                 <td>
-                                    <TextField type="text" id="orgBiznum" className="input-first" value={org.orgBiznum} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요"/>
+                                    <TextField type="text" id="orgBiznum" className="input-first" value={org.orgBiznum} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요" inputRef={orgBiznumRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">전화번호</label></th>
                                 <td>
-                                    <TextField type="text" id="orgPhone" className="input-first" value={org.orgPhone} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요"/>
+                                    <TextField type="text" id="orgPhone" className="input-first" value={org.orgPhone} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요" inputRef={orgPhoneRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">이메일</label></th>
                                 <td>
-                                    <MemberEamil org={org} setOrg={setOrg} orgEmailId={orgEmailId} setOrgEmailId={setOrgEmailId} 
+                                    <MemberEamil org={org} setOrg={setOrg} orgEmailId={orgEmailId} setOrgEmailId={setOrgEmailId} orgEmailIdRef={orgEmailIdRef} orgEmailDomainRef={orgEmailDomainRef}
                                         orgEmailDomain={orgEmailDomain} setOrgEmailDomain={setOrgEmailDomain} setEmailChk={setEmailChk}/>
                                 </td>
                             </tr>
@@ -264,21 +297,21 @@ export default function OrgUpdate(props){
                             <tr>
                                 <th><label className="label">주소</label></th>
                                 <td>
-                                    <MemberAddr org={org} setOrg={setOrg}/>
+                                    <MemberAddr org={org} setOrg={setOrg} addressRef={addressRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">단체 설명</label></th>
                                 <td>
-                                    <TextField id="orgIntroduce" className="input-first" multiline rows={4} value={org.orgIntroduce} onChange={chgOrg}/>
+                                    <TextField id="orgIntroduce" className="input-first" multiline rows={4} value={org.orgIntroduce} onChange={chgOrg} inputRef={orgIntroduceRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">계좌번호</label></th>
                                 <td>
-                                    <Select name="orgAccountBank" id="orgAccountBank" value={org.orgAccountBank} onChange={selectAccountBank} style={{marginRight : "5px", width : "125px"}}>
+                                    <Select name="orgAccountBank" id="orgAccountBank" value={org.orgAccountBank} onChange={selectAccountBank} style={{marginRight : "5px", width : "125px"}} inputRef={orgAccountBankRef}>
                                         <MenuItem value="select">--선택--</MenuItem>
                                         <MenuItem value="국민은행">국민은행</MenuItem>
                                         <MenuItem value="신한은행">신한은행</MenuItem>
@@ -291,7 +324,7 @@ export default function OrgUpdate(props){
                                         <MenuItem value="카카오뱅크">카카오뱅크</MenuItem>
                                         <MenuItem value="토스뱅크">토스뱅크</MenuItem>
                                     </Select>
-                                    <TextField type="text" id="orgAccount" className="input-account" value={org.orgAccount} onChange={chgOrg}/>
+                                    <TextField type="text" id="orgAccount" className="input-account" value={org.orgAccount} onChange={chgOrg} inputRef={orgAccountRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -369,12 +402,6 @@ function Profile(props){
 
     //기본 이미지로 변경 클릭 시 호출 함수
     function chgDefault(){
-        if(org.orgThumbPath == null || org.orgThumbPath == ""){
-            setProfile(null);
-            setProfileImg(null);
-            return;
-        }
-
         Swal.fire({
             title : "알림",
             text : "기본 이미지로 변경하시겠습니까?",
@@ -383,18 +410,11 @@ function Profile(props){
             confirmButtonText : "변경",
             cancelButtonText : "취소"
         })
-        .then(function(res){
-            if(res.isConfirmed){
-                let options = {};
-                options.url = serverUrl + "/org/thumb/" + orgNo;
-                options.method = "patch";
-
-                axiosInstance(options)
-                .then(function(res){
-                    if(res.data.resData){
-                        setOrg({...org, orgThumbPath : null});
-                    }
-                });
+        .then(function(result){
+            if(result.isConfirmed){
+                setProfile(null);
+                setProfileImg(null);
+                setOrg({...org, orgThumbPath : null});
             }
         });
     }
@@ -428,6 +448,8 @@ function MemberEamil(props){
     const orgEmailDomain = props.orgEmailDomain;
     const setOrgEmailDomain = props.setOrgEmailDomain;
     const setEmailChk = props.setEmailChk;
+    const orgEmailIdRef = props.orgEmailIdRef;
+    const orgEmailDomainRef = props.orgEmailDomainRef;
     
     const [isCustom, setIsCustom] = useState(true);
     
@@ -499,9 +521,9 @@ function MemberEamil(props){
 
     return (
         <>
-            <TextField type="text" id="orgEmail" className="input-email"
+            <TextField type="text" id="orgEmail" className="input-email" inputRef={orgEmailIdRef}
             value={orgEmailId} onChange={chgEmailId}/>&nbsp;@&nbsp;
-            <TextField type="text" id="orgEmailDomain" className="input-email"
+            <TextField type="text" id="orgEmailDomain" className="input-email" inputRef={orgEmailDomainRef}
             value={orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
             <Select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? "custom" : orgEmailDomain} style={{marginLeft : "5px", width : "125px"}}>
                 <MenuItem value="custom">직접 입력</MenuItem>
@@ -519,6 +541,7 @@ function MemberEamil(props){
 function MemberAddr(props){
     const org = props.org;
     const setOrg = props.setOrg;
+    const addressRef = props.addressRef;
 
     //다음 주소 API 불러오기
     useEffect(() => {
@@ -527,12 +550,12 @@ function MemberAddr(props){
         script.async = true;
         document.body.appendChild(script);
     }, []);
+
+    //상세주소
+    const detailAddressRef = useRef(null);
     
     //다음 주소 API 실행 코드
     function execDaumPostcode (){
-        //주소, 상세주소
-        const addressMain = document.getElementById("orgAddrMain");
-        const addressDetail = document.getElementById("orgAddrDetail");
 
         new window.daum.Postcode({
             oncomplete: function (data) {
@@ -544,12 +567,12 @@ function MemberAddr(props){
                     addr = data.jibunAddress;
                 }
 
-                addressMain.value = addr;
+                addressRef.current.value = addr;
                 
                 //주소 값 State 변수에 저장
                 setOrg({...org, orgAddrMain : addr})
 
-                addressDetail.focus();
+                detailAddressRef.current.focus();
             }
         }).open();
     }
@@ -562,9 +585,9 @@ function MemberAddr(props){
 
     return (
         <>
-            <TextField type="text" id="orgAddrMain" className="input-addr" value={org.orgAddrMain} placeholder="주소" readOnly/>
+            <TextField type="text" id="orgAddrMain" className="input-addr" value={org.orgAddrMain} placeholder="주소" inputRef={addressRef}  slotProps={{input: {readOnly: true}}}/>
             <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
-            <TextField type="text"id="orgAddrDetail" className="input-first" value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" />
+            <TextField type="text"id="orgAddrDetail" className="input-first" value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" inputRef={detailAddressRef}/>
         </>
     )
 }

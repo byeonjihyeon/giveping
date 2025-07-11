@@ -22,7 +22,7 @@ export default function JoinMember(props){
         setMember({...member});
     }
 
-
+    
     /*아이디 관련 코드*/
     /*
     아이디 유효성 체크 결과, 중복 체크 결과를 저장할 변수
@@ -31,7 +31,7 @@ export default function JoinMember(props){
     2 : 유효성 체크 실패
     3 : 중복된 아이디가 존재하는 경우 
     */
-    const [idChk, setIdChk] = useState(0);
+   const [idChk, setIdChk] = useState(0);
 
 
     /*비밀번호 관련 코드*/
@@ -149,20 +149,44 @@ export default function JoinMember(props){
     */
     const [emailChk, setEmailChk] = useState(0);
 
+    //이메일 값 변경 시 저장 변수
+    const [memberEmailId, setMemberEmailId] = useState("");         //이메일 아이디
+    const [memberEmailDomain, setMemberEmailDomain] = useState(""); //이메일 도메인
+
+    //유효성 실패 후 focus를 위한 useRef
+    const memberIdRef = useRef(null);       //아이디
+    const memberPwRef = useRef(null);       //비밀번호
+    const memberPwReRef = useRef(null);     //비밀번호 확인
+    const memberNameRef = useRef(null);     //이름
+    const memberPhoneRef = useRef(null);    //전화번호
+    const memberBirthRef = useRef(null);    //생년월일
+    const memberEmailIdRef = useRef(null);  //이메일 아이디
+    const memberEmailDomainRef = useRef(null); //이메일 도메인
+    const addressRef = useRef(null);        //주소
+    
 
     //다음 버튼 클릭 시 호출 함수
     function insertMember(){
         // 유효성 조건 리스트
         const validations = [
-            { valid: member.memberId !== "" && idChk !== 1, message: "아이디 중복체크를 하세요." },
-            { valid: idChk !== 1, message: "아이디를 확인하세요." },
-            { valid: pwChk !== 1 && memberPwRe !== "", message: "비밀번호를 확인하세요." },
-            { valid: memberPwRe === "", message: "비밀번호 확인을 입력하세요." },
-            { valid: nameChk != 1, message: "이름을 입력하세요." },
-            { valid: phoneChk !== 1, message: "전화번호를 확인하세요." },
-            { valid: member.memberBirth >= today, message: "생년월일을 확인하세요." },
-            { valid: emailChk !== 1, message: "이메일을 확인하세요." },
-            { valid: member.memberAddrMain === "", message: "주소를 입력하세요." }
+            { valid: member.memberId == "", message: "아이디를 입력하세요.", inputRef : memberIdRef},
+            { valid: member.memberId !== "" && idChk !== 1, message: "아이디 중복체크를 하세요.", inputRef : memberIdRef },
+            { valid: idChk !== 1, message: "아이디 형식이 올바르지 않습니다.", inputRef : memberIdRef },
+            { valid: member.memberPw == "", message : "비밀번호를 입력하세요.", inputRef : memberPwRef},
+            { valid: pwChk == 2, message: "비밀번호 형식이 올바르지 않습니다.", inputRef : memberPwRef },
+            { valid: memberPwRe === "", message: "비밀번호 확인을 입력하세요.", inputRef : memberPwReRef },
+            { valid: pwChk == 3, message: "비밀번호가 일치하지 않습니다.", inputRef : memberPwReRef },
+            { valid: member.memberName == "", message : "이름을 입력하세요.", inputRef : memberNameRef},
+            { valid: nameChk != 1, message: "이름 형식이 올바르지 않습니다.", inputRef : memberNameRef },
+            { valid: member.memberPhone == "", message : "전화번호를 입력하세요.", inputRef : memberPhoneRef},
+            { valid: phoneChk !== 1, message: "전화번호 형식이 올바르지 않습니다.", inputRef : memberPhoneRef },
+            { valid: member.memberBirth >= today, message: "생년월일을 확인하세요.", inputRef : memberBirthRef },
+            { valid: memberEmailId == "" && memberEmailDomain == "", message: "이메일을 입력하세요.", inputRef : memberEmailIdRef},
+            { valid: memberEmailDomain != "" && memberEmailId == "", message: "이메일 아이디를 입력하세요.", inputRef : memberIdRef},
+            { valid: emailChk == 2, message: "이메일 아이디 형식이 올바르지 않습니다.", inputRef : memberEmailIdRef},
+            { valid: memberEmailDomain == "", message : "이메일 주소를 입력하세요.", inputRef : memberEmailDomainRef},
+            { valid: emailChk !== 1, message: "이메일 주소 형식이 올바르지 않습니다.", inputRef : memberEmailDomainRef },
+            { valid: member.memberAddrMain === "", message: "주소를 입력하세요.", inputRef : addressRef }
         ];
 
         // 검증 실패 시 첫 번째 오류 메시지 띄우고 return
@@ -172,7 +196,8 @@ export default function JoinMember(props){
                     title: "알림",
                     text: validations[i].message,
                     icon: "warning",
-                    confirmButtonText: "확인"
+                    confirmButtonText: "확인",
+                    didClose : validations[i].inputRef.current.focus()
                 });
                 return;
             }
@@ -197,7 +222,7 @@ export default function JoinMember(props){
                                     <label htmlFor="memberId" className="label">아이디</label>
                                 </th>
                                 <td>
-                                    <MemberId member={member} chgMember={chgMember} idChk={idChk} setIdChk={setIdChk}/>
+                                    <MemberId member={member} chgMember={chgMember} idChk={idChk} setIdChk={setIdChk} memberIdRef={memberIdRef}/>
                                 </td>
                             </tr>
                             <tr>
@@ -211,7 +236,7 @@ export default function JoinMember(props){
                                     <label htmlFor="memberPw" className="label">비밀번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="password" id="memberPw" className="input-first"
+                                    <TextField type="password" id="memberPw" className="input-first" inputRef={memberPwRef}
                                     value={member.memberPw} onChange={chgMember} onBlur={checkMemberPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
                                 </td>
                             </tr>
@@ -226,7 +251,7 @@ export default function JoinMember(props){
                                     <label htmlFor="memberPwRe" className="label">비밀번호 확인</label>
                                 </th>
                                 <td>
-                                    <TextField type="password" id="memberPwRe" className="input-first"
+                                    <TextField type="password" id="memberPwRe" className="input-first" inputRef={memberPwReRef}
                                     value={memberPwRe} onChange={chgMemberPwRe} onBlur={checkMemberPw}/>
                                 </td>
                             </tr>
@@ -241,7 +266,7 @@ export default function JoinMember(props){
                                     <label htmlFor="memberName" className="label">이름</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="memberName" className="input-first"
+                                    <TextField type="text" id="memberName" className="input-first" inputRef={memberNameRef}
                                     value={member.memberName} onChange={chgMember} onBlur={checkMemberName}/>
                                 </td>
                             </tr>
@@ -251,7 +276,7 @@ export default function JoinMember(props){
                                     <label htmlFor="memberPhone" className="label">전화번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="memberPhone" className="input-first"
+                                    <TextField type="text" id="memberPhone" className="input-first" inputRef={memberPhoneRef}
                                     value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요. (010-XXXX-XXXX)"/>
                                 </td>
                             </tr>
@@ -259,7 +284,7 @@ export default function JoinMember(props){
                             <tr>
                                 <th><label className="label">생년월일</label></th>
                                 <td>
-                                    <MemberBirth member={member} setMember={setMember} currentYear={currentYear} currentMonth={currentMonth} currentDay={currentDay}/>
+                                    <MemberBirth member={member} setMember={setMember} currentYear={currentYear} currentMonth={currentMonth} currentDay={currentDay} memberBirthRef={memberBirthRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -268,14 +293,15 @@ export default function JoinMember(props){
                                     <label htmlFor="memberEmailId" className="label">이메일</label>
                                 </th>
                                 <td>
-                                    <MemberEmail member={member} setMember={setMember} setEmailChk={setEmailChk}/>
+                                    <MemberEmail member={member} setMember={setMember} setEmailChk={setEmailChk} memberEmailId={memberEmailId} setMemberEmailId={setMemberEmailId}
+                                    memberEmailDomain={memberEmailDomain} setMemberEmailDomain={setMemberEmailDomain} memberEmailIdRef={memberEmailIdRef} memberEmailDomainRef={memberEmailDomainRef}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">주소</label></th>
                                 <td>
-                                    <MemberAddr member={member} setMember={setMember}/>
+                                    <MemberAddr member={member} setMember={setMember} addressRef={addressRef}/>
                                 </td>
                             </tr>
                         </tbody>
@@ -302,6 +328,7 @@ function MemberId(props){
     const chgMember = props.chgMember;
     const idChk = props.idChk;
     const setIdChk = props.setIdChk;
+    const memberIdRef = props.memberIdRef;
 
     //아이디 입력 후 포커스를 잃었을 때 호출함수 (onBlur)
     function checkMemberId(e){
@@ -333,7 +360,8 @@ function MemberId(props){
                         title : "알림",
                         text : "이미 사용중인 아이디입니다.",
                         icon : "warning",
-                        confirmButtonText : "확인"
+                        confirmButtonText : "확인",
+                        didClose : memberIdRef.current.focus()
                     });
                 }else if(res.data.resData == 0){ //중복된 아이디가 존재하지 않는 경우
                     setIdChk(1); //회원가입 가능한 상태
@@ -353,14 +381,15 @@ function MemberId(props){
                 title : "알림",
                 text : "아이디 형식이 올바르지 않습니다.",
                 icon : "warning",
-                confirmButtonText : "확인"
+                confirmButtonText : "확인",
+                didClose : memberIdRef.current.focus()
             });
         }
     }
 
     return (
         <>
-            <TextField type="text" id="memberId" className="input-id" value={member.memberId}
+            <TextField type="text" id="memberId" className="input-id" value={member.memberId} inputRef={memberIdRef}
             onChange={chgMember} onBlur={checkMemberId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
             <Button variant="contained" type="button" onClick={checkMemberIdUnique} className="checkBtn" style={{marginLeft : "10px"}}>중복체크</Button>
         </>
@@ -374,6 +403,7 @@ function MemberBirth(props){
     const currentYear = props.currentYear;
     const currentMonth = props.currentMonth;
     const currentDay = props.currentDay;
+    const memberBirthRef = props.memberBirthRef;
 
     const [birthYear, setBirthYear] = useState(String(currentYear));
     const [birthMonth, setBirthMonth] = useState(currentMonth);
@@ -390,7 +420,7 @@ function MemberBirth(props){
         months.push(String(i).padStart(2, '0'));
     }
 
-    const [days, setDays] = useState([]);
+    const [days, setDays] = useState([birthDay]);
 
     //월별 일 수 계산
     useEffect(function () {
@@ -415,6 +445,7 @@ function MemberBirth(props){
         if (parseInt(birthDay) > lastDay) {
             setBirthDay(String(lastDay).padStart(2, '0'));
         }
+
     }, [birthYear, birthMonth]);
 
     //생년월일 값 onChange 호출 함수
@@ -439,7 +470,7 @@ function MemberBirth(props){
     return (
         <>
             <FormControl>
-                <Select name="birthYear" value={birthYear} onChange={handleYearChange}>
+                <Select name="birthYear" value={birthYear} onChange={handleYearChange} inputRef={memberBirthRef}>
                     {years.map(function(y, index){
                         return  <MenuItem key={"y"+index} value={y}>{y}년</MenuItem>
                     })}
@@ -468,10 +499,13 @@ function MemberEmail(props){
     const member = props.member;
     const setMember = props.setMember;
     const setEmailChk = props.setEmailChk;
+    const memberEmailId = props.memberEmailId;
+    const setMemberEmailId = props.setMemberEmailId;
+    const memberEmailDomain = props.memberEmailDomain;
+    const setMemberEmailDomain = props.setMemberEmailDomain;
+    const memberEmailIdRef = props.memberEmailIdRef;
+    const memberEmailDomainRef = props.memberEmailDomainRef;
 
-    //이메일 값 변경 시 저장 변수
-    const [memberEmailId, setMemberEmailId] = useState("");         //이메일 아이디
-    const [memberEmailDomain, setMemberEmailDomain] = useState(""); //이메일 도메인
     const [isCustom, setIsCustom] = useState(true);                 //이메일 도메인 직접 입력 선택 여부
 
     //이메일 아이디 값 onChange 호출 함수
@@ -541,10 +575,10 @@ function MemberEmail(props){
 
     return (
         <>
-        <TextField type="text" id="memberEmailId" className="input-email"
+        <TextField type="text" id="memberEmailId" className="input-email" inputRef={memberEmailIdRef}
         value={memberEmailId} onChange={chgEmailId}/>
         &nbsp;@&nbsp;
-        <TextField type="text" id="memberEmailDomain" className="input-email"
+        <TextField type="text" id="memberEmailDomain" className="input-email" inputRef={memberEmailDomainRef}
         value={memberEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
         <FormControl>
             <Select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : memberEmailDomain} style={{marginLeft : "5px", width : "125px"}}>
@@ -564,6 +598,7 @@ function MemberEmail(props){
 function MemberAddr(props){
     const member = props.member;
     const setMember = props.setMember;
+    const addressRef = props.addressRef;
 
     //다음 주소 API 불러오기
     useEffect(() => {
@@ -573,12 +608,11 @@ function MemberAddr(props){
         document.body.appendChild(script);
     }, []);
     
+    //주소, 상세주소
+    const detailAddressRef = useRef(null);
     
     //다음 주소 API 실행 코드
     function execDaumPostcode (){
-        //주소, 상세주소
-        const addressRef = document.getElementById("memberAddrMain");
-        const detailAddressRef = document.getElementById("memberAddrDetail");
 
         new window.daum.Postcode({
             oncomplete: function (data) {
@@ -590,12 +624,13 @@ function MemberAddr(props){
                     addr = data.jibunAddress;
                 }
 
-                addressRef.value = addr;
+                addressRef.current.value = addr;
                 
                 //주소 값 State 변수에 저장
                 setMember({...member, memberAddrMain : addr})
 
-                detailAddressRef.focus();
+                //detailAddressRef.focus();
+                detailAddressRef.current.focus();
             }
         }).open();
     }
@@ -608,9 +643,9 @@ function MemberAddr(props){
 
     return (
         <>
-            <TextField type="text" id="memberAddrMain" className="input-addr" placeholder="주소" readOnly/>
+            <TextField type="text" id="memberAddrMain" className="input-addr" inputRef={addressRef} placeholder="주소"  slotProps={{input: {readOnly: true}}}/>
             <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
-            <TextField type="text" id="memberAddrDetail" className="input-first"
+            <TextField type="text" id="memberAddrDetail" className="input-first" inputRef={detailAddressRef}
             value={member.memberAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
         </>
     )
