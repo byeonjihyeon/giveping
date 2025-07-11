@@ -34,6 +34,7 @@
     width: 80px;
     height: 80px;
     margin-bottom: 10px;
+    background-color: white;
 }
 
 .profile-wrap p {
@@ -486,25 +487,56 @@
 .input-profile-wrap {
     height: 120px;
     display: flex;
-    border-bottom: 1px solid #dcdcdc;
-    gap: 15px;
+    gap: 25px;
 }
 
 .profile {
     width: 100px;
     height: 100px;
     border-radius: 50px;
+    border: 1px solid #dcdcdc;
+    cursor: pointer;
 }
 
-.profile-img {
+.profile-img{
+    position: relative;
+}
+
+.profile-img::after{
+    background-image: url('/images/camera_alt_30dp_FFFFFF.png');
+    background-size: 80%;
+    background-position: center;
+    content: "";
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    vertical-align: middle;
+    position: absolute;
+    left: 10px;
+    background-color: #848B91;
+    border-radius: 15px;
+    left: 80px;
+    top: 75px;
+}
+
+.profile-img-wrap {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .profile-content{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    gap: 10px;
+}
+
+.profile-content>span{
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .profile-btns{
@@ -514,7 +546,9 @@
 
 .profile-btns > *{
     width: 50px;
+    height: 30px;
 }
+
 
 
 

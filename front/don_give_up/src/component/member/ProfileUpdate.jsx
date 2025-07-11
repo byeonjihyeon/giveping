@@ -77,23 +77,20 @@ export default function ProfileUpdate(props){
 
     return (
         <div className="input-profile-wrap">
-            <div className="profile-img">
+            <div className="profile-img-wrap">
+                <div className="profile-img" onClick={function(e){
+                    profileImgEl.current.click();
+                }}>
                 {
                     profileImg ?   //미리보기 파일이 있는지?
-                        <img className="profile"  src={profileImg} onClick={function(e){
-                            profileImgEl.current.click();
-                        }} />
+                        <img className="profile"  src={profileImg}  />
                     :
                     member.memberProfile ? //서버에 저장된 프로필이미지가 있는지?
-                    <img className="profile" src={serverUrl + "/member/" + member.memberProfile.substring(0,8) + "/" + member.memberProfile} onClick={
-                        function(e){
-                            profileImgEl.current.click();
-                        }} />    
+                    <img className="profile" src={serverUrl + "/member/" + member.memberProfile.substring(0,8) + "/" + member.memberProfile} />    
                     :
-                    <img className="profile" src='/images/default_profile.jpg' onClick={function(e){
-                        profileImgEl.current.click();
-                    }} />
+                    <img className="profile" src='/images/default_profile.jpg' />
                 }
+                </div>
                 <input type='file' accept="image/*" id='memberProfile' style={{display: 'none'}} ref={profileImgEl} onChange={chgProfileImg} />
             </div>
             <div className="profile-content">
