@@ -99,16 +99,17 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
-    padding: 10px;
+    padding: 8px;
     border-radius: 50%;
     box-shadow: 0 0 6px rgba(0,0,0,0.2);
 }
 
 .scroll-btn.left {
-    left: 0;
+    left: 3px;
 }
 
 .scroll-btn.right {
-    right: 0;
+    right: 3px;
 }
+
 

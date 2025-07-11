@@ -225,60 +225,55 @@ public class OrgController {
 
 	}
 
-	//단체 프로필 초기화(삭제)
-	@PatchMapping("/thumb/{orgNo}")
-	public ResponseEntity<ResponseDTO> deleteThumb(@PathVariable int orgNo) {
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 초기화 중 오류가 발생했습니다.", false, "error");
-		
-		try {
-			String prevFilePath = service.deleteThumb(orgNo); //prevFilePath : 서버에 저장된 기존 파일
-			
-			if(prevFilePath != null) {
-				String savePath = uploadPath + "/org/thumb/";
-				File delFile = new File(savePath + prevFilePath.substring(0, 8) + File.separator + prevFilePath);
-				
-				if(delFile.exists()) {
-					delFile.delete();
-				}
-				
-				res = new ResponseDTO(HttpStatus.OK, "기본 프로필로 변경되었습니다.", true, "success");
-			}else {
-				res = new ResponseDTO(HttpStatus.OK, "프로필 초기화 중 오류가 발생했습니다.", false, "warning");
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		
-		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
-	}
 	
 	//단체 프로필 수정
 	@PostMapping("/thumb")
-	public ResponseEntity<ResponseDTO> updateThumb(@ModelAttribute MultipartFile profile, int orgNo, String orgThumbPath) {
+	public ResponseEntity<ResponseDTO> updateThumb(@ModelAttribute MultipartFile profile, int orgNo, boolean isDefault, String prevProfile) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "프로필 수정 중 오류가 발생했습니다.", null, "error");
 		
 		try {
-			String filePath = fileUtil.uploadFile(profile, "/org/thumb/");
-			
-			Org org = new Org();
-			org.setOrgNo(orgNo);
-			org.setOrgThumbPath(filePath);
-			
-			int result = service.updateThumb(org);
-			
-			if(result > 0) {
-				if(orgThumbPath != null) {
-					String savePath = uploadPath + "/org/thumb/";
-					File delFile = new File(savePath + orgThumbPath.substring(0, 8) + File.separator + orgThumbPath);
+			if(profile == null) { //대표 사진을 변경하지 않았을 때 or 기본 이미지로 변경했을 때
+				//기본 이미지로 변경했을 때 기존 대표 사진 삭제
+				if(isDefault) { //기본 이미지 변경했을 때
+					int result = service.deleteThumb(orgNo);
 					
-					if(delFile.exists()) {
-						delFile.delete();
+					if(result > 0) {						
+						if(prevProfile != null) { //기존 대표 사진이 존재할 때
+							String savePath = uploadPath + "/org/thumb/";
+							File delFile = new File(savePath + prevProfile.substring(0, 8) + File.separator + prevProfile);
+							
+							if(delFile.exists()) {
+								delFile.delete();
+							}
+						}
 					}
+					res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", null, "success");
+				}else { //대표 사진을 변경하지 않았을 때
+					res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", prevProfile, "success");
 				}
+			}else { //대표 사진을 변경했을 때
+				String filePath = fileUtil.uploadFile(profile, "/org/thumb/");
 				
-				res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", filePath, "success");
-			}else {
-				res = new ResponseDTO(HttpStatus.OK, "프로필 수정 중 오류가 발생했습니다.", null, "warning");
+				Org org = new Org();
+				org.setOrgNo(orgNo);
+				org.setOrgThumbPath(filePath);
+				
+				int result = service.updateThumb(org);
+				
+				//기존 대표 사진 삭제
+				if(result > 0) {
+					if(prevProfile != null) { //기존 대표 사진이 존재할 때
+						String savePath = uploadPath + "/org/thumb/";
+						File delFile = new File(savePath + prevProfile.substring(0, 8) + File.separator + prevProfile);
+						
+						if(delFile.exists()) {
+							delFile.delete();
+						}
+					}
+					res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", filePath, "success");
+				}else {
+					res = new ResponseDTO(HttpStatus.OK, "프로필 수정 중 오류가 발생했습니다.", null, "warning");
+				}	
 			}
 			
 		}catch (Exception e) {
