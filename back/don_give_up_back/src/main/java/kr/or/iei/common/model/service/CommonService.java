@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.iei.common.model.dao.CommonDao;
 import kr.or.iei.common.model.dto.CommonBiz;
+import kr.or.iei.common.model.dto.CommonOrg;
 import kr.or.iei.common.model.dto.DonateCode;
 
 @Service
@@ -28,5 +29,9 @@ public class CommonService {
 	public ArrayList<CommonBiz> selectMainBizList(int memberNo) {
 		// TODO Auto-generated method stub
 		return dao.selectMainBizList(memberNo);
+	}
+
+	public ArrayList<CommonOrg> selectMainOrgList(int primaryNo) {
+		return dao.selectMainOrgList(primaryNo);
 	}
 }

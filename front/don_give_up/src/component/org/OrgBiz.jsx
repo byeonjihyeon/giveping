@@ -41,6 +41,7 @@ export default function OrgBiz(){
     //버튼 클릭 시 호출 함수
     function selectBiz(e){
         setClickBtn(e.target.value);
+        setReqPage(1);
     }
 
     return (
@@ -133,7 +134,7 @@ function ApprovalBiz(props){
                    biz.bizStatus == 2 ? "반려" : 
                    biz.bizStatus == 3 ? "삭제 요청" : "삭제"}
               </td> 
-              <td>{biz.payoutYN != null ? "O" : "X"}</td>
+              <td>{biz.payoutYN == 1 ? "O" : "X"}</td>
               </>
             : ""}
         </>

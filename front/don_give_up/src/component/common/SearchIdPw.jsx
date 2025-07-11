@@ -12,8 +12,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { useRef } from "react";
 
-//비밀번호 찾기
+//아이디/비밀번호 찾기
 export default function SearchIdPw(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -121,8 +122,38 @@ export default function SearchIdPw(){
         }, [orgEmailId, orgEmailDomain]);
     }
 
+    //유효성 체크 실패 후 focus를 위한 useRef
+    const nameRef = useRef(null);
+    const idRef = useRef(null);
+    const emailIdRef = useRef(null);
+    const emailDomainRef = useRef(null);
+
     //확인 버튼 클릭 시 실행 함수
     function findPw(){
+        const validations = [
+            {valid: type == "id" && selectRadio == "member" && member.memberName == "", message: "이름을 입력하세요.", inputRef: nameRef},
+            {valid: type == "id" && selectRadio == "org" && org.orgName == "", message: "단체명을 입력하세요.", inputRef: nameRef},
+            {valid: type == "pw" && selectRadio == "member" && member.memberId == "", message: "아이디를 입력하세요.", inputRef: idRef},
+            {valid: type == "pw" && selectRadio == "org" && org.orgId == "", message: "아이디를 입력하세요.", inputRef: idRef},
+            {valid: selectRadio == "member" && memberEmailId == "", message: "이메일 아이디를 입력하세요.", inputRef: emailIdRef},
+            {valid: selectRadio == "org" && orgEmailId == "", message: "이메일 아이디를 입력하세요.", inputRef: emailIdRef},
+            {valid: selectRadio == "member" && memberEmailDomain == "", message: "이메일 주소를 입력하세요.", inputRef: emailDomainRef},
+            {valid: selectRadio == "org" && orgEmailDomain == "", message: "이메일 주소를 입력하세요.", inputRef: emailDomainRef}
+        ]
+
+        for(let i=0; i<validations.length; i++){
+            if(validations[i].valid){
+                Swal.fire({
+                    title : "알림", 
+                    text : validations[i].message,
+                    icon : "warning",
+                    confirmButtonText : "확인",
+                    didClose : validations[i].inputRef.current.focus()
+                });
+                return;
+            }
+        }
+
         let options = {};
         if(type == "id"){
             if(selectRadio == "member"){
@@ -182,7 +213,7 @@ export default function SearchIdPw(){
                                 <tr>
                                     <th><label className="login-label">{selectRadio == "member" ? "이름" : "단체명"}</label></th>
                                     <td>
-                                        <TextField type="text" id={selectRadio == "member" ? "memberName" : "orgName"} className="input-first"
+                                        <TextField type="text" id={selectRadio == "member" ? "memberName" : "orgName"} className="input-first" inputRef={nameRef}
                                             value={selectRadio == "member" ? member.memberName : org.orgName} onChange={chgValue} style={{marginBottom : "5px"}}/>
                                     </td>
                                 </tr>
@@ -190,7 +221,7 @@ export default function SearchIdPw(){
                                 <tr>
                                     <th><label className="login-label">아이디</label></th>
                                     <td>
-                                        <TextField type="text" id={selectRadio == "member" ? "memberId" : "orgId"} className="input-first"
+                                        <TextField type="text" id={selectRadio == "member" ? "memberId" : "orgId"} className="input-first" inputRef={idRef}
                                             value={selectRadio == "member" ? member.memberId : org.orgId} onChange={chgValue} style={{marginBottom : "5px"}}/>
                                     </td>
                                 </tr>
@@ -198,9 +229,9 @@ export default function SearchIdPw(){
                                 <tr>
                                     <th><label className="login-label">이메일</label></th>
                                     <td>
-                                        <TextField type="text" className="input-email" id={selectRadio == "member" ? "memberEmailId" : "orgEmailId"}
+                                        <TextField type="text" className="input-email" id={selectRadio == "member" ? "memberEmailId" : "orgEmailId"} inputRef={emailIdRef}
                                                 value={selectRadio == "member" ? memberEmailId : orgEmailId} onChange={chgEmailId}/>&nbsp;@&nbsp;
-                                        <TextField type="text" className="input-email" id={selectRadio == "member" ? "memberEmailDomain" : "orgEmailDomain"}
+                                        <TextField type="text" className="input-email" id={selectRadio == "member" ? "memberEmailDomain" : "orgEmailDomain"} inputRef={emailDomainRef}
                                                 value={selectRadio == "member" ? memberEmailDomain : orgEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
                                         <Select name="eamilDomain" onChange={selectEmailDomain} style={{marginLeft : "5px", width : "125px"}}
                                         value={isCustom ? 'custom' : selectRadio == "member" ? memberEmailDomain : orgEmailDomain}>

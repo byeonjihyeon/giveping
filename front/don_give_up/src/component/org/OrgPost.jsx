@@ -54,6 +54,14 @@ export default function OrgPost(){
 
     //사업 시작 날짜가 최소 7일 뒤에 시작되어야 해 확인하기 위하여
     const today = new Date();
+    //모금 종료일
+    const donateEndDate = new Date();
+    donateEndDate.setDate(today.getDate() + Number(donateBiz.bizDonateTerm) + 7);
+    //0000-00-00 형식으로 바꿔주기
+    const endYear = donateEndDate.getFullYear();
+    const endMonth = String(donateEndDate.getMonth() + 1).padStart(2, "0");
+    const endDay = String(donateEndDate.getDate()).padStart(2, "0");
+    const donateEndDateStr = endYear + "-" + endMonth + "-" + endDay;
     //7일 뒤 날짜 가져오기
     const nextWeek = new Date();
     nextWeek.setDate(today.getDate() + 7);
@@ -71,38 +79,16 @@ export default function OrgPost(){
             if(e.target.value < nextWeekStr){
                 Swal.fire({
                     title : "알림",
-                    text : "사업 시작일은 7일 뒤부터 가능합니다.",
+                    text : "사업 시작일은 모금 시작일보다 빠를 수 없습니다.",
                     icon : "warning",
                     confirmButtonText : "확인"
                 }).then(function(result){
                     e.target.value = "";
                 });
-            }else if(donateBiz.bizEnd != "" && e.target.value > donateBiz.bizEnd){
-                Swal.fire({
-                    title : "알림",
-                    text : "사업 종료일은 사업 시작일보다 빠를 수 없습니다.",
-                    icon : "warning",
-                    confirmButtonText : "확인"
-                }).then(function(result){
-                    e.target.value = "";
-                })
-            }else{
-                setDonateBiz({...donateBiz});
             }
         }
 
-        if(e.target.id == "bizEnd" && donateBiz.bizStart != "" && e.target.value < donateBiz.bizStart){
-            Swal.fire({
-                title : "알림",
-                text : "사업 종료일은 사업 시작일보다 빠를 수 없습니다.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            }).then(function(result){
-                e.target.value = "";
-            })
-        }else{
-            setDonateBiz({...donateBiz});
-        }
+        setDonateBiz({...donateBiz});
     }
 
     //사용 계획 추가 클릭 시 호출 함수
@@ -161,28 +147,20 @@ export default function OrgPost(){
     
     //등록 버튼 클릭 시 실행 함수
     function insertBizPlan(){
-        //콤마 제거를 위해
-        const cleanedDonateBiz = Object.assign({}, donateBiz);
-
-        // bizPlanList 내 각 항목의 bizPlanMoney 콤마 제거
-        cleanedDonateBiz.bizPlanList = cleanedDonateBiz.bizPlanList.map(function (plan) {
-            return Object.assign({}, plan, {
-            bizPlanMoney: String(plan.bizPlanMoney).replace(/,/g, "")
-            });
-        });
-
         //유효성 체크
         //유효성 조건 리스트
         const validations = [
-            { valid: donateBiz.bizDonateTerm == "" || donateBiz.bizDonateTerm == 0, message: "모금 기간을 선택하세요." },
-            { valid: donateBiz.bizStart == "", message: "사업 시작일을 선택하세요." },
-            { valid: donateBiz.bizEnd == "", message: "사업 종료일을 선택하세요." },
-            { valid: donateBiz.bizGoal == 0, message: "사용 용도 및 산출 근거 또는 사용 금액을 입력하세요." },
-            { valid: donateBiz.bizGoal >= 1000000000, message: "전체 목표 금액은 10억 미만으로 설정해주세요." },
-            { valid: donateBiz.donateCode == "", message: "기부 코드를 선택하세요." },
-            { valid: donateBiz.bizName == "", message: "사업명을 입력하세요." },
-            { valid: donateBiz.bizContent == "", message: "사업 내용을 입력하세요." },
-            { valid: bizImg == null, message: "대표 사진 등록해주세요." }
+            { valid: donateBiz.bizDonateTerm == "" || donateBiz.bizDonateTerm == 0, message: "모금 기간을 선택하세요."},
+            { valid: donateBiz.bizStart == "", message: "사업 시작일을 선택하세요."},
+            { valid: donateBiz.bizEnd == "", message: "사업 종료일을 선택하세요."},
+            { valid: donateBiz.bizEnd != "" && donateBiz.bizStart > donateBiz.bizEnd, message: "사업 종료일은 사업 시작일보다 빠를 수 없습니다."},
+            { valid: donateBiz.bizDonateTerm != "" && donateEndDateStr > donateBiz.bizEnd, message: "사업 종료일은 모금 종료일보다 빠를 수 없습니다."},
+            { valid: donateBiz.bizGoal == 0, message: "사용 용도 및 산출 근거 또는 사용 금액을 입력하세요."},
+            { valid: donateBiz.bizGoal >= 1000000000, message: "전체 목표 금액은 10억 미만으로 설정해주세요."},
+            { valid: donateBiz.donateCode == "", message: "기부 코드를 선택하세요."},
+            { valid: bizImg == null, message: "대표 사진 등록해주세요." },
+            { valid: donateBiz.bizName == "", message: "사업명을 입력하세요."},
+            { valid: donateBiz.bizContent == "", message: "사업 내용을 입력하세요."}
         ];
     
         //검증 실패 시 첫 번째 오류 메시지 띄우고 return
@@ -290,7 +268,8 @@ export default function OrgPost(){
                             <FormControlLabel value="90" control={<Radio />} label="90일" />
                         </RadioGroup>
                     </FormControl>
-                    <p>*모금 시작일은 등록일로부터 7일 뒤입니다.(예시 : 등록일 - 7월 5일 / 모금 시작일 - 7월 12일)</p>
+                    <p>*모금 시작일은 등록일로부터 7일 뒤, 모금 종료일은 선택한 희망 모금 기간 +7일입니다.</p>
+                    <p>(예시 : 등록일 - 7월 5일, 선택 희망 모금일 - 30일 / 모금 시작일 - 7월 12일 / 모금 종료일 - 8월 10일)</p>
                 </div>
                 <div>
                     <h3>사업 기간</h3>

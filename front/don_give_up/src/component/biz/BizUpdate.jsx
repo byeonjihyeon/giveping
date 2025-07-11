@@ -60,8 +60,8 @@ export default function BizUpdate(){
         if (prevDonateBiz && prevDonateBiz.bizNo) {
              // 대표 사진 미리보기 설정
         const previewImg = prevDonateBiz.bizThumbPath 
-            ? (serverUrl + prevDonateBiz.bizThumbPath) 
-            : null;
+            ? (serverUrl + "/biz/thumb/" + prevDonateBiz.bizThumbPath.substring(0,8)) + "/" + prevDonateBiz.bizThumbPath
+            : "/images/default_img.png";
 
             setDonateBiz({
                 ...prevDonateBiz,
@@ -76,9 +76,11 @@ export default function BizUpdate(){
             setBizThumbImg("/images/default_img.png");
         }
 
+        /*
         if (prevDonateBiz.bizThumbPath) {
             setFix(true); // 서버에 저장된 대표 사진이 있으면 수정 불가로 처리
         }
+        */
         
         }
     }, [prevDonateBiz, prevBizPlanList, orgNo]);
@@ -239,8 +241,10 @@ export default function BizUpdate(){
         }
     }
 
+    /*
     //대표 사진 변경 가능 여부를 다룰 변수
     const [fix, setFix] = useState(false);
+    */
 
     
     useEffect(function(){
@@ -269,8 +273,7 @@ export default function BizUpdate(){
             { valid: donateBiz.donateCode == "", message: "기부 코드를 선택하세요." },
             { valid: donateBiz.bizName == "", message: "사업명을 입력하세요." },
             { valid: donateBiz.bizContent == "", message: "사업 내용을 입력하세요." },
-            { valid: !bizImg && !donateBiz.bizThumbPath, message: "대표 사진을 등록해주세요." },
-            { valid: !fix, message: "대표 사진 확정 처리를 해주세요." }
+            { valid: !bizImg && !donateBiz.bizThumbPath, message: "대표 사진을 등록해주세요." }
         ];
     
         //검증 실패 시 첫 번째 오류 메시지 띄우고 return
@@ -335,24 +338,77 @@ export default function BizUpdate(){
                 
                 axiosInstance(options)
                 .then(function(res){
-                    Swal.fire({
-                        title : "알림",
-                        text : res.data.clientMsg,
-                        icon : res.data.alertIcon,
-                        confirmButtonText : "확인"
-                    })
-                    .then(function(result){
-                            console.log("기부사업글 수정 성공!");
-                    });
+
+                    // DB에 tbl_donate_biz 업데이트 성공일 경우
+                    // 여기에 사진 /biz/thumb 하는 axios 선언
+
+                    //DB에 대표 사진 저장
+                    const form = new FormData();
+                    
+                    // 새로 올린 이미지가 있을 때만 해당 axios 실행
+                    if(bizImg != null){
+                        form.append("bizImg", bizImg);
+                        form.append("bizNo", bizNo);
+                        console.log("bizImg : ", bizImg);
+                        console.log("bizNo : ", bizNo);
+    
+                        let options = {};
+                        options.url = serverUrl + "/biz/thumb";
+                        options.method = "post";
+                        options.data = form;
+                        options.headers = {};
+                        options.headers.contentType = "multipart/form-data";
+                        options.headers.processData = false; //쿼리스트링 X
+                        
+                        
+                        axiosInstance(options)
+                        .then(function(res){
+                            
+                            /*
+                            const newDonateBiz = res.data.resData;
+
+                            setDonateBiz(prev => ({
+                                ...prev,
+                                bizNo: newDonateBiz.bizNo,
+                                bizThumbPath: newDonateBiz.bizThumbPath // 서버에서 전달받은 새 썸네일 경로로 갱신
+                            }));
+                            */
+                            
+                            
+                            Swal.fire({
+                                title : "알림",
+                                text : res.data.clientMsg,
+                                icon : res.data.alertIcon,
+                                confirmButtonText : "확인"
+                            })
+                            .then(function(result){
+                                
+                                    navigate("/biz/view/"+bizNo);
+                            });
+                        });
+                        
+                    }else{
+                        // bizImg 가 없는 경우 : 이미지 수정 없이 사업 정보가 수정 완료 처리됨
+                        Swal.fire({
+                                title : "알림",
+                                text : res.data.clientMsg,
+                                icon : res.data.alertIcon,
+                                confirmButtonText : "확인"
+                            })
+                            .then(function(result){
+                                
+                                    navigate("/biz/view/"+bizNo);
+                            });
+
+                    }
                 });
-                
             }
         })
     }
-
+    /*
     // 썸네일 함수 초기화
     function resetThumbImage() {
-        setFix(false); // 다시 수정 가능 상태로 전환
+        //setFix(false); // 다시 수정 가능 상태로 전환
         setBizImg(null); // 서버로 전송할 이미지 초기화
         setBizThumbImg(null); // 미리보기 이미지 제거
         // 기존 donateBiz의 bizThumbPath 제거 (원하면)
@@ -361,6 +417,8 @@ export default function BizUpdate(){
             bizThumbPath: ""  // or null
         }));
     }
+    */
+    /*
 
     //대표 사진 확정 버튼 클릭 시 호출 함수
         function fixThumbImg(){
@@ -405,6 +463,7 @@ export default function BizUpdate(){
                 };
             });
         }
+            */
 
 
     return(
@@ -467,22 +526,22 @@ export default function BizUpdate(){
                     <div>대표 사진 등록</div>
                     <img 
                         src={
-                            donateBiz.bizThumbPath
-                            ? serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0, 8) + "/" + donateBiz.bizThumbPath
-                            : bizThumbImg || "/images/default_img.png"
+                            bizThumbImg
+                            ? bizThumbImg
+                            : donateBiz.bizThumbPath
+                            ? serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0,8) + "/" + donateBiz.bizThumbPath
+                            : "/images/default_img.png"
                         }
-                        style={{ width: "100px", cursor: fix ? "default" : "pointer" }}
-                        onClick={fix ? null : () => thumbImg.current.click()}
+                        style={{ width: "100px", cursor: "pointer" }}
+                        onClick={() => thumbImg.current.click()}
                     />
-
                     <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
-                    {fix && (
-                    <button type="button" onClick={resetThumbImage}>초기화</button>
-                    )}
+
+                    {/*<button type="button" onClick={resetThumbImage}>사진초기화</button>
                     <div>
-                        <Button variant="contained" type="button" onClick={fixThumbImg} style={{bottom : "0", marginTop : "65px", marginLeft : "10px"}}>확정</Button>
+                        <Button variant="contained" type="button" style={{bottom : "0", marginTop : "65px", marginLeft : "10px"}}>확정</Button>
                     </div>
-                    
+                    */}
                 </div>
                 <div>
                     <div>본문</div>

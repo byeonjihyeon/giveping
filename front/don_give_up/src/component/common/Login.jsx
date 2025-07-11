@@ -11,6 +11,7 @@ import useUserStore from '../../store/useUserStore';
 import { useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { useRef } from 'react';
 
 //로그인 페이지
 export default function Login(){
@@ -93,15 +94,27 @@ function DoLogin(props){
         setOrg({...org});
     }
 
+    const idRef = useRef(null);
+    const pwRef = useRef(null);
+
     //로그인 버튼 클릭 시 호출 함수
     function login(){
         if(selectRadio == "member"){ //개인 회원 선택
-            if(member.memberId == "" || member.memberPw == ""){
+            if(member.memberId == ""){
                 Swal.fire({
                     title : "알림",
-                    text : "아이디 또는 비밀번호를 입력하세요",
+                    text : "아이디를 입력하세요",
                     icon : "warning",
-                    confirmButtonText : "확인"
+                    confirmButtonText : "확인",
+                    didClose : idRef.current.focus()
+                });
+            }else if(member.memberPw == ""){
+                Swal.fire({
+                    title : "알림",
+                    text : "비밀번호를 입력하세요",
+                    icon : "warning",
+                    confirmButtonText : "확인",
+                    didClose : pwRef.current.focus()
                 });
             }else{
                 let options = {};
@@ -141,12 +154,21 @@ function DoLogin(props){
                 });
             }
         }else{ //단체 회원 선택
-            if(org.orgId == "" || org.orgPw == ""){
+            if(org.orgId == ""){
                 Swal.fire({
                     title : "알림",
-                    text : "아이디 또는 비밀번호를 입력하세요",
+                    text : "아이디를 입력하세요",
                     icon : "warning",
-                    confirmButtonText : "확인"
+                    confirmButtonText : "확인",
+                    didClose : idRef.current.focus()
+                });
+            }else if(org.orgPw == ""){
+                Swal.fire({
+                    title : "알림",
+                    text : "비밀번호를 입력하세요",
+                    icon : "warning",
+                    confirmButtonText : "확인",
+                    didClose : pwRef.current.focus()
                 });
             }else{
                 let options = {};
@@ -198,7 +220,7 @@ function DoLogin(props){
                             <TextField type="text" id={selectRadio == "member" ? "memberId" : "orgId"} 
                                    value={selectRadio == "member" ? member.memberId : org.orgId}
                                    onChange={selectRadio == "member" ? chgMember : chgOrg}
-                                   className="input-login" style={{marginBottom : "5px"}}
+                                   className="input-login" style={{marginBottom : "5px"}} inputRef={idRef}
                             />
                         </td>
                     </tr>
@@ -207,7 +229,7 @@ function DoLogin(props){
                             <label htmlFor={selectRadio == "member" ? "memberPw" : "orgPw"} className="login-label">비밀번호</label>
                         </th>
                         <td>
-                            <TextField type="password" id={selectRadio == "member" ? "memberPw" : "orgPw"} 
+                            <TextField type="password" id={selectRadio == "member" ? "memberPw" : "orgPw"} inputRef={pwRef}
                                    value={selectRadio == "member" ? member.memberPw : org.orgPw} 
                                    onChange={selectRadio == "member" ? chgMember : chgOrg} className="input-login"
                             />

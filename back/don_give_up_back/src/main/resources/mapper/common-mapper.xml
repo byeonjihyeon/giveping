@@ -70,13 +70,58 @@
 	                )
 	            </if>
 	        </where>
-	        ORDER BY o.org_temperature DESC, b.biz_reg_date DESC
+	        ORDER BY o.org_temperature DESC, b.biz_end
 	    )
 	    WHERE ROWNUM &lt;= 8
 	</select>
 
 
 	<!-- 회원 관심 카테고리에 따라서 기부단체 리스트 (8개) 출력 -->
+	<select id="selectMainOrgList" parameterType="int" resultMap="mainOrgMap">
+	    SELECT * FROM (
+	        SELECT DISTINCT
+	        	   o.org_no AS orgNo, 
+				   o.org_id AS orgId,
+			       o.org_name AS orgName,
+			       o.ORG_INTRODUCE AS orgIntroduce,
+			       o.ORG_ENROLL_DATE AS orgEnrollDate,
+			       o.ORG_TEMPERATURE AS orgTemperature,
+			       o.ORG_THUMB AS orgThumbPath
+			FROM tbl_org o
+			JOIN tbl_org_donation od ON o.org_no = od.org_no
+			JOIN tbl_member_donation md ON od.donate_code = md.donate_code
+			<where>
+			o.org_status = 1
+			<if test="memberNo != null and memberNo != 0">
+			  AND md.member_no = #{memberNo}
+			</if>
+			</where>
+			order by o.org_temperature desc
+	    )
+	    WHERE ROWNUM &lt;= 8
+	</select>
+	
+	<resultMap type="CommonOrg" id="mainOrgMap">
+		<result column="org_no" property="orgNo"/>
+		<result column="org_id" property="orgId"  />
+		<result column="org_name" property="orgName"  />
+		<result column="org_introduce" property="orgIntroduce"  />
+		<result column="org_enroll_date" property="orgEnrollDate"  />
+		<result column="org_temperature" property="orgTemperature" />
+		<result column="org_thumb" property="orgThumbPath" />
+	
+	<collection property="categoryList"
+		select="selectCategoryList" column="orgNo"
+		javaType="java.util.List" ofType="String">
+		</collection>
+	
+	</resultMap>
+	
+	<select id="selectCategoryList" parameterType="_int" resultType="string">
+	select donate_code
+		  from tbl_org_donation
+		 where org_no = #{orgNo}
+	</select>
 
 	
 </mapper>

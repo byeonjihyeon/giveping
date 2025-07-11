@@ -117,7 +117,7 @@ export default function MyHome(props){
                 <div className="myNews-item">
                     <div className="m-newsList-wrap" >
                              {
-                                newsList.filter(news => news.alarmRead === 0).length === 0 ? (
+                                !newsList || newsList.filter(news => news.alarmRead === 0).length === 0 ? (
                                 <div>새로운 소식이 없습니다.</div>
                                 ) : (
                                 newsList
