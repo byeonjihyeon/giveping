@@ -226,6 +226,7 @@ export default function OrgUpdate(props){
                             <tr>
                                 <Profile orgNo={orgNo} org={org} setOrg={setOrg} profileImg={profileImg} setProfileImg={setProfileImg} profile={profile} setProfile={setProfile}/>
                             </tr>
+                            <tr><td></td><td><p></p></td></tr>
                             <tr>
                                 <th><label className="label">아이디</label></th>
                                 <td><TextField className="input-first" value={org.orgId} readOnly></TextField></td>
@@ -399,22 +400,22 @@ function Profile(props){
     }
 
     return (
-        <td colSpan={2}>
-            <div style={{display : "flex"}}>
-                <div>
+        <th colSpan={2}>
+            <div style={{display : "inline-block"}}>
+                <div style={{marginBottom : "5px"}}>
                     <img src={profileImg 
                             ? profileImg
                             : org.orgThumbPath
                                 ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0, 8) + "/" + org.orgThumbPath
                                 : "/images/default_profile.jpg"}
-                        onClick={function(e){profileImgEl.current.click();}}/>
+                        onClick={function(e){profileImgEl.current.click();}} style={{height : "150px", border : "1px solid #b1adad"}}/>
                     <input type="file" accept="image/*" id="orgThumbPath" style={{display : "none"}} ref={profileImgEl} onChange={chgProfileImg}/>
                 </div>
                 <div>
                     <Button variant="contained" onClick={chgDefault}>기본 사진으로 변경</Button>
                 </div>
             </div>
-        </td>
+        </th>
     )
 }
 

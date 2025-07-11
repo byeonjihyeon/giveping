@@ -168,9 +168,9 @@
 		       biz_goal as bizGoal,
 		       biz_status as bizStatus,
 		       a.rnum as rnum,
-		       a.payout_no as payoutYN
+		       a.payout_status as payoutYN
 		  from (select rownum rnum, a.*
-				  from (select d.*, p.payout_no
+				  from (select d.*, p.payout_status
 						  from tbl_donate_biz d
 						  left join tbl_admin_payout_history p
 						    on d.biz_no = p.biz_no
@@ -238,14 +238,14 @@
 		select biz_name as bizName,
 		       to_char(biz_donate_end, 'YYYY-MM-DD') as bizDonateEnd,
 		       to_char(biz_end, 'YYYY-MM-DD') as bizEnd,
-		       payout_no as payoutYN
+		       payout_status as payoutYN
 		  from tbl_donate_biz d
 		  left join tbl_admin_payout_history p
 		    on d.biz_no = p.biz_no
 		 where org_no = #{orgNo}
-		   and payout_no is null
 		   and biz_end >= sysdate
 		   and biz_status = 1
+		   and (payout_status is null or payout_status = 0)
 		 order by biz_end
 	</select>
 	
@@ -291,7 +291,7 @@
 	<!-- 입금 처리된 기부 사업 갯수 -->
 	<select id="selectPayEndBiz" parameterType="_int" resultType="_int">
 		select count(*) from tbl_donate_biz left join tbl_admin_payout_history using (biz_no)
-		where org_no = #{orgNo} and biz_status = 1 and payout_no is not null
+		where org_no = #{orgNo} and biz_status = 1 and payout_status = 1
 	</select>
 	<!-- 카테고리별 기부 사업 갯수 -->
 	<select id="selectDonateCodeCnt" parameterType="_int" resultType="DonateCode">
@@ -353,7 +353,7 @@
 						       to_char(biz_end, 'YYYY-MM-DD') as bizEnd,
 						       biz_goal as bizGoal,
 						       sum(donate_money) as donateMoney,
-						       payout_no as payoutYN
+						       payout_status as payoutYN
 						  from tbl_donate_biz
 						  left join tbl_donation_list
 						 using (biz_no)
@@ -361,7 +361,7 @@
 						 using (biz_no)
 						 where org_no = #{orgNo}
 						   and biz_status = 1
-						 group by biz_no, biz_name, biz_donate_start, biz_donate_end, biz_start, biz_end, biz_goal, payout_no
+						 group by biz_no, biz_name, biz_donate_start, biz_donate_end, biz_start, biz_end, biz_goal, payout_status
 						 order by bizDonateStart desc, bizDonateEnd desc) a )
 		 where rnum between 1 and 5
 	</select>

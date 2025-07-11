@@ -57,51 +57,50 @@ export default function MyHome(props){
     return(
 
         <div className="myNews-wrap">
-                <div>
-                    <span>Today 기부금 : {todayDonate} 원</span>
+                <h2 className="page-title">마이페이지</h2>
+                <div className="myPage-div">
+                    <h3>Today 기부금 : {todayDonate == 0 ? 0 : todayDonate.toLocaleString("ko-KR")} 원</h3>
                 </div>
-                <div>
-                    <span>관심 회원 수 : {likeMember} 명</span>
+                <div className="myPage-div">
+                    <h3>관심 회원 수 : {likeMember} 명</h3>
                 </div>
-                <div>
+                <div className="myPage-div">
                     {categoryList.map(function(ctg, index){
-                        return  <span key={"ctg"+index}>#{ctg}</span>
+                        return  <h3 key={"ctg"+index} style={{display : "inline"}}>#{ctg} </h3>
                     })}
                 </div>
-                <div className="myNews-title-wrap">
-                    <span>내 소식</span>
-                    <span> | 총 { unreadAlarmCount }  건</span>
-                </div>
-                <div className="myNews-item">
-                    <div className="newsList-wrap" >
-                             {
-                                newsList.filter(news => news.alarmRead === 0).length === 0 ? (
-                                <div>새로운 소식이 없습니다.</div>
-                                ) : (
-                                newsList
-                                    .filter(news => news.alarmRead === 0)
-                                    .slice(0, 3)
-                                    .map(function(news, index) {
-                                    return <News key={"news" + index} news={news} />;
-                                    })
-                                )
-                            }
+                <div className="myPage-div">
+                    <div className="myNews-title-wrap">
+                        <span>내 소식</span>
+                        <span> | 총 { unreadAlarmCount }  건</span>
+                    </div>
+                    <div className="myNews-item">
+                        <div className="newsList-wrap" >
+                                {
+                                    newsList.filter(news => news.alarmRead === 0).length === 0 ? (
+                                    <div>새로운 소식이 없습니다.</div>
+                                    ) : (
+                                    newsList
+                                        .filter(news => news.alarmRead === 0)
+                                        .slice(0, 3)
+                                        .map(function(news, index) {
+                                        return <News key={"news" + index} news={news} />;
+                                        })
+                                    )
+                                }
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <span>최근 등록 기부 사업</span>
-                    <table border={1}>
+                <div className="myPage-div">
+                    <h3 style={{marginBottom : "10px"}}>최근 등록 기부 사업</h3>
+                    <table className="tbl-donate">
                         <thead>
                             <tr>
                                 <th>사업명</th>
-                                <th>모금 시작일</th>
-                                <th>모금 종료일</th>
-                                <th>목표 모금액</th>
-                                <th>모금액</th>
-                                <th>입금 여부</th>
-                                <th>사업 시작일</th>
-                                <th>사업 종료일</th>
-                                <th>상세 페이지</th>
+                                <th style={{width : "15%"}}>목표 모금액</th>
+                                <th style={{width : "15%"}}>모금액</th>
+                                <th style={{width : "10%"}}>입금 여부</th>
+                                <th style={{width : "15%"}}>상세 페이지</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -191,13 +190,9 @@ function Biz(props){
     return (
         <tr>
             <td>{biz.bizName}</td>
-            <td>{biz.bizDonateStart}</td>
-            <td>{biz.bizDonateEnd}</td>
             <td>{biz.bizGoal != null ? biz.bizGoal.toLocaleString("ko-KR") : 0}원</td>
             <td>{biz.donateMoney != null ? biz.donateMoney.toLocaleString("ko-KR") : 0}원</td>
-            <td>{biz.payoutYN != null ? "O" : "X"}</td>
-            <td>{biz.bizStart}</td>
-            <td>{biz.bizEnd}</td>
+            <td>{biz.payoutYN == 1 ? "O" : "X"}</td>
             <td><button type="button" onClick={clickBtn}>상세 페이지</button></td>
         </tr>
     )
