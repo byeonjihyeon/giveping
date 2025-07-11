@@ -344,7 +344,8 @@ export default function BizUpdate(){
 
                     //DB에 대표 사진 저장
                     const form = new FormData();
-    
+                    
+                    // 새로 올린 이미지가 있을 때만 해당 axios 실행
                     if(bizImg != null){
                         form.append("bizImg", bizImg);
                         form.append("bizNo", bizNo);
@@ -381,10 +382,24 @@ export default function BizUpdate(){
                                 confirmButtonText : "확인"
                             })
                             .then(function(result){
-                                    console.log("기부사업글 수정 성공!");
+                                
+                                    navigate("/biz/view/"+bizNo);
                             });
                         });
                         
+                    }else{
+                        // bizImg 가 없는 경우 : 이미지 수정 없이 사업 정보가 수정 완료 처리됨
+                        Swal.fire({
+                                title : "알림",
+                                text : res.data.clientMsg,
+                                icon : res.data.alertIcon,
+                                confirmButtonText : "확인"
+                            })
+                            .then(function(result){
+                                
+                                    navigate("/biz/view/"+bizNo);
+                            });
+
                     }
                 });
             }
