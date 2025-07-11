@@ -95,32 +95,33 @@ export default function MemberChangePw(){
 
     return (
       
-        <div>
+        <div className="pwchange-wrap">
+            <div className="pwchange-title">
+                <span>비밀번호 변경</span>
+            </div>
             {!isAuth?
                 <>          
                     {/* 현재 비밀번호 입력창 */}
-                    <div>        
-                        <div>
+                    <div className="pw-input-wrap">        
                             <span>현재비밀번호</span>
                             <input type="password" name='memberPw' value={member.memberPw} onChange={chgMemberPw} />
                             <button type="button" onClick={checkPw}>확인</button>
-                        </div>
                     </div>
                 </>
            : 
                  <>
            {/* 새 비밀번호 입력창 */}
-                    <div>
-                            <div>
+                    <div className="pwRe-wrap">
+                            <div className="pwRe-input-wrap">
                                 <span>변경할 비밀번호</span>
                                 <input type="password" name='memberPw' value={member.memberPw} onChange={chgMemberPw} />
                             </div>
-                            <div>
+                            <div className="pwRe-input-wrap">
                                 <span>비밀번호 확인</span>
                                 <input type="password" name='memberRePw' value={memberPwRe} onChange={chgMemberPwRe} />
-                                <button onClick={updatePw} type="button">변경</button>
-                                <p>비밀번호 일치여부 확인 메시지</p>
                             </div>
+                            <p>비밀번호 일치여부 확인 메시지</p>
+                            <button onClick={updatePw} type="button">변경</button>
                     </div>
                   </>
             }

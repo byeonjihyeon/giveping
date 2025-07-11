@@ -1,13 +1,15 @@
 .member-main-wrap {
    width: 1200px;
    margin: 0 auto;
-   margin-top: 50px;
+   margin-top: 30px;
    display: flex;
-   justify-content: space-between;
+   justify-content: center;
+   gap: 50px;
+
 
 }
 .member-main-mid-wrap {
-    width: 950px;
+    width: 850px;
     border: 1px solid black;
 }
 /* 사이드 메뉴 CSS */
@@ -106,7 +108,8 @@
 
 /* MyHome */
 .myHome-wrap {
-    width: 900px;
+    width: 100%;
+    margin: 0 auto;
 }
 .myHome-wrap-top {
     display: flex;
@@ -114,13 +117,17 @@
 }
 .top-info {
     width: 50%;
+    height: 100px;
     padding: 15px 15px;
     border: 1px solid #dcdcdc;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .detail-left > div:first-of-type {
-    font-size: 20px;
+    font-size: 23px;
 }
 .detail-right {
     display: flex;
@@ -129,7 +136,9 @@
 }
 .donation-cnt {
     display: flex;
-    gap: 30px
+    gap: 30px;
+    align-items: end;
+    font-size: 20px;
 }
 
 .money>span:first-of-type{
@@ -141,14 +150,101 @@
     font-size: 20px;
 }
 
+.myNews-wrap {
+    margin-top: 30px;
+}
+
+.myNews-title-wrap {
+    border-bottom: 1px solid #dcdcdc;
+    height: 30px;
+}
+
+.myNews-title-wrap>span:first-of-type{
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.myNews-title-wrap>span:nth-child(3){
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+
+.m-newsList-wrap>div>* {
+    font-size: 16px;
+}
+
+.myNews-item {
+    /*border: 1px solid black;*/
+    position: relative;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+
+.m-newsList-wrap{
+    width: 700px;
+    align-items: center;
+    /*
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); /* 3개씩 */
+}
+.m-newsList-wrap::before {
+    position: absolute;
+    content : "";
+    border: 2px solid #dcdcdc;
+    height: 100%;
+    left: 30px;
+}
+.m-news-info {
+    border: 1px solid #dcdcdc;
+    height: 80px;
+    position: relative;
+    margin-top: 10px;   
+    margin-bottom: 10px;
+    z-index: 1;
+    margin-left: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.m-news-info::before {
+    content: ""; /*::before 사용시 필수작성 */
+    border:6px solid #91C8E4;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: -35px;
+    z-index: 2;
+    
+}
+
+.mySurvey-wrap {
+    margin-top: 30px;
+}
+
+.survey-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.survey-card:hover {
+  transform: translateY(-3px);
+
+}
 
 .chargeOrRefund-btn{
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 .chargeOrRefund-btn>*{
     width: 80px;
-    height: 30px;
+    height: 35px;
     border: 1px solid black;
     border-radius: 5px;
     font-size: 16px;
@@ -164,7 +260,60 @@
     border: none;
 }
 
+/* 내 소식 */
+.news-wrap{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
 
+.myNews-title {
+    width: 100%;
+    font-size: 25px;
+}
+.myNews-mid {
+    margin: 20px 0;
+    width: 90%;
+    height: 80px;
+    border: 1px solid #dcdcdc;
+
+}
+
+.newsList-wrap {
+   position: relative;
+}
+.newsList-wrap::before {
+    position: absolute;
+    content : "";
+    border: 2px solid #dcdcdc;
+    height: 100%;
+    left: 2px;
+}
+
+.news-info {
+    border: 1px solid #dcdcdc;
+    width: 700px;
+    height: 100px;
+    position: relative; 
+    margin-left: 50px;  
+    margin-bottom: 10px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.news-info::before {
+    content: ""; /*::before 사용시 필수작성 */
+    border:6px solid #91C8E4;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: -53px;
+    z-index: 2;
+}
 
 
 /* 관심기부단체 리스트 */
@@ -188,7 +337,7 @@
 .likeOrg-logo {
     position: relative;
     height: 150px;
-    border: 1px solid black;
+    border: 1px solid #dcdcdc;
 }
 
 .org-ctg-wrap {
@@ -261,38 +410,7 @@
     text-align: right;
 }
 
-.newsList-wrap {
-   position: relative;
-   display: flex;
-   flex-direction: column;
-   align-items: flex-end;
-}
-.newsList-wrap::before {
-    position: absolute;
-    content : "";
-    border: 2px solid #dcdcdc;
-    height: 100%;
-    left: 50px;
-}
 
-
-.news-info {
-    border: 1px solid #dcdcdc;
-    width: 850px;
-    position: relative;   
-    margin-bottom: 10px;
-    z-index: 1;
-}
-
-.news-info::before {
-    content: ""; /*::before 사용시 필수작성 */
-    border:6px solid #91C8E4;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: -53px;
-    z-index: 2;
-}
 
 .profileImg-wrap>img {
     width: 100px;
@@ -303,43 +421,7 @@
 
 
 
-/* 회원 수정 페이지 */
-.update-frm-wrap {
-    width: 600px;
-}
 
-.input-wrap {
-    display: flex;
-    border: 1px solid black;
-}
-
-.input-title-wrap {
-    width: 20%;
-}
-.input-wrap > div{
-    height: 80px;
-}
-
-.category-wrap {
-    border: 1px solid black;
-    display: flex;
-    gap: 10px;
-}
-
-.category-name {
-    border: 1px solid black;
-    height: 50%;
-    width: 20%;
-    cursor: pointer;
-}
-
-.chosed-category {
-    background-color: lightblue;
-}
-
-.update-frm-wrap input {
-    width: 200px;
-}
 
 /* 결제내역 페이지 */
 .history-wrap {
@@ -364,25 +446,104 @@
     gap: 20px
 }
 
-/* myHome.css */
-.mynewsList-wrap {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3개씩 */
-  gap: 16px;
-  margin-top: 10px;
+
+/* 회원 수정 페이지 */
+.update-frm-wrap {
+    width: 600px;
+    margin: 0 auto;
+    border: 1px solid #dcdcdc;
 }
 
-.survey-card {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 16px;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s ease-in-out;
-}
-
-.survey-card:hover {
-  transform: translateY(-3px);
+.input-wrap {
+    display: flex;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
 
 }
+
+.input-wrap:last-of-type{
+    border: none;
+}
+
+.input-title-wrap {
+    width: 10%;
+}
+
+.input-wrap > div{
+    height: 50px;
+}
+
+.input-wrap > input {
+    width: 80%;
+    height: 50px;
+    font-size: 19px;
+    border: none;
+}
+
+.input-content-wrap>input{
+    border: 1px solid #dcdcdc ;
+    width: 90%;
+    height: 90%;
+    font-size: 16px;
+}
+
+.category-wrap {
+    border: 1px solid black;
+    display: flex;
+    gap: 10px;
+}
+
+.category-name {
+    border: 1px solid black;
+    height: 50%;
+    width: 20%;
+    cursor: pointer;
+}
+
+.chosed-category {
+    background-color: lightblue;
+}
+
+/* 비밀번호 변경 */
+.pwchange-wrap {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.pwchange-title {
+    font-size: 25px;
+}
+
+.pw-input-wrap{
+    margin-top: 80px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 20px;   
+}
+
+.pwchange-wrap input {
+    width: 250px;
+    border: 1px solid #dcdcdc;
+} 
+
+.pwchange-wrap button {
+    width: 60px;
+    font-size: 18px;
+}
+
+.pwRe-wrap {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 200px;
+    gap: 10px;
+}
+
+.pwRe-wrap {
+    width: 8;
+}
+
+

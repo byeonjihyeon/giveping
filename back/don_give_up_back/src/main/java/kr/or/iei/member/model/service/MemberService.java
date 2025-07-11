@@ -23,6 +23,7 @@ import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.member.model.dto.Wallet;
+import kr.or.iei.member.model.dto.Charge;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -331,14 +332,17 @@ public class MemberService {
 		return walletMap;
 	}
 	
-	//충전하기
+	//회원 충전하기 버튼 클릭시, 주문번호 미리 생성 및 금액 입력 +회원번호
 	@Transactional
 	public int charge(int memberNo, int charge) {
-		HashMap<String, Integer> memberMap = new HashMap<>();
+		HashMap<String, Object> memberMap = new HashMap<>();
 		memberMap.put("memberNo", memberNo);
 		memberMap.put("charge", charge);
 		
-		return dao.charge(memberMap);
+		//서버에 저장
+		int result = dao.charge(memberMap);
+		
+		return result;
 	}
 
 	// 회원별 설문조사 내역 리스트 조회
@@ -429,5 +433,13 @@ public class MemberService {
 		}
 		return result;
 	}
-
+	
+	//결제 실패시, 미리 생성한 주문번호 행 지우기
+	@Transactional
+	public void deleteCharge(String orderId) {
+		dao.deleteCharge(orderId);
+	}
+	
+	
+	
 }

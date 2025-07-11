@@ -1,11 +1,9 @@
 package kr.or.iei.member.controller;
 
 import java.io.File;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,13 +27,12 @@ import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.member.model.dto.MemberAlarm;
-import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Refund;
-import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
 import kr.or.iei.member.model.service.MemberService;
+
 
 @RestController
 @CrossOrigin("*")
@@ -471,26 +468,7 @@ public class MemberController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
-	//회원 충전하기
-	@PostMapping("/charge/{memberNo}")
-	public ResponseEntity<ResponseDTO> charge(@PathVariable int memberNo, @RequestParam int charge){
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "결제 중, 오류가 발생하였습니다.", false, "error");
-		
-		try {
-			int result = service.charge(memberNo, charge);
-			
-			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "결제 완료하였습니다.", true, "success");
-			}else {
-				res = new ResponseDTO(HttpStatus.OK, "결제 중, 오류가 발생하였습니다..", false, "warning");
-			}
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
-	}
+	
 	
 	// 회원별 설문조사 내역 조회
 	@GetMapping("/surveyHistory/{memberNo}")
@@ -598,5 +576,29 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//회원 충전하기
+	@PostMapping("/charge/{memberNo}")
+	public ResponseEntity<ResponseDTO> charge(@PathVariable int memberNo, @RequestParam int charge){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "결제 중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.charge(memberNo, charge);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "결제 완료하였습니다.", true, "");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "결제중 오류가 발생하였습니다.", false, "");
+			}
+			
+			
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 
+	
 }

@@ -7,7 +7,14 @@
     /* color: black; */
 }
 
+/*폰트적용*/
+body {
+  font-family: 'Pretendard', sans-serif;
+  color: #333333;
+}
+
 /*Header*/
+
 .header-wrap {
     width: 1200px;
     margin: 0 auto;
