@@ -1,6 +1,8 @@
+
 import { useRef, useState } from "react"
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
+
 
 //충전 컴포넌트
 export default function ChargeFrm(props){
@@ -104,7 +106,6 @@ export default function ChargeFrm(props){
                 {
                 addMoneyArr.map(function(money, index){
                     function addCharge(){   //해당 클릭시 +금액만큼 증가하는 함수
-                    
 
                         let sum = Number(charge) + money.add;
                         

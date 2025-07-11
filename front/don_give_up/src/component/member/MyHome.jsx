@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
@@ -8,6 +8,8 @@ import Modal from "../common/Modal";
 import ChargeFrm from "../common/ChargeFrm";
 import RefundFrm from "../common/RefundFrm";
 import Swal from "sweetalert2";
+
+
 
 //마이홈 컴포넌트
 export default function MyHome(props){
@@ -17,9 +19,13 @@ export default function MyHome(props){
     const axiosInstance = createInstance();
     const {loginMember, unreadAlarmCount} = useUserStore();
     const [newsList, setNewsList] = useState([]);
+
+    const [reLoadMember, setReLoadMember] = useState({}); 
+
 	//모달창 상태
     const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
      const navigate = useNavigate();
+
 
     // 알림 리스트 가져오기
     useEffect(function(){
@@ -66,7 +72,7 @@ export default function MyHome(props){
                             <button className="charge-btn" onClick={function(){
                                 setModalType('charge');                        
                             }} >충전</button>
-                            <div className="refund-btn" onClick={function(){
+                            <button className="refund-btn" onClick={function(){
                                 if(member.memberBankCode == '0'){
                                     Swal.fire({     //등록된 계좌가 없을경우
                                         title : '알림',
@@ -83,19 +89,20 @@ export default function MyHome(props){
                                     return;
                                 }
                                 setModalType('refund');
-                            }}>출금신청</div>
+                            }}>출금신청</button>
 
                             <Modal modalType={modalType} isOpen={modalType !== null} onClose={function(){
                                 setModalType(null);
                             }}>
-                                {modalType === 'charge' ?
-                                <ChargeFrm onClose={setModalType} member={member} setMember={setMember}  />
+                                
+                                {modalType === 'charge' ?   //충전 페이지
+                                <ChargeFrm member={member} setMember={setMember} onClose={setModalType} />
                                 :
-                                modalType === 'refund' ?
-                                <RefundFrm onClose={setModalType} member={member} setMember={setMember} title='출금신청'/>
+                                modalType === 'refund' ?    //출금 페이지
+                                <RefundFrm member={member} setMember={setMember} onClose={setModalType} />
                                 :
                                 ""
-                            }
+                                }
                             </Modal>                     
                         </div>                       
                     </div>
@@ -104,10 +111,11 @@ export default function MyHome(props){
             <div className="myNews-wrap">
                 <div className="myNews-title-wrap">
                     <span>내 소식</span>
-                    <span> | 총 {unreadAlarmCount} 건</span>
+                    <span>|</span>
+                    <span>총 {unreadAlarmCount} 건</span>
                 </div>
                 <div className="myNews-item">
-                    <div className="newsList-wrap" >
+                    <div className="m-newsList-wrap" >
                              {
                                 newsList.filter(news => news.alarmRead === 0).length === 0 ? (
                                 <div>새로운 소식이 없습니다.</div>
@@ -123,7 +131,7 @@ export default function MyHome(props){
                     </div>
                 </div>
             </div>
-            <div className="myNews-wrap">
+            <div className="mySurvey-wrap">
                 <div className="myNews-title-wrap">
                     <span>설문조사</span>
                 </div>
@@ -224,7 +232,7 @@ function News(props){
 
     return (
         <div 
-            className="news-info" 
+            className="m-news-info" 
             onClick={handleClick} 
             style={{
                 cursor: 'pointer',

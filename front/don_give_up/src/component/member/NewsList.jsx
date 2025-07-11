@@ -87,10 +87,18 @@ export default function NewsList(){
 
 
     return (
-        <div className="newsList-wrap" >
-                {newsList.map(function(news, index){
-                     return <News key={"news" + index} news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
-                })}
+        <div className='news-wrap'>
+            <div className="myNews-title">
+                <span>내 소식</span>
+            </div>
+            <div className="myNews-mid">
+                <span></span>
+            </div>
+            <div className="newsList-wrap" >
+                    {newsList.map(function(news, index){
+                        return <News key={"news" + index} news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
+                    })}
+            </div>
         </div>
     )
 }
