@@ -150,17 +150,17 @@ export default function OrgPost(){
         //유효성 체크
         //유효성 조건 리스트
         const validations = [
-            { valid: donateBiz.bizDonateTerm == "" || donateBiz.bizDonateTerm == 0, message: "모금 기간을 선택하세요." },
-            { valid: donateBiz.bizStart == "", message: "사업 시작일을 선택하세요." },
-            { valid: donateBiz.bizEnd == "", message: "사업 종료일을 선택하세요." },
+            { valid: donateBiz.bizDonateTerm == "" || donateBiz.bizDonateTerm == 0, message: "모금 기간을 선택하세요."},
+            { valid: donateBiz.bizStart == "", message: "사업 시작일을 선택하세요."},
+            { valid: donateBiz.bizEnd == "", message: "사업 종료일을 선택하세요."},
             { valid: donateBiz.bizEnd != "" && donateBiz.bizStart > donateBiz.bizEnd, message: "사업 종료일은 사업 시작일보다 빠를 수 없습니다."},
-            { valid: donateBiz.bizDonateTerm != "" && donateEndDateStr > donateBiz.bizEnd, message: "사업 종료일은 모금 종료일보다 빠를 수 없습니다." },
-            { valid: donateBiz.bizGoal == 0, message: "사용 용도 및 산출 근거 또는 사용 금액을 입력하세요." },
-            { valid: donateBiz.bizGoal >= 1000000000, message: "전체 목표 금액은 10억 미만으로 설정해주세요." },
-            { valid: donateBiz.donateCode == "", message: "기부 코드를 선택하세요." },
-            { valid: donateBiz.bizName == "", message: "사업명을 입력하세요." },
-            { valid: donateBiz.bizContent == "", message: "사업 내용을 입력하세요." },
-            { valid: bizImg == null, message: "대표 사진 등록해주세요." }
+            { valid: donateBiz.bizDonateTerm != "" && donateEndDateStr > donateBiz.bizEnd, message: "사업 종료일은 모금 종료일보다 빠를 수 없습니다."},
+            { valid: donateBiz.bizGoal == 0, message: "사용 용도 및 산출 근거 또는 사용 금액을 입력하세요."},
+            { valid: donateBiz.bizGoal >= 1000000000, message: "전체 목표 금액은 10억 미만으로 설정해주세요."},
+            { valid: donateBiz.donateCode == "", message: "기부 코드를 선택하세요."},
+            { valid: bizImg == null, message: "대표 사진 등록해주세요." },
+            { valid: donateBiz.bizName == "", message: "사업명을 입력하세요."},
+            { valid: donateBiz.bizContent == "", message: "사업 내용을 입력하세요."}
         ];
     
         //검증 실패 시 첫 번째 오류 메시지 띄우고 return

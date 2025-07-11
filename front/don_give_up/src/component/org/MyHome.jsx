@@ -4,6 +4,8 @@ import createInstance from "../../axios/Interceptor";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 import Modal from "../common/Modal";
+import * as React from 'react';
+import Button from '@mui/material/Button';
 
 
 export default function MyHome(props){
@@ -193,7 +195,7 @@ function Biz(props){
             <td>{biz.bizGoal != null ? biz.bizGoal.toLocaleString("ko-KR") : 0}원</td>
             <td>{biz.donateMoney != null ? biz.donateMoney.toLocaleString("ko-KR") : 0}원</td>
             <td>{biz.payoutYN == 1 ? "O" : "X"}</td>
-            <td><button type="button" onClick={clickBtn}>상세 페이지</button></td>
+            <td><Button variant="contained" type="button" onClick={clickBtn}>상세 페이지</Button></td>
         </tr>
     )
 }
