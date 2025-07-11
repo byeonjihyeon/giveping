@@ -161,6 +161,7 @@ body {
     background-color: #007acc;
     color: #fff;
 }
+
 /*회원가입 입력 페이지*/
 .join-form {
     margin-top: 20px;
@@ -197,7 +198,12 @@ body {
     width: 134px;
 }
 .MuiPaper-root {
-    height: 200px;
+    overflow-y: auto;
+    max-height: 200px;
+}
+.MuiPopover-paper {
+  max-height: 200px !important;
+  overflow-y: auto !important;
 }
 .input-first {
     width: 420px;
@@ -217,7 +223,6 @@ body {
 .MuiSelect-select {
     text-align: center;
 }
-
 
 /*회원가입-카테고리 선택*/
 .section.category-wrap {
