@@ -126,16 +126,13 @@ export default function BizFile(props){
 
     return(
         <>
-        <br/>
-        <hr/>
-        <br/>
         {/* 수정 모드 아닌 경우 */}
         {!isEditMode && 
             <div className="no-login">
                 <p className="file-title">첨부파일</p>
                                 <div className="file-zone">
                                     {
-                                        prevBizFileList
+                                        prevBizFileList.length>0
                                         ? prevBizFileList.map(function(file, index){
                                             return <FileItem key={"file"+index} file={file} />
                                         })
@@ -149,7 +146,7 @@ export default function BizFile(props){
                 <div className="btn-zone">
                     
                     <button type="button" className="btn-primary" onClick={() => setIsEditMode(true)}>
-                        파일 수정하기
+                        수정
                     </button>
                 </div>
             }

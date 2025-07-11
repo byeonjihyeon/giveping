@@ -6,6 +6,7 @@ import useUserStore from "../../store/useUserStore";
 import Survey from './Survey';
 import BizFile from './BizFile';
 import Swal from "sweetalert2";
+import { green } from "@mui/material/colors";
 
 export default function BizView(){
     const {loginMember, loginOrg, isLogined} = useUserStore();
@@ -26,9 +27,6 @@ export default function BizView(){
 
     // planList 저장 변수 (모금액 사용 계획)
     const [planList, setPlanList] = useState([]);
-
-    //로그인 회원 정보 (수정, 삭제 버튼 활성화)
-    //const {loginMember} = useUserStore(); 
 
     // 기부 팝업 모달을 위한 변수 선언
     const [isDonateOpen, setIsDonateOpen] = useState(false);
@@ -58,7 +56,7 @@ export default function BizView(){
     
     function openDonatePopup() {
         //console.log("기부하기 버튼 클릭");
-        if(loginMember.orgNo == donateBiz.orgNo){
+        if(loginOrg && loginOrg.orgNo === donateBiz.orgNo){
             Swal.fire({
                         title : '알림',
                         text : '같은 단체의 사업에 기부할 수 없습니다.',
@@ -143,7 +141,6 @@ export default function BizView(){
 
     const navigate = useNavigate();
     // 삭제하기 클릭 시, 동작 함수
-
         function deleteBiz(){
             Swal.fire({
                 title : '알림',
@@ -154,7 +151,7 @@ export default function BizView(){
                 cancelButtonText : '취소'
             }).then(function(res){
                 if(res.isConfirmed){
-                
+                /*
                     let options = {};
                     options.url = serverUrl + '/biz/delete/' + donateBiz.bizNo;
                     options.method = 'patch';
@@ -166,198 +163,219 @@ export default function BizView(){
                             navigate('/biz/list');
                         }
                     });
+                    */
                 }
                 }
         )};
+
+        // 탭 변환
+        const [activeTab, setActiveTab] = useState('intro');
+        console.log("loginMember : ", loginMember);
+
+        function renderTab(){
+            switch(activeTab){
+                case 'intro' : 
+                    return <IntroTab donateBiz={donateBiz}/>;
+                case 'plan' : 
+                    return <PlanTab planList={planList} donateBiz={donateBiz}/>;
+                case 'file' : 
+                    return <FileTab loginMember={loginMember} loginOrg={loginOrg} bizNo={bizNo}
+                                    prevBizFileList={prevBizFileList} setPrevBizFileList={setPrevBizFileList}
+                                    donateBiz={donateBiz} bizFile={bizFile} setBizFile={setBizFile}
+                                    delBizFileNo={delBizFileNo} setDelBizFileNo={setDelBizFileNo}/>;
+                case 'donateMember' : 
+                    return <DonateMember showMemberList={showMemberList} setShowMemberList={setShowMemberList} memberList={memberList}/>;
+                default :
+                    return null;
+            }
+        };
+
+        // span 태그 클릭 시 호출되는 함수
+        function handleTabClick(tabName) {
+            setActiveTab(tabName);
+        }
+
 
     
 
     return (
         <section>
-            <div className="page-title">게시글 상세 보기</div>
-            <div className="board-view-content">
-                <div className="board-view-info">
-                    <div className="board-thumbnail">
-                        <img src={
-                            donateBiz.bizThumbPath
-                            ? serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0,8) + "/" + donateBiz.bizThumbPath
-                            : "/images/default_img.png"
-                        } />
-                    </div>
-                    <div className="board-view-preview">
-                        <table className="tbl">
-                            <tbody>
-                                <tr>
-                                    <td className="left" colSpan={4}>
-                                        {donateBiz.bizName}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style={{width:"20%"}}>작성자</th>
-                                    <td style={{width:"20%"}}>{donateBiz.orgName}</td>
-                                    <th style={{width:"20%"}}>사업신청검토일자</th>
-                                    <td style={{width:"20%"}}>{donateBiz.bizRegDate}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        {/* (기부단체는 본인 사업에 기부못함) 
-                        loginMember.orgNo == donateBiz.orgNo인 경우 기부하기 버튼 보이지 않음 */}
-                        {
-                            loginMember != null && loginMember.memberNo != donateBiz.orgNo
-                            ?
-                                <button onClick={openDonatePopup}>기부하기</button>
-                            :
-                            ''
-                        }
-                        {/* 기부 팝업 */}
-                        {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}
-
-                        {/* (설문조사 팝업 => 기부 이력 있는 회원만 버튼 보임)*/}
-                        {/* 설문조사 팝업 */}
-                        {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
-                    </div>
-                    
-                        
-                         
-                    {isOwnerOrAdmin && (
-                        <div className="view-btn-zone">
-
-                            {donateBiz.bizStatus !== 1 && (
-                            <Link to={"/biz/update/" + donateBiz.bizNo} className="btn-primary lg">
-                                글수정
-                            </Link>
-                            )}
-                            {today >= bizEndDate && (
-                            <button type="button" className="btn-secondary lg" onClick={deleteBiz}>
-                                글삭제
-                            </button>
-                            )}
-                        </div>
-                    )}
-                    
-
-                        
-                </div>
-
-                <hr />
-
-                 <table style={{ width: '100%', marginTop: '20px' }} className="donate-info-table">
-                        <tbody>
-                        <tr>
-                            <th style={{ width: '20%' }}>기부카테고리</th>
-                            <td style={{ width: '30%' }}>{donateBiz.donateCtg}</td>
-                            <th style={{ width: '20%' }}>모금 기간</th>
-                            <td style={{ width: '30%' }}>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</td>
-                            <th>기부사업 시작일</th>
-                            <td>{donateBiz.bizStart}</td>
-                        </tr>
-                        <tr>
-                            <th>기부사업 종료일</th>
-                            <td>{donateBiz.bizEnd}</td>
-                            <th>목표모금금액</th>
-                            <td>{donateBiz?.bizGoal != null ? donateBiz.bizGoal.toLocaleString() : '-'} (원)</td>
-                        </tr>
-                        <tr>
-                            <th>사업신청검토일자</th>
-                            <td>{donateBiz.bizRegDate}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    
-                    <br />
-
-                    {planList.length > 0 && (
-                        <>
-                            <h3 style={{ marginTop: '30px' }}>모금액 사용 계획</h3>
-                            <table className="donate-plan-table" style={{ width: '100%', marginTop: '10px' }}>
-                                <thead>
-                                    <tr>
-                                        <th style={{ width: '10%' }}>번호</th>
-                                        <th style={{ width: '60%' }}>용도</th>
-                                        <th style={{ width: '30%' }}>금액</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {planList.map((plan, index) => (
-                                        <tr key={plan.planNo}>
-                                            <td>{index + 1}</td>
-                                            <td>{plan.bizPlanPurpose}</td>
-                                            <td>{plan.bizPlanMoney.toLocaleString()}원</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </>
-                    )}
-                
-                <br/>
-                <hr/>
-                <br/>
-
-                <div className="board-content-wrap"> 
-                    {
-                        donateBiz.bizContent
-                        ? <Viewer initialValue={donateBiz.bizContent} />
-                        : ''
-                    }
-
-                    <BizFile  loginMember={loginMember}
-                                  loginOrg={loginOrg}
-                                  bizFile={bizFile}
-                                    setBizFile={setBizFile}
-                                    prevBizFileList={prevBizFileList}
-                                    setPrevBizFileList={setPrevBizFileList}
-                                    delBizFileNo={delBizFileNo}
-                                    setDelBizFileNo={setDelBizFileNo}
-                                    donateBiz={donateBiz}
-                                    bizNo={bizNo}
-                                    />
-
-                    
-
+            {/* 썸네일, 디데이, 제목, 모금율 그래프 */}
+           <div className="bizView-banner-wrap">
+                <div className="bizView-banner-info">
+                    <span className="bizView-banner-day">D-34</span>
                     <br/>
-                <hr/>
-                <br/>
-                    {/* 관리자거나, 해당 기부 사업의 주체 단체일 경우에만 기부한 회원 리스트 버튼 생성 */}
-                    {
-                        loginMember != null && (loginMember.memberLevel == 1 || loginMember.orgNo ==  donateBiz.orgNo)
-                        ?
-                        <div className="donateMember-zone">
-                            <p className="donateMember-title">기부한 회원 리스트 (관리자 전용)</p>
-                            
-                            <button onClick={() => setShowMemberList(!showMemberList)}>
-                                {showMemberList ? '기부자 목록 숨기기' : '기부자 목록 보기'}
-                            </button>
-
-                            {
-                                showMemberList && memberList
-                                ? memberList.map((member, index) => (
-                                    <MemberItem key={"member" + index} member={member} />
-                                ))
-                                : null
-                            }
-                        </div>
-                        :''
-                    }
-                   
+                    <strong>{donateBiz.bizName}</strong>
                 </div>
+           </div>
 
-                
-                {/* 
-                {
-                    loginMember != null && loginMember.memberId == board.boardWriter
-                    ?
-                    <div className="view-btn-zone">
-                        <Link to={'/biz/update/' + donateBiz.bizNo} className="btn-primary lg">수정</Link>
-                        <button type="button" className="btn-secondary lg" onClick={deleteBiz}>삭제</button>
+           {/* 고정 메뉴 - 기부소개 / 사용계획 / 소식후기 / 기부회원리스트 / 기부하기 => 관리자나 기부단체계정일 경우 글수정,글삭제 버튼으로 */}
+           <div className="tabArea-wrap">
+                {/* 왼쪽에 위치 */}
+                <div className="tabArea-left">
+                    <span className={ "tabArea-left-text" + (activeTab === 'intro' ? " active" : "") } 
+                          onClick={function(){handleTabClick('intro');}}>기부소개</span>
+                    <span className={ "tabArea-left-text" + (activeTab === 'plan' ? " active" : "") } 
+                          onClick={function(){handleTabClick('plan');}}>사용계획</span>
+                    <span className={ "tabArea-left-text" + (activeTab === 'file' ? " active" : "") }
+                          onClick={function(){handleTabClick('file');}}>소식후기</span>
+                    {/* 관리자나 기부단체계정일 경우에만 보임 */}
+                    <span className={ "tabArea-left-text" + (activeTab === 'donateMember' ? " active" : "") } 
+                          onClick={function(){handleTabClick('donateMember');}}>기부회원리스트</span>
+                </div>
+                {/* 오른쪽에 위치 */}
+                <div className="tabArea-right">
+                    <span className="tabArea-right-text" onClick={openDonatePopup}>기부하기</span>
+                    {/* 기부 팝업 */}
+                    {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}
+                    {/* 관리자나 기부단체계정일 경우에만 보임 */}
+                    <span className="tabArea-right-text" onClick={function(){navigate("/biz/update/" + donateBiz.bizNo)}}>수정</span>
+                    <span className="tabArea-right-text" onClick={deleteBiz}>삭제</span>
+                </div>
+           </div>
+            {/* 콘텐츠 (tabArea-wrap 하단에 위치) */}
+           <div className="bizView-content-wrap">
+                <div className="bizView-inner-content">
+                    {/* aside-content-wrap의 왼쪽에 위치 */}
+                    <div className="main-content-wrap">
+                         {renderTab()}
+                        
                     </div>
-                    : ''
-                }
-                    */}
-            </div>
+                    {/* main-content-wrap의 오른쪽에 위치 */}
+                    <div className="aside-content-wrap">
+                        <div className="content-orgInfo-wrap">
+                            <span className="content-orgInfo">모금단체</span>
+                            {/* Link url 임시 설정 => "/org/view/"+orgNo  로 변경할것임.*/}
+                            <Link className="content-orgInfo-link" to={"/biz/view/"+bizNo}>
+                                <span className="content-orgInfo-img" src={"/images/default_img.png"}></span>
+                                <span className="content-orgInfo-name">{donateBiz.orgName}</span>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+           </div>
         </section>
     );
+}
+
+// 기부소개 탭 컴포넌트 
+function IntroTab(props){
+    const donateBiz = props.donateBiz;
+
+    return(
+        <div className="content-tag-wrap">
+            <div className="content-tag-wrap">
+                <span className="content-tag">#{donateBiz.donateCtg}</span>
+            </div>
+            <div className="content-bizContent">
+                {
+                    donateBiz.bizContent
+                    ? <Viewer initialValue={donateBiz.bizContent} />
+                    : ''
+                }
+            </div>
+        </div>
+    );
+}
+
+// 사용계획 탭 컴포넌트
+function PlanTab(props){
+    const planList = props.planList;
+    const donateBiz = props.donateBiz;
+
+    return(
+        <div className="content-plan-wrap">
+            <strong className="content-plan-title">이렇게 진행됩니다.</strong>
+            <ul className="content-plan-info">
+                <li className="">
+                    <span>모금 기간</span>
+                    <span>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
+                </li>
+                <li className="">
+                    <span>사업 기간</span>
+                    <span>{donateBiz.bizStart} ~ {donateBiz.bizEnd}</span>
+                </li>
+            </ul>
+            <div className="donate-plan-list">
+                {/* 목표금액 표시 */}
+                <div className="donate-plan-goal">
+                    <span>목표금액</span>
+                    <span>{donateBiz?.bizGoal != null ? donateBiz.bizGoal.toLocaleString() + '원' : '-'}</span>
+                </div>
+
+                {/* 용도별 사용계획 */}
+                {planList.map((plan, index) => (
+                    <div key={plan.planNo}>
+                        <span>{plan.bizPlanPurpose}</span>
+                        <span>{plan.bizPlanMoney.toLocaleString()}원</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+}
+
+// 소식후기 탭 컴포넌트
+function FileTab(props){
+    const loginMember = props.loginMember;
+    const loginOrg = props.loginOrg;
+    const bizNo = props.bizNo;
+    const prevBizFileList = props.prevBizFileList;
+    const setPrevBizFileList = props.setPrevBizFileList;
+    const donateBiz = props.donateBiz;
+    const bizFile = props.bizFile;
+    const setBizFile = props.setBizFile;
+    const setDelBizFileNo = props.setDelBizFileNo;
+    const delBizFileNo = props.delBizFileNo;
+
+    return(
+        <div className="content-file-wrap">
+            <BizFile loginMember={loginMember}
+                     loginOrg={loginOrg}
+                     bizFile={bizFile}
+                     setBizFile={setBizFile}
+                     prevBizFileList={prevBizFileList}
+                     setPrevBizFileList={setPrevBizFileList}
+                     delBizFileNo={delBizFileNo}
+                     setDelBizFileNo={setDelBizFileNo}
+                     donateBiz={donateBiz}
+                     bizNo={bizNo}
+                     />
+
+        </div>
+    );
+
+}
+
+// 기부회원리스트 탭 컴포넌트
+function DonateMember(props){
+    const showMemberList = props.showMemberList;
+    const setShowMemberList = props.setShowMemberList;
+    const memberList = props.memberList;
+
+    return(
+
+        <div className="content-donateMember-wrap">
+            <div className="donateMember-zone">
+                {/* 기부한 회원 리스트 (관리자 전용) */}
+                <p className="donateMember-title">기부 회원 리스트</p>
+                
+                <button onClick={() => setShowMemberList(!showMemberList)}>
+                    {showMemberList ? '기부자 목록 숨기기' : '기부자 목록 보기'}
+                </button>
+
+                {
+                    showMemberList && memberList
+                    ? memberList.map((member, index) => (
+                        <MemberItem key={"member" + index} member={member} />
+                    ))
+                    : null
+                }
+            </div>
+        </div>
+    );
+
 }
 
 
@@ -532,9 +550,10 @@ function Donate(props){
                         <p><strong>차감 후 잔액:</strong> {(totalMoney - selectedAmount).toLocaleString()}원</p>
                     </div>
                 )}
-
+                <div style={{ textAlign: "right", marginTop: "16px" }}>
                 <button onClick={donatePay} disabled={selectedAmount <= 0}>결제하기</button>
                 <button onClick={onClose}>닫기</button>
+                </div>
             </div>
         </div>
     );
