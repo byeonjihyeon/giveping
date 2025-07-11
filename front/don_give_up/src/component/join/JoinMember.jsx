@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import Swal from "sweetalert2";
 import * as React from 'react';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -211,7 +211,8 @@ export default function JoinMember(props){
                                     <label htmlFor="memberPw" className="label">비밀번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="password" id="memberPw" value={member.memberPw} onChange={chgMember} onBlur={checkMemberPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
+                                    <TextField type="password" id="memberPw" className="input-first"
+                                    value={member.memberPw} onChange={chgMember} onBlur={checkMemberPw} placeholder="영대소문자, 숫자, 특수문자로 이루어진 6~30글자"/>
                                 </td>
                             </tr>
                             <tr>
@@ -225,7 +226,8 @@ export default function JoinMember(props){
                                     <label htmlFor="memberPwRe" className="label">비밀번호 확인</label>
                                 </th>
                                 <td>
-                                    <TextField type="password" id="memberPwRe" value={memberPwRe} onChange={chgMemberPwRe} onBlur={checkMemberPw}/>
+                                    <TextField type="password" id="memberPwRe" className="input-first"
+                                    value={memberPwRe} onChange={chgMemberPwRe} onBlur={checkMemberPw}/>
                                 </td>
                             </tr>
                             <tr>
@@ -239,7 +241,8 @@ export default function JoinMember(props){
                                     <label htmlFor="memberName" className="label">이름</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="memberName" value={member.memberName} onChange={chgMember} onBlur={checkMemberName}/>
+                                    <TextField type="text" id="memberName" className="input-first"
+                                    value={member.memberName} onChange={chgMember} onBlur={checkMemberName}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -248,7 +251,8 @@ export default function JoinMember(props){
                                     <label htmlFor="memberPhone" className="label">전화번호</label>
                                 </th>
                                 <td>
-                                    <TextField type="text" id="memberPhone" value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요. (010-XXXX-XXXX)"/>
+                                    <TextField type="text" id="memberPhone" className="input-first"
+                                    value={member.memberPhone} onChange={chgMember} onBlur={checkMemberPhone} placeholder="'-'를 포함해서 작성해주세요. (010-XXXX-XXXX)"/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
@@ -356,7 +360,8 @@ function MemberId(props){
 
     return (
         <>
-            <TextField type="text" id="memberId" value={member.memberId} onChange={chgMember} onBlur={checkMemberId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
+            <TextField type="text" id="memberId" className="input-id" value={member.memberId}
+            onChange={chgMember} onBlur={checkMemberId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
             <Button variant="contained" type="button" onClick={checkMemberIdUnique} className="checkBtn" style={{marginLeft : "10px"}}>중복체크</Button>
         </>
     )
@@ -536,8 +541,11 @@ function MemberEmail(props){
 
     return (
         <>
-        <TextField type="text" id="memberEmailId" value={memberEmailId} onChange={chgEmailId}/>&nbsp;@&nbsp;
-        <TextField type="text" id="memberEmailDomain" value={memberEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
+        <TextField type="text" id="memberEmailId" className="input-email"
+        value={memberEmailId} onChange={chgEmailId}/>
+        &nbsp;@&nbsp;
+        <TextField type="text" id="memberEmailDomain" className="input-email"
+        value={memberEmailDomain} onChange={chgEmailDomain} readOnly={!isCustom}/>
         <FormControl>
             <Select name="eamilDomain" onChange={selectEmailDomain} value={isCustom ? 'custom' : memberEmailDomain} style={{marginLeft : "5px", width : "125px"}}>
                 <MenuItem value="custom">직접 입력</MenuItem>
@@ -600,9 +608,10 @@ function MemberAddr(props){
 
     return (
         <>
-            <TextField type="text" id="memberAddrMain" placeholder="주소" readOnly/>
+            <TextField type="text" id="memberAddrMain" className="input-addr" placeholder="주소" readOnly/>
             <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
-            <TextField type="text" id="memberAddrDetail" placeholder="상세주소" value={member.memberAddrDetail} onChange={chgAddrDetail}/>
+            <TextField type="text" id="memberAddrDetail" className="input-first"
+            value={member.memberAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
         </>
     )
 }

@@ -24,6 +24,9 @@ export default function BizView(){
     // memberList 저장 변수
     const [memberList, setMemberList] = useState([]);
 
+    // planList 저장 변수 (모금액 사용 계획)
+    const [planList, setPlanList] = useState([]);
+
     //로그인 회원 정보 (수정, 삭제 버튼 활성화)
     //const {loginMember} = useUserStore(); 
 
@@ -39,6 +42,18 @@ export default function BizView(){
     const [bizFile, setBizFile] = useState([]); // 게시글에 대한 첨부파일 객체
     const [prevBizFileList, setPrevBizFileList] = useState([]); //BizFile 객체 리스트 
     const [delBizFileNo, setDelBizFileNo] = useState([]); //삭제 대상 파일 번호 저장 배열
+
+    // 날짜 계산 후, 글삭제 버튼 가시화하기 위해 변수 선언
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const bizEndDate = new Date(donateBiz.bizEnd);
+    bizEndDate.setHours(0, 0, 0, 0);
+
+    const isOwnerOrAdmin = 
+    (loginMember != null && loginMember.memberLevel === 1) || 
+    (loginOrg != null && loginOrg.orgNo === donateBiz.orgNo);
+
 
     
     function openDonatePopup() {
@@ -76,6 +91,7 @@ export default function BizView(){
     }
 
 
+    // 기부 사업 내용 불러오기
     useEffect(function(){
         let options = {};
         options.url = serverUrl + '/biz/' + bizNo;
@@ -88,6 +104,8 @@ export default function BizView(){
             console.log("후원회원", res.data.resData.bizMemberList);
             setDonateBiz(res.data.resData);
             setMemberList(res.data.resData.bizMemberList);
+            setPlanList(res.data.resData.bizPlanList);
+            console.log(res.data.resData.bizPlanList);
             //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
         });
 
@@ -124,6 +142,33 @@ export default function BizView(){
     */
 
     const navigate = useNavigate();
+    // 삭제하기 클릭 시, 동작 함수
+
+        function deleteBiz(){
+            Swal.fire({
+                title : '알림',
+                text : '기부 사업글을 삭제 하시겠습니까?',
+                icon : 'question',
+                showCancelButton : true,
+                confirmButtonText : '삭제',
+                cancelButtonText : '취소'
+            }).then(function(res){
+                if(res.isConfirmed){
+                
+                    let options = {};
+                    options.url = serverUrl + '/biz/delete/' + donateBiz.bizNo;
+                    options.method = 'patch';
+        
+                    axiosInstance(options)
+                    .then(function(res){
+                        console.log(res.data.resData);
+                        if(res.data.resData){
+                            navigate('/biz/list');
+                        }
+                    });
+                }
+                }
+        )};
 
     
 
@@ -171,30 +216,32 @@ export default function BizView(){
                         {/* 설문조사 팝업 */}
                         {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
                     </div>
+                    
                         
-                        <BizFile  loginMember={loginMember}
-                                  loginOrg={loginOrg}
-                                  bizFile={bizFile}
-                                    setBizFile={setBizFile}
-                                    prevBizFileList={prevBizFileList}
-                                    setPrevBizFileList={setPrevBizFileList}
-                                    delBizFileNo={delBizFileNo}
-                                    setDelBizFileNo={setDelBizFileNo}
-                                    donateBiz={donateBiz}
-                                    bizNo={bizNo}
-                                    />
+                         
+                    {isOwnerOrAdmin && (
+                        <div className="view-btn-zone">
+
+                            {donateBiz.bizStatus !== 1 && (
+                            <Link to={"/biz/update/" + donateBiz.bizNo} className="btn-primary lg">
+                                글수정
+                            </Link>
+                            )}
+                            {today >= bizEndDate && (
+                            <button type="button" className="btn-secondary lg" onClick={deleteBiz}>
+                                글삭제
+                            </button>
+                            )}
+                        </div>
+                    )}
+                    
+
                         
                 </div>
-                
-                <hr/>
 
-                <div className="board-content-wrap"> 
-                    {
-                        donateBiz.bizContent
-                        ? <Viewer initialValue={donateBiz.bizContent} />
-                        : ''
-                    }
-                     <table style={{ width: '100%', marginTop: '20px' }} className="donate-info-table">
+                <hr />
+
+                 <table style={{ width: '100%', marginTop: '20px' }} className="donate-info-table">
                         <tbody>
                         <tr>
                             <th style={{ width: '20%' }}>기부카테고리</th>
@@ -216,7 +263,62 @@ export default function BizView(){
                         </tr>
                         </tbody>
                     </table>
-                    <br /> <hr />
+
+                    
+                    <br />
+
+                    {planList.length > 0 && (
+                        <>
+                            <h3 style={{ marginTop: '30px' }}>모금액 사용 계획</h3>
+                            <table className="donate-plan-table" style={{ width: '100%', marginTop: '10px' }}>
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: '10%' }}>번호</th>
+                                        <th style={{ width: '60%' }}>용도</th>
+                                        <th style={{ width: '30%' }}>금액</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {planList.map((plan, index) => (
+                                        <tr key={plan.planNo}>
+                                            <td>{index + 1}</td>
+                                            <td>{plan.bizPlanPurpose}</td>
+                                            <td>{plan.bizPlanMoney.toLocaleString()}원</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </>
+                    )}
+                
+                <br/>
+                <hr/>
+                <br/>
+
+                <div className="board-content-wrap"> 
+                    {
+                        donateBiz.bizContent
+                        ? <Viewer initialValue={donateBiz.bizContent} />
+                        : ''
+                    }
+
+                    <BizFile  loginMember={loginMember}
+                                  loginOrg={loginOrg}
+                                  bizFile={bizFile}
+                                    setBizFile={setBizFile}
+                                    prevBizFileList={prevBizFileList}
+                                    setPrevBizFileList={setPrevBizFileList}
+                                    delBizFileNo={delBizFileNo}
+                                    setDelBizFileNo={setDelBizFileNo}
+                                    donateBiz={donateBiz}
+                                    bizNo={bizNo}
+                                    />
+
+                    
+
+                    <br/>
+                <hr/>
+                <br/>
                     {/* 관리자거나, 해당 기부 사업의 주체 단체일 경우에만 기부한 회원 리스트 버튼 생성 */}
                     {
                         loginMember != null && (loginMember.memberLevel == 1 || loginMember.orgNo ==  donateBiz.orgNo)

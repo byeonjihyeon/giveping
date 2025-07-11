@@ -490,7 +490,6 @@ public class MemberController {
 	@PatchMapping("/account")
 	public ResponseEntity<ResponseDTO> updateMemberAccount(@RequestBody Member member){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "업데이트중, 오류가 발생하였습니다.", false, "error");
-		
 		try {
 			
 			int result = service.updateMemberAccount(member);
@@ -524,7 +523,7 @@ public class MemberController {
 				
 				res = new ResponseDTO(HttpStatus.OK, "아이디 : " + memberId, true, "success");
 			}else {
-				res = new ResponseDTO(HttpStatus.OK, "이름 또는 전화번호가 일치하지 않습니다.", false, "warning");
+				res = new ResponseDTO(HttpStatus.OK, "이름 또는 이메일이 일치하지 않습니다.", false, "warning");
 			}
 		}catch(Exception e) {
 

@@ -1,7 +1,7 @@
-/* 3열 4행 그리드 설정 */
+/* ✅ 3열 4행 그리드 설정 (그대로 유지) */
 ul.posting-wrap.grid-3x4 {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3열씩 지정 */
+    grid-template-columns: repeat(3, 1fr); /* 3열 */
     gap: 20px;
     padding: 0;
     margin: 0;
@@ -9,6 +9,7 @@ ul.posting-wrap.grid-3x4 {
     cursor: pointer;
 }
 
+/* ✅ 기부자 카드 스타일 */
 .member-card {
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -36,7 +37,7 @@ ul.posting-wrap.grid-3x4 {
     color: #555;
 }
 
-/* 퍼센트와 모금 금액 사이 간격 조정 */
+/* ✅ 기부 통계 (퍼센트/금액) 간격 조정 */
 .donate-stats {
     display: flex;
     justify-content: space-between;
@@ -44,65 +45,49 @@ ul.posting-wrap.grid-3x4 {
     margin-top: 4px;
 }
 
-
-/* 모달 배경 */
+/* ✅ 모달 스타일 */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.4);
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     z-index: 9999;
 }
 
-/* 팝업 - 모달 본문 */
 .modal-content {
-    background-color: #fff;
+    background: white;
     padding: 30px;
-    border-radius: 8px;
+    border-radius: 10px;
     width: 400px;
     max-width: 90%;
-    max-height: 80vh;            
-    overflow-y: auto;            /* 세로 스크롤 활성화 */
+    max-height: 80vh;
+    overflow-y: auto;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    position: relative;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 400px;
-}
-/* 기부 버튼 스타일 변경 */
-.button-group button.selected {
-    background-color: #007BFF;
-    color: white;
-    font-weight: bold;
-}
+/* ✅ 기부 버튼 스타일 */
 .button-group button {
     margin-right: 10px;
     padding: 8px 16px;
     cursor: pointer;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
 }
 
-/* 기부금 달성률 바 */
+.button-group button.selected {
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+    border-color: #007BFF;
+}
+
+/* ✅ 기부금 달성률 Progress Bar */
 .progress-bar {
     width: 100%;
     height: 12px;
@@ -118,4 +103,23 @@ ul.posting-wrap.grid-3x4 {
     transition: width 0.3s ease;
 }
 
+/* ✅ 모금액 사용 계획 테이블 */
+.donate-plan-table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    width: 100%;
+}
 
+.donate-plan-table th,
+.donate-plan-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+/* ✅ BizFile 아래 구분선 */
+.bizfile-divider {
+    margin: 30px 0 20px;
+    border: none;
+    border-top: 1px solid #ccc;
+}

@@ -3,6 +3,9 @@ import createInstance from "../../axios/Interceptor";
 import { useState } from "react";
 import useUserStore from "../../store/useUserStore";
 import Swal from "sweetalert2";
+import * as React from 'react';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 //비밀번호 변경(단체)
 export default function OrgChangePw(){
@@ -151,38 +154,55 @@ export default function OrgChangePw(){
     }
 
     return (
-        //현재 비밀번호 입력창
         <div>
-            {!result
-            ?
-            <form autoComplete="off" onSubmit={function(e){
-                e.preventDefault();
-                checkPw();
-            }}>
-                <div>
-                    <label htmlFor="orgPw">현재비밀번호</label>
-                    <input type="password" id="orgPw" value={org.orgPw} onChange={chgOrgPw}/>
-                    <button type="submit">확인</button>
-                </div>
-            </form>
-            ://새 비밀번호 입력창
-            <form autoComplete="off" onSubmit={function(e){
-                e.preventDefault();
-                updatePw();
-            }}>
-                <div>
-                    <label htmlFor="newOrgPw">변경할 비밀번호</label>
-                    <input type="password" id="newOrgPw" value={newOrgPw} onChange={chgNewOrgPw} onBlur={checkNewPw} readOnly={result ? false : true}/>
-                    <p>{pwChk == 2 ? "비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
-                </div>
-                <div>
-                    <label htmlFor="newOrgPwRe">비밀번호 확인</label>
-                    <input type="password" id="newOrgPwRe" value={newOrgPwRe} onChange={chgNewOrgPwRe} onBlur={checkNewPw} readOnly={result ? false : true}/>
-                    <button type="submit">변경</button>
-                    <p>{pwChk == 3 ? "비밀번호와 일치하지 않습니다." : ""}</p>
-                </div>
-            </form>
-            }
+            <h2 className="page-title">비밀번호 변경</h2>
+            <div className={!result ? "updPw-div" : "updPw-div-plus"}>
+                {!result
+                ? //현재 비밀번호 입력창
+                <form autoComplete="off" onSubmit={function(e){
+                    e.preventDefault();
+                    checkPw();
+                }}>
+                    <div style={{display : "flex"}}>
+                        <label htmlFor="orgPw" className="label" style={{fontWeight : "bold"}}>현재 비밀번호</label>
+                        <TextField type="password" id="orgPw" className="input-login"
+                        value={org.orgPw} onChange={chgOrgPw}/>
+                        <Button variant="contained" type="submit" style={{width : "90px", marginLeft : "3px"}}>확인</Button>
+                    </div>
+                </form>
+                : //새 비밀번호 입력창
+                <form autoComplete="off" style={{display : "flex"}} onSubmit={function(e){
+                    e.preventDefault();
+                    updatePw();
+                }}>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th><label htmlFor="newOrgPw" className="label" style={{width : "110px"}}>변경할 비밀번호</label></th>
+                                <td>
+                                    <TextField type="password" id="newOrgPw" className="input-login" value={newOrgPw} onChange={chgNewOrgPw} onBlur={checkNewPw} readOnly={result ? false : true}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><p>{pwChk == 2 ? "*영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p></td>
+                            </tr>
+                            <tr>
+                                <th><label htmlFor="newOrgPwRe" className="label" style={{width : "110px"}}>비밀번호 확인</label></th>
+                                <td>
+                                    <TextField type="password" id="newOrgPwRe" className="input-login" value={newOrgPwRe} onChange={chgNewOrgPwRe} onBlur={checkNewPw} readOnly={result ? false : true}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><p>{pwChk == 3 ? "*비밀번호와 일치하지 않습니다." : ""}</p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <Button variant="contained" type="submit" style={{height : "90px", width : "90px"}}>변경</Button>
+                </form>
+                }
+            </div>
         </div>
         
     )

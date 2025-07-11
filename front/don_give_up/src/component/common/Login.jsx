@@ -59,7 +59,9 @@ export default function Login(){
                     <DoLogin selectRadio={selectRadio} member={member} setMember={setMember} org={org} setOrg={setOrg}/>
                 </div>
                 <div style={{marginTop : "10px"}}>
-                    <Link to="/search/id">아이디 찾기</Link> &nbsp;|&nbsp; <Link to="/search/pw">비밀번호 찾기</Link> &nbsp;|&nbsp; <Link to="/join">회원가입</Link>
+                    <Link to="/search/id">아이디 찾기</Link>
+                     &nbsp;|&nbsp; <Link to="/search/pw">비밀번호 찾기</Link>
+                      &nbsp;|&nbsp; <Link to="/join">회원가입</Link>
                 </div>
             </div>
         </section>
@@ -196,7 +198,7 @@ function DoLogin(props){
                             <TextField type="text" id={selectRadio == "member" ? "memberId" : "orgId"} 
                                    value={selectRadio == "member" ? member.memberId : org.orgId}
                                    onChange={selectRadio == "member" ? chgMember : chgOrg}
-                                   style={{marginBottom : "5px"}}
+                                   className="input-login" style={{marginBottom : "5px"}}
                             />
                         </td>
                     </tr>
@@ -207,7 +209,7 @@ function DoLogin(props){
                         <td>
                             <TextField type="password" id={selectRadio == "member" ? "memberPw" : "orgPw"} 
                                    value={selectRadio == "member" ? member.memberPw : org.orgPw} 
-                                   onChange={selectRadio == "member" ? chgMember : chgOrg}
+                                   onChange={selectRadio == "member" ? chgMember : chgOrg} className="input-login"
                             />
                         </td>
                     </tr>

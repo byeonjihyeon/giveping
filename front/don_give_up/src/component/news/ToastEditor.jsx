@@ -1,11 +1,10 @@
  import {Editor} from '@toast-ui/react-editor';
  import '@toast-ui/editor/dist/toastui-editor.css';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import createInstance from '../../axios/Interceptor';
 
  //소식 본문 내용 작성을 위한 에디터
  export default function ToastEditor(props){
-
     const newsContent = props.newsContent;
     const setNewsContent = props.setNewsContent;
     const type=props.type; // 등록 : 0 ,수정 : 1
@@ -18,7 +17,11 @@ import createInstance from '../../axios/Interceptor';
 
     const editorRef = useRef(null); //에디터와 연결할 ref 변수
 
-
+    useEffect(function() {
+        if (donateBiz && donateBiz.bizContent && editorRef.current) {
+            editorRef.current.getInstance().setHTML(donateBiz.bizContent);
+        }
+    }, [donateBiz.bizContent]);
 
     function changeContent(){
         //에디터 본문에 작성한 내용 state 변수에 세팅
@@ -29,6 +32,9 @@ import createInstance from '../../axios/Interceptor';
             setDonateBiz({...donateBiz, bizContent : editorText});
         }
     }
+
+    
+
 
     // 에디터 상단, 이미지 아이콘 클릭하여 이미지 업로드 후, OK 버튼 클릭 시 동작 함수
     function uploadImg(file, callbackFunc){

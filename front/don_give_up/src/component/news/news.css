@@ -185,7 +185,7 @@
 }
 
 /* 등록 버튼 */
-.comment-submit-btn {
+.btn-primary {
   padding: 10px 16px;
   background-color: #007bff;
   color: white;
