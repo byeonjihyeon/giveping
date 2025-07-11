@@ -80,7 +80,7 @@ export default function OrgNewsList(){
     return (
          <div className="newsList-wrap" >
             {
-                newsList.length>0
+                Array.isArray(newsList) && newsList.length>0
                 ?
                 newsList.map(function(news, index){
                      return <News key={"news" + index} news={news}  setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginOrg={loginOrg}/>   

@@ -77,17 +77,17 @@ export default function MyHome(props){
                     <div className="myNews-item">
                         <div className="newsList-wrap" >
                                 {
-                                    newsList.filter(news => news.alarmRead === 0).length === 0 ? (
-                                    <div>새로운 소식이 없습니다.</div>
-                                    ) : (
-                                    newsList
-                                        .filter(news => news.alarmRead === 0)
-                                        .slice(0, 3)
-                                        .map(function(news, index) {
-                                        return <News key={"news" + index} news={news} />;
-                                        })
-                                    )
-                                }
+                                !newsList || newsList.filter(news => news.alarmRead === 0).length === 0 ? (
+                                <div>새로운 소식이 없습니다.</div>
+                                ) : (
+                                newsList
+                                    .filter(news => news.alarmRead === 0)
+                                    .slice(0, 3)
+                                    .map(function(news, index) {
+                                    return <News key={"news" + index} news={news} />;
+                                    })
+                                )
+                            }
                         </div>
                     </div>
                 </div>
