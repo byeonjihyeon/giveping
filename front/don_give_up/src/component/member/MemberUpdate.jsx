@@ -7,6 +7,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import useUserStore from "../../store/useUserStore";
 import { Link } from "react-router-dom";
+import ProfileUpdate from "./ProfileUpdate";
 
 
 
@@ -265,74 +266,81 @@ export default function MemberUpdate(props) {
     }
 
     return (
-        <div className="update-frm-wrap" >
-            <div className="input-wrap">
-                <div className="input-title-wrap">아이디</div>
-                <div>{member.memberId}</div>
-            </div>
-            <div className="input-wrap">
-                <div className="input-title-wrap">이름</div>
-               
-                    <input type="text" id='memberName' value={member.memberName} onChange={updMember} onBlur={chkName} />   
-                    <p>{invalidMsg.id}</p>
-            </div>
+        <div className="update-frm-wrap">
+            <div className="update-frm-title">회원정보 수정</div>
+            <div className="update-frm-content" >
+                <div className="input-wrap">
+                    <div className="input-title-wrap">프로필</div>
+                    <ProfileUpdate member={mainMember} setMember={setMainMember} />
+                </div>
+                <div className="input-wrap">
+                    <div className="input-title-wrap">이름</div>
+                    <div className="input-content-wrap">
+                        <input type="text" id='memberName' value={member.memberName} onChange={updMember} onBlur={chkName} />   
+                        <p className={chkInfo.id ? "" : "invalid"}> {invalidMsg.id}</p>
+                    </div>
+                </div>
+                <div className="input-wrap">
+                    <div className="input-title-wrap">생년월일</div>
+                    <div className="input-content-wrap">
+                        <input type='type' id='memberBirth' value={member.memberBirth} placeholder="생년월일 8자리" onChange={updMember} onBlur={chkBirth}/>
+                        <p className={chkInfo.birth ? "" : "invalid"}> {invalidMsg.birth}</p>
+                    </div>
+                
+                </div>
+                <div className="input-wrap">
+                    <div className="input-title-wrap" >전화번호</div>
+                    <div className="input-content-wrap">
+                        <input type="text" id='memberPhone' value={member.memberPhone} onChange={updMember} onBlur={chkPhone}/>
+                        <p className={chkInfo.phone ? "" : "invalid"}>{invalidMsg.phone}</p>
+                    </div>
+                </div>
+                <div className="input-wrap">
+                    <div className="input-title-wrap">이메일</div>
+                    <div className="input-content-wrap">
+                        <input type="text" id='memberEmail' maxLength={100} value={member.memberEmail} onChange={updMember} onBlur={chkEmail}/>
+                        <p className={chkInfo.email ? "" : "invalid"}>{invalidMsg.email}</p>
+                    </div>   
+                </div>
         
-            <div className="input-wrap">
-                <div className="input-title-wrap">생년월일</div>
-                <div className="input-content-wrap">
-                    <input type='type' id='memberBirth' value={member.memberBirth} placeholder="생년월일 8자리" onChange={updMember} onBlur={chkBirth}/>
-                    <p>{invalidMsg.birth}</p>
+                <div className="input-wrap">
+                    <div className="input-title-wrap">주소</div>
+                    <MemberAddr member={member} setMember={setMember} />
+                
                 </div>
-               
-            </div>
-            <div className="input-wrap">
-                <div className="input-title-wrap" >전화번호</div>
-                <div className="input-content-wrap">
-                    <input type="text" id='memberPhone' value={member.memberPhone} onChange={updMember} onBlur={chkPhone}/>
-                    <p>{invalidMsg.phone}</p>
-                </div>
-            </div>
-            <div className="input-wrap">
-                <div className="input-title-wrap">이메일</div>
-                <div className="input-content-wrap">
-                    <input type="text" id='memberEmail' maxLength={100} value={member.memberEmail} onChange={updMember} onBlur={chkEmail}/>
-                    <p>{invalidMsg.email}</p>
-                </div>   
-            </div>
-    
-            <div className="input-wrap">
-                <div className="input-title-wrap">주소</div>
-                <MemberAddr member={member} setMember={setMember} />
-            
-            </div>
-            <div className="input-wrap">
-                <div className="input-title-wrap">카테고리</div>
+                <div className="input-category-wrap">
+                    <div className="input-category-title-wrap">
+                        <img src="/images/check_box_30dp_5985E1.png" />
+                        <span>관심 카테고리를 선택하시면 원하는 정보를 더 빠르게 찾을 수 있어요!</span>
+                    </div>
                     <div className="category-wrap">
                         {allCategory.map(function(category, index){
                             
                             function chkCategory(e){
-                               let divEl = e.target;
-                               if(divEl.classList.contains('chosed-category')){     //선택 헤제시   
-                                    divEl.classList.remove('chosed-category');
-                                    setChoseCategory(choseCategory.filter(function(dCode,dIndex){
-                                        return category.donateCode != dCode;
-                                    }))
-                               }else {  //선택시
-                                    divEl.classList.add('chosed-category');
-                                    if(!choseCategory.includes(category.donateCode)){
-                                        setChoseCategory([...choseCategory, category.donateCode]);
-                                    }
-                               }    
+                                let divEl = e.target;
+                                if(divEl.classList.contains('chosed-category')){     //선택 헤제시   
+                                        divEl.classList.remove('chosed-category');
+                                        setChoseCategory(choseCategory.filter(function(dCode,dIndex){
+                                            return category.donateCode != dCode;
+                                        }))
+                                }else {  //선택시
+                                        divEl.classList.add('chosed-category');
+                                        if(!choseCategory.includes(category.donateCode)){
+                                            setChoseCategory([...choseCategory, category.donateCode]);
+                                        }
+                                }    
                             }
                             return <div key={"category" + index} id={category.donateCode} className={"category-name" + (prevCategory.includes(category.donateCode) ? " chosed-category" : "")} onClick={chkCategory} >{category.donateCtg}</div>
                         })}
                     </div>
-            </div>
-            <div>
-                <Link to='/member/delete'>탈퇴하기</Link>
+                </div>               
             </div>
             <div className="update-btn-wrap">
-                <button type="button" onClick={updateMember}>수정하기</button>
+                    <button type="button" onClick={updateMember}>수정하기</button>
+            </div>
+             <div className="delete-wrap">
+                <span>탈퇴를 원하시면 우측의 회원탈퇴 버튼을 눌러주세요.</span>        
+                <button><Link to='/member/delete'>탈퇴하기</Link></button>
             </div>
         </div>
     )
@@ -397,10 +405,9 @@ function MemberAddr(props){
     }
 
     return (
-        <div>
-            
-            <input type="button" onClick={DaumPostcode} value="주소 찾기" /> <br/>
-            <input type="text" id="memberAddrMain" placeholder="주소" value={member.memberAddrMain} readOnly />
+        <div className="input-addr-wrap">
+            <input id='addr-btn' type="button" onClick={DaumPostcode} value="주소 찾기" /> <br/>
+            <input type="text" id="memberAddrMain" placeholder="주소" value={member.memberAddrMain} readOnly /> <br/>
             <input type="text" id="memberAddrDetail" placeholder="상세주소" maxLength={30} value={!member.memberAddrDetail ? "" : member.memberAddrDetail} ref={detailAddrEl} onChange={updAddr} />
         </div>
     )

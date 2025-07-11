@@ -10,13 +10,13 @@
 }
 .member-main-mid-wrap {
     width: 850px;
-    border: 1px solid black;
+  /*  border: 1px solid black; */
 }
 /* 사이드 메뉴 CSS */
 .sidebar-wrap {
     width: 200px;
     border: 1px solid #dcdcdc;
-    background-color: #fafafa;
+  /*  background-color: #fafafa; */
 }
 
 .profile-wrap {
@@ -418,11 +418,6 @@
     border-radius: 50%;
 }
 
-
-
-
-
-
 /* 결제내역 페이지 */
 .history-wrap {
     display: flex;
@@ -449,101 +444,296 @@
 
 /* 회원 수정 페이지 */
 .update-frm-wrap {
-    width: 600px;
+    width: 100%;
     margin: 0 auto;
-    border: 1px solid #dcdcdc;
+    padding: 10px;
+}
+
+.update-frm-title {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.update-frm-content{
+    width: 100%;
+    border-top: 3px solid #dcdcdc;
+    border-bottom: 3px solid #dcdcdc;
+    padding: 15px;
+    box-sizing: border-box;
+    
 }
 
 .input-wrap {
     display: flex;
-    border: 1px solid #dcdcdc;
-    border-radius: 5px;
-
-}
-
-.input-wrap:last-of-type{
-    border: none;
+    width: 100%;
+    border-bottom: 1px solid #dcdcdc;
+    padding: 10px 0;
 }
 
 .input-title-wrap {
-    width: 10%;
+    width: 20%;
+    font-weight: bold;
+    font-size: 18px;
 }
 
-.input-wrap > div{
-    height: 50px;
+.input-content-wrap {
+    width: 90%;
+    height: 70px;
+    padding-left: 10px;
 }
 
-.input-wrap > input {
-    width: 80%;
-    height: 50px;
-    font-size: 19px;
-    border: none;
+.input-profile-wrap {
+    height: 120px;
+    display: flex;
+    border-bottom: 1px solid #dcdcdc;
+    gap: 15px;
 }
+
+.profile {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+}
+
+.profile-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.profile-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-btns{
+    display: flex;
+    gap: 5px;
+}
+
+.profile-btns > *{
+    width: 50px;
+}
+
+
 
 .input-content-wrap>input{
-    border: 1px solid #dcdcdc ;
+    width: 60%;
+    height: 40px;
+    padding-left: 10px;
+    outline: none;
+    border: 1px solid #dcdcdc;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.input-content-wrap>input:focus {
+    border: 1px solid lightblue;
+}
+
+.input-addr-wrap {
     width: 90%;
-    height: 90%;
-    font-size: 16px;
+    margin-left: 10px;
 }
 
-.category-wrap {
-    border: 1px solid black;
+.input-addr-wrap>input {
+    width: 80%;
+    height: 30px;
+    padding-left: 10px;
+    margin-bottom: 5px;
+    outline: none;
+    border: 1px solid #dcdcdc;
+    height: 40px;
+    font-size: 18px;
+}
+
+#memberAddrMain {
+    background-color: #eeeeee;
+}
+
+#memberAddrDetail:focus {
+    border: 1px solid lightblue;
+}
+#addr-btn {
+    width: 100px;
+    padding-left: 0px !important;
+    background-color: lightblue;
+    border: none;
+    border-radius: 5px;
+}
+
+.input-category-wrap{
+    margin-top: 20px;
+}
+.category-wrap{
     display: flex;
-    gap: 10px;
+    margin: 20px 20px;
 }
 
-.category-name {
-    border: 1px solid black;
-    height: 50%;
-    width: 20%;
+.category-wrap>*{
+    border: 1px solid #dcdcdc;
+    width: 80px;
+    height: 40px;
+    font-size: 18px;
+    margin-right: 20px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: background-color 0.2s ease, color 0.3s ease;
+}
+.input-category-title-wrap{
+    margin-top: 10px;
+    display: flex;
+    align-items:  center;
+    gap: 5px;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .chosed-category {
     background-color: lightblue;
+    border: 1px solid lightblue;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+
+.update-btn-wrap>button {
+    margin-top: 10px;
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    font-size: 18px;
+    background-color: lightblue;
+    border: none;
+}
+
+.delete-wrap {
+   display: flex;
+   justify-content:flex-end;
+   align-items: center;
+   gap: 10px;
+   margin-top: 20px;
+   font-size: 16px;
+}
+
+.delete-wrap a{
+    width: 100%;
+    color: black;
+}
+.delete-wrap>button{
+    width: 65px;
+    height: 30px;
+}
+
+
 
 /* 비밀번호 변경 */
 .pwchange-wrap {
-    width: 100%;
-    margin: 0 auto;
-}
-
-.pwchange-title {
-    font-size: 25px;
-}
-
-.pw-input-wrap{
-    margin-top: 80px;
-    height: 35px;
+    border-top: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+    width: 700px;
+    margin: 50px auto;
+    padding: 50px;
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    font-size: 20px;   
+    flex-direction: column;
+    align-items: center;
 }
 
-.pwchange-wrap input {
-    width: 250px;
-    border: 1px solid #dcdcdc;
-} 
+.pwchange-title{
+    font-weight: bold;
+    font-size: 25px;
+    margin-bottom: 30px;
+}
 
-.pwchange-wrap button {
-    width: 60px;
+.pwRe-wrap {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pw-input-wrap {
+    border: 1px solid #dcdcdc;
+    width: 60%;
+}
+
+
+.pw-input-wrap >input {
     font-size: 18px;
 }
 
-.pwRe-wrap {
-    margin: 0 auto;
+.pwRe-wrap>div:first-of-type{
+    border-bottom: none;
+}
+
+
+.pwchange-wrap input{
+    height: 40px;
+    width: 100%;
+    border: 1px solid transparent;
+    outline: none;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+
+.pwchange-wrap input:focus{
+  border: 1px solid #91C8E4;
+}
+
+.update-pw-btn {
+    width: 100%;
+    font-size: 18px;
+}
+
+.pwRe-msg{
+    margin-top: 5px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    height: 15px;
+}
+
+
+.pwchange-content{
+    width: 60%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    height: 200px;
-    gap: 10px;
+    align-items:flex-start;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+.update-pw-btn {
+    text-align: center;
+    width: 60%;
 }
 
-.pwRe-wrap {
-    width: 8;
+.update-pw-btn>button {
+    margin-top: 30px;
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+    background-color: lightblue;
+    border: none;
+    cursor: pointer;
 }
 
+.invalid{
+    color: #ff3d00;
+}
 
+.invalid::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-image: url("/images/icon_info_warning.svg");
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+
+.pwRe-msg>p>img{
+    width: 16px;
+}
