@@ -85,6 +85,7 @@ export default function NewsList(){
     const [newsList, setNewsList] = useState([]);
     //const [isNewsRead, setIsNewsRead] = useState(false); // 소식 읽었는지 여부 (초기값 : false / 읽을 경우 true로 변경)
 
+    console.log(newsList);
 
     return (
         <div className='news-wrap'>
@@ -95,9 +96,15 @@ export default function NewsList(){
                 <span></span>
             </div>
             <div className="newsList-wrap" >
-                    {newsList.map(function(news, index){
+                {
+                    newsList.length>0
+                    ?
+                    newsList.map(function(news, index){
                         return <News key={"news" + index} news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
-                    })}
+                    })
+                    :
+                    <p>새로운 소식이 없습니다.</p>
+                }
             </div>
         </div>
     )
