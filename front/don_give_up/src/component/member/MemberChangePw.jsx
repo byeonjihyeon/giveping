@@ -123,7 +123,6 @@ export default function MemberChangePw(){
         }
      }
 
-
     return (
         
         <div className="pwchange-wrap">
