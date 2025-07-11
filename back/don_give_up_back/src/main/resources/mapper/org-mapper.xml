@@ -117,13 +117,6 @@
 		 where org_no = #{orgNo}
 	</update>
 	
-	<!-- 단체 프로필 조회 -->
-	<select id="selectThumb" parameterType="_int" resultType="string">
-		select org_thumb as orgThumbPath
-		  from tbl_org
-		 where org_no = #{orgNo}
-	</select>
-	
 	<!-- 단체 프로필 초기화(삭제) -> 삭제가 아닌 null로 변경 -->
 	<update id="deleteThumb" parameterType="_int">
 		update tbl_org
