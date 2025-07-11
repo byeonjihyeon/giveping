@@ -100,7 +100,14 @@ export default function BizFile(props){
                     console.log("resData", res.data.resData)
 
                     fetchBizFileList(); //수정사항 반영 -> 재조회 
-                    window.location.reload();
+                   
+                    // 업로드 된 파일 목록 초기화
+                    setBizFile([]);
+                    setBizFileImg([]);
+                    setDelBizFileNo([]);
+
+                    // 수정 보드 종료
+                    setIsEditMode(false);
                 }
             });
         
@@ -128,20 +135,21 @@ export default function BizFile(props){
                 <p className="file-title">첨부파일</p>
                                 <div className="file-zone">
                                     {
-                                        donateBiz.fileList
-                                        ? donateBiz.fileList.map(function(file, index){
+                                        prevBizFileList
+                                        ? prevBizFileList.map(function(file, index){
                                             return <FileItem key={"file"+index} file={file} />
                                         })
-                                        : ''
+                                        : <p>등록된 첨부파일이 없습니다.</p>
                                     }
                                 </div>
         </div>
         }
         
-        {isManagerOrOrg &&
+        {isManagerOrOrg && !isEditMode &&
                 <div className="btn-zone">
+                    
                     <button type="button" className="btn-primary" onClick={() => setIsEditMode(true)}>
-                        수정하기
+                        파일 수정하기
                     </button>
                 </div>
             }
@@ -154,7 +162,7 @@ export default function BizFile(props){
                             <form className="bizFile" onSubmit={function(e){
                                 e.preventDefault();
                                 updateFile(); //파일 업로드 함수 호출
-                                setIsEditMode(false); // 수정 완료 -> 다시 비수정 모드로
+                                //setIsEditMode(false); // 수정 완료 -> 다시 비수정 모드로
                                 //window.location.reload();   // 새로고침 -> 파일 변경사항 반영
                             }}> 
             <div>
@@ -167,7 +175,7 @@ export default function BizFile(props){
                                 </th>
                                 {isManagerOrOrg && (
                                 <td className="left">
-                                    <label htmlFor="bizFile" className="btn-primary sm">파일첨부</label>
+                                    <label htmlFor="bizFile" className="btn-primary sm">파일첨부하기</label>
                                     <input type="file" id="bizFile" style={{display : 'none'}} multiple onChange={chgBizFile} />
                                 </td>
                                 )}
