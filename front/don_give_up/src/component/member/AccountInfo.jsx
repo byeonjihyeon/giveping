@@ -98,39 +98,50 @@ export default function AccountInfo(props){
    }
 
     return(
-
-         <div>
-            <div>{mainMember.memberName}</div>
-            <div>{mainMember.memberBirth}</div>
-            {
-            (mainMember.memberBankCode != "0") && (mainMember.memberBankCode != "") ? 
-               <div>{mainMember.memberBankCode} | {mainMember.memberBankAccount} <button onClick={updAccount}>초기화</button></div>
-            :   
+        <div className="account-change-wrap">
+            <div className="account-change-title">
+                출금계좌 조회 / 변경
+            </div>
+            
+            <div>
                 <div>
-                    <div>
-                        <select defaultValue="" id='memberBankCode' onChange={chgAccount}>
-                            <option value="" disabled>은행선택</option>
-                            <option value="국민은행">국민은행</option>
-                            <option value="신한은행">신한은행</option>
-                            <option value="하나은행">하나은행</option>
-                            <option value="우리은행">우리은행</option>
-                            <option value="iM뱅크">iM뱅크</option>
-                            <option value="기업은행">기업은행</option>
-                            <option value="농협은행">농협은행</option>
-                            <option value="우체국">우체국</option>
-                            <option value="카카오뱅크">카카오뱅크</option>
-                            <option value="토스뱅크">토스뱅크</option>
-                        </select>
-                        <input type='text' id='memberBankAccount' maxLength={30} placeholder="계좌 입력 '-'제외" value={member.memberBankAccount} onChange={chgAccount} />
-                        <button onClick={chkAccount} >인증</button>
-                        <p>{accountMsg}</p>
-                    </div>
-                    <div>
-                       <button onClick={regAccount}>등록하기</button> 
-                    </div>
+                    <div>이름</div>
+                    <div>{mainMember.memberName}</div>
                 </div>
-            }
-        </div>           
+                <div>
+                    <div>생년월일</div>
+                    <div>{mainMember.memberBirth}</div>
+                </div>
+                {
+                (mainMember.memberBankCode != "0") && (mainMember.memberBankCode != "") ? 
+                <div>{mainMember.memberBankCode} | {mainMember.memberBankAccount} <button onClick={updAccount}>초기화</button></div>
+                :   
+                    <div>
+                        <div>
+                            <select defaultValue="" id='memberBankCode' onChange={chgAccount}>
+                                <option value="" disabled>은행선택</option>
+                                <option value="국민은행">국민은행</option>
+                                <option value="신한은행">신한은행</option>
+                                <option value="하나은행">하나은행</option>
+                                <option value="우리은행">우리은행</option>
+                                <option value="iM뱅크">iM뱅크</option>
+                                <option value="기업은행">기업은행</option>
+                                <option value="농협은행">농협은행</option>
+                                <option value="우체국">우체국</option>
+                                <option value="카카오뱅크">카카오뱅크</option>
+                                <option value="토스뱅크">토스뱅크</option>
+                            </select>
+                            <input type='text' id='memberBankAccount' maxLength={30} placeholder="계좌 입력 '-'제외" value={member.memberBankAccount} onChange={chgAccount} />
+                            <button onClick={chkAccount} >인증</button>
+                            <p>{accountMsg}</p>
+                        </div>
+                        <div>
+                        <button onClick={regAccount}>등록하기</button> 
+                        </div>
+                    </div>
+                }
+            </div>  
+    </div>             
     )
        
    
