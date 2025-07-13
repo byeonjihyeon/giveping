@@ -1,5 +1,6 @@
 import { endOfMonth, format, getMonth, getYear, isAfter, isBefore} from "date-fns";
 import { useState } from "react"
+import './dateSelectBar.css'
 
 //년,월기준 선택하여 기간 조회(Ex 2024.07 ~ 2025.07)
 export default function DateSelectBar(props){
@@ -59,28 +60,28 @@ export default function DateSelectBar(props){
 
     return (
         <>
-        <select id='startYear' value={form.startYear} onChange={updDate}>
-            {yearArr.map(function(startYear, index){
-                return <option key={"startYear" + index} value={startYear}>{startYear}</option>
-            })}
-        </select>
-        <select id='startMonth' value={form.startMonth} onChange={updDate}>
-            {monthArr.map(function(startMonth, index){
-                return <option key={"startMonth" + index} value={startMonth}>{startMonth}</option>
-            })}
-        </select>
-        ~
-        <select id='endYear' value={form.endYear} onChange={updDate}>
-            {yearArr.map(function(endYear, index){
-                return <option key={"year" + index} value={endYear}>{endYear}</option>
-            })}
-        </select>
-        <select id='endMonth' value={form.endMonth} onChange={updDate}>
-            {monthArr.map(function(endMonth, index){
-                return <option key={"endMonth" + index} value={endMonth}>{endMonth}</option>
-            })}
-        </select>
-        <button type="button" onClick={searchDate}>검색</button>
+            <select id='startYear' value={form.startYear} onChange={updDate}>
+                {yearArr.map(function(startYear, index){
+                    return <option key={"startYear" + index} value={startYear}>{startYear}</option>
+                })}
+            </select>
+            <select id='startMonth' value={form.startMonth} onChange={updDate}>
+                {monthArr.map(function(startMonth, index){
+                    return <option key={"startMonth" + index} value={startMonth}>{startMonth}</option>
+                })}
+            </select>
+            ~
+            <select id='endYear' value={form.endYear} onChange={updDate}>
+                {yearArr.map(function(endYear, index){
+                    return <option key={"year" + index} value={endYear}>{endYear}</option>
+                })}
+            </select>
+            <select id='endMonth' value={form.endMonth} onChange={updDate}>
+                {monthArr.map(function(endMonth, index){
+                    return <option key={"endMonth" + index} value={endMonth}>{endMonth}</option>
+                })}
+            </select>
+            <button className="searchBtn" type="button" onClick={searchDate}>검색</button>
         </>
     )
 }

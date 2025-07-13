@@ -31,7 +31,9 @@ export default function Modal(props){
                     {/* onClose: 부모컴포넌트로 받은 함수(== 모달창 닫기) */}
                     <div className='modal-close' onClick={function(){
                         onClose();  //모달 닫기
-                    }}>x</div> 
+                    }}>
+                    <img src='/images/clear_24dp_C0C0C0.png'/>
+                    </div> 
                 </div>
                 <div className='modal-content'>
                     {children}

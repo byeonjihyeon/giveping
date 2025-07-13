@@ -33,8 +33,8 @@ export default function RefundFrm(props){
     //금액 유효성 메시지
     const [moneyMsg, setMoneyMsg] = useState("");
 
-    //금액 유효성 결과 변수
-    const [isMoney, setIsMoney] = useState(false);
+    //금액 유효성 결과 변수 0:입력전 1:유효성 x 2:통과
+    const [isMoney, setIsMoney] = useState(0);
 
     //금액입력 input onChange
     function chgMoney(e){
@@ -55,12 +55,14 @@ export default function RefundFrm(props){
         let moneyStr = e.target.value;
 
         if(moneyStr.length == 0){  //금액미입력시
+            setIsMoney(1);
             setMoneyMsg('금액을 입력하여주세요');
             return;
         }
         
         const regExp = /^[0-9]*$/; // 0 ~ 9 숫자 입력만
         if(!regExp.test(moneyStr)){ //숫자 입력 x
+            setIsMoney(1);
             setMoneyMsg('숫자만 입력하여주세요.');
             return;
         }
@@ -73,13 +75,14 @@ export default function RefundFrm(props){
         let money = Number(moneyStr);
 
         if(prevMoney < money){
+            setIsMoney(1);
             setMoneyMsg('현재 보유하고 있는 금액보다 크게 입력하였습니다.');
             return;
         }
         
         //서버에 전달할 money
         moneyStr.split(',').join(''); //1,000,000 => 1000000
-        setIsMoney(true);
+        setIsMoney(2);
         setRefund({...refund, refundMoney: moneyStr });
         
     }
@@ -88,7 +91,7 @@ export default function RefundFrm(props){
     //출금 신청하기 (유효성 검사 포함)
     function refundMoney(){
 
-        if(!isMoney){   //유효성 검사 미통과시 메소드 종료.
+        if(isMoney != 2){   //유효성 검사 미통과시 메소드 종료.
             return;
         }
 
@@ -114,20 +117,19 @@ export default function RefundFrm(props){
     return (
         <div className="refund-wrap">
             <div>
-                <span>출금가능금액</span>
-                <span>{member.totalMoney} 원</span>
-            </div>
-            <div>
-                <div>금액 입력</div>
-                <div>
-                    <input type='text' maxLength={10} value={commaMoney} onChange={chgMoney} onBlur={chkMoney} /> 원
+                <div className="possible-money">
+                    <span>출금가능금액</span>
+                    <span>{member.totalMoney} 원</span>
                 </div>
-                <p>{moneyMsg}</p>
+                <div className="account-info">
+                    <span>입금계좌</span>
+                    <span>({member.memberBankCode}) {member.memberBankAccount}</span>
+                </div>
+            </div>  
+            <div className="input-refund">
+                <input type='text' placeholder="출금금액 입력" maxLength={10} value={commaMoney} onChange={chgMoney} onBlur={chkMoney} /> 원
             </div>
-            <div>
-                <span>입금계좌</span>
-                <span>{member.memberBankCode} | {member.memberBankAccount}</span>
-            </div>
+            <p className={isMoney == 1 ? "invalid" : ""}>{moneyMsg}</p>
             <div>
                 <button onClick={refundMoney}>출금 신청하기</button>
             </div>

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.model.dto.ResponseDTO;
@@ -276,6 +277,7 @@ public class MemberController {
 				"error");
 
 		try {
+			System.out.println(member);
 			boolean chkResult = service.checkPw(member);
 
 			res = new ResponseDTO(HttpStatus.OK, "", chkResult, "");
@@ -581,5 +583,20 @@ public class MemberController {
 
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
-
+	
+	//회원 추천 관심기부사업 조회 (회원 카테고리 참고해서)
+	@GetMapping("/recommand/biz/{memberNo}")
+	public ResponseEntity<ResponseDTO> recommandBiz(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			ArrayList<Biz> recommandList = service.recommandBiz(memberNo);
+			res = new ResponseDTO(HttpStatus.OK, "", recommandList, "");
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }

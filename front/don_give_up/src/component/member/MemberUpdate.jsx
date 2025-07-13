@@ -48,9 +48,6 @@ export default function MemberUpdate(props) {
     //선택한 카테고리
     const [choseCategory, setChoseCategory] = useState([]);
     
-
-   
-
     //기존 회원정보 조회
     useEffect(function(){
         let options = {};
@@ -239,10 +236,14 @@ export default function MemberUpdate(props) {
         }
     
         //삭제할 카테고리 : 기존카테고리 - 현재카테고리
-        const delCategory = prevCategory.filter(function(code,index){return !choseCategory.includes(code)});
+        let delCategory = prevCategory.filter(function(code,index){return !choseCategory.includes(code)});
         //추가할 카테고리 : 현재카테고리 - 기존카테로기
-        const addCategory = choseCategory.filter(function(code,index){return !prevCategory.includes(code)});
-        
+        let addCategory = choseCategory.filter(function(code,index){return !prevCategory.includes(code)});
+        console.log("prev : " + prevCategory);
+        console.log("chose :" + choseCategory);
+        console.log("del: " +delCategory);
+        console.log("add : " + addCategory);
+
         let options = {};
         options.url = serverUrl + '/member';
         options.method = 'patch';   //수정
@@ -256,12 +257,14 @@ export default function MemberUpdate(props) {
         .then(function(res){
             if(member.memberName != loginMember.memberName){                        //이름이 변경되었다면, 스토리지변수 또한 변경
                 setLoginMember({...loginMember, memberName: member.memberName});    //스토리지영역도 변경적용 및 헤더, 사이드메뉴 재랜더링
-                setMainMember({...mainMember, memberName: member.memberName})
+                setMainMember({...mainMember, memberName: member.memberName});
             }
             
             if(member.memberEmail != mainMember.memberEmail){
                 setMainMember({...mainMember, memberEmail: member.memberEmail});
             }
+
+            setPrevCategory(choseCategory);
         })
     }
 

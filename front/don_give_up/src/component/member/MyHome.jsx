@@ -24,8 +24,7 @@ export default function MyHome(props){
 
 	//모달창 상태
     const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
-     const navigate = useNavigate();
-
+    const navigate = useNavigate();
 
     // 알림 리스트 가져오기
     useEffect(function(){
@@ -40,6 +39,20 @@ export default function MyHome(props){
                 });
             }, []);
 
+    const [bizList, setBizList] = useState([]);            
+    //추천기부사업 조회 
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + '/member/recommand/biz/' + loginMember.memberNo;
+        options.method = 'get';
+
+        axiosInstance(options)
+        .then(function(res){
+            setBizList(res.data.resData);
+        })
+
+    }, [])        
+
     
     return (
         <div className="myHome-wrap">
@@ -50,7 +63,7 @@ export default function MyHome(props){
                     </div>    
                     <div className='detail-right'>
                         <div className="money">
-                            <span>{member.totalDonateMoney}</span>
+                            <span>{member.totalDonateMoney ? member.totalDonateMoney : 0}</span>
                             <span> 원</span>
                         </div>
                         <div className="donation-cnt">
@@ -151,6 +164,39 @@ export default function MyHome(props){
                             }
                     </div>
                 </div>
+            </div>
+            <div className="interested-biz-wrap">
+                <div className="title">
+                    {member.memberName} 님, &nbsp;관심 가질만한 기부사업이 도착했어요! ☺️
+                </div>
+                <div className="recommand-biz-wrap">
+                    {bizList.map(function(biz, index){
+                        return <Biz biz={biz} />
+                    })}
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function Biz(props){
+    const biz = props.biz;
+
+    return (
+        <div className="recommand-biz">
+            <div className="thumb">
+                <img  src={
+                            biz.bizThumbPath    //기존 썸네일 가지고있다면?
+                            ?
+                            serverUrl + "/biz/thumb/" + biz.bizThumbPath.substring(0,8) + "/" + biz.bizThumbPath
+                            :
+                            "/images/default_img.png"     
+                        } />
+                <div className="biz-ctg">{biz.donateCtg}</div>        
+            </div>
+            <div className="info">
+                <div>{biz.bizName}</div>   
+                <div>{biz.bizContent}</div>             
             </div>
         </div>
     )

@@ -17,7 +17,7 @@ export default function MemberDelete(props){
 
     //회원번호, 비밀번호 state 변수
     const [member, setMember] = useState({
-        memberNo: mainMember.memberNo,
+        memberNo: loginMember.memberNo,
         memberPw : ""
     })
 
@@ -37,6 +37,7 @@ export default function MemberDelete(props){
 
     //확인(비밀번호)버튼 클릭시, 동작함수
     function chkPw(){
+
         let options = {};
         options.url = serverUrl + '/member/checkPw';
         options.method = 'post';
@@ -47,7 +48,7 @@ export default function MemberDelete(props){
             if(res.data.resData){
                 setIsAuth(true);
             }else{
-                alert('비밀번호 틀렸어여!!!');
+                alert('비밀번호를 다시 확인하여주세요.');
             }
         })
     }
@@ -68,48 +69,58 @@ export default function MemberDelete(props){
                 setLoginMember(null);
                 setAccessToken(null);
                 setRefreshToken(null);
-                
                 navigate('/login');
             
             }
         })
-
     }
-
     return(
-        <div>
-            회원탈퇴 페이지~! <br/>
-            로직 <br/>
-            1. 회원 정보처리,현재 남아있는 금액보여주며 탈퇴동의하는 체크와 비밀번호 받기 <br />
-                - 예치금 출금으로 이동하는 링크 만들어줄지? <br />
-                - 가지고 잇는 금액이 있어도 걍 탈퇴진행한다면? 
-                - 그 돈을 관리자가 출금후 빵원 처리 ?
-                - 걍 db에서 바로 0원 처리?
-            2. 탈퇴버튼 클릭 활성화되며 탈퇴완료~!(db에는 남아있음)
-            <hr /> <br />
-            <div>
-                어쩌구,,저쩌구,,, 탈퇴하면 정보도 남아있지만 제공못할거고, 돈도 못돌려받을 거임.        
+        <div className="member-delete-wrap">
+            <div className="title">회원탈퇴</div>
+            <div className="notice">
+                <span>회원탈퇴 전, 유의사항을 확인해 주시기 바랍니다.</span>
+                <span>- 회원탈퇴 시 회원전용 웹 서비스 이용이 불가합니다.</span>
+                <span>- 거래정보가 있는 경우, 전자상거래 등에서의 소비자 보호에 관한 법률에 따라 계약 또는 청약철회에 관한 기록, 대금결제 및 재화 등의  &nbsp;&nbsp;공급에 관한 기록은 5년동안 보존됩니다.</span>
+                <span>- 보유하셨던 금액은 탈퇴와 함께 삭제되며 환불되지 않습니다.</span>
+                <span>- 회원탈퇴 후 서비스에 입력하신 댓글은 삭제되지 않으며, 회원정보 삭제로 인해 작성자 본인을 확인할 수 없어 편집 및 삭제처리가 &nbsp;&nbsp;원천적으로 불가능 합니다.
+                상품문의 및 후기, 댓글 삭제를 원하시는 경우에는 먼저 댓글을 삭제하신 후 탈퇴를 신청하시기 바랍니다.</span>
+                <span>- 이미 결제가 완료된 건은 탈퇴로 취소되지 않습니다.</span>
             </div>
-            <hr /> <br />
-            <div>
-                현재 너의 토탈 잔액 : <span>{mainMember.totalMoney} 원</span>
+            <div className="notice-agree">
+             <input type="checkbox" checked={isAgreed} onChange={chkAgree}/> 상기 회원탈퇴 시 처리사항 안내를 확인하였음에 동의합니다.
             </div>
-            <br />
-            <div>
-                <input type="checkbox" checked={isAgreed} onChange={chkAgree}/> 동의할게!
+            <div className="money-info">
+                <div>
+                    <div>보유금액</div>
+                    <div>{mainMember.totalMoney} 원</div>
+                </div>
+                <div>
+                    <div>출금 진행중인 금액</div>
+                    <div>원</div>
+                </div>
             </div>
-            <br />
-            <div >
-                비밀번호 : <input type='password' value={member.memberPw} onChange={chgPw} disabled={isAuth} /> 
-                <button type='button' onClick={chkPw} disabled={isAuth}>확인</button>
+            <div className="delete-agree">
+                <div>회원님의 이름과 계정 및 비밀번호를 확인 합니다.</div>
+                <div className="member-info">
+                    <div className="title">
+                        <div>이름 : </div>
+                        <div>{mainMember.memberName}</div>
+                    </div>
+                    <div className="title">
+                        <div>아이디 : </div>
+                        <div>{mainMember.memberId}</div>
+                    </div>
+                    <div>
+                        <div>비밀번호 : </div>
+                        <input type='password' value={member.memberPw} onChange={chgPw} disabled={isAuth} /> 
+                        <button type='button' onClick={chkPw} disabled={isAuth}>본인확인</button>
+                    </div>
+                </div>
             </div>
             {
-        
-            <div>
-                <button type="button" onClick={deleteMember} disabled={!isAgreed || !isAuth}>탈퇴고고</button>
+            <div className="btn">
+                <button type="button" onClick={deleteMember} disabled={!isAgreed || !isAuth}>탈퇴하기</button>
             </div>
-            
-            
             }
         </div>     
     )

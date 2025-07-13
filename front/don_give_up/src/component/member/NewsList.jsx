@@ -71,16 +71,6 @@ export default function NewsList(){
     }
         */
    
-    
-    /*
-    const [newsList, setNewsList] = useState([
-        {title: '제목1', content: '내용1', date: '2025-06-30', sender: '운영자'},
-        {title: '제목2', content: '내용2', date: '2025-06-30', sender: '운영자'},
-        {title: '제목3', content: '내용3', date: '2025-06-30', sender: '운영자'},
-        {title: '제목4', content: '내용4', date: '2025-06-30', sender: '운영자'},
-        {title: '제목5', content: '내용5', date: '2025-06-30', sender: '운영자'}
-    ]);
-    */
 
     const [newsList, setNewsList] = useState([]);
     //const [isNewsRead, setIsNewsRead] = useState(false); // 소식 읽었는지 여부 (초기값 : false / 읽을 경우 true로 변경)
@@ -89,23 +79,25 @@ export default function NewsList(){
 
     return (
         <div className='news-wrap'>
-            <div className="myNews-title">
+            <div className="mynews-title">
                 <span>내 소식</span>
             </div>
             <div className="myNews-mid">
                 <span></span>
             </div>
-            <div className="newsList-wrap" >
                 {
                     Array.isArray(newsList) && newsList.length>0
                     ?
                     newsList.map(function(news, index){
-                        return <News key={"news" + index} news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
+                        return  <div className="newsList-wrap" >
+                                    <News key={"news" + index} news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
+                                </div>
                     })
                     :
-                    <p>새로운 소식이 없습니다.</p>
+                    <div className="no-news-wrap">
+                        <p>새로운 소식이 없습니다.</p>
+                    </div>
                 }
-            </div>
         </div>
     )
 }
