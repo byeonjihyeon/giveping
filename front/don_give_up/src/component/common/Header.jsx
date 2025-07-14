@@ -7,6 +7,7 @@ import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import DotBadge from "./DotBadge";
 
+
 //헤더 JSX
 export default function Header(){
 
@@ -120,10 +121,10 @@ function MainNavi(){
     return (
         <ul className="main-menu">
             <li>
-                <Link to="#">사업 소개</Link>
+                <Link to="/companyIntroduction">사업 소개</Link>
             </li>
             <li>
-                <Link to="#">후원 단체</Link>
+                <Link to="/organization/list">후원 단체</Link>
             </li>
             <li>
                 <Link to="/biz/list">기부 사업</Link>

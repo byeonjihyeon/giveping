@@ -74,7 +74,7 @@ export default function OrgManage(){
     return (
         <>
             <div className="page-title">단체 관리</div>
-             <div className="org">
+             <div className="two-nav">
             <ul>
                  <li>
                     <button onClick={join}>가입신청</button>
@@ -175,7 +175,7 @@ function Org(props) {
             <td>{org.orgName}</td>
             <td>{org.orgEnrollDate.substring(0,10)}</td>
             <td>
-                <button onClick={handleOpen}>보기</button>
+                <button className="show" onClick={handleOpen}>보기</button>
             </td>
             <td> 
                 <Box sx={{ minWidth: 120 }}>

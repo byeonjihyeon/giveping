@@ -51,7 +51,7 @@ export default function ReportManage(){
                 </thead>
                 <tbody>
                    {reportList.map(function(report, index){
-                        return <BoardItem key={"report"+index} report={report} reportList={reportList} setReportList={setReportList} />
+                        return <Report key={"report"+index} report={report} reportList={reportList} setReportList={setReportList} />
                    })}
                 </tbody>
             </table>
@@ -63,7 +63,7 @@ export default function ReportManage(){
 }
 
 //게시글 1개
-function BoardItem(props) {
+function Report(props) {
     const report = props.report;
     const reportList = props.reportList;
     const setReportList = props.setReportList;

@@ -33,6 +33,12 @@ public class AdminOrg {
 	private String bizName;
 	private String bizEnd;
 	private int payoutStatus;
-	
 	private List<AdminBiz> bizList;
+	private String orgThumbPath;
+	private String orgCtg;
+	
+	
+	
+	//단체소개 시 필요한 변수
+	
 }

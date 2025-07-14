@@ -62,7 +62,7 @@ export default function RefundManage(){
     return (
         <>
             <div className="page-title">환불 신청 관리</div>
-        <div className="refund-nav">
+        <div className="two-nav">
             <ul>
                  <li>
                     <button onClick={() =>{ setShowType("request"); setReqPage(1);}}>환불신청</button>
@@ -89,7 +89,7 @@ export default function RefundManage(){
                 <tbody>
                     
                    {refundList.map(function(refund, index){
-                        return <BoardItem key={"refund"+index} showType={showType} refund={refund} refundList={refundList} setRefundList={setRefundList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
+                        return <Refund key={"refund"+index} showType={showType} refund={refund} refundList={refundList} setRefundList={setRefundList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
                     
                    })}
                   
@@ -103,7 +103,7 @@ export default function RefundManage(){
 
 }
 
-function BoardItem(props) {
+function Refund(props) {
     const refund = props.refund;
     
     const refundList = props.refundList;

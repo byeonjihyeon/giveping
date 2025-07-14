@@ -110,4 +110,10 @@ public interface OrgDao {
 	//승인된 최근 기부 사업 리스트 5개 조회
 	ArrayList<Biz> selectCurrentBizList(int orgNo);
 
+    // 단체 전체 갯수 
+	int selectOrgCount();
+	//단체 목록 조회 (후원단체 메뉴 눌렀을 때 보이는 단체 목록)
+	ArrayList<Org> selectOrgList(int reqPage);
+ 
+
 }

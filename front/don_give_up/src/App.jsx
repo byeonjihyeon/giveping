@@ -16,6 +16,8 @@ import JoinMember from './component/join/JoinMember';
 import JoinOrg from './component/join/JoinOrg';
 import JoinCategory from './component/join/JoinCategory';
 import SearchIdPw from './component/common/SearchIdPw';
+import CompanyIntroduction from './component/admin/CompanyIntro';
+import Organization from'./component/org/OrgList';
 
 
 function App() {
@@ -50,6 +52,8 @@ function App() {
             <Route path='/admin/*' element={<AdminMain />} />
             <Route path="/org/*" element={<OrgMain/>}/>
             <Route path="/search/:type" element={<SearchIdPw/>}/>
+            <Route path='/companyIntroduction' element={<CompanyIntroduction/>}/>
+            <Route path='/organization/*' element={<Organization/>}/>
           </Routes>
         </main>
       <Footer/>
