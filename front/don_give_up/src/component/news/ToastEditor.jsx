@@ -9,7 +9,7 @@ import createInstance from '../../axios/Interceptor';
     const setNewsContent = props.setNewsContent;
     const type=props.type; // 등록 : 0 ,수정 : 1
     //기부 사업 등록에 필요한 변수
-    const donateBiz = props.donateBiz;
+    const donateBiz = props.donateBiz ? props.donateBiz : "";
     const setDonateBiz = props.setDonateBiz;
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
