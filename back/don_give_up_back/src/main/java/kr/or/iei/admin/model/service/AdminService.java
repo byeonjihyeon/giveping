@@ -20,7 +20,7 @@ import kr.or.iei.admin.model.dto.AdminReport;
 import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.MailUtil;
 import kr.or.iei.common.util.PageUtil;
-import kr.or.iei.member.model.dto.Member;
+
 
 @Service
 public class AdminService {
@@ -34,9 +34,9 @@ public class AdminService {
 	@Autowired
   private MailUtil mailUtil;
 
-	//개인 회원리스트 조회
+	// 회원리스트 조회
 	public HashMap<String, Object> selectMemberList(int reqPage, String searchType, String keyword) {
-		 int viewCnt = 10;          // 한 페이지당 보여줄 행 갯수 
+		    int viewCnt = 10;          // 한 페이지당 보여줄 행 갯수 
 		    int pageNaviSize = 5;      // 페이지 네비게이션 길이
 
 		    // 검색 조건 맵 생성
@@ -66,19 +66,19 @@ public class AdminService {
 		    memberMap.put("keyword", keyword);
 
 		    return memberMap;
-	}
+	 }
 	
 	// 회원 등급 변경
 	@Transactional
 	public int changeMemberLevel(AdminMember member) {
 		
-		return dao.changeMemberLevel(member);
-	}
+		  return dao.changeMemberLevel(member);
+   }
 
 	
 	// 단체 회원리스트 조회
 	public HashMap<String, Object> selectOrgList(int reqPage) {
-		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
+		int viewCnt = 10;        //한 페이지당 보여줄 게시글 갯수 
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
 		int totalCount =dao.selectOrgCount();
 		
@@ -93,6 +93,7 @@ public class AdminService {
 		return orgMap;
 		
 	}
+	
 	//단체회원 상태 변경
 	@Transactional
 	public int updateOrgStatus(AdminOrg org) {
@@ -113,7 +114,9 @@ public class AdminService {
 		HashMap<String,Object>bizMap =new HashMap<String,Object>();
 	    bizMap.put("bizList", bizList);
 		bizMap.put("pageInfo", pageInfo);
-		return bizMap;
+	
+	 return bizMap;
+	
 	}
 	
 	//기부사업 상태변경
@@ -136,9 +139,7 @@ public class AdminService {
 		    	  String to = bizStatus.getOrgEmail();
 		          String bizName = bizStatus.getBizName();
 		          String orgName = bizStatus.getOrgName();
-		          
-		        //Biz biz = dao.selectBizList(biz.getBizNo()); // 단체 이메일 필요
-		 
+
 		        System.out.println(to);
 		        System.out.println(bizName);
 		        System.out.println(orgName);
@@ -146,7 +147,7 @@ public class AdminService {
 		        mailUtil.sendApproveMail(to, bizName, orgName);
 		    }
 
-		    return result;
+		return result;
 
 	    }
 	
@@ -155,7 +156,6 @@ public class AdminService {
 		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
 		int totalCount =dao.selectRefundCount(showType);
-		System.out.println("totalCount: " +totalCount);
 		
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
 		
@@ -165,16 +165,16 @@ public class AdminService {
 		    paramMap.put("showType", showType);
 		
 		ArrayList<AdminRefund> refundList =dao.selectRefundList(paramMap);
-		System.out.println("refundList: " +refundList);
 		
 		HashMap<String,Object> refundMap =new HashMap<String,Object>();
-	    refundMap.put("refundList", refundList);   
-	    refundMap.put("pageInfo", pageInfo);
-	    refundMap.put("showType", showType);
-	    refundMap.put("start", pageInfo.getStart());
-	    refundMap.put("end", pageInfo.getEnd());
-	    
-		return refundMap;
+		    refundMap.put("refundList", refundList);   
+		    refundMap.put("pageInfo", pageInfo);
+		    refundMap.put("showType", showType);
+		    refundMap.put("start", pageInfo.getStart());
+		    refundMap.put("end", pageInfo.getEnd());
+		    
+	  return refundMap;
+	
 	}
 	
 	//환불 상태 변경
@@ -196,9 +196,11 @@ public class AdminService {
 		
 		HashMap<String,Object> reportMap =new HashMap<String,Object>();
 	    reportMap.put("reportList", reportList);   
+	 
 	    reportMap.put("pageInfo", pageInfo);
 	    
-		return reportMap;
+	return reportMap;
+	
 	}
 
 	//탈퇴 신청 관리 (단체)
@@ -206,38 +208,71 @@ public class AdminService {
 		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
 		int totalCount =dao.selectDeleteCount(showType);
+		System.out.println("totcnt:"+ totalCount);	
 		
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
 		
 		Map<String, Object> paramMap = new HashMap<>();
-	    paramMap.put("start", pageInfo.getStart());
-	    paramMap.put("end", pageInfo.getEnd());
-	    paramMap.put("showType", showType);
-	      
-	
+		    paramMap.put("start", pageInfo.getStart());
+		    paramMap.put("end", pageInfo.getEnd());
+		    paramMap.put("showType", showType);
+		    System.out.println("showT="+ showType);
+		  
 		ArrayList<AdminOrg> deleteList =dao.selectDeleteList(paramMap);
-		
+		System.out.println("deleteList" +deleteList );
 		
 		for (AdminOrg org : deleteList) {
 			List<AdminBiz> bizList = dao.selectOneOrgBizList(org.getOrgNo());
-			org.setBizList(bizList);  // ← Org 클래스에 setBizList(List<DonateBiz>) 있어야 함
-			System.out.println("org:" +org);
+			org.setBizList(bizList);  
+			
 		}
 	    
 		
 		HashMap<String,Object> deleteMap =new HashMap<String,Object>();
-	    deleteMap.put("deleteList", deleteList);   
-	    deleteMap.put("pageInfo", pageInfo);
-	    deleteMap.put("showType", showType);
-	    deleteMap.put("start", pageInfo.getStart());
-	    deleteMap.put("end", pageInfo.getEnd());
+		    deleteMap.put("deleteList", deleteList);   
+		    deleteMap.put("pageInfo", pageInfo);
+		    deleteMap.put("showType", showType);
+		    deleteMap.put("start", pageInfo.getStart());
+		    deleteMap.put("end", pageInfo.getEnd());
 	    
 		return deleteMap;
 	}
+	
+	//탈퇴상태 변경
+		@Transactional
+		public int updateDelStatus(AdminOrg org) {
+	        		
+			   AdminOrg orgStatus = dao.selectOrgStatus(org.getOrgNo());
+
+			   int currentStatus = orgStatus.getOrgStatus();
+	               System.out.println("현재상태 :" + currentStatus );
+	           
+			    int result = dao.updateDelStatus(org);
+			    
+			    System.out.println("orgStatus:"+org.getOrgStatus());
+			    
+			    
+			    if (result > 0 && currentStatus == 3 && org.getOrgStatus() == 4) {
+		
+			    	  String to = orgStatus.getOrgEmail();
+			          String orgName = orgStatus.getOrgName();
+			          
+			        //Biz biz = dao.selectBizList(biz.getBizNo()); // 단체 이메일 필요
+			 
+			        System.out.println(to);
+			        System.out.println(orgName);
+			        
+			        mailUtil.sendDelOrgMail(to, orgName);
+			    }
+
+			    return result;
+
+		    }
+
 
 	//관리자 송금 내역 조회
 	public HashMap<String, Object> selectPayoutList(int reqPage, String showType) {
-		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
+		int viewCnt = 10;        //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
 		int totalCount =dao.selectPayoutCount(showType);
 		
@@ -251,12 +286,12 @@ public class AdminService {
 		ArrayList<AdminPayout> payoutList =dao.selectPayoutList(paramMap);
 		
 		HashMap<String,Object> payoutMap =new HashMap<String,Object>();
-		payoutMap.put("payoutList", payoutList);   
-		payoutMap.put("pageInfo", pageInfo);
-		payoutMap.put("showType", showType);
-	    payoutMap.put("start", pageInfo.getStart());
-	    payoutMap.put("end", pageInfo.getEnd());
-	    
+			payoutMap.put("payoutList", payoutList);   
+			payoutMap.put("pageInfo", pageInfo);
+			payoutMap.put("showType", showType);
+		    payoutMap.put("start", pageInfo.getStart());
+		    payoutMap.put("end", pageInfo.getEnd());
+		    
 		return payoutMap;
 	}
  
@@ -266,40 +301,7 @@ public class AdminService {
 		return dao.updatePayoutStatus(adminPayout);
 	}
     
-	//탈퇴상태 변경
-	@Transactional
-	public int updateDelStatus(AdminOrg org) {
-        		
-		   AdminOrg orgStatus = dao.selectOrgStatus(org.getOrgNo());
-		   System.out.println("org:" + org.getOrgNo());
-		   
-		   System.out.println("selectOrgStatus 결과: " + orgStatus);  // null이면 문제 확정
-
-		   int currentStatus = orgStatus.getOrgStatus();
-               System.out.println("현재상태 :" + currentStatus );
-           
-		    int result = dao.updateDelStatus(org);
-		    
-		    System.out.println("orgStatus:"+org.getOrgStatus());
-		    
-		    
-		    if (result > 0 && currentStatus == 3 && org.getOrgStatus() == 4) {
-		    	System.out.println("currentStatus:" + currentStatus);
-		    	  String to = orgStatus.getOrgEmail();
-		          String orgName = orgStatus.getOrgName();
-		          
-		        //Biz biz = dao.selectBizList(biz.getBizNo()); // 단체 이메일 필요
-		 
-		        System.out.println(to);
-		        System.out.println(orgName);
-		        
-		        mailUtil.sendDelOrgMail(to, orgName);
-		    }
-
-		    return result;
-
-	    }
-
+	
 	}
 
 

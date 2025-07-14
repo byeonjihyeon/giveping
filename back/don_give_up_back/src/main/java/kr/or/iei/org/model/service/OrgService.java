@@ -364,5 +364,35 @@ public class OrgService {
 		return orgMap;
 	}
 
+	//단체 목록 페이지
+	public HashMap<String, Object> selectOrgList(int reqPage) {
+		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
+		int pageNaviSize = 5;    //페이지 네비게이션 길이
+		int totalCount =dao.selectOrgCount();
+		
+		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
+		
+		  HashMap<String, Object> param = new HashMap<String, Object>();
+		  param.put("start", pageInfo.getStart());
+		  param.put("end", pageInfo.getEnd());
+		
+		ArrayList<Org> orgList = dao.selectOrgList(param);
+		System.out.println("단체목록"+ orgList);
+		
+	    for (Org org : orgList) {
+	        List<String> categoryList = dao.selectOrgCategory(org.getOrgNo());
+	        org.setCategoryList(categoryList); 
+	    }
+		HashMap<String, Object> orgMap = new HashMap<String, Object>();
+		orgMap.put("orgList", orgList);
+		orgMap.put("pageInfo", pageInfo);
+		
+	
+		System.out.println("단체목록"+ orgList);
+	    
+		return orgMap;
+	}
+
 		
 }
+

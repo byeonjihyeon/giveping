@@ -102,6 +102,7 @@ export default function BizList() {
 
     function srchSubmit() {
     setIsSearching(true);
+    setCategories([]); // 카테고리 초기화
     setReqPage(1);  // 검색은 첫 페이지부터
     fetchSearchData(1);
     }
@@ -126,31 +127,49 @@ export default function BizList() {
 
     return (
         <section className="section board-list">
-            <div className="page-title">기부 사업</div>
+                <div className="page-title">기부 사업</div>
+                <div className="filter-search-wrapper">
+                <div className="category-filter">
+                    {Object.entries(donateCategoryMap).map(([code, label]) => (
+                        <button
+                        key={code}
+                        style={{
+                            backgroundColor: categories.includes(code) ? '#007bff' : '#f0f0f0',
+                            color: categories.includes(code) ? 'white' : '#333',
+                            border: '1px solid',
+                            borderColor: categories.includes(code) ? '#0056b3' : '#ccc',
+                            padding: '10px 20px',
+                            margin: '0 6px 6px 0',
+                            cursor: 'pointer',
+                            borderRadius: '30px',
+                            fontWeight: categories.includes(code) ? 'bold' : 'normal',
+                            fontSize: '1rem',
+                            boxShadow: categories.includes(code) ? '0 0 8px rgba(0,123,255,0.6)' : 'none',
+                            transition: 'background-color 0.3s ease, color 0.3s ease',
+                            minWidth: 'center',
+                        }}
+                        onClick={() => toggleCategory(code)}
+                        >
+                        {label}
+                        </button>
 
-            <div className="category-filter">
-                {Object.entries(donateCategoryMap).map(([code, label]) => (
-                    <button
-                    key={code}
-                    style={{
-                        backgroundColor: categories.includes(code) ? '#007bff' : '#f0f0f0',
-                        color: categories.includes(code) ? 'white' : '#333',
-                        border: '1px solid',
-                        borderColor: categories.includes(code) ? '#0056b3' : '#ccc',
-                        padding: '6px 14px',
-                        margin: '0 6px 6px 0',
-                        cursor: 'pointer',
-                        borderRadius: '4px',
-                        fontWeight: categories.includes(code) ? 'bold' : 'normal',
-                        boxShadow: categories.includes(code) ? '0 0 8px rgba(0,123,255,0.6)' : 'none',
-                        transition: 'background-color 0.3s ease, color 0.3s ease',
-                    }}
-                    onClick={() => toggleCategory(code)}
-                    >
-                    {label}
-                    </button>
+                    ))}
+                </div>
 
-                ))}
+                <div className="search-box">
+                    <select name="searchType" id="searchType" value={searchType} onChange={handleSearchTypeChange}>
+                        <option value="bizTitle">사업명</option>
+                        <option value="orgName">단체명</option>
+                    </select>
+                    <input
+                        type="text"
+                        name={searchType === "bizTitle" ? "bizTitle" : "orgName"}
+                        placeholder={searchType === "bizTitle" ? "기부 사업명을 입력하세요" : "단체명을 입력하세요"}
+                        value={searchType === "bizTitle" ? keyWord.bizTitle : keyWord.orgName}
+                        onChange={handleInputChange}
+                    />
+                    <input type="button" value="검색" onClick={srchSubmit} />
+                </div>
             </div>
 
             <div className="board-list-wrap">
@@ -164,20 +183,7 @@ export default function BizList() {
             <div className="board-paging-wrap">
                 <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
             </div>
-
-            <div className="search-box">
-                <select value={searchType} onChange={handleSearchTypeChange}>
-                    <option value="bizTitle">기부 사업명</option>
-                    <option value="orgName">단체명</option>
-                </select>
-                <input
-                    type="text"
-                    placeholder={searchType === "bizTitle" ? "기부 사업명을 입력하세요" : "단체명을 입력하세요"}
-                    value={searchType === "bizTitle" ? keyWord.bizTitle : keyWord.orgName}
-                    onChange={handleInputChange}
-                />
-                <input type="button" value="검색" onClick={srchSubmit} />
-            </div>
+            
         </section>
     );
 }

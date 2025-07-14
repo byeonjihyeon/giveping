@@ -30,6 +30,8 @@ public class Org {
 	private String orgUrl;			//단체 홈페이지 url
 	
 	
+	// 단체 목록 조회시 필요한 변수
+	private String orgCtg;
 	private List<String> categoryList;	//주요 카테고리 리스트
 	private List<Biz> bizList;			//기부사업 리스트
 }

@@ -1,12 +1,12 @@
 
-.refund-nav{
+.two-nav{
   display: flex;
   justify-content: flex-end; /* 오른쪽 정렬 */
   gap: 20px;                  /* 버튼 사이 간격 */
   padding: 10px;
 }
 
-.refund-nav>li{
+.two-nav>li{
     list-style: none;
     padding: 0;
     display: flex;
@@ -16,13 +16,13 @@
     margin-right: 10px;
    
 }
-.refund-nav>ul{
+.two-nav>ul{
     display: flex;
     text-align: center;
     margin-right: 10px;
     gap: 10px;
 }
-.refund-nav button{
+.two-nav button{
     all:unset;
     appearance: none;
     background-color: #456882;
@@ -38,10 +38,10 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
     
 }
-.refund-nav > li > button:hover {
+.two-nav > li > button:hover {
     background-color: rgb(204, 204, 238);
 }
-.refund-nav li:first-child {
+.two-nav li:first-child {
     margin-left: -10px;  /* gap의 반대 효과 */
 }
 .detail{

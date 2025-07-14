@@ -153,7 +153,7 @@
      where biz_no = #{bizNo}
     </update>
     
-    <resultMap id="bizResultMap" type="Biz">
+    <resultMap id="bizResultMap" type="AdminBiz">
 	  <result property="bizStatus" column="BIZ_STATUS"/>
 	  <result property="orgName" column="ORG_NAME"/>
 	  <result property="orgEmail" column="ORG_EMAIL"/>
@@ -299,7 +299,7 @@
 	
 	
    <!--  탈퇴 요청 단체의 정보를 열람하기 위해 필요한 resultMap -->
-<resultMap id="deleteMap" type="Org">
+<resultMap id="deleteMap" type="AdminOrg">
   <id property="orgNo" column="orgNo"/>
   <result property="orgId" column="orgId"/>
   <result property="orgName" column="orgName"/>
@@ -360,10 +360,13 @@
     
     <!-- 한 단체의 기부사업 리스트 조회(탈퇴 요청 단체의 사업 정보 조회) -->
     <select id= 'selectOneOrgBizList' parameterType='_int' resultType='AdminBiz'>
-     select 
-     biz_name as bizName, biz_end as bizEnd, payout_status as payoutStatus
+     select
+       biz_name as bizName, 
+       biz_end as bizEnd, 
+       MAX(h.payout_status) as payoutStatus
      FROM tbl_donate_biz b join tbl_admin_payout_history h on b.biz_no=h.biz_no
      WHERE org_no = #{orgNo}
+     GROUP BY b.biz_name, b.biz_end
      ORDER BY biz_end   
     </select>
     
@@ -376,7 +379,7 @@
     </update>
     
  <!-- 탈퇴처리된 단체에 보낼 메일에 쓰일 정보들 -->
-    <resultMap id="DelOrgResultMap" type="Org">
+    <resultMap id="DelOrgResultMap" type="AdminOrg">
 	  <result property="orgName" column="orgName"/>
 	  <result property="orgEmail" column="orgEmail"/>
 	  <result property="orgStatus" column="orgStatus"/>

@@ -195,7 +195,7 @@ function Biz(props){
             <td>{biz.bizGoal != null ? biz.bizGoal.toLocaleString("ko-KR") : 0}원</td>
             <td>{biz.donateMoney != null ? biz.donateMoney.toLocaleString("ko-KR") : 0}원</td>
             <td>{biz.payoutYN == 1 ? "O" : "X"}</td>
-            <td><Button variant="contained" type="button" onClick={clickBtn}>상세 페이지</Button></td>
+            <td><Button variant="contained" type="button" onClick={clickBtn} id="detail-btn">상세 페이지</Button></td>
         </tr>
     )
 }

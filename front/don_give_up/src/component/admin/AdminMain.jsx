@@ -9,6 +9,7 @@ import RefundManage from'./RefundManage.jsx';
 import ReportManage from'./ReportManage.jsx';
 import DeleteManage from'./DeleteManage.jsx';
 import PayoutManage from'./PayoutManage.jsx';
+import CompanyIntroduction from "./CompanyIntro.jsx";
 import "./admin.css";
 
 
@@ -57,9 +58,9 @@ export default function AdminMain(){
                         <Route path="bizManage" element={<BizManage />} />
                         <Route path="refundManage" element={<RefundManage />}  />
                         <Route path="reportManage" element={<ReportManage />}  />
-                         <Route path="deleteManage" element={<DeleteManage />}  />
-                         <Route path="payoutManage" element={<PayoutManage />}  />
-                         
+                        <Route path="deleteManage" element={<DeleteManage />}  />
+                        <Route path="payoutManage" element={<PayoutManage />}  />
+                        <Route path="companyIntroduce" element={<CompanyIntroduction/>}/>
                     </Routes>
                 </section>
             </div>

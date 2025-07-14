@@ -556,6 +556,7 @@
 	                     biz_donate_end as bizDonateEnd
 	               from tbl_donate_biz d
 	      		  where sysdate &lt; biz_donate_end
+	      		    and biz_status = 1
 	               order by bizNo) a   
 	        ) a 
 	<if test="list != null and list.size() != 0">        

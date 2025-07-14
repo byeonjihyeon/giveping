@@ -33,6 +33,8 @@ public class Biz {
 	// join 을 위해 선언한 변수
 	private String orgName;	// 사업명
 	private String donateCtg;	// 기부 카테고리명
+	private String orgIntroduce; // 단체 소개
+	private String orgThumbPath;	 // 단체 프로필 사진
 	
 	// 기부 사업 게시글에 대한 파일 정보 저장 변수 
 	private List<BizFile> fileList;

@@ -78,17 +78,20 @@ export default function OrgNewsList(){
     //const [isNewsRead, setIsNewsRead] = useState(false); // 소식 읽었는지 여부 (초기값 : false / 읽을 경우 true로 변경)
 
     return (
-         <div className="newsList-wrap" >
-            {
-                Array.isArray(newsList) && newsList.length>0
-                ?
-                newsList.map(function(news, index){
-                     return <News key={"news" + index} news={news}  setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginOrg={loginOrg}/>   
-                })
-                :
-                    <p>새로운 소식이 없습니다.</p>
-            }
+        <>
+        <h2 className="page-title" style={{marginBottom : "20px"}}>내 소식</h2>
+        <div className="newsList-wrap" >
+        {
+            Array.isArray(newsList) && newsList.length>0
+            ?
+            newsList.map(function(news, index){
+                    return <News key={"news" + index} news={news}  setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginOrg={loginOrg}/>   
+            })
+            :
+                <p>새로운 소식이 없습니다.</p>
+        }
         </div>
+        </>
     )
 }
 

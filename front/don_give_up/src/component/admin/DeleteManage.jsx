@@ -57,7 +57,7 @@ export default function DeleteManage(){
     return (
         <>
             <div className="page-title">탈퇴 신청 관리</div>
-            <div className="delete-nav">
+            <div className="two-nav">
             <ul>
                  <li>
                     <button onClick={() =>{ setShowType("request"); setReqPage(1);}}>탈퇴신청</button>
@@ -74,13 +74,12 @@ export default function DeleteManage(){
                         <th style={{width:"15%"}}>단체명</th>
                         <th style={{width:"15%"}}>상세정보</th>
                         <th style={{width:"15%"}}>기부사업</th>
-                        <th style={{width:"15%"}}>상태</th>
-                      
+                        <th style={{width:"15%"}}>상태</th>    
                     </tr>
                 </thead>
                 <tbody>
                    {deleteList.map(function(org, index){
-                        return <BoardItem key={"org"+index} org={org} setOrg={setOrg} showType={showType} setShowType={setShowType} deleteList={deleteList} setDeleteList={setDeleteList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
+                        return <DelOrg key={"org"+index} org={org} setOrg={setOrg} showType={showType} setShowType={setShowType} deleteList={deleteList} setDeleteList={setDeleteList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
                    })}
                 </tbody>
             </table>
@@ -92,7 +91,7 @@ export default function DeleteManage(){
 }
 
 
-function BoardItem(props) {
+function DelOrg(props) {
     const org = props.org;
     const setOrg =props.setOrg;
     const deleteList = props.deleteList;
