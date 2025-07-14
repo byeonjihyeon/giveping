@@ -1,44 +1,66 @@
 /* 소식 리스트 */
 .board-view-info {
   display: flex;
-  gap: 24px;
-  align-items: flex-start; /* 상단 정렬 */
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.board-view-top {
+    display: flex;
+    padding: 16px;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.board-thumbnail {
+    flex: 0 0 auto;
+    width: 200px;
+}
+
+.board-thumbnail img {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.board-view-preview {
+  display: flex;
+  flex-direction: column;
+  
 }
 
 .board-thumbnail {
   flex-shrink: 0;
-  width: 280px;
-  height: 180px;
+  width: 50%;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .board-thumbnail img {
-  width: 100%;
-  height: 100%;
+  max-width: 390px;
+  height: auto;
+  border-radius: 8px;
   object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
 .board-view-preview {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  width: 50%;         /* 나머지 반을 차지 */
+  box-sizing: border-box;
+  padding-left: 1rem;
 }
 
-/* 제목은 테이블 위에 별도 배치하면 더 보기 좋음 */
+/* 제목은 테이블 위에 별도 배치 */
 .news-title {
-  margin: 0 0 16px 0;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #222;
+  font-size: 3.0rem;
+  font-weight: 600;
+  margin : 0.7rem 0 0.7rem 0
 }
-
-/* 테이블 너비는 100% 유지 */
 .tbl {
-  width: 100%;
-  border-collapse: collapse;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 .tbl th,
@@ -48,19 +70,69 @@
   text-align: left;
 }
 
-/* th 너비 균등 분배 */
 .tbl th {
   background-color: #f9f9f9;
   font-weight: 600;
   width: 16.66%; /* 6개 칸이라 100% / 6 */
 }
 
-/* td 너비도 동일 */
 .tbl td {
-  width: 16.66%;
+  position: relative;
 }
 
-/* 팝업 - 모달 본문 */
+.info-row {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.view-btn-zone {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.bordered-pill {
+  color: #007bff;
+  display: inline-block;
+  padding: 0.5rem 0.5rem;
+  border: 1px solid #007bff;
+  border-radius: 999px;
+  background-color: #f9f9f9;
+
+  width: auto !important;       /* 너비 자동 */
+  min-width: 0 !important;      /* 최소 너비 제한 제거 */
+  max-width: max-content;       /* 글자 길이만큼 최대 너비 */
+  white-space: nowrap;          /* 줄바꿈 방지 */
+}
+
+
+/* 수평 정렬을 위한 컨테이너 */
+.content-orgInfo {
+  display: flex;
+  align-items: center; /* 수직 중앙 정렬 */
+  gap: 0.5rem; /* 이미지와 텍스트 사이 간격 */
+  margin: 0.5rem 0;
+}
+
+/* 관리자 프로필 이미지 */
+.content-orgInfo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 관리자 텍스트 */
+.content-orgInfo-name {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+
+
 .modal-content {
     background-color: #fff;
     padding: 30px;
@@ -90,8 +162,6 @@
 }
 
 /* 댓글 리스트 css */
-
-
 .comment-item {
   display: flex;
   gap: 12px;
@@ -184,16 +254,26 @@
   border-color: #007bff;
 }
 
+/* 버튼 공통 (기존 btn-primary, btn-secondary 가 있을 경우 무시 가능) */
+.btn-primary,
+.btn-secondary {
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 /* 등록 버튼 */
 .btn-primary {
-  padding: 10px 16px;
-  background-color: #007bff;
+   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  border: none;
 }
 
 .comment-submit-btn:hover {
@@ -219,4 +299,163 @@
 .comment-action-text:hover {
   color: #0056b3;
    text-decoration: underline;
+}
+
+/* 소식 메뉴 - 글쓰기 (관리자 전용) */
+.board-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem; /* 썸네일과 오른쪽 영역 사이 간격 */
+}
+
+.board-thumb-wrap {
+  flex-shrink: 0;
+  width: 600px; /* 썸네일 영역 고정폭 지정 가능 */
+}
+
+.board-thumb-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+}
+
+.board-info-group {
+  flex-grow: 1;
+}
+
+.board-info-wrap {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tbl th,
+.tbl td {
+  padding: 8px 12px;
+  vertical-align: middle;
+  text-align: left;
+  font-size: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.tbl th {
+  width: 30%;
+  font-weight: 600;
+  color: #444;
+}
+
+.input-text {
+  width: 100%;
+  padding: 6px 8px;
+  box-sizing: border-box;
+}
+
+.input-item input[type="text"] {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.input-item input[type="text"]:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0,123,255,0.5);
+}
+
+.btn-primary.sm {
+  background-color: #007bff;
+  color: white;
+  padding: 3px 10px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary.sm:hover {
+  background-color: #0056b3;
+}
+
+.org-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 0.5rem;
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.org-list li {
+  margin: 0;
+  padding: 0;
+}
+
+.org-list button {
+  width: 100%;
+  padding: 8px 10px;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #eee;
+}
+
+.org-list button:hover {
+  background-color: #f0f8ff;
+}
+
+.org-list button:focus {
+  outline: none;
+  background-color: #e0f0ff;
+}
+
+.tbl td input[type="text"] {
+  width: calc(100% - 70px);
+  height: 40px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.tbl td .btn-primary.sm {
+  width: 60px;
+  vertical-align: middle;
+  padding: 3px 9px;
+}
+
+/* 단체 조회 버튼 */
+
+.tbl td > .input-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* input과 버튼 사이 간격 */
+}
+
+/* input은 flex-grow로 너비 차지하게 */
+.tbl td > .input-item input[type="text"] {
+  flex-grow: 1;
+  min-width: 0; /* 텍스트가 길어도 줄어들도록 */
+}
+
+/* 버튼은 기본 크기 유지 */
+.btn-primary.sm {
+  flex-shrink: 0;
+  white-space: nowrap;
 }

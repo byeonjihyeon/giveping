@@ -35,41 +35,6 @@ export default function NewsList(){
             });
         }, []);
 
-    // 알림 읽음 처리 함수
-    /*
-    function markAllAsRead(alarmNos){
-        let options={};
-        options.url= serverUrl + '/member/alarm/' + alarmNos.join(',');
-        options.method = "patch";
-
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res.data.resData);
-            
-            // 안 읽은 알림 갯수 reload
-            let options = {};
-            options.url = serverUrl + '/countAlarm';
-            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
-            options.params = { memberNo: loginMember.memberNo };
-            options.method = 'get';
-    
-            axiosInstance(options)
-            .then(function(res){
-                console.log(res.data.resData);
-
-                const count = res.data.resData;
-                if(count > 0){
-                    console.log("안읽은알림갯수 : ", count);
-                    setHasNewAlert(true);
-                    setUnreadAlarmCount(count);    // 결과 unreadAlarmCount 에 set 하기
-                }else{
-                    setHasNewAlert(false);
-                    setUnreadAlarmCount(count);
-                }
-            });
-        });
-    }
-        */
    
 
     const [newsList, setNewsList] = useState([]);

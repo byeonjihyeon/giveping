@@ -246,7 +246,11 @@ function News(props){
                 }
             }
             if (hasSurveyForBiz) {  // 설문조사한 이력 있는 경우 -> alert 창
-            alert('이미 설문조사에 참여했습니다.'); 
+            Swal.fire({
+                        title : '알림',
+                        text : '이미 설문조사에 참여했습니다.',
+                        icon : 'warning'
+                });
             } else {    // 설문조사한 이력 없는 경우 -> 설문조사창으로 이동
             navigate('/biz/view/' + news.bizNo + '?survey=open');
             }
@@ -321,7 +325,11 @@ function Surveys(props){
                 }
             }
             if (hasSurveyForBiz) {  // 설문조사한 이력 있는 경우 -> alert 창 경고
-            alert('이미 설문조사에 참여했습니다.'); 
+            Swal.fire({
+                        title : '알림',
+                        text : '이미 설문조사에 참여했습니다.',
+                        icon : 'warning'
+                });
             } else {    // 설문조사한 이력 없는 경우 -> 설문조사창으로 이동
             navigate('/biz/view/' + survey.bizNo + '?survey=open');
             }
