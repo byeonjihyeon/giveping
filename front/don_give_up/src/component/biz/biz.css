@@ -146,6 +146,7 @@ ul.posting-wrap.grid-3x4 {
     height: 240px;
     background: #f1f1f1 url('/images/default_img.png') center/cover no-repeat;
     display: flex;
+    flex-direction: column;
     align-items: flex-end;
     padding: 1rem;
     border-radius: 12px;
@@ -176,6 +177,56 @@ ul.posting-wrap.grid-3x4 {
 .bizView-banner-info strong {
     font-size: 2.5rem;
 }
+
+/* 진행률 바 */
+.bizView-banner-wrap {
+  padding: 40px 20px;
+  color: white;
+  text-align: center;
+}
+
+.bizView-banner-info {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  padding: 20px 30px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* 진행률 컨테이너 */
+.bizView-progress-container {
+  width: 900px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  border-radius: 10px;
+}
+
+/* 진행률 바 */
+.bizView-progress-bar {
+  width: 100%;
+  height: 16px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.bizView-progress-fill {
+  height: 100%;
+  background-color: #ffd700; /* 노란색 진행 바 */
+  width: 0%;
+  transition: width 0.5s ease-in-out;
+}
+
+/* 통계 텍스트 */
+.bizView-donate-stats {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
 
 /* ===== 탭 영역 ===== */
 .tabArea-wrap {
@@ -302,7 +353,7 @@ ul.posting-wrap.grid-3x4 {
 .content-orgInfo-introduce {
   font-size: 0.9rem;
   color: #666;
-  width: 76%;
+  width: 80%;
 }
 
 /* planTab (모금액 사용 계획)*/
@@ -553,4 +604,118 @@ ul.posting-wrap.grid-3x4 {
   font-size: 0.95rem;
 }
 
+/* 기부 사업 정보 수정 */
+.biz-form {
+  border: 2px solid #ccc;   /* 테두리 색과 두께 설정 */
+  border-radius: 10px;      /* 테두리 둥글게 (선택 사항) */
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.form-section {
+  margin-bottom: 24px;
+}
+
+.form-section h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.date-range {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.date-group {
+  display: flex;
+  gap: 12px;
+}
+
+.input-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-block label {
+  margin-bottom: 4px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.input-text {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.thumb-preview {
+  width: 400px;
+  height: auto;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.btn-add {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 6px 12px;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-add:hover {
+  background-color: #e0e0e0;
+}
+
+.goal-amount {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.submit-section {
+  text-align: center;
+}
+
+.btn-submit {
+  padding: 10px 24px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #303f9f;
+}
+
+/* 사용계획 리스트 */
+.bizplan-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-delete {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
 
