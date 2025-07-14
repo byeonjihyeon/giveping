@@ -1,6 +1,7 @@
 package kr.or.iei.news.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,7 +17,7 @@ public interface NewsDao {
 
 	int selectNewsCount();
 
-	ArrayList<News> selectNewsList(PageInfo pageInfo);
+	ArrayList<News> selectNewsList(HashMap<String, Object> param);
 
 	News selectOneNews(int newsNo);
 
