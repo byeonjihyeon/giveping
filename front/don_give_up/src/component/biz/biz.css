@@ -1,4 +1,12 @@
-/* ✅ 3열 4행 그리드 설정 (그대로 유지) */
+/* 제목 */
+.page-title{
+  font-size: 2rem;      /* 글씨 크기 크게 */
+  font-weight: 700;     /* 두껍게 (bold) */
+  margin-bottom: 1rem;  /* 아래 여백 추가 */
+}
+
+
+/* 3열 4행 그리드 (biz item) */
 ul.posting-wrap.grid-3x4 {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3열 */
@@ -8,6 +16,47 @@ ul.posting-wrap.grid-3x4 {
     list-style: none;
     cursor: pointer;
 }
+
+/* 카테고리, 검색창 */
+.filter-search-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.category-filter {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.search-box {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.search-box select,
+.search-box input[type="text"],
+.search-box input[type="button"] {
+  height: 32px;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.search-box input[type="button"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
 
 /* ✅ 기부자 카드 스타일 */
 .member-card {
@@ -87,13 +136,6 @@ ul.posting-wrap.grid-3x4 {
     transition: width 0.3s ease;
 }
 
-/* 기부사업 상세페이지 백그라운드 이미지 */
-/*
-.bizView-banner-wrap{
-    background-image: url("/images/default_img.png");
-
-}
-    */
 
 /* 기부사업 상세 페이지 */
 /* 전체 섹션 기본 여백 */
@@ -101,7 +143,7 @@ ul.posting-wrap.grid-3x4 {
 /* ===== 썸네일, 디데이, 제목 ===== */
 .bizView-banner-wrap {
     position: relative;
-    height: 200px;
+    height: 240px;
     background: #f1f1f1 url('/images/default_img.png') center/cover no-repeat;
     display: flex;
     align-items: flex-end;
@@ -132,7 +174,7 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .bizView-banner-info strong {
-    font-size: 1.5rem;
+    font-size: 2.5rem;
 }
 
 /* ===== 탭 영역 ===== */
@@ -188,6 +230,8 @@ ul.posting-wrap.grid-3x4 {
 
 /* 기부 카테고리 wrap */
 .content-tag-wrap {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 1rem;
     justify-content: center;
     align-items: center;
@@ -198,10 +242,11 @@ ul.posting-wrap.grid-3x4 {
     display: inline-block;
     background-color: #eef;
     color: #3366cc;
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     margin-right: 0.5rem;
-    padding: 0.3rem 0.7rem;
+    padding: 0.6rem 1.2rem;
     border-radius: 6px;
+    font-weight: 600; 
 }
 
 .content-bizContent {
@@ -237,17 +282,27 @@ ul.posting-wrap.grid-3x4 {
     gap: 0.5rem;
 }
 
+.content-orgInfo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
 .content-orgInfo-img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: url('/images/default_img.png') center/cover no-repeat;
     display: inline-block;
 }
 
 .content-orgInfo-name {
     font-size: 1rem;
     font-weight: 500;
+}
+
+.content-orgInfo-introduce {
+  font-size: 0.9rem;
+  color: #666;
+  width: 76%;
 }
 
 /* planTab (모금액 사용 계획)*/
@@ -258,7 +313,9 @@ ul.posting-wrap.grid-3x4 {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.content-plan-title {
+.content-plan-title,
+.donateMember-title,
+.file-title {
     font-size: 1.3rem;
     font-weight: bold;
     color: #333;
@@ -393,5 +450,107 @@ ul.posting-wrap.grid-3x4 {
   background-color: #888;
 }
 
+/* 첨부 파일 리스트 */
+.file-list,
+.file-list-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-item, .board-file {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+}
+
+.file-name {
+  font-size: 0.95rem;
+  flex: 1;
+  word-break: break-all;
+}
+
+.material-icons.file-icon {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.material-icons.del-file-icon {
+  color: #dc3545;
+  cursor: pointer;
+}
+
+/* 비수정 모드 상단 */
+.file-view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+/* 수정 버튼 */
+.btn-edit {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-edit:hover {
+  background-color: #0056b3;
+}
+
+/* 파일 업로드 박스 */
+.file-upload-box {
+  margin-bottom: 1rem;
+}
+
+.file-upload-btn {
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.file-upload-btn:hover {
+  background-color: #218838;
+}
+
+/* 저장 버튼 */
+.button-zone {
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* 예외 메시지 */
+.no-file-text {
+  color: #888;
+  font-size: 0.95rem;
+}
 
 
