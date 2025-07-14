@@ -129,12 +129,13 @@ export default function BizList() {
         <section className="section board-list">
                 <div className="page-title">기부 사업</div>
                 <div className="filter-search-wrapper">
+
                 <div className="category-filter">
                     {Object.entries(donateCategoryMap).map(([code, label]) => (
                         <button
                         key={code}
                         style={{
-                            backgroundColor: categories.includes(code) ? '#007bff' : '#f0f0f0',
+                            backgroundColor: categories.includes(code) ? '#007bff' : '#ffffffff',
                             color: categories.includes(code) ? 'white' : '#333',
                             border: '1px solid',
                             borderColor: categories.includes(code) ? '#0056b3' : '#ccc',
@@ -144,8 +145,6 @@ export default function BizList() {
                             borderRadius: '30px',
                             fontWeight: categories.includes(code) ? 'bold' : 'normal',
                             fontSize: '1rem',
-                            boxShadow: categories.includes(code) ? '0 0 8px rgba(0,123,255,0.6)' : 'none',
-                            transition: 'background-color 0.3s ease, color 0.3s ease',
                             minWidth: 'center',
                         }}
                         onClick={() => toggleCategory(code)}
@@ -153,23 +152,23 @@ export default function BizList() {
                         {label}
                         </button>
 
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                <div className="search-box">
-                    <select name="searchType" id="searchType" value={searchType} onChange={handleSearchTypeChange}>
-                        <option value="bizTitle">사업명</option>
-                        <option value="orgName">단체명</option>
-                    </select>
-                    <input
-                        type="text"
-                        name={searchType === "bizTitle" ? "bizTitle" : "orgName"}
-                        placeholder={searchType === "bizTitle" ? "기부 사업명을 입력하세요" : "단체명을 입력하세요"}
-                        value={searchType === "bizTitle" ? keyWord.bizTitle : keyWord.orgName}
-                        onChange={handleInputChange}
-                    />
-                    <input type="button" value="검색" onClick={srchSubmit} />
-                </div>
+                    <div className="search-box">
+                        <select name="searchType" id="searchType" value={searchType} onChange={handleSearchTypeChange}>
+                            <option value="bizTitle">사업명</option>
+                            <option value="orgName">단체명</option>
+                        </select>
+                        <input
+                            type="text"
+                            name={searchType === "bizTitle" ? "bizTitle" : "orgName"}
+                            placeholder={searchType === "bizTitle" ? "기부 사업명을 입력하세요" : "단체명을 입력하세요"}
+                            value={searchType === "bizTitle" ? keyWord.bizTitle : keyWord.orgName}
+                            onChange={handleInputChange}
+                        />
+                        <input type="button" value="검색" onClick={srchSubmit} />
+                    </div>
             </div>
 
             <div className="board-list-wrap">

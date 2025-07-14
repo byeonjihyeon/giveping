@@ -33,19 +33,21 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .search-box {
+  margin-bottom: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
   width: 100%;
   box-sizing: border-box;
+  margin-bottom: 5px;
 }
 
 .search-box select,
 .search-box input[type="text"],
 .search-box input[type="button"] {
-  height: 32px;
+
   font-size: 14px;
-  padding: 4px 8px;
+  padding: 0 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
@@ -55,6 +57,11 @@ ul.posting-wrap.grid-3x4 {
   color: white;
   border: none;
   cursor: pointer;
+  height: 34px;
+}
+
+.search-box select {
+  height: 34px;
 }
 
 

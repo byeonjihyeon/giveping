@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import createInstance from "../../axios/Interceptor";
+import Swal from "sweetalert2";
 
 export default function NewsFrm(props){
 //부모 컴포넌트에서 전달 받은 데이터 추출
@@ -65,7 +66,11 @@ export default function NewsFrm(props){
     // 단체 검색 요청
     function searchOrgByName() {
         if (!orgName || orgName.trim() === "") {
-            alert("단체명을 입력하세요.");
+            Swal.fire({
+                        title : '알림',
+                        text : '단체명을 입력해주세요.',
+                        icon : 'warning'
+                });
             return;
         }
 
@@ -82,9 +87,16 @@ export default function NewsFrm(props){
                 setOrgList(res.data.resData);
                 setShowOrgList(true);
             } else {
-                alert("해당 단체명이 존재하지 않습니다.");
-                setOrgList([]);
-                setShowOrgList(false);
+                Swal.fire({
+                            title : '알림',
+                            text : '해당 단체명이 존재하지 않습니다.',
+                            icon : 'warning',
+                            showCancelButton : false,
+                            confirmButtonText : '확인'
+                        }).then(function(res){
+                            setOrgList([]);
+                            setShowOrgList(false);
+                        });
             }
         })
         .catch(err => {
@@ -103,7 +115,7 @@ export default function NewsFrm(props){
 
 
     return(
-    <div>
+    <div className="board-wrap" style={{ display: 'flex', gap: '2rem' }}>
             <div className="board-thumb-wrap">
                 {thumbImg
                  ?
@@ -129,6 +141,8 @@ export default function NewsFrm(props){
                 }
                 <input type="file" accept="image/*" style={{display : 'none'}} ref={thumbFileEl} onChange={chgThumbFile}/>
             </div>
+
+            <div className="board-info-group">
             <div className="board-info-wrap">
                 <table className="tbl">
                     <tbody>
@@ -137,41 +151,34 @@ export default function NewsFrm(props){
                                 <label htmlFor="boardTitle">제목</label>
                             </th>
                             <td>
-                                <div className="input-item">
-                                    <input type="text" 
-                                           id="newsName" 
-                                           name="newsName" 
-                                           value={newsName}
-                                           onChange={chgNewsName}
-                                           />
-                                </div>
+                                <input type="text" 
+                                        id="newsName" 
+                                        name="newsName" 
+                                        value={newsName}
+                                        onChange={chgNewsName}
+                                        className="input-text"
+                                        />
                             </td>
                         </tr>
                         <tr>
                             <th>단체명</th>
                             <td>
-                                <div className="input-item">
-                                    <input type="text" 
-                                           id="orgName" 
-                                           name="orgName" 
-                                           value={orgName}
-                                           onChange={chgOrgName}
-                                           />
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <td>
+                                <input type="text" 
+                                        id="orgName" 
+                                        name="orgName" 
+                                        value={orgName}
+                                        onChange={chgOrgName}
+                                        className="input-text"
+                                        />
                                 <button type="button" onClick={searchOrgByName} className="btn-primary sm">
-                                    단체 조회
+                                조회
                                 </button>
                             </td>
                         </tr>
                         {
                             showOrgList && orgList.length > 0 &&
                             <tr>
-                                <th>조회 결과</th>
+                                <th>단체 조회 결과</th>
                                 <td>
                                     <ul className="org-list">
                                         {orgList.map((org, idx) => (
@@ -187,6 +194,7 @@ export default function NewsFrm(props){
                         }
                     </tbody>
                 </table>
+            </div>
             </div>
         </div>
 

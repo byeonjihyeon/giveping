@@ -66,10 +66,6 @@ export default function BizView(){
                     });
                     return; 
                     
-            /*
-            alert("같은 단체의 사업에 기부할 수 없습니다.");
-            return;
-            */
         }else{
             setIsDonateOpen(true);
         }
@@ -294,7 +290,7 @@ export default function BizView(){
                             {donateBiz.bizStatus !== 1 && (
                                 <span
                                     className="tabArea-right-text"
-                                    onClick={() => navigate("/biz/update/" + donateBiz.bizNo)}
+                                    onclick={function(){ navigate("/biz/update/" + donateBiz.bizNo)}}
                                 >
                                     수정
                                 </span>

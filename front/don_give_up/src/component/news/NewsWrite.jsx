@@ -22,14 +22,22 @@ export default function NewsWrite(){
     // 소식 등록 버튼 클릭 시, 동작 함수
     function newsWrite(){
         if(newsName != '' && newsContent != ''){
+
+            if(orgNo == null || orgNo == undefined || orgNo ==''){
+                Swal.fire({
+                     title : '알림',
+                     text : '기부 단체를 선택해주세요',
+                     icon : 'warning'
+                });
+                return; // axios 보내기 중지
+            }
             const form = new FormData();    //파일 업로드 시, 사용할 수 있는 내장 객체
 
             // 첫번째로 작성하는 문자열 ==> input의 name 속성값 역할을 함.
             form.append("newsName", newsName);
             form.append("newsContent", newsContent);
             form.append("memberNo", loginMember.memberNo);   // 작성자 (관리자만 가능)
-            //form.append("boardWriter", 'admin');
-            form.append("orgNo", orgNo);    // 대상 단체 번호
+            form.append("orgNo", orgNo); // 대상 단체 번호
 
             if(newsThumb != null){ //썸네일 이미지 업로드한 경우에만
                 form.append("newsThumb", newsThumb);
@@ -40,7 +48,7 @@ export default function NewsWrite(){
             options.url = serverUrl + '/news';
             options.data = form;
             options.headers = {};
-            options.headers.contentType = "multiple/form-data";
+            options.headers.ContentType = "multipart/form-data";
             options.headers.processData = false;    //쿼리스트링으로 변환하지 않도록 설정
 
             axiosInstance(options)
@@ -63,7 +71,7 @@ export default function NewsWrite(){
 
     return(
     <section className="section board-content-wrap">
-            <div className="page-title">게시글 작성</div>
+            <div className="page-title">소식 작성</div>
             <form className="board-write-frm" onSubmit={function(e){
                 e.preventDefault();
                 newsWrite(); //등록하기 함수 호출
