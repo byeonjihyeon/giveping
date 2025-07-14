@@ -324,7 +324,7 @@ export default function BizView(){
                         <div className="content-orgInfo-wrap">
                             <span className="content-orgInfo">모금단체</span>
                             {/* Link url 임시 설정 => "/org/view/"+orgNo  로 변경할것임.*/}
-                            <Link className="content-orgInfo-link" to={"/biz/view/"+bizNo}>
+                            <Link className="content-orgInfo-link" to={"/org/view/"+donateBiz.orgNo}>
                                 <img className="content-orgInfo-img"
                                         src={donateBiz.orgThumbPath
                                         ? serverUrl + "/org/thumb/" + donateBiz.orgThumbPath.substring(0, 8) + "/" + donateBiz.orgThumbPath
@@ -437,62 +437,67 @@ function DonateMember(props){
     const memberList = props.memberList;
 
     return (
-        <div className="content-donateMember-wrap">
-            <div className="donateMember-zone">
-            {/* 기부한 회원 리스트 (관리자 전용) */}
+         <div className="donate-member-list-wrap">
             <p className="donateMember-title">기부 회원 목록</p>
-            
             {memberList && memberList.length > 0 ? (
-                <>
-                <button onClick={() => setShowMemberList(!showMemberList)}>
-                    {showMemberList ? '숨기기' : '목록 보기'}
-                </button>
-
-                {showMemberList &&
-                    memberList.map((member, index) => (
-                    <MemberItem key={"member" + index} member={member} />
-                    ))
-                }
-                </>
+                <div className="donate-member-list">
+                    <div className="donate-member-header">
+                        <div>아이디</div>
+                        <div>이름</div>
+                        <div>생년월일</div>
+                        <div>전화번호</div>
+                        <div>기부금액</div>
+                        <div>기부일시</div>
+                    </div>
+                    {memberList.map((member, index) => (
+                        <div className="donate-member-row" key={index}>
+                            <div>{member.memberId}</div>
+                            <div>{member.memberName}</div>
+                            <div>{member.memberBirth}</div>
+                            <div>{member.memberPhone}</div>
+                            <div>{member.donateMoney.toLocaleString()}원</div>
+                            <div>{member.donateDate}</div>
+                        </div>
+                    ))}
+                </div>
             ) : (
                 <p>기부 회원이 없습니다.</p>
             )}
-            </div>
         </div>
         );
 }
 
-
+/*
 // 멤버 1명 객체
 function MemberItem(props){
     const member = props.member;
 
     return(
         <div className="member-card">
-            <div className="member-row">
-                <div className="member-label">아이디</div>
-                <div className="member-value">{member.memberId}</div>
-                <div className="member-label">이름</div>
-                <div className="member-value">{member.memberName}</div>
+            <div className="member-info-grid">
+                <div className="label">아이디</div>
+                <div className="value">{member.memberId}</div>
+
+                <div className="label">이름</div>
+                <div className="value">{member.memberName}</div>
+
+                <div className="label">생년월일</div>
+                <div className="value">{member.memberBirth}</div>
+
+                <div className="label">전화번호</div>
+                <div className="value">{member.memberPhone}</div>
+
+                <div className="label">기부금액</div>
+                <div className="value">{member.donateMoney.toLocaleString()}원</div>
+
+                <div className="label">기부일시</div>
+                <div className="value">{member.donateDate}</div>
             </div>
-            <div className="member-row">
-                <div className="member-label">생년월일</div>
-                <div className="member-value">{member.memberBirth}</div>
-                <div className="member-label">전화번호</div>
-                <div className="member-value">{member.memberPhone}</div>
-            </div>
-            <div className="member-row">
-                <div className="member-label">기부금액</div>
-                <div className="member-value">{member.donateMoney}원</div>
-                <div className="member-label">기부일시</div>
-                <div className="member-value">{member.donateDate}</div>
-            </div>
-            <hr />
-            <br />
         </div>
     );
 
 }
+    */
 
 function Donate(props){
     const onClose = props.onClose;
