@@ -23,7 +23,7 @@ export default function OrgUpdate(props){
 
     //단체 1개 정보를 저장할 State 변수
     const [org, setOrg] = useState({
-        orgNo : "", orgId : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "", orgAddrMain : "", orgThumbPath : "",
+        orgNo : "", orgName : "", orgBiznum : "", orgPhone : "", orgEmail : "", orgAddrMain : "", orgThumbPath : "",
         orgAddrDetail : "", orgIntroduce : "", orgAccount : "", orgAccountBank : "", orgUrl : "", categoryList : [], orgStatus : ""
     });
 
@@ -38,6 +38,8 @@ export default function OrgUpdate(props){
     const [orgEmailDomain, setOrgEmailDomain] = useState("");
     //이메일 유효성 체크 결과를 저장할 변수
     const [emailChk, setEmailChk] = useState(0);
+
+    const [keyUp, setKeyUp] = useState(0); //단체 설명 입력시 올라갈 글자수
 
     //단체 1개 정보 가져오기
     useEffect(function(){
@@ -63,6 +65,8 @@ export default function OrgUpdate(props){
 
             setPrevProfile(newOrg.orgThumbPath); //기본 이미지로 변경했을 때를 대비해서 저장
 
+            setKeyUp(newOrg.orgIntroduce.length);
+
             setOrg(newOrg);
         });
     }, []);
@@ -81,8 +85,13 @@ export default function OrgUpdate(props){
 
     //input 태그 안 내용 변경 시
     function chgOrg(e){
-        org[e.target.id] = e.target.value;
-        setOrg({...org});
+        if(e.target.id == "orgIntroduce" && e.target.value.length <= 150){
+            setOrg({...org, orgIntroduce : e.target.value});
+            setKeyUp(e.target.value.length);
+        }else if(e.target.id != "orgIntroduce"){
+            org[e.target.id] = e.target.value;
+            setOrg({...org});
+        }
     }
 
     /*사업자번호 관련 코드*/
@@ -180,6 +189,7 @@ export default function OrgUpdate(props){
             { valid: emailChk !== 1, message: "이메일 주소 형식이 올바르지 않습니다.", inputRef : orgEmailDomainRef },
             { valid: org.orgAddrMain === "", message: "주소를 입력하세요.", inputRef : addressRef },
             { valid: org.orgIntroduce === "", message: "단체설명을 입력하세요.", inputRef : orgIntroduceRef },
+            { valid: keyUp > 150, message: "단체설명은 띄어쓰기 포함 150자 이하로 작성해주세요.", inputRef : orgIntroduceRef },
             { valid: org.orgAccountBank === "" || org.orgAccountBank === "select", message: "은행을 선택하세요.", inputRef : orgAccountBankRef },
             { valid: org.orgAccount == "", message: "계좌번호를 입력하세요.", inputRef : orgAccountRef },
             { valid: accountChk !== 1, message: "계좌번호 형식이 올바르지 않습니다.", inputRef : orgAccountRef }
@@ -257,12 +267,10 @@ export default function OrgUpdate(props){
                     <table className="tbl-org">
                         <tbody>
                             <tr>
-                                <Profile orgNo={orgNo} org={org} setOrg={setOrg} profileImg={profileImg} setProfileImg={setProfileImg} profile={profile} setProfile={setProfile}/>
-                            </tr>
-                            <tr><td></td><td><p></p></td></tr>
-                            <tr>
-                                <th><label className="label">아이디</label></th>
-                                <td><TextField className="input-first" value={org.orgId}></TextField></td>
+                                <th><label className="label">프로필</label></th>
+                                <th>
+                                    <Profile orgNo={orgNo} org={org} setOrg={setOrg} profileImg={profileImg} setProfileImg={setProfileImg} profile={profile} setProfile={setProfile}/>
+                                </th>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>
                             <tr>
@@ -307,7 +315,7 @@ export default function OrgUpdate(props){
                                     <TextField id="orgIntroduce" className="input-first" multiline rows={4} value={org.orgIntroduce} onChange={chgOrg} inputRef={orgIntroduceRef}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td></td><td><p className="key-up">{keyUp}/150</p></td></tr>
                             <tr>
                                 <th><label className="label">계좌번호</label></th>
                                 <td>
@@ -351,8 +359,8 @@ export default function OrgUpdate(props){
                             <tr>
                                 <th colSpan={2}>
                                     <div style={{margin : "20px auto"}}>
-                                        <Button variant="contained" type="submit" className="orgBtn" style={{marginRight : "10px", height : "40px", fontSize : "20px"}}>수정</Button>
-                                        <Button variant="contained" className="orgBtn" style={{height : "40px", fontSize : "20px"}}>
+                                        <Button variant="contained" id="mui-btn" type="submit" className="orgBtn" style={{marginRight : "10px", height : "40px", fontSize : "20px"}}>수정</Button>
+                                        <Button variant="contained" className="orgBtn" style={{height : "40px", fontSize : "20px"}} id="mui-btn">
                                             {org.orgStatus == 3 ? "" : <Link to="/org/delete">탈퇴하기</Link>}
                                         </Button>
                                     </div>
@@ -420,22 +428,20 @@ function Profile(props){
     }
 
     return (
-        <th colSpan={2}>
-            <div style={{display : "inline-block"}}>
-                <div style={{marginBottom : "5px"}}>
-                    <img src={profileImg 
-                            ? profileImg
-                            : org.orgThumbPath
-                                ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0, 8) + "/" + org.orgThumbPath
-                                : "/images/default_profile.jpg"}
-                        onClick={function(e){profileImgEl.current.click();}} style={{height : "150px", border : "1px solid #b1adad"}}/>
-                    <input type="file" accept="image/*" id="orgThumbPath" style={{display : "none"}} ref={profileImgEl} onChange={chgProfileImg}/>
-                </div>
-                <div>
-                    <Button variant="contained" onClick={chgDefault}>기본 사진으로 변경</Button>
-                </div>
+        <div style={{display : "inline-block"}}>
+            <div style={{marginBottom : "5px"}}>
+                <img src={profileImg 
+                        ? profileImg
+                        : org.orgThumbPath
+                            ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0, 8) + "/" + org.orgThumbPath
+                            : "/images/default_profile.jpg"}
+                    onClick={function(e){profileImgEl.current.click();}} style={{height : "150px", border : "1px solid #b1adad"}}/>
+                <input type="file" accept="image/*" id="orgThumbPath" style={{display : "none"}} ref={profileImgEl} onChange={chgProfileImg}/>
             </div>
-        </th>
+            <div>
+                <Button variant="contained" onClick={chgDefault} id="mui-btn">기본 사진으로 변경</Button>
+            </div>
+        </div>
     )
 }
 
@@ -586,7 +592,7 @@ function MemberAddr(props){
     return (
         <>
             <TextField type="text" id="orgAddrMain" className="input-addr" value={org.orgAddrMain} placeholder="주소" inputRef={addressRef}  slotProps={{input: {readOnly: true}}}/>
-            <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
+            <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}} id="mui-btn">주소 찾기</Button> <br/>
             <TextField type="text"id="orgAddrDetail" className="input-first" value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" inputRef={detailAddressRef}/>
         </>
     )

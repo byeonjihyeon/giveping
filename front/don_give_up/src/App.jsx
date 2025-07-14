@@ -17,7 +17,7 @@ import JoinOrg from './component/join/JoinOrg';
 import JoinCategory from './component/join/JoinCategory';
 import SearchIdPw from './component/common/SearchIdPw';
 import CompanyIntroduction from './component/admin/CompanyIntro';
-import Organization from'./component/org/OrgList';
+import Organization from './component/org/Organization';
 
 
 function App() {

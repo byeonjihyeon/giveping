@@ -365,16 +365,24 @@ public class OrgService {
 	}
 
 	//단체 목록 페이지
-	public HashMap<String, Object> selectOrgList(int reqPage) {
-		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
+	public HashMap<String, Object> selectOrgList(Org data) {
+		int reqPage = data.getReqPage();
+		String searchOrgName = data.getSearchOrgName();
+		ArrayList<String> checkCtgList = data.getCheckCtgList();
+		
+		int viewCnt = 12;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 12개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
 		int totalCount =dao.selectOrgCount();
 		
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
 		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("start", pageInfo.getStart());
+		param.put("end", pageInfo.getEnd());
+		param.put("checkCtgList", checkCtgList);
+		param.put("searchOrgName", searchOrgName);
 		
-		ArrayList<Org> orgList = dao.selectOrgList(reqPage);
-		System.out.println("단체목록"+ orgList);
+		ArrayList<Org> orgList = dao.selectOrgList(param);
 		
 	    for (Org org : orgList) {
 	        List<String> categoryList = dao.selectOrgCategory(org.getOrgNo());
@@ -384,9 +392,31 @@ public class OrgService {
 		orgMap.put("orgList", orgList);
 		orgMap.put("pageInfo", pageInfo);
 		
-	
-		System.out.println("단체목록"+ orgList);
 	    
+		return orgMap;
+	}
+
+	//단체 상세페이지
+	public HashMap<String, Object> selectOrgView(int orgNo) {
+		//1) 단체 1개 정보 조회
+		Org org = dao.selectOneOrg(orgNo);
+		
+		//2) 단체 주요 카테고리
+		List<String> categoryList = dao.selectOrgDonation(orgNo);
+		
+		//3) 진행 중인 기부 사업
+		ArrayList<Biz> ingBizList = dao.selectOrgIngBizList(orgNo);
+		
+		//4) 종료된 기부 사업
+		ArrayList<Biz> endBizList = dao.selectOrgEndBizList(orgNo);
+		
+		HashMap<String, Object> orgMap = new HashMap<String, Object>();
+		orgMap.put("org", org);
+		orgMap.put("categoryList", categoryList);
+		orgMap.put("ingBizList", ingBizList);
+		orgMap.put("endBizList", endBizList);
+		
+		
 		return orgMap;
 	}
 

@@ -11,6 +11,7 @@ import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
+import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.member.model.dto.Wallet;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
@@ -127,5 +128,8 @@ public interface MemberDao {
 	
 	//회원 관심카테고리를 가진 단체와 일치하는 사업 조회
 	List<Biz> selectRecommandBizList(List<String> orgList);
+	
+	//환불요청중인 리스트 조회
+	ArrayList<Refund> selectRefundList(int memberNo);
 	
 }

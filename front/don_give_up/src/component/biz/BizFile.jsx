@@ -127,134 +127,82 @@ export default function BizFile(props){
     return(
         <>
         {/* 수정 모드 아닌 경우 */}
-        {!isEditMode && 
-            <div className="no-login">
-                <p className="file-title">첨부파일</p>
-                                <div className="file-zone">
-                                    {
-                                        prevBizFileList.length>0
-                                        ? prevBizFileList.map(function(file, index){
-                                            return <FileItem key={"file"+index} file={file} />
-                                        })
-                                        : <p>등록된 첨부파일이 없습니다.</p>
-                                    }
-                                </div>
-        </div>
-        }
-        
-        {isManagerOrOrg && !isEditMode &&
-                <div className="btn-zone">
-                    
-                    <button type="button" className="btn-primary" onClick={() => setIsEditMode(true)}>
-                        수정
-                    </button>
-                </div>
-            }
-        
-
-        {isEditMode &&     
-        <div className="manager-login">
-        <section className="section biz-content-wrap">
-                            <div className="page-title">첨부파일 섹션</div>
-                            <form className="bizFile" onSubmit={function(e){
-                                e.preventDefault();
-                                updateFile(); //파일 업로드 함수 호출
-                                //setIsEditMode(false); // 수정 완료 -> 다시 비수정 모드로
-                                //window.location.reload();   // 새로고침 -> 파일 변경사항 반영
-                            }}> 
-            <div>
-                <div>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>
-                                    <label>첨부파일</label>
-                                </th>
-                                {isManagerOrOrg && (
-                                <td className="left">
-                                    <label htmlFor="bizFile" className="btn-primary sm">파일첨부하기</label>
-                                    <input type="file" id="bizFile" style={{display : 'none'}} multiple onChange={chgBizFile} />
-                                </td>
-                                )}
-                            </tr>
-                            <tr>
-                                <th>첨부파일 목록</th>
-                                <td>
-                                    <div className="biz-file-wrap">
-                                        {
-                                            prevBizFileList
-                                            ? prevBizFileList.map(function(oldFile, index){
-                                                console.log("oldFile 전체 구조 확인:", oldFile); // ← 이걸로 구조 확인 가능
-                                                console.log("oldFile.fileNo:", oldFile.fileNo); // ← undefined
-
-                                                //기존 파일 삭제 아이콘 클릭 시, 호출 함수
-                                                function deleteFile(){
-                                                    console.log("현재 삭제 대상 파일 번호:", oldFile.fileNo);
-                                                    console.log("삭제 전 delBizFileNo:", delBizFileNo);
-                                                    const newFileList = prevBizFileList.filter(function(fOldFile, fIndex){
-                                                        return oldFile != fOldFile;
-                                                    })
-                                                    setPrevBizFileList(newFileList); //화면에서 삭제
-
-                                                    //서버에서도 파일 삭제를 위해, 삭제 아이콘을 클릭한 파일의 파일 번호를 변수에 세팅
-                                                    setDelBizFileNo([...delBizFileNo, oldFile.fileNo]); 
-                                                }
-
-                                                //oldFile == BizFile 객체
-                                                return <p key={"old-file"+index}>
-                                                            <span className="fileName">{oldFile.fileName}</span>
-                                                           {isManagerOrOrg && (
-                                                                <span className="material-icons del-file-icon" onClick={deleteFile}>
-                                                                    delete
-                                                                </span>
-                                                            )}
-                                                    </p>
-                                            })
-                                            : ''
-                                        }
-                                        {
-                                            bizFileImg.map(function(fileName, index){
-                                                
-                                                //배열의 각 요소마다 적용되는 함수
-                                                function deleteFile(){
-
-                                                    //파일 이름 배열에서 제거
-                                                    bizFileImg.splice(index, 1);
-                                                    setBizFileImg([...bizFileImg]);
-
-                                                    //파일 객체 배열에서 제거
-                                                    bizFile.splice(index, 1);
-                                                    setBizFile([...bizFile]);
-                                                }
-
-
-                                                return <p key={"new-file"+index}>
-                                                            <span className="fileName">{fileName}</span>
-                                                            <span className="material-icons del-file-icon" onClick={deleteFile}>
-                                                                delete
-                                                            </span>
-                                                    </p>
-                                            })
-                                        }
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-       </div>
-
-            {isManagerOrOrg && (
-            <div className="button-zone">
-                <button type="submit" className="btn-primary lg">
-                    저장
+        {!isEditMode && (
+        <div className="file-view-wrap">
+            <div className="file-view-header">
+            <p className="file-title">첨부파일</p>
+                {isManagerOrOrg &&
+                <button type="button" className="btn-edit" onClick={() => setIsEditMode(true)}>
+                    수정
                 </button>
+                }
             </div>
-           )}
-        </form>
-    </section>
-    </div>  
-    }  
+
+            <div className="file-list">
+                {
+                prevBizFileList.length > 0
+                ? prevBizFileList.map((file, index) => (
+                    <FileItem key={"file" + index} file={file} />
+                    ))
+                : <p>등록된 첨부파일이 없습니다.</p>
+                }
+            </div>
+            </div>
+        )}
+        
+        {/* 수정 모드 진입 */}
+        {isEditMode && (
+        <div className="file-edit-wrap">
+            <form className="file-form" onSubmit={function(e){
+                                        e.preventDefault();
+                                        updateFile();
+            }}>
+            {isManagerOrOrg && (
+            <div className="file-upload-box">
+                <label className="file-upload-btn" htmlFor="bizFile">파일첨부하기</label>
+                <input type="file" id="bizFile" multiple onChange={chgBizFile} style={{ display: 'none' }} />
+            </div>
+            )}
+
+            <div className="file-list-edit">
+                {prevBizFileList.map(function(oldFile, index){
+                return(
+                    <div className="file-item" key={"old-file" + index}>
+                    <span className="file-name">{oldFile.fileName}</span>
+                    <span className="material-icons del-file-icon" onClick={() => {
+                    const newList = prevBizFileList.filter(function(fOldFile, fIndex){
+                        return oldFile != fOldFile;
+                    })
+                    setPrevBizFileList(newList); //화면에서 삭제
+
+                    //서버에서도 파일 삭제를 위해, 삭제 아이콘을 클릭한 파일의 파일 번호를 변수에 세팅
+                    setDelBizFileNo([...delBizFileNo, oldFile.fileNo]); 
+                }}>delete</span>
+                </div>
+                );
+            })}
+
+                {bizFileImg.map(function(fileName, index){
+                return(
+                    <div className="file-item" key={"new-file" + index}>
+                        <span className="file-name">{fileName}</span>
+                        <span className="material-icons del-file-icon" onClick={() => {
+                        bizFileImg.splice(index, 1);
+                        setBizFileImg([...bizFileImg]);
+                        bizFile.splice(index, 1);
+                        setBizFile([...bizFile]);
+                        }}>delete</span>
+                    </div>
+                );
+                })}
+            </div>
+
+            <div className="button-zone">
+                <button type="submit" className="btn-primary">저장</button>
+            </div>
+            </form>
+        </div>
+        )}
        </>
     )
 

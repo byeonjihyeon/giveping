@@ -34,61 +34,26 @@ export default function OrgNewsList(){
                 */
             });
         }, []);
-
-        // 알림 읽음 처리 함수
-        /*
-    function markAllAsRead(alarmNos){
-        //console.log("alarmNo" , alarmNo);
-        let options={};
-        options.url= serverUrl + '/org/alarm/' + alarmNos.join(',');
-        options.method = "patch";
-
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res.data.resData);
-
-            // 안 읽은 알림 갯수 reload
-            let options = {};
-            options.url = serverUrl + '/countAlarm';
-            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
-            options.params = { orgNo: orgNo };
-            options.method = 'get';
-    
-            axiosInstance(options)
-            .then(function(res){
-                console.log(res.data.resData);
-
-                const count = res.data.resData;
-                if(count > 0){
-                    console.log("안읽은알림갯수 : ", count);
-                    setHasNewAlert(true);
-                    setUnreadAlarmCount(count);    // 결과 unreadAlarmCount 에 set 하기
-                }else{
-                    setHasNewAlert(false);
-                    setUnreadAlarmCount(count);
-                }
-            });
-        });
-    }
-    */
-
         
 
     const [newsList, setNewsList] = useState([]);
     //const [isNewsRead, setIsNewsRead] = useState(false); // 소식 읽었는지 여부 (초기값 : false / 읽을 경우 true로 변경)
 
     return (
-         <div className="newsList-wrap" >
-            {
-                Array.isArray(newsList) && newsList.length>0
-                ?
-                newsList.map(function(news, index){
-                     return <News key={"news" + index} news={news}  setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginOrg={loginOrg}/>   
-                })
-                :
-                    <p>새로운 소식이 없습니다.</p>
-            }
+        <>
+        <h2 className="page-title" style={{marginBottom : "20px"}}>내 소식</h2>
+        <div className="newsList-wrap" >
+        {
+            Array.isArray(newsList) && newsList.length>0
+            ?
+            newsList.map(function(news, index){
+                    return <News key={"news" + index} news={news}  setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginOrg={loginOrg}/>   
+            })
+            :
+                <p>새로운 소식이 없습니다.</p>
+        }
         </div>
+        </>
     )
 }
 

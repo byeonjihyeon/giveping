@@ -66,10 +66,6 @@ export default function BizView(){
                     });
                     return; 
                     
-            /*
-            alert("같은 단체의 사업에 기부할 수 없습니다.");
-            return;
-            */
         }else{
             setIsDonateOpen(true);
         }
@@ -151,7 +147,6 @@ export default function BizView(){
                 cancelButtonText : '취소'
             }).then(function(res){
                 if(res.isConfirmed){
-                /*
                     let options = {};
                     options.url = serverUrl + '/biz/delete/' + donateBiz.bizNo;
                     options.method = 'patch';
@@ -163,7 +158,6 @@ export default function BizView(){
                             navigate('/biz/list');
                         }
                     });
-                    */
                 }
                 }
         )};
@@ -195,19 +189,62 @@ export default function BizView(){
             setActiveTab(tabName);
         }
 
+        // d-day 구하기
+        function calculateDDay(donateEndDate) {
+            console.log("donateEndDate : ", donateEndDate);
+            const today = new Date();
+            const endDate = new Date(donateEndDate);
 
-    
+            const diffTime = endDate.getTime() - today.getTime();
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays > 0) {
+                return "D-" + diffDays;
+            } else if (diffDays === 0) {
+                return "D-Day";
+            } else {
+                return "종료";
+            }
+        }
+
+        // 기부금 달성률 계산
+        const goal = donateBiz.bizGoal || 0;
+        const donated = donateBiz.donateMoney || 0;
+        const percent = goal > 0 ? Math.floor((donated / goal) * 100) : 0;
 
     return (
         <section>
-            {/* 썸네일, 디데이, 제목, 모금율 그래프 */}
-           <div className="bizView-banner-wrap">
+            {/* 썸네일, 디데이, 제목, 모금율 그래프 */}    
+            <div
+                className="bizView-banner-wrap"
+                style={{
+                    backgroundImage: 'url(' + (
+                    donateBiz.bizThumbPath
+                        ? serverUrl + '/biz/thumb/' + donateBiz.bizThumbPath.substring(0, 8) + '/' +  donateBiz.bizThumbPath
+                        : '/images/default_img.png'
+                ) + ')',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                }}
+                >
                 <div className="bizView-banner-info">
-                    <span className="bizView-banner-day">D-34</span>
+                    <span className="bizView-banner-day">{calculateDDay(donateBiz.bizDonateEnd)}</span>
                     <br/>
                     <strong>{donateBiz.bizName}</strong>
                 </div>
-           </div>
+
+                <div className="bizView-progress-container">
+                    <div className="bizView-progress-bar">
+                            <div className="bizView-progress-fill" style={{ width: `${percent}%` }}></div>
+                    </div>
+                    <div className="bizView-donate-stats">
+                        <span>{percent}%</span>
+                        <span>{donated.toLocaleString()}원</span>
+                    </div>
+                </div>
+            </div>
+         
 
            {/* 고정 메뉴 - 기부소개 / 사용계획 / 소식후기 / 기부회원리스트 / 기부하기 => 관리자나 기부단체계정일 경우 글수정,글삭제 버튼으로 */}
            <div className="tabArea-wrap">
@@ -220,17 +257,54 @@ export default function BizView(){
                     <span className={ "tabArea-left-text" + (activeTab === 'file' ? " active" : "") }
                           onClick={function(){handleTabClick('file');}}>소식후기</span>
                     {/* 관리자나 기부단체계정일 경우에만 보임 */}
-                    <span className={ "tabArea-left-text" + (activeTab === 'donateMember' ? " active" : "") } 
-                          onClick={function(){handleTabClick('donateMember');}}>기부회원리스트</span>
+                    {
+                        (loginOrg != null || loginMember != null) &&
+                        (
+                            (loginMember?.memberLevel === 1) ||
+                            (loginOrg?.orgNo != null && donateBiz?.orgNo != null && loginOrg.orgNo === donateBiz.orgNo)
+                        )
+                        ? (
+                            <span
+                            className={"tabArea-left-text" + (activeTab === 'donateMember' ? " active" : "")}
+                            onClick={() => handleTabClick('donateMember')}
+                            >
+                            기부회원
+                            </span>
+                        ) : ''
+                    }
                 </div>
-                {/* 오른쪽에 위치 */}
+                {/* 오른쪽에 위치 , 일반 회원일 경우에만 보임 (관리자, 기부 단체 계정은 x) */}
                 <div className="tabArea-right">
-                    <span className="tabArea-right-text" onClick={openDonatePopup}>기부하기</span>
+                    {
+                        loginMember != null && (loginMember.memberLevel == 2)
+                        ?
+                        <span className="tabArea-right-text" onClick={openDonatePopup}>기부하기</span>
+                        :''
+                    }
                     {/* 기부 팝업 */}
                     {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}
+
                     {/* 관리자나 기부단체계정일 경우에만 보임 */}
-                    <span className="tabArea-right-text" onClick={function(){navigate("/biz/update/" + donateBiz.bizNo)}}>수정</span>
-                    <span className="tabArea-right-text" onClick={deleteBiz}>삭제</span>
+                    {isOwnerOrAdmin && (
+                        <>
+                            {donateBiz.bizStatus !== 1 && (
+                                <span
+                                    className="tabArea-right-text"
+                                    onclick={function(){ navigate("/biz/update/" + donateBiz.bizNo)}}
+                                >
+                                    수정
+                                </span>
+                            )}
+                            {today >= bizEndDate && (
+                                <span
+                                    className="tabArea-right-text"
+                                    onClick={deleteBiz}
+                                >
+                                    삭제
+                                </span>
+                            )}
+                        </>
+                    )}
                 </div>
            </div>
             {/* 콘텐츠 (tabArea-wrap 하단에 위치) */}
@@ -246,9 +320,15 @@ export default function BizView(){
                         <div className="content-orgInfo-wrap">
                             <span className="content-orgInfo">모금단체</span>
                             {/* Link url 임시 설정 => "/org/view/"+orgNo  로 변경할것임.*/}
-                            <Link className="content-orgInfo-link" to={"/biz/view/"+bizNo}>
-                                <span className="content-orgInfo-img" src={"/images/default_img.png"}></span>
-                                <span className="content-orgInfo-name">{donateBiz.orgName}</span>
+                            <Link className="content-orgInfo-link" to={"/org/view/"+donateBiz.orgNo}>
+                                <img className="content-orgInfo-img"
+                                        src={donateBiz.orgThumbPath
+                                        ? serverUrl + "/org/thumb/" + donateBiz.orgThumbPath.substring(0, 8) + "/" + donateBiz.orgThumbPath
+                                        : "/images/default_img.png"}></img>
+                                  <span className="content-orgInfo-text">
+                                    <span className="content-orgInfo-name">{donateBiz.orgName}</span>
+                                    <span className="content-orgInfo-introduce">{donateBiz.orgIntroduce}</span>
+                                </span>
                             </Link>
                         </div>
                     </div>
@@ -264,9 +344,7 @@ function IntroTab(props){
 
     return(
         <div className="content-tag-wrap">
-            <div className="content-tag-wrap">
-                <span className="content-tag">#{donateBiz.donateCtg}</span>
-            </div>
+            <span className="content-tag">#{donateBiz.donateCtg}</span>
             <div className="content-bizContent">
                 {
                     donateBiz.bizContent
@@ -354,61 +432,68 @@ function DonateMember(props){
     const setShowMemberList = props.setShowMemberList;
     const memberList = props.memberList;
 
-    return(
-
-        <div className="content-donateMember-wrap">
-            <div className="donateMember-zone">
-                {/* 기부한 회원 리스트 (관리자 전용) */}
-                <p className="donateMember-title">기부 회원 리스트</p>
-                
-                <button onClick={() => setShowMemberList(!showMemberList)}>
-                    {showMemberList ? '기부자 목록 숨기기' : '기부자 목록 보기'}
-                </button>
-
-                {
-                    showMemberList && memberList
-                    ? memberList.map((member, index) => (
-                        <MemberItem key={"member" + index} member={member} />
-                    ))
-                    : null
-                }
-            </div>
+    return (
+         <div className="donate-member-list-wrap">
+            <p className="donateMember-title">기부 회원 목록</p>
+            {memberList && memberList.length > 0 ? (
+                <div className="donate-member-list">
+                    <div className="donate-member-header">
+                        <div>아이디</div>
+                        <div>이름</div>
+                        <div>생년월일</div>
+                        <div>전화번호</div>
+                        <div>기부금액</div>
+                        <div>기부일시</div>
+                    </div>
+                    {memberList.map((member, index) => (
+                        <div className="donate-member-row" key={index}>
+                            <div>{member.memberId}</div>
+                            <div>{member.memberName}</div>
+                            <div>{member.memberBirth}</div>
+                            <div>{member.memberPhone}</div>
+                            <div>{member.donateMoney.toLocaleString()}원</div>
+                            <div>{member.donateDate}</div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <p>기부 회원이 없습니다.</p>
+            )}
         </div>
-    );
-
+        );
 }
 
-
+/*
 // 멤버 1명 객체
 function MemberItem(props){
     const member = props.member;
 
     return(
         <div className="member-card">
-            <div className="member-row">
-                <div className="member-label">아이디</div>
-                <div className="member-value">{member.memberId}</div>
-                <div className="member-label">이름</div>
-                <div className="member-value">{member.memberName}</div>
+            <div className="member-info-grid">
+                <div className="label">아이디</div>
+                <div className="value">{member.memberId}</div>
+
+                <div className="label">이름</div>
+                <div className="value">{member.memberName}</div>
+
+                <div className="label">생년월일</div>
+                <div className="value">{member.memberBirth}</div>
+
+                <div className="label">전화번호</div>
+                <div className="value">{member.memberPhone}</div>
+
+                <div className="label">기부금액</div>
+                <div className="value">{member.donateMoney.toLocaleString()}원</div>
+
+                <div className="label">기부일시</div>
+                <div className="value">{member.donateDate}</div>
             </div>
-            <div className="member-row">
-                <div className="member-label">생년월일</div>
-                <div className="member-value">{member.memberBirth}</div>
-                <div className="member-label">전화번호</div>
-                <div className="member-value">{member.memberPhone}</div>
-            </div>
-            <div className="member-row">
-                <div className="member-label">기부금액</div>
-                <div className="member-value">{member.donateMoney}원</div>
-                <div className="member-label">기부일시</div>
-                <div className="member-value">{member.donateDate}</div>
-            </div>
-            <hr />
-            <br />
         </div>
     );
 
 }
+    */
 
 function Donate(props){
     const onClose = props.onClose;
@@ -550,7 +635,7 @@ function Donate(props){
                         <p><strong>차감 후 잔액:</strong> {(totalMoney - selectedAmount).toLocaleString()}원</p>
                     </div>
                 )}
-                <div style={{ textAlign: "right", marginTop: "16px" }}>
+                <div className="donate-button">
                 <button onClick={donatePay} disabled={selectedAmount <= 0}>결제하기</button>
                 <button onClick={onClose}>닫기</button>
                 </div>
