@@ -72,39 +72,39 @@ export default function OrgData(){
             {data.allBiz == 0 ? "" :
             <div>
                 <span className="data-title">전체 기부 사업 {data.allBiz}건</span> <br/>
-                <span className="span-circle" style={{backgroundColor : "#AFCBFF"}}></span><span> 미승인 ({data.notApproveBiz}건)</span>
-                <span className="span-circle" style={{backgroundColor : "#FFFFD1"}}></span><span> 반려 ({data.rejectBiz}건)</span>
-                <span className="span-circle" style={{backgroundColor : "#B5EAD7"}}></span><span> 승인 ({data.approveBiz}건)</span>
-                <span className="span-circle" style={{backgroundColor : "#f8f9fa"}}></span><span> 기타 ({rest}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#ffd6a5"}}></span><span> 미승인 ({data.notApproveBiz}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#fdffb6"}}></span><span> 반려 ({data.rejectBiz}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#caffbf"}}></span><span> 승인 ({data.approveBiz}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#9bf6ff"}}></span><span> 기타 ({rest}건)</span>
                 <div className="donate-data">
-                    {data.notApproveBiz == 0 ? "" : <div style={{width : notApprove + "%", backgroundColor : "#AFCBFF"}}>{notApprove}%</div>}
-                    {data.rejectBiz == 0 ? "" : <div style={{width : reject + "%", backgroundColor : "#FFFFD1"}}>{reject}%</div>}
-                    {data.approveBiz == 0 ? "" : <div style={{width : approve + "%", backgroundColor : "#B5EAD7"}}>{approve}%</div>}
-                    {rest == 0 ? "" : <div style={{width : etc + "%", backgroundColor : "#f8f9fa"}}>{etc}%</div>}
+                    {data.notApproveBiz == 0 ? "" : <div style={{width : notApprove + "%", backgroundColor : "#ffd6a5"}}>{notApprove}%</div>}
+                    {data.rejectBiz == 0 ? "" : <div style={{width : reject + "%", backgroundColor : "#fdffb6"}}>{reject}%</div>}
+                    {data.approveBiz == 0 ? "" : <div style={{width : approve + "%", backgroundColor : "#caffbf"}}>{approve}%</div>}
+                    {rest == 0 ? "" : <div style={{width : etc + "%", backgroundColor : "#9bf6ff"}}>{etc}%</div>}
                 </div>
             </div>
             }
             {data.approveBiz == 0 ? "" :
             <div>
                 <span className="data-title">승인 기부 사업 {data.approveBiz}건</span> <br/>
-                <span className="span-circle" style={{backgroundColor : "#C7CEEA"}}></span><span> 진행 중 ({data.ingBiz}건)</span>
-                <span className="span-circle" style={{backgroundColor : "#E2F0CB"}}></span><span> 모금 종료 ({data.donateEndBiz}건)</span>
-                <span className="span-circle" style={{backgroundColor : "#D5AAFF"}}></span><span> 사업 종료 ({data.endBiz}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#ffadad"}}></span><span> 진행 중 ({data.ingBiz}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#ffd6a5"}}></span><span> 모금 종료 ({data.donateEndBiz}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#fdffb6"}}></span><span> 사업 종료 ({data.endBiz}건)</span>
                 <div className="donate-data">
-                    {data.ingBiz == 0 ? "" : <div style={{width : ing + "%", backgroundColor : "#C7CEEA"}}>{ing}%</div>}
-                    {data.donateEndBiz == 0 ? "" : <div style={{width : donateEnd + "%", backgroundColor : "#E2F0CB"}}>{donateEnd}%</div>}
-                    {data.endBiz == 0 ? "" : <div style={{width : end + "%", backgroundColor : "#D5AAFF"}}>{end}%</div>}
+                    {data.ingBiz == 0 ? "" : <div style={{width : ing + "%", backgroundColor : "#ffadad"}}>{ing}%</div>}
+                    {data.donateEndBiz == 0 ? "" : <div style={{width : donateEnd + "%", backgroundColor : "#ffd6a5"}}>{donateEnd}%</div>}
+                    {data.endBiz == 0 ? "" : <div style={{width : end + "%", backgroundColor : "#fdffb6"}}>{end}%</div>}
                 </div>
             </div>
             }
             {data.donateEndBiz == 0 ? "" :
             <div>
                 <span className="data-title">모금 종료 사업 {data.donateEndBiz}건</span> <br/>
-                <span className="span-circle" style={{backgroundColor : "#FFDAC1"}}></span><span> 미입금 ({notPay}건)</span>
-                <span className="span-circle" style={{backgroundColor : "#AFCBFF"}}></span><span> 입금 완료 ({data.payEndBiz}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#caffbf"}}></span><span> 미입금 ({notPay}건)</span>
+                <span className="span-circle" style={{backgroundColor : "#9bf6ff"}}></span><span> 입금 완료 ({data.payEndBiz}건)</span>
                 <div className="donate-data">
-                    {notPay == 0 ? "" : <div style={{width : payNotEnd + "%", backgroundColor : "#FFDAC1"}}>{payNotEnd}%</div>}
-                    {data.payEndBiz == 0 ? "" : <div style={{width : payEnd + "%", backgroundColor : "#AFCBFF"}}>{payEnd}%</div>}
+                    {notPay == 0 ? "" : <div style={{width : payNotEnd + "%", backgroundColor : "#caffbf"}}>{payNotEnd}%</div>}
+                    {data.payEndBiz == 0 ? "" : <div style={{width : payEnd + "%", backgroundColor : "#9bf6ff"}}>{payEnd}%</div>}
                 </div>
             </div>
             }
@@ -115,7 +115,7 @@ export default function OrgData(){
                     const bgColor = colors[index % colors.length];
 
                     return  <span key={"code"+index}>
-                                <span className="span-circle" style={{backgroundColor : bgColor}}></span><span > {code.donateCtg} {code.codeCount}개</span>
+                                <span className="span-circle" style={{backgroundColor : bgColor}}></span><span > {code.donateCtg} ({code.codeCount}개)</span>
                             </span>
                 })}
                 <div className="donate-data">

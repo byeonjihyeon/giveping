@@ -17,8 +17,14 @@ export default function JoinOrg(props){
 
     //아이디, 비밀번호, 단체명, 사업자번호, 전화번호, 단체 설명, 계좌번호 onChange 호출 함수
     function chgOrg(e){
-        org[e.target.id] = e.target.value;
-        setOrg({...org});
+        
+        if(e.target.id == "orgIntroduce" && e.target.value.length <= 150){
+            setOrg({...org, orgIntroduce : e.target.value});
+            setKeyUp(e.target.value.length);
+        }else if(e.target.id != "orgIntroduce") {
+            org[e.target.id] = e.target.value;
+            setOrg({...org});
+        }
     }
 
     /*아이디 관련 코드*/
@@ -141,6 +147,10 @@ export default function JoinOrg(props){
     const [orgEmailDomain, setOrgEmailDomain] = useState("");   //이메일 도메인
 
 
+    /*단체 설명 관련 코드*/
+    const [keyUp, setKeyUp] = useState(0);
+
+
     /*계좌번호 관련 코드*/
     const [bankSelect, setBankSelect] = useState("select");
 
@@ -204,6 +214,7 @@ function insertOrg() {
         { valid: emailChk !== 1, message: "이메일 주소 형식이 올바르지 않습니다.", inputRef : orgEmailDomainRef },
         { valid: org.orgAddrMain === "", message: "주소를 입력하세요.", inputRef : addressRef },
         { valid: org.orgIntroduce === "", message: "단체설명을 입력하세요.", inputRef : orgIntroduceRef },
+        { valid: keyUp > 150, message: "단체설명은 띄어스기 포함 150자 이하로 작성해주세요.", inputRef : orgIntroduceRef },
         { valid: org.orgAccountBank === "" || org.orgAccountBank === "select", message: "은행을 선택하세요.", inputRef : orgAccountBankRef },
         { valid: org.orgAccount == "", message: "계좌번호를 입력하세요.", inputRef : orgAccountRef },
         { valid: accountChk !== 1, message: "계좌번호 형식이 올바르지 않습니다.", inputRef : orgAccountRef }
@@ -340,7 +351,7 @@ function insertOrg() {
                                     multiline rows={4} value={org.orgIntroduce} onChange={chgOrg}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td></td><td><p className="key-up">{keyUp}/150</p></td></tr>
                             <tr>
                                 <th>
                                     <label htmlFor="orgAccount" className="label">계좌번호</label>
@@ -369,7 +380,7 @@ function insertOrg() {
                         <tfoot>
                             <tr>
                                 <th colSpan={2}>
-                                    <Button variant="contained" type="submit" className="nextBtn" style={{margin : "10px 0", height : "40px", fontSize : "20px"}}>다음</Button>
+                                    <Button variant="contained" type="submit" className="nextBtn" id="mui-btn" style={{margin : "10px 0", height : "40px", fontSize : "20px"}}>다음</Button>
                                 </th>
                             </tr>
                         </tfoot>
@@ -452,7 +463,7 @@ function OrgId(props){
         <>
             <TextField type="text" id="orgId" className="input-id" value={org.orgId} inputRef={orgIdRef}
             onChange={chgOrg} onBlur={checkOrgId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
-            <Button variant="contained" type="button" onClick={checkOrgIdUnique} style={{marginLeft : "10px"}}>중복체크</Button>
+            <Button variant="contained" type="button" onClick={checkOrgIdUnique} style={{marginLeft : "10px"}} id="mui-btn">중복체크</Button>
         </>
     )
 }
@@ -605,7 +616,7 @@ function OrgAddr(props){
     return (
         <>
             <TextField type="text" id="orgAddrMain" className="input-addr" inputRef={addressRef} placeholder="주소" slotProps={{input: {readOnly: true}}}/>
-            <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
+            <Button variant="contained" type="button" id="mui-btn" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
             <TextField type="text" id="orgAddrDetail" className="input-first" inputRef={detailAddressRef}
             value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
         </>

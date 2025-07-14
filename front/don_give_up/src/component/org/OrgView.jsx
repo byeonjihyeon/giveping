@@ -7,5 +7,7 @@ import useUserStore from "../../store/useUserStore";
 
 export default function OrgView(){
 
-
+    return (
+        <h1>후원단체 상세 페이지</h1>
+    )
 }

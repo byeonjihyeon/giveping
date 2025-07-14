@@ -29,7 +29,7 @@ export default function OrgList(){
             setOrgList(res.data.resData.orgList);
             setPageInfo(res.data.resData.pageInfo);
         });
-
+        
         /*
         useEffect 함수의 첫번 째 매개변수로 전달한 function이 실행되는 조건
         (1) 컴포넌트 첫 랜더링(마운트) 이후
@@ -42,7 +42,7 @@ export default function OrgList(){
             <div className="page-title">후원단체</div>
 
             <div className="org-list-wrap">
-                <ul className="posting-wrap">
+                <ul className="posting-wrap grid-3x4">
                     {orgList.map(function(org, index){
                         //게시글 1개에 대한 JSX를 BoardItem이 return한 JSX로
                         return <BoardItem key={"org"+index} org={org} serverUrl={serverUrl} />
@@ -68,7 +68,7 @@ function BoardItem(props) {
     return (
         <li className="posting-item" onClick={function(){
             //상세보기 (BoardView) 컴포넌트 전환하며, 게시글 번호 전달
-            navigate('/org/view/' + org.orgNo);
+            navigate('/orgview/' + org.orgNo);
         }}>
             <div className="posting-img">
                 {/* 썸네일 이미지가 등록된 경우에는 백엔드로 요청하고, 등록되지 않은 경우에는 기본 이미지 표기되도록 처리 */}
@@ -80,9 +80,12 @@ function BoardItem(props) {
                 <div className="posting-sub-info">
                 
                 {org.categoryList && org.categoryList.map((orgCtg, idx) => (
-                <span key={idx}>{orgCtg}</span>
+                <span key={idx}>#{orgCtg} </span>
         ))}
-                    <span>{org.orgTemperature}</span>
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"}}></div>
+                    </div>
+                    <span>{org.orgTemperature}ºC</span>
                 </div>
             </div>
         </li>

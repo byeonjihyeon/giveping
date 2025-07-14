@@ -293,7 +293,7 @@ export default function OrgPost(){
                                             donateBiz={donateBiz} setDonateBiz={setDonateBiz}/>
                         })}
                         <div style={{marginBottom : "5px"}}>목표 금액 : {(donateBiz.bizGoal || 0).toLocaleString("ko-KR")}원</div>
-                        <Button variant="contained" type="button" onClick={addBizPlan}>사용 계획 추가</Button>
+                        <Button variant="contained" type="button" onClick={addBizPlan} id="mui-btn">사용 계획 추가</Button>
                     </div>
                 </div>
                 <div>
@@ -331,7 +331,7 @@ export default function OrgPost(){
                     </div>
                 </div>
                 <div style={{textAlign : "center"}}>
-                    <Button variant="contained" type="submit" style={{width : "180px", height : "50px", fontSize : "20px"}}>등록</Button>
+                    <Button variant="contained" type="submit" id="mui-btn" style={{width : "180px", height : "50px", fontSize : "20px"}}>등록</Button>
                 </div>
             </form>
         </div>

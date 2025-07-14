@@ -43,7 +43,7 @@ export default function OrgDelete(){
         setOrg({...org, orgPw : e.target.value});
     }
 
-    //비밀번호 확인
+    //비밀번호 확인wrap
     function chkPw(){
         let options = {};
         options.url = serverUrl + "/org/chkPw";
@@ -97,7 +97,7 @@ export default function OrgDelete(){
     }
 
     return (
-        <section className="section delete-wrap">
+        <section className="section org-delete-wrap">
             <h2 className="page-title">탈퇴하기</h2>
             {bizList == ""
             ? ""
@@ -135,9 +135,9 @@ export default function OrgDelete(){
                     chkPw(); /*비밀번호 확인*/}} style={type == 1 ? {display : "none"} : {display : "flex"}}>
                     <label htmlFor="orgPw" className="label" style={{fontWeight : "bold"}}>비밀번호 </label>
                     <TextField type="password" id="orgPw" className="input-login" value={org.orgPw} onChange={chgPw}/>
-                    <Button variant="contained" type="submit" style={{marginLeft : "5px"}}>확인</Button>
+                    <Button variant="contained" type="submit" style={{marginLeft : "5px"}} id="mui-btn">확인</Button>
                 </form>
-                <Button variant="contained" type="button" className="orgBtn" onClick={deleteOrg}
+                <Button variant="contained" type="button" className="orgBtn" onClick={deleteOrg} id="mui-btn"
                 style={type == 0 ? {display : "none", height : "40px", fontSize : "20px"} : {height : "40px", fontSize : "20px"}}>탈퇴 신청</Button>
             </div>
         </section>

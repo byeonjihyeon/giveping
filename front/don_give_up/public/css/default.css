@@ -127,6 +127,16 @@ body {
     text-align: center;
     margin-top: 30px;
 }
+#mui-btn {
+    background-color: lightblue;
+    color: black;
+}
+#mui-btn a {
+    color: black;
+}
+#detail-btn {
+    background-color: #999;
+}
 
 /*회원가입*/
 /*회원가입 메인*/
@@ -225,7 +235,7 @@ body {
 }
 
 /*회원가입-카테고리 선택*/
-.section.category-wrap {
+.section.category-select-wrap {
     width: 700px;
     min-height: 600px;
     display: block;
@@ -251,15 +261,20 @@ body {
     background-color: #fff;
     text-align: center;
 }
-.section.category-wrap p {
+.section.category-select-wrap p {
     font-size: 14px;
     padding-left: 10px;
 }
 
+.select-ctg-wrap>.select-ctg {
+    font-weight: bold;
+}
 .select-ctg-wrap>.select-ctg.active {
-  background-color: #3082ce;
-  color: white;
-  border-color: #3082ce;
+  background-color: lightblue;
+  border-color: lightblue;
+}
+.key-up {
+    text-align: right;
 }
 
 /*로그인*/

@@ -87,7 +87,7 @@ export default function OrgBiz(){
                                         <td>{biz.bizName}</td>
                                         {clickBtn == "allBiz" ? <AllBiz biz={biz}/>
                                                             : <ApprovalBiz biz={biz} clickBtn={clickBtn}/>}
-                                        <th><Button variant="contained"  onClick={bizView}>상세 페이지</Button></th>
+                                        <th><Button variant="contained"  onClick={bizView} id="detail-btn">상세 페이지</Button></th>
                                     </tr>
                         })}
                     </tbody>
