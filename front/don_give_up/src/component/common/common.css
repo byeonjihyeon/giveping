@@ -120,7 +120,8 @@
     background-color: #87CEEB;
     border-radius: 5px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     
 }
 
@@ -129,5 +130,16 @@
     color: white;
     font-size: 25px;
 
+}
+
+.main-category {
+    display: flex;
+    gap: 10px
+}
+
+.main-category>* {
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
 }
 
