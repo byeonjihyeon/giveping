@@ -18,6 +18,7 @@ import JoinCategory from './component/join/JoinCategory';
 import SearchIdPw from './component/common/SearchIdPw';
 import CompanyIntroduction from './component/admin/CompanyIntro';
 import Organization from'./component/org/OrgList';
+import OrgView from './component/org/OrgView';
 
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
             <Route path="/search/:type" element={<SearchIdPw/>}/>
             <Route path='/companyIntroduction' element={<CompanyIntroduction/>}/>
             <Route path='/organization/*' element={<Organization/>}/>
+            <Route path="/orgView/:orgNo" element={<OrgView/>}/>
           </Routes>
         </main>
       <Footer/>

@@ -395,7 +395,7 @@
 		 ( select rownum as rnum, a.* 
 		   from 
 		 ( select * from tbl_org 
-		 WHERE org_status IN (0, 1, 2)
+		 WHERE org_status = 1
 		 order by org_status
 		  ) a 
 		 ) a
