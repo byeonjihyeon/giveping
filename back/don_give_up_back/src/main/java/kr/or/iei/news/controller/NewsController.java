@@ -100,8 +100,7 @@ public class NewsController {
 	@PostMapping
 	public ResponseEntity<ResponseDTO> insertNews(@ModelAttribute MultipartFile newsThumb, // 썸네일 파일 객체
 			@ModelAttribute News news) {
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 게시글 정보 조회 중, 오류가 발생하였습니다.", null,
-				"error");
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 게시글 등록 중, 오류가 발생하였습니다.", null, "error");
 
 		try {
 			// 썸네일 파일 업로드
@@ -112,9 +111,10 @@ public class NewsController {
 
 			// DB에 게시글 정보 등록
 			int result = service.insertNews(news);
-
-			res = new ResponseDTO(HttpStatus.OK, "게시글이 등록 되었습니다.", true, "success");
-
+			System.out.println("result : " + result);
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "게시글이 등록 되었습니다.", true, "success");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
