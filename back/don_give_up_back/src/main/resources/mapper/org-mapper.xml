@@ -363,7 +363,7 @@
 <!--  전체 단체 수   -->
 	<select id="selectOrgCount" resultType="_int">
 	 select count(*) from tbl_org
-	 where org_status in (0,1,2)
+	 where org_status = 1
 	</select>
 	
 	
@@ -374,7 +374,7 @@
 	
 	
    <!--  전체 단체 목록 조회  -->
-    <select id="selectOrgList" parameterType="PageInfo" resultType="Org">
+    <select id="selectOrgList" parameterType="map" resultType="Org">
 	 select org_no as orgNo,
 	        org_id as orgId,
 	        org_name as orgName, 

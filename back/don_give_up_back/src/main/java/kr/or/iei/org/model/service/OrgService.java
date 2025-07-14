@@ -372,8 +372,11 @@ public class OrgService {
 		
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
 		
+		  HashMap<String, Object> param = new HashMap<String, Object>();
+		  param.put("start", pageInfo.getStart());
+		  param.put("end", pageInfo.getEnd());
 		
-		ArrayList<Org> orgList = dao.selectOrgList(reqPage);
+		ArrayList<Org> orgList = dao.selectOrgList(param);
 		System.out.println("단체목록"+ orgList);
 		
 	    for (Org org : orgList) {
