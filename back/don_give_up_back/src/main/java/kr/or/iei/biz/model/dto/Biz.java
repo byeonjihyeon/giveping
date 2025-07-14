@@ -37,6 +37,9 @@ public class Biz {
 	// 기부 사업 게시글에 대한 파일 정보 저장 변수 
 	private List<BizFile> fileList;
 	
+	// 삭제된 모금액 사용 계획 번호 배열
+	private int[] deletedPlanNos;
+	
 	// 삭제 파일 번호 배열 저장 변수
 	private int [] delBizFileNo;
 	

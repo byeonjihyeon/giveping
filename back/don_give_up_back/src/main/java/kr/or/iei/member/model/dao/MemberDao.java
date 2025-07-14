@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.member.model.dto.MemberAlarm;
 import kr.or.iei.member.model.dto.MemberDonation;
@@ -95,9 +96,8 @@ public interface MemberDao {
 	//회원 설문조사 내역 조회
 	ArrayList<MemberSurveyAnswer> selectSurveyHistory(int memberNo);
 	
-	//충전하기
-	int charge(HashMap<String, Integer> memberMap);
-	
+	//회원 충전하기 버튼 클릭시, 주문번호 미리 생성 및 금액 입력 + 회원번호 가져오기
+	int charge(HashMap<String, Object> memberMap);
 
 	//회원 인증계좌 업데이트
 	int updateMemberAccount(Member member);
@@ -115,5 +115,17 @@ public interface MemberDao {
 
 	//임시 비밀번호로 변경
 	void updateRandomPw(Member member);
+	
+	//주문번호 미리 생성 및 결제할 금액 저장
+	int insertOrder(HashMap<String, Object> orderMap);
+	
+	//결제 실패시, 미리 생성한 주문번호 행 지우기
+	void deleteCharge(String orderId);
+	
+	//회원 관심카테고리와 일치하는 단체 조회
+	List<String> selecOrgList(List<String> categories);
+	
+	//회원 관심카테고리를 가진 단체와 일치하는 사업 조회
+	List<Biz> selectRecommandBizList(List<String> orgList);
 	
 }

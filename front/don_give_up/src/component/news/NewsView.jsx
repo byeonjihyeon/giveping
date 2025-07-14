@@ -152,8 +152,11 @@ export default function NewsView(){
                 <div className="board-content-wrap">
                     {news.newsContent ? <Viewer initialValue={news.newsContent} /> : ""}
                 </div>
-
+                        {/*
                 {(loginMember != null && (loginMember.memberLevel === 1 || loginOrg != null)) && (
+                    
+                )}
+                    */ }
                     <div className="view-btn-zone">
                     <Link to={"/news/update/" + news.newsNo} className="btn-primary lg">
                         수정
@@ -161,10 +164,9 @@ export default function NewsView(){
                     <button type="button" className="btn-secondary lg" onClick={deleteNews}>
                         삭제
                     </button>
-                    </div>
-                )}
+                    </div> 
                 </div>
-
+                
             </section>
             
             <section className="section board-comment-wrap">

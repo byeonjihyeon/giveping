@@ -1,4 +1,6 @@
 package kr.or.iei.common.model.dto;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +28,7 @@ public class CommonOrg {
 	private String orgUrl;			//단체 홈페이지 url
 	
 	
-	//private List<String> categoryList;	//주요 카테고리 리스트
+	private List<String> categoryList;	//주요 카테고리 리스트
 	//private List<Biz> bizList;			//기부사업 리스트
 
 }

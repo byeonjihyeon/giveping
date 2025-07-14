@@ -1,0 +1,21 @@
+select {
+    height: 30px;
+    border: 1px solid #dcdcdc;
+    font-size: 18px;
+    width: 80px;
+}
+
+#startMonth {
+    width: 60px;
+}
+
+#endMonth {
+    width: 60px;
+}
+
+.searchBtn {
+    height: 30px;
+    width: 60px;
+    background-color: lightblue;
+    border: none;
+}

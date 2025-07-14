@@ -118,3 +118,7 @@
   gap: 20px;                  /* 버튼 사이 간격 */
   padding: 10px;
 }
+
+.MuiPaper-root {
+    max-height: 200px;
+}

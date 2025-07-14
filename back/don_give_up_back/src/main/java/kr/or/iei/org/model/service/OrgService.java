@@ -178,18 +178,8 @@ public class OrgService {
 
 	//단체 프로필 초기화(삭제)
 	@Transactional
-	public String deleteThumb(int orgNo) {
-		//1) 기존 파일명 조회(서버에서 삭제하기 위함)
-		String prevFilePath = dao.selectThumb(orgNo);
-		
-		//2) 단체 프로필 초기화(삭제)
-		int result = dao.deleteThumb(orgNo);
-		
-		if(result > 0) {
-			return prevFilePath;
-		}else {			
-			return null;
-		}
+	public int deleteThumb(int orgNo) {
+		return dao.deleteThumb(orgNo);
 	}
 
 	//단체 프로필 수정

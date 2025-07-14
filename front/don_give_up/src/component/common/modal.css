@@ -1,14 +1,14 @@
 .modal-overlay {
     position: fixed;
     inset: 0; /* == top, bottom, right, left: 0;*/
-    background-color: rbga(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
+    box-shadow: none;
     justify-content: center;
     align-items: center;
     z-index: 999;
     animation: fadeIn 0.3s ease; /* ease == 애니메이션 시작은 느리게, 중간은 빠르게, 끝부분 느리게 */
 }
-
 /* 애니메이션 */
 @keyframes fadeIn { /* 요소가 서서히 투명에서 불투명 */
     from { opacity: 0;} /*opacity: 투명도 0 == 완전히 투명, 1 == 불투명*/ 
@@ -19,12 +19,11 @@
     width: 500px;
     background-color: white;
     max-width: 90%;
-    border-radius: 8px;
     overflow: hidden; /* 요소의 내용이 지정한 크기를 넘으면 보이지 않게*/
 }    
 
 .modal-header {
-    border: 1px solid black;
+    padding: 15px;
     display: flex;
     justify-content: space-between;
 }
@@ -33,17 +32,131 @@
     cursor: pointer;
 }
 
+.modal-content {
+    margin: 0 auto;
+    box-shadow: none !important;
+    padding: 0px !important; 
+    width: 500px;
+}
+
+.charge-input-wrap {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dcdcdc;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+}
+
+.charge-input-wrap>div>input {
+    width: 300px;
+    border: none;
+    font-size: 18px;
+    text-align: right;
+    height: 30px;
+    padding-right: 10px;
+}
+
 .money-range {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
 
 .money-range>*{
-    width: 150px;
-    height: 50p;
-    border: 1px solid black;
+    width: 120px;
+    height: 30px;
+    border: 1px solid #dcdcdc;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 5px;
 }
 
+.charge-result {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-top: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+    height: 50px;
+    text-align: end;
+    line-height: 50px;
+    padding-right: 10px;
+}
+.charge-result>span:last-of-type{
+    color: lightblue;
+    font-weight: bold;
+    font-size: 18px;
+}
 
+.charge>button{
+    width: 100%;
+    height:40px;
+    background-color: lightblue;
+    border: none;
+}
 
+.charge-msg {
+    text-align: right;
+    padding-right: 5px;
+}
 
+.charge{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.refund-wrap {
+    margin: 15px 0px;
+}
+
+.possible-money{
+    display: flex;
+    border-top : 1px solid #dcdcdc;
+    height: 30px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 5px;
+}
+
+.account-info {
+    display: flex;
+    border-top : 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
+    height: 30px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 5px;
+}
+
+.refund-wrap button {
+    margin-top: 30px;
+    width: 100%;
+    background-color: lightblue;
+    border: none;
+    height: 30px;
+}
+.input-refund {
+    margin-top: 30px;
+    text-align: right;
+    border-bottom: 1px solid #dcdcdc;
+    padding-right: 5px;
+    height: 30px;
+}
+
+.input-refund>input {
+    text-align: right;
+    font-size: 18px;
+    border: none;
+    padding-right: 10px;
+    width: 90%;
+    height: 30px;
+}
+
+.refund-wrap p {
+    margin-top: 5px;
+    text-align: right;
+    font-size: 13px;
+    padding-right: 5px;
+}

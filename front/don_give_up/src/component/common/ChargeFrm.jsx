@@ -1,6 +1,8 @@
+
 import { useRef, useState } from "react"
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
+
 
 //충전 컴포넌트
 export default function ChargeFrm(props){
@@ -19,6 +21,9 @@ export default function ChargeFrm(props){
     
     //금액 유효성 메시지 변수
     const [chargeMsg, setChargeMsg] = useState("");
+
+    //금액 유효성 체크 0: 입력전 1: 유효성x 2: 통과
+    const [chkCharge, setChkCharge] = useState(0);
 
     //최대 충전금액 (100만원)
     const max = "1000000";
@@ -57,11 +62,11 @@ export default function ChargeFrm(props){
 
     //해당 돈단위 클릭시 돈단위만큼 증가하게 하게끔
     const addMoneyArr = ([
-        {add : 1000, content: "+1,000원"},
-        {add : 3000, content: "+3,000원"},
-        {add : 5000, content: "+5,000원"},
-        {add : 10000, content: "+10,000원"},
-        {add : 50000, content: "+50,000원"}
+        {add : 1000, content: "+ 1,000원"},
+        {add : 3000, content: "+ 3,000원"},
+        {add : 5000, content: "+ 5,000원"},
+        {add : 10000, content: "+ 10,000원"},
+        {add : 50000, content: "+ 50,000원"}
     ])
 
     //충전하기 버튼 클릭시 동작함수
@@ -69,6 +74,7 @@ export default function ChargeFrm(props){
         
         if(charge == "" || charge.slice(-3) != '000' || charge.length <= 3){    //빈값이거나, 천원단위가 아닌경우 유효성 X
             setChargeMsg("금액은 천원 단위로 입력하여주세요.");
+            setChkCharge(1);
             return;
         }
 
@@ -94,24 +100,25 @@ export default function ChargeFrm(props){
     return (
         <div className="charge-wrap">
             <div>
-                <div>
-                    <span>기부금액</span>
-                    <input type='text' value={charge} onChange={chgCharge} ref={inputEl} /> <span> 원</span>
+                <div className="charge-input-wrap">
+                    <span>결제금액</span>
+                    <div>
+                        <input type='text' value={charge} onChange={chgCharge} ref={inputEl} placeholder="금액입력" /> 
+                        <span> 원</span>
+                    </div>
                 </div>
-                <p>{chargeMsg}</p>
+               
             </div>
             <div className="money-range">
                 {
                 addMoneyArr.map(function(money, index){
                     function addCharge(){   //해당 클릭시 +금액만큼 증가하는 함수
-                    
 
                         let sum = Number(charge) + money.add;
                         
                         if(sum > 1000000){ //합이 백만원보다 크다면 종료.
                             return;
                         }
-
                         let sumStr = String(sum);
                         setCharge(sumStr);
                         setCommaCharge(addCommas(sumStr));
@@ -124,12 +131,13 @@ export default function ChargeFrm(props){
                     inputEl.current.focus();
                 }}>직접입력</div>
             </div>
-            <div>
-                <span>총</span> 
-                <span>{commaCharge} 원</span>
+            <div className="charge-result">
+                <span>총 </span> 
+                <span>{commaCharge}원</span>
             </div>
-            <div>
-                <button type="button" onClick={recharge}>결제하기</button>
+            <p className={chkCharge == 1 ? "charge-msg invalid" : "charge-msg"}> {chargeMsg}</p>
+            <div className="charge">
+                <button type="button" onClick={recharge}>충전하기</button>
             </div>
         </div>
     )

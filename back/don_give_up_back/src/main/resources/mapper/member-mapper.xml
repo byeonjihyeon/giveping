@@ -70,7 +70,7 @@
 	    m.member_addr_main,
 	    m.member_addr_detail,
 	    m.member_profile,
-	    TO_CHAR(m.total_money, 'FM999,999,999PR') AS total_money,
+	    to_char(m.total_money, 'FM999,999,999PR') AS total_money,
 	    TO_CHAR((
 	        SELECT SUM(d.donate_money)
 	        FROM tbl_donation_list d
@@ -477,7 +477,7 @@
 		where rownum between 1 and #{pageInfo.end}
 	</select>
 	
-	<!-- 충전하기 -->
+	<!-- 회원 충전하기 -->
 	<insert id="charge"
 	parameterType="map">
 	insert into tbl_charge values (seq_charge.nextval, #{memberNo}, #{charge}, sysdate) 
@@ -500,6 +500,7 @@
     where member_no = #{memberNo}		 
 	</update>
 	
+	<!-- 출금하기 -->
 	<insert id="refund"
 	parameterType="map">
 	insert into tbl_refund values (
@@ -513,4 +514,58 @@
 	null
 	)
 	</insert>
+	
+	<!-- 결제 실패시, 미리 생성한 주문번호 행 지우기 -->
+	<delete id="deleteCharge"
+	parameterType="String">
+	delete from tbl_charge where charge_no = #{orderId}
+	</delete>
+	
+	<!-- 회원 관심카테고리와 일치하는 단체 조회 -->
+	<select id="selecOrgList"
+	parameterType="map"
+	resultType="String">
+	select distinct org_no 
+	from tbl_org_donation 
+	where donate_code in
+	<foreach collection="list"
+			 item="no"
+			 open="("
+			 separator=","
+			 close=")">
+			 #{no}
+	</foreach>
+	order by org_no
+	</select>
+	
+	<!-- 회원관심카테고리를 가진 단체와 일치하는 사업 조회 -->
+	<select id='selectRecommandBizList'
+	parameterType="list"
+	resultType="Biz">
+	select a.*  
+  	  from(
+	       select rownum as rnum, a.*
+	         from
+	             (select biz_no as bizNo,
+	                     org_no as orgNo,
+	                     donate_code as donateCode,
+	                     (select donate_ctg from tbl_donate_code a where d.donate_code = a.donate_code) as donateCtg,
+	                     biz_name as bizName,
+	                     biz_content as bizContent,
+	                     biz_donate_end as bizDonateEnd
+	               from tbl_donate_biz d
+	      		  where sysdate &lt; biz_donate_end
+	               order by bizNo) a   
+	        ) a 
+	<if test="list != null and list.size() != 0">        
+	where donateCode in
+	<foreach collection="list"
+			 item="no"
+			 open="("
+			 separator=","
+			 close=")">
+			 #{no}
+	</foreach>
+	</if>       	            
+	</select>
 </mapper>	
