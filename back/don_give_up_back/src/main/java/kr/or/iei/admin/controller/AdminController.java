@@ -2,7 +2,7 @@ package kr.or.iei.admin.controller;
 
 
 import java.util.HashMap;
-
+import kr.or.iei.org.controller.OrgController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +30,17 @@ import kr.or.iei.member.model.dto.Member;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private final OrgController orgController;
+
 	@Autowired
 	private AdminService service;
 	
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+    AdminController(OrgController orgController) {
+        this.orgController = orgController;
+    }
 
 	// 전체 회원 리스트 조회
 	@GetMapping("/memberManage/{reqPage}")
@@ -128,7 +134,7 @@ public class AdminController {
 			int result = service.updateBizStatus(biz);
 			
 			if (result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "승인되어 메일발송이 완료되었습니다.", true, "success");
+				res = new ResponseDTO(HttpStatus.OK, "변경이 완료되었습니다.", true, "success");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -193,6 +199,7 @@ public class AdminController {
 
 			try {
 				HashMap<String, Object> deleteMap = service.selectDeleteList(reqPage,showType);
+				
 				res = new ResponseDTO(HttpStatus.OK, "", deleteMap, "");
 			} catch (Exception e) {
 				e.printStackTrace();

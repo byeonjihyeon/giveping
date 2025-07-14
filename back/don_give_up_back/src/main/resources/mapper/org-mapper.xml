@@ -365,4 +365,48 @@
 						 order by bizDonateStart desc, bizDonateEnd desc) a )
 		 where rnum between 1 and 5
 	</select>
-</mapper>
+
+
+<!--  전체 단체 수   -->
+	<select id="selectOrgCount" resultType="_int">
+	 select count(*) from tbl_org
+	 where org_status in (0,1,2)
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+   <!--  전체 단체 목록 조회  -->
+    <select id="selectOrgList" parameterType="PageInfo" resultType="Org">
+	 select org_no as orgNo,
+	        org_id as orgId,
+	        org_name as orgName, 
+	        org_biznum as orgBiznum,
+	        org_phone as orgPhone,
+            org_email as orgEmail, 
+	        org_addr_main as orgAddrMain, 
+	        org_addr_detail as orgAddrDetail, 
+	        org_introduce as orgIntroduce,
+	        org_account as orgAccount,
+	        org_account_bank as orgAccountBank,
+	        org_enroll_date as orgEnrollDate,
+	        org_temperature as orgTemperature, 
+	        org_url as orgUrl,
+	        org_thumb as orgThumbPath,
+	        org_status as orgStatus  
+	 from 
+		 ( select rownum as rnum, a.* 
+		   from 
+		 ( select * from tbl_org 
+		 WHERE org_status IN (0, 1, 2)
+		 order by org_status
+		  ) a 
+		 ) a
+	 where rnum between #{start} and #{end} 
+    </select>
+    </mapper>
+    

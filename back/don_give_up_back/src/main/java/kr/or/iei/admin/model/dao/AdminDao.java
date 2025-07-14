@@ -27,15 +27,16 @@ public interface AdminDao {
 
 	int changeBoardStatus(Board board);
 */
+	
+	//회원관리 메소드
 	int selectMemberCount(Map<String, Object> listMap);
 	
 	ArrayList<AdminMember> selectMemberList(Map<String, Object> listMap);
 
-	//ArrayList<Member> selectMemberList(PageInfo pageInfo, String searchType, String keyword);
-
 	int changeMemberLevel(AdminMember member);
 
 	
+	//단체 관리 메소드
 	int selectOrgCount();
 
 	ArrayList<AdminOrg> selectOrgList(PageInfo pageInfo);
@@ -43,41 +44,50 @@ public interface AdminDao {
 	int updateOrgStatus(AdminOrg org);
 
 	
+	//기부사업 관리 메소드
 	int selectBizCount();
 
 	ArrayList<AdminBiz> selectBizList(PageInfo pageInfo);
 
 	int updateBizStatus(AdminBiz biz);
 	
+	
+	//환불관리 메소드
+	int selectRefundCount(String showType);
+	
 	ArrayList<AdminRefund> selectRefundList(Map<String, Object> paramMap);
 	
-	int selectRefundCount(String showType);
-
 	int updateRefundStatus(AdminRefund refund);
 
-
-	ArrayList<AdminReport> selectReportList(PageInfo pageInfo);
-
 	
+    //신고내역 관리 메소드
 	int selectReportCount();
+	
+	ArrayList<AdminReport> selectReportList(PageInfo pageInfo);
 
 	AdminBiz selectBizStatus(int bizNo);
 
+	
+	//탈퇴단체 메소드
 	ArrayList<AdminOrg> selectDeleteList(Map<String, Object> paramMap);
 
 	int selectDeleteCount(String showType);
+		
+	List<AdminBiz> selectOneOrgBizList(int orgNo);
+	
+	int updateDelStatus(AdminOrg org);
 
+	AdminOrg selectOrgStatus(int orgNo);
+
+	
+	//송금내역 관리 메소드
+	int selectPayoutCount(String showType);
+	
 	ArrayList<AdminPayout> selectPayoutList(Map<String, Object> paramMap);
 
 	int updatePayoutStatus(AdminPayout adminPayout);
 
-	int selectPayoutCount(String showType);
-
-	List<AdminBiz> selectOneOrgBizList(int orgNo);
-
-	AdminOrg selectOrgStatus(int orgNo);
-
-	int updateDelStatus(AdminOrg org);
+	
 
 	
 }

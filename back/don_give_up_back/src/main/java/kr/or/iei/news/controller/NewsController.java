@@ -259,7 +259,7 @@ public class NewsController {
 	public ResponseEntity<ResponseDTO> updateComment(@RequestBody Comment comment) {
 		
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 수정 중, 오류가 발생하였습니다.", false, "error");
-
+                
 		try {
 			int result = service.updateComment(comment);
 			if(result > 0) {
@@ -275,7 +275,7 @@ public class NewsController {
 	@GetMapping("/comment/report")
 	public ResponseEntity<ResponseDTO> selectReportCode(){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신고 코드 조회 중, 오류가 발생하였습니다.", null, "error");
-
+		 
 		try {
 			ArrayList<NewsReport> newsReportList = service.selectReportCode();
 			if (newsReportList != null) {
@@ -292,7 +292,7 @@ public class NewsController {
 	// 댓글 신고 등록
 	@PostMapping("/comment/report")
 	public ResponseEntity<ResponseDTO> regCommentReport(@RequestBody NewsReport newsReport){
-		
+		 System.out.println("comment="+newsReport);
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 신고 처리 중, 오류가 발생하였습니다.", false, "error");
 
 		try {

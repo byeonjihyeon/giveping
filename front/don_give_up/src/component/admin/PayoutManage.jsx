@@ -62,7 +62,7 @@ export default function PayoutManage(){
     return (
         <>
             <div className="page-title">관리자 모금액 송금 관리</div>
-        <div className="payout-nav">
+        <div className="two-nav">
             <ul>
                  <li>
                     <button onClick={() =>{ setShowType("todo"); setReqPage(1);}}>미송금내역</button>
@@ -90,7 +90,7 @@ export default function PayoutManage(){
                 <tbody>
                     
                    {payoutList.map(function(payout, index){
-                        return <BoardItem key={"payout"+index} showType={showType} payout={payout} payoutList={payoutList} setPayoutList={setPayoutList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
+                        return <Payout key={"payout"+index} showType={showType} payout={payout} payoutList={payoutList} setPayoutList={setPayoutList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
                     
                    })}
                   
@@ -104,7 +104,7 @@ export default function PayoutManage(){
 
 }
 
-function BoardItem(props) {
+function Payout(props) {
     const payout = props.payout;
     
     const payoutList = props.payoutList;

@@ -66,7 +66,7 @@ export default function BizManage(){
                 </thead>
                 <tbody>
                    {bizList.map(function(biz, index){
-                        return <BoardItem key={"biz"+index} biz={biz} bizList={bizList} setBizList={setBizList} />
+                        return <BizItem key={"biz"+index} biz={biz} bizList={bizList} setBizList={setBizList} />
                    })}
                 </tbody>
             </table>
@@ -77,8 +77,8 @@ export default function BizManage(){
     );
 }
 
-//게시글 1개
-function BoardItem(props) {
+//1행 정보
+function BizItem(props) {
     const biz = props.biz;
     const bizList = props.bizList;
     const setBizList = props.setBizList;
@@ -142,7 +142,7 @@ function bizDetail(props) {
             <td>{biz.bizRegDate.substring(0,10)}</td>
             <td>{biz.bizName}</td>
             <td>
-                <button onClick={bizDetail}>열람</button>
+                <button className="show" onClick={bizDetail}>열람</button>
             </td>
      
             <td>

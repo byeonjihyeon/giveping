@@ -3,6 +3,7 @@ package kr.or.iei.org.controller;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -456,6 +457,27 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos
 		
 		try {
 			HashMap<String, Object> orgMap = service.selectOrgMain(orgNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", orgMap, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//단체 목록 조회 (후원단체 메뉴 클릭 시)
+	@NoTokenCheck
+	@GetMapping("/organization/list/{reqPage}")
+	public ResponseEntity<ResponseDTO> selectOrgList(@PathVariable int reqPage) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 목록 조회 중 오류가 발생하였습니다.", null, "error");
+		  System.out.println("reqPage=" + reqPage);
+		try {
+			 
+			HashMap<String, Object> orgMap = service.selectOrgList(reqPage);
+		
+		  System.out.println("orgMap=" + orgMap);
 			
 			res = new ResponseDTO(HttpStatus.OK, "", orgMap, "");
 			
