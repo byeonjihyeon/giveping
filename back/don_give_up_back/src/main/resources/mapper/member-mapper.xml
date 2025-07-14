@@ -266,7 +266,7 @@
 		LEFT JOIN tbl_news n ON a.news_no = n.news_no
 		LEFT JOIN tbl_org o2 ON n.org_no = o2.org_no
 		WHERE a.member_no = #{_parameter} and a.alarm_type not in (3,4)
-		order by alarm_date desc
+		order by a.alarm_read, a.alarm_date desc
 	</select>
 	
 	<resultMap type="Alarm" id="AlarmMap">
@@ -548,6 +548,7 @@
 	         from
 	             (select biz_no as bizNo,
 	                     org_no as orgNo,
+	                     (select org_name from tbl_org a where d.org_no = a.org_no) as orgName,
 	                     donate_code as donateCode,
 	                     (select donate_ctg from tbl_donate_code a where d.donate_code = a.donate_code) as donateCtg,
 	                     biz_name as bizName,
@@ -569,4 +570,22 @@
 	</foreach>
 	</if>       	            
 	</select>
+	
+	<!-- 환불요청중인 리스트 조회 -->
+	<select id='selectRefundList'
+	parameterType="_int"
+	resultType="Refund">
+	select refund_no as refundNo,
+	to_char(refund_money, '99,999,999') as refundMoney,
+	member_account as memberAccount,
+	member_account_bank as memberAccountBank,
+	to_char(refund_date, 'YYYY-MM-DD HH24:MI:SS') as refundDate,
+	refund_status as refundStatus,
+	to_char(refund_fin_date, 'YYYY-MM-DD HH24:MI:SS') as refundFinDate
+	from tbl_refund 
+	where member_no= #{_parameter}
+			and refund_status = 0
+	order by refunddate desc
+	</select>
+	
 </mapper>	
