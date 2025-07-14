@@ -19,6 +19,7 @@ import SearchIdPw from './component/common/SearchIdPw';
 import CompanyIntroduction from './component/admin/CompanyIntro';
 import Organization from'./component/org/OrgList';
 import OrgView from './component/org/OrgView';
+import Header2 from './component/common/Header copy';
 
 
 function App() {

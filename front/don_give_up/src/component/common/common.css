@@ -112,4 +112,22 @@
     right: 3px;
 }
 
+/* main banner */
+.banner-wrap {
+    width: 1200px;
+    margin: 0 auto;
+    height: 200px;
+    background-color: #87CEEB;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    
+}
+
+.banner-wrap>.title {
+    line-height: 130px;
+    color: white;
+    font-size: 25px;
+
+}
 
