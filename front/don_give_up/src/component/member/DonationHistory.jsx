@@ -42,45 +42,48 @@ export default function DonationHistory(props){
 
     return (
         <div className="member-donate-list-wrap-out">
-            <div>기부내역</div>
-            <div>
-                <div>총 기부건수</div>
-                <div>{!member.donationHistory ? "" : member.donationHistory.length} 건</div>
-                <div>총 기부금액</div>
-                <div>{member.totalDonateMoney} 원</div>
+            <div className="donation-list-title">기부내역</div>
+            <div className="donation-content">
+                조회 기간은 최근 1년 기준으로 설정되어 있습니다. <br/> 
+                다른 조건으로 검색을 원하실 경우 검색 기간 설정을 변경해주세요.
             </div>
-            
+            <div className="donation-summary">
+                <div>
+                    <div className="title">총 기부건수</div>
+                    <div className="content">{!member.donationHistory ? "" : member.donationHistory.length} <span>건</span></div>
+                </div>
+                <div>
+                    <div className="title">총 기부금액</div>
+                    <div className="content">{member.totalDonateMoney} <span>원</span></div>
+                </div>
+            </div>
             <div className="member-donate-period">
                 <DateSelectBar startDate={startDate} endDate={endDate} setStartDate={setStartDate} setEndDate={setEndDate} />
-                <div>(조회결과 : {srchCnt} 건)</div>
             </div>
+            <div>총 <span>{srchCnt}</span> 건</div>
             {
             !donationHistory ?
             ""
             :
             donationHistory.length > 0 ?
-                <div className="donate-list-wrap-in">
+                <div className="donate-list-wrap">
                 {donationHistory.map(function(donation,index){
                     return <Donation key={"donation" + index} donation={donation} />
                 })}              
                 </div>
-            
             :
-             <>
-                <div>조회되는 기부내역이 없네요..</div>
-             </>
+            <div className="donate-list-wrap">
+                <div className="no-data">검색결과가 없습니다.</div>
+            </div>
             }
             {
             reqPage < pageinfo.totalPage ?
-            <div onClick={function(){
+            <div className="more-info" onClick={function(){
                     setReqPage(reqPage + 1); 
             }}>더보기</div>
             :
             ""
             }
-            <div>조회 기간은 최근 1년 기준으로 설정되어 있습니다. <br/> 
-                 다른 조건으로 검색을 원하실 경우 검색 기간 설정을 변경해주세요.</div>
-         
         </div>
     )
 }
@@ -94,17 +97,18 @@ function Donation(props){
         <div className="donate-info-wrap">
                 <div className="state-wrap">
                     <div className="state">
-                        <span>기부완료</span>
+                        <span>기부</span>
+                        <span>완료</span>
                     </div>
                 </div>
                 <div className="donate-info">
                     <div>{donation.donateDate}</div>
-                    <div>{donation.bizName}</div>
+                    <div className="bizname">{donation.bizName}</div>
                     <div>{donation.orgName}</div>
                 </div>
                 <div className="donate-money">
-                    <span>{donation.donateMoney} 원</span>
-                    <button type="button">영수증 출력</button>
+                    <span>{donation.donateMoney}</span>
+                    <span> 원</span>
                 </div>
         </div> 
        </> 

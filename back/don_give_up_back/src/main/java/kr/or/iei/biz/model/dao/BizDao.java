@@ -70,6 +70,18 @@ public interface BizDao {
 	// 첨부파일 다운로드
 	BizFile selectBizFile(int bizFileNo);
 
+	// 기부 사업 삭제 상태로 업데이트
+	int deleteBiz(int bizNo);
+
+	// 모금액 사용 계획 삭제
+	int deleteBizPlans(List<Integer> deletedPlanNosList);
+
+	// 기부 사업글 수정
+	int updateBiz(Biz biz);
+
+	// 모금액 사용 계획 수정
+	int updateBizPlan(BizPlan plan);
+
 	
 
 }

@@ -11,7 +11,6 @@ import ProfileUpdate from './ProfileUpdate';
 import WalletHistory from './WalletHistory';
 import MemberDelete from './MemberDelete';
 
-
 import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
 import MyHome from './MyHome';
@@ -28,7 +27,7 @@ export default function MemberMain(){
         {url: '/member/likeOrgList', name: '관심단체' },
         {url: '/member/donateList', name: '내 활동', submenuList: [{url: '/member/donateList' , name: '기부내역'}, , {url: '/member/money/history' , name: '충전 / 출금내역'}]  },
         {url: '/member/update', name: '내 정보', submenuList: [{url: '/member/update' , name: '회원정보 수정'}, {url: '/member/changePw' , name: '비밀번호 변경'}, 
-                                                              {url: '/member/changeProfile' , name: '프로필사진 변경'}, {url: '/member/accountInfo' , name: '출금계좌 조회 / 변경'}]}
+                                                               {url: '/member/accountInfo' , name: '출금계좌 조회 / 변경'}]}
     ])
 
     //자식컴포넌트에 전달할 회원정보

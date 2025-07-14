@@ -1,3 +1,4 @@
+/*단체 마이페이지 메인*/
 .org-main-wrap {
     width: 1200px;
     margin: 0 auto;
@@ -8,4 +9,163 @@
 .org-main-mid-wrap {
     width: 950px;
     border: 1px solid black;
+}
+
+/*기부 사업 등록*/
+.post-form {
+    margin: 20px;
+}
+.post-form p {
+    font-size: 12px;
+}
+.post-form>div {
+    padding: 15px 0;
+}
+.post-form h3 {
+    margin-bottom: 10px;
+}
+.biz-date {
+    text-align: center;
+}
+.biz-date>div {
+    margin-bottom: 5px;
+}
+.post-form h4 {
+    line-height: 80px;
+    margin: 0 7px;
+}
+.plan-purpose {
+    width: 400px;
+}
+.plan-money {
+    width: 150px;
+    margin-left: 10px;
+}
+
+/*기부 사업 보기*/
+.tbl-donate {
+    width: 800px;
+    border-spacing: 0;
+    border-top: 3px solid #b1adad;
+    border-bottom: 2px solid #b1adad;
+    margin: 0 auto;
+}
+.tbl-donate th {
+    height: 45px;
+    border-bottom: 1px solid #b1adad;
+}
+.tbl-donate td {
+    height: 45px;
+    text-align: center;
+    border-bottom: 1px solid #b1adad;
+}
+.chgBtn {
+    width: 80px;
+}
+
+/*기부 사업 통계*/
+.data-wrap {
+    width: 100%;
+}
+.data-wrap>div {
+    width: 800px;
+    margin: 0 auto;
+    margin-top: 30px;
+}
+.data-title {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+.donate-data {
+    display: flex;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+.donate-data>div {
+    box-sizing: border-box;
+    border-top: 1px solid #b1adad;
+    border-bottom: 1px solid #b1adad;
+    align-content: center;
+    padding-left: 10px;
+    height: 35px;
+}
+.donate-data>div:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-left: 1px solid #b1adad;
+}
+.donate-data>div:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-right: 1px solid #b1adad;
+}
+.span-circle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border: 0.5px solid black;
+    border-radius: 30px;
+    margin-left: 5px;
+}
+
+/*단체 정보 수정*/
+.org-form {
+    margin-top: 20px;
+}
+.tbl-org {
+    margin: 0 auto;
+}
+.tbl-org p {
+    display: block;
+    height: 15px;
+    font-size: 12px;
+}
+.orgBtn {
+    width: 150px;
+}
+
+/*비밀번호 변경*/
+.updPw-div {
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 130px;
+}
+.updPw-div-plus {
+    width: 527px;
+    margin: 0 auto;
+    margin-top: 130px;
+}
+.updPw-div-plus p {
+    font-size: 12px;
+    color: red;
+    height: 15px;
+}
+
+/*프로필 변경하기*/
+.change-wrap {
+    border: none;
+    margin-top: 60px;
+    text-align: center;
+}
+.change-title-wrap {
+    height: 300px;
+    border: 1px solid #b1adad;
+}
+
+/*탈퇴하기*/
+.delete-wrap {
+    width: 100%;
+}
+.delete-wrap>p {
+    width: 800px;
+    margin: 0 auto;
+    font-size: 14px;
+}
+
+/*마이페이지 홈*/
+.myPage-div {
+    width: 800px;
+    margin: 20px auto;
 }

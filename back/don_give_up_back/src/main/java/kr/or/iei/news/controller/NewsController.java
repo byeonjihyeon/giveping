@@ -43,7 +43,7 @@ public class NewsController {
 
 	@Autowired
 	private FileUtil fileUtil;
-	
+
 	@Value("${file.uploadPath}")
 	private String uploadPath;
 
@@ -141,8 +141,8 @@ public class NewsController {
 	// 소식 글 수정
 	@PatchMapping
 	public ResponseEntity<ResponseDTO> updateNews(@ModelAttribute MultipartFile newsThumb, // 새 썸네일 파일 객체
-													@ModelAttribute News news, // 소식글 번호, 제목, 내용, 삭제 파일 번호 배열
-													String prevThumbPath){ // 기존 썸네일 이미지 파일명
+			@ModelAttribute News news, // 소식글 번호, 제목, 내용, 삭제 파일 번호 배열
+			String prevThumbPath) { // 기존 썸네일 이미지 파일명
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식 글 수정 중, 오류가 발생하였습니다.", false, "error");
 
 		try {
@@ -161,11 +161,11 @@ public class NewsController {
 					}
 				}
 			}
-			
+
 			int result = service.updateNews(news); // 업데이트 로직
 
-			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "게시글이 정상적으로 수정 되었습니다.", true, "success");				
+			if (result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "게시글이 정상적으로 수정 되었습니다.", true, "success");
 			}
 
 		} catch (Exception e) {
@@ -174,70 +174,69 @@ public class NewsController {
 
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
-	
+
 	// 소식 글 삭제
 	@DeleteMapping("/{newsNo}")
-	public ResponseEntity<ResponseDTO> deleteNews(@PathVariable int newsNo){
+	public ResponseEntity<ResponseDTO> deleteNews(@PathVariable int newsNo) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식글 삭제 중, 오류가 발생하였습니다.", false, "error");
-		
-		try {
-			//DB 게시글, 파일 정보 삭제
-			News delnews = service.deleteNews(newsNo);
-			
-			if(delnews != null) {
-				//썸네일 파일 삭제
-				if(delnews.getNewsThumbPath() != null) {
-					String savePath = uploadPath + "/news/thumb/" + delnews.getNewsThumbPath().substring(0, 8) + File.separator + delnews.getNewsThumbPath();
-					File file = new File(savePath);
-					if(file.exists()) {
-						file.delete();
-					}
-				}
-				
-				//에디터 이미지 제거
-				String regExp = "<img[^>]*src=[\"']([^\"']+)[\"'][^>]*>"; //<img> 태그에서 src 속성을 추출하기 위한 정규표현식
-				Pattern pattern = Pattern.compile(regExp);
-				Matcher matcher = pattern.matcher(delnews.getNewsContent()); 
-				
-				while(matcher.find()) {
-					String imageUrl = matcher.group(1); // 예) http://localhost:9999/news/board/20250624/20250624162600775_04771.jpg
-					
-					String filePath = imageUrl.substring(imageUrl.lastIndexOf("/") + 1); // 20250624162600775_04771.jpg
-					String savePath = uploadPath + "/news/board/" + filePath.substring(0, 8) + File.separator;
-					
-					File file = new File(savePath + filePath);
-					if(file.exists()) {
-						file.delete();
-					}
-				}
-				
-				res = new ResponseDTO(HttpStatus.OK, "소식이 삭제 되었습니다.", true, "success");
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
-	}
-	
-	
-	/*
-	// 댓글 리스트 조회
-	@GetMapping("/comment/{newsNo}")
-	@NoTokenCheck // 소식에 달린 댓글 조회 : 로그인 필요 x
-	public ResponseEntity<ResponseDTO> selectCommentList(@PathVariable int newsNo) {
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식 조회 중, 오류가 발생하였습니다.", null, "error");
 
 		try {
-			ArrayList<Comment> commentList = service.selectCommentList(newsNo);
-			res = new ResponseDTO(HttpStatus.OK, "", commentList, "");
+			// DB 게시글, 파일 정보 삭제
+			News delnews = service.deleteNews(newsNo);
+
+			if (delnews != null) {
+				// 썸네일 파일 삭제
+				if (delnews.getNewsThumbPath() != null) {
+					String savePath = uploadPath + "/news/thumb/" + delnews.getNewsThumbPath().substring(0, 8)
+							+ File.separator + delnews.getNewsThumbPath();
+					File file = new File(savePath);
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+
+				// 에디터 이미지 제거
+				String regExp = "<img[^>]*src=[\"']([^\"']+)[\"'][^>]*>"; // <img> 태그에서 src 속성을 추출하기 위한 정규표현식
+				Pattern pattern = Pattern.compile(regExp);
+				Matcher matcher = pattern.matcher(delnews.getNewsContent());
+
+				while (matcher.find()) {
+					String imageUrl = matcher.group(1); // 예)
+														// http://localhost:9999/news/board/20250624/20250624162600775_04771.jpg
+
+					String filePath = imageUrl.substring(imageUrl.lastIndexOf("/") + 1); // 20250624162600775_04771.jpg
+					String savePath = uploadPath + "/news/board/" + filePath.substring(0, 8) + File.separator;
+
+					File file = new File(savePath + filePath);
+					if (file.exists()) {
+						file.delete();
+					}
+				}
+
+				res = new ResponseDTO(HttpStatus.OK, "소식이 삭제 되었습니다.", true, "success");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
-	*/
-	
-	
+
+	/*
+	 * // 댓글 리스트 조회
+	 * 
+	 * @GetMapping("/comment/{newsNo}")
+	 * 
+	 * @NoTokenCheck // 소식에 달린 댓글 조회 : 로그인 필요 x public ResponseEntity<ResponseDTO>
+	 * selectCommentList(@PathVariable int newsNo) { ResponseDTO res = new
+	 * ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식 조회 중, 오류가 발생하였습니다.", null,
+	 * "error");
+	 * 
+	 * try { ArrayList<Comment> commentList = service.selectCommentList(newsNo); res
+	 * = new ResponseDTO(HttpStatus.OK, "", commentList, ""); } catch (Exception e)
+	 * { e.printStackTrace(); } return new ResponseEntity<ResponseDTO>(res,
+	 * res.getHttpStatus()); }
+	 */
+
 	// 댓글 삭제
 	@PatchMapping("/comment/{commentNo}")
 	public ResponseEntity<ResponseDTO> deleteComment(@PathVariable int commentNo) {
@@ -245,7 +244,7 @@ public class NewsController {
 
 		try {
 			int result = service.deleteComment(commentNo);
-			if(result > 0) {
+			if (result > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "댓글이 삭제되었습니다.", true, "");
 			}
 		} catch (Exception e) {
@@ -253,16 +252,16 @@ public class NewsController {
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
-	
+
 	// 댓글 수정
 	@PatchMapping("/comment")
 	public ResponseEntity<ResponseDTO> updateComment(@RequestBody Comment comment) {
-		
+
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 수정 중, 오류가 발생하였습니다.", false, "error");
-                
+
 		try {
 			int result = service.updateComment(comment);
-			if(result > 0) {
+			if (result > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "댓글이 수정되었습니다.", true, "");
 			}
 		} catch (Exception e) {
@@ -270,12 +269,12 @@ public class NewsController {
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
-	
+
 	// 댓글 신고 코드 조회
 	@GetMapping("/comment/report")
-	public ResponseEntity<ResponseDTO> selectReportCode(){
+	public ResponseEntity<ResponseDTO> selectReportCode() {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신고 코드 조회 중, 오류가 발생하였습니다.", null, "error");
-		 
+
 		try {
 			ArrayList<NewsReport> newsReportList = service.selectReportCode();
 			if (newsReportList != null) {
@@ -285,19 +284,18 @@ public class NewsController {
 			e.printStackTrace();
 		}
 
-		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
-	
+
 	// 댓글 신고 등록
 	@PostMapping("/comment/report")
-	public ResponseEntity<ResponseDTO> regCommentReport(@RequestBody NewsReport newsReport){
-		 System.out.println("comment="+newsReport);
+	public ResponseEntity<ResponseDTO> regCommentReport(@RequestBody NewsReport newsReport) {
+
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 신고 처리 중, 오류가 발생하였습니다.", false, "error");
 
 		try {
 			int result = service.regCommentReport(newsReport);
-			if(result > 0) {
+			if (result > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "댓글 신고가 완료되었습니다.", true, "");
 			}
 		} catch (Exception e) {
@@ -305,16 +303,16 @@ public class NewsController {
 		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
-	
+
 	// 소식 게시판 댓글 등록
 	@PostMapping("/comment")
-	public ResponseEntity<ResponseDTO> regComment(@RequestBody Comment comment){
+	public ResponseEntity<ResponseDTO> regComment(@RequestBody Comment comment) {
 		System.out.println("comment : " + comment);
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 등록 처리 중, 오류가 발생하였습니다.", false, "error");
 
 		try {
 			int result = service.regComment(comment);
-			if(result > 0) {
+			if (result > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "댓글 등록이 완료되었습니다.", true, "");
 			}
 		} catch (Exception e) {

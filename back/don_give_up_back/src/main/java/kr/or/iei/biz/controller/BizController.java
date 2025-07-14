@@ -193,19 +193,23 @@ public class BizController {
 	
 	//대표 이미지 등록
 	@PostMapping("/thumb")
-	public ResponseEntity<ResponseDTO> uploadThumb(@ModelAttribute MultipartFile bizImg, int orgNo) {
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "대표 이미지 업로드 중, 오류가 발생하였습니다.", null, "error");
+	public ResponseEntity<ResponseDTO> uploadThumb(@ModelAttribute MultipartFile bizImg, int bizNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "대표 이미지 업로드 중, 오류가 발생하였습니다.", false, "error");
 		
 		try {
 			String filePath = fileUtil.uploadFile(bizImg, "/biz/thumb/");
 			
 			Biz biz = new Biz();
-			biz.setOrgNo(orgNo);
+			biz.setBizNo(bizNo);
 			biz.setBizThumbPath(filePath);
 			
-			Biz newBiz = service.uploadThumb(biz);
+			int result = service.uploadThumb(biz);
 			
-			res = new ResponseDTO(HttpStatus.OK, "", newBiz, "");
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "정상적으로 등록되었습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "대표 이미지 업로드 중, 오류가 발생하였습니다.", false, "warning");
+			}
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -298,17 +302,17 @@ public class BizController {
 	}
 	
 	//기부 사업 등록
-	@PatchMapping("/post")
+	@PostMapping("/post")
 	public ResponseEntity<ResponseDTO> insertBiz(@RequestBody Biz biz) {
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "error");
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 등록 중, 오류가 발생하였습니다.", 0, "error");
 		
 		try {
-			int result = service.insertBiz(biz);
+			int bizNo = service.insertBiz(biz);
 			
-			if(result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "정상적으로 등록되었습니다.", true, "success");				
+			if(bizNo > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "", bizNo, "");				
 			}else {
-				res = new ResponseDTO(HttpStatus.OK, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "warning");
+				res = new ResponseDTO(HttpStatus.OK, "기부 사업 등록 중, 오류가 발생하였습니다.", 0, "warning");
 			}
 			
 		}catch(Exception e) {
@@ -317,4 +321,48 @@ public class BizController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	// 기부사업글 삭제 요청 상태로 업데이트
+	@PatchMapping("/delete/{bizNo}")
+	public ResponseEntity<ResponseDTO> deleteBiz(@PathVariable int bizNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.deleteBiz(bizNo);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "정상적으로 삭제되었습니다.", true, "success");				
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "기부 사업 삭제 중, 오류가 발생하였습니다.", false, "warning");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	// 기부사업글 수정 업데이트
+	@PatchMapping("/update")
+	public ResponseEntity<ResponseDTO> updateBiz(@RequestBody Biz biz) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "error");
+		System.out.println("biz : " + biz);
+		try {
+			
+			int result = service.updateBiz(biz);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "정상적으로 수정되었습니다.", true, "success");				
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "기부 사업 수정 중, 오류가 발생하였습니다.", false, "warning");
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
 }

@@ -3,6 +3,10 @@ import createInstance from "../../axios/Interceptor";
 import { useState } from "react";
 import useUserStore from "../../store/useUserStore";
 import Swal from "sweetalert2";
+import * as React from 'react';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import { useRef } from "react";
 
 //비밀번호 변경(단체)
 export default function OrgChangePw(){
@@ -17,6 +21,8 @@ export default function OrgChangePw(){
     const [newOrgPw, setNewOrgPw] = useState("");       //새 비밀번호
     const [newOrgPwRe, setNewOrgPwRe] = useState("");   //새 비밀번호 확인
     const [result, setResult] = useState(false);        //비밀번호 확인을 진행해야 새 비밀번호를 입력할 수 있도록 제어할 변수
+    const pwRef = useRef(null);
+    const pwReRef = useRef(null);
 
     //비밀번호 변경 시 호출 함수
     function chgOrgPw(e){
@@ -31,6 +37,17 @@ export default function OrgChangePw(){
 
     //현재 비밀번호 확인 버튼 클릭 시 실행 함수
     function checkPw(){
+        if(org.orgPw == ""){
+            Swal.fire({
+                title : "알림",
+                text : "비밀번호를 입력하세요.",
+                icon : "warning",
+                confirmButtonText : "확인",
+                didClose : pwRef.current.focus()
+            });
+            return;
+        }
+
         let options = {};
         options.url = serverUrl + "/org/chkPw";
         options.method = "post";
@@ -42,13 +59,14 @@ export default function OrgChangePw(){
                 title : "알림",
                 text : res.data.clientMsg,
                 icon : res.data.alertIcon,
-                confirmButtonText : "확인"
+                confirmButtonText : "확인",
+                didClose : pwRef.current.focus()
             })
             .then(function(result){
                 if(res.data.resData){
                     setResult(true);
                 }
-            })
+            });
         });
     }
 
@@ -100,89 +118,97 @@ export default function OrgChangePw(){
 
     //변경 버튼 클릭 시 실행할 함수
     function updatePw(){
-        if(!result){ //현재 비밀번호 확인을 하지 않고 클릭했을 때
-            Swal.fire({
-                title : "알림",
-                text : "현재 비밀번호 확인을 진행해주세요.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            })
-        }else{ //현재 비밀번호 확인 완료
-            if(pwChk != 1){ //유효성 체크 통과 실패
-                const validations = [
-                    {valid : pwChk == 2, message : "변경할 비밀번호가 올바르지 않습니다."},
-                    {valid : pwChk == 3, message : "변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다."},
-                    {valid : pwChk == 4, message : "비밀번호 확인을 입력하세요."},
-                    {valid : pwChk == 5, message : "변경할 비밀번호가 기존 비밀번호와 같습니다."}
-                ];
+        const validations = [
+            {valid : newOrgPw == "", message : "변경할 비밀번호를 입력하세요.", inputRef : pwRef},
+            {valid : pwChk == 2, message : "변경할 비밀번호 형식이 올바르지 않습니다.", inputRef : pwRef},
+            {valid : pwChk == 5, message : "변경할 비밀번호가 기존 비밀번호와 같습니다.", inputRef : pwRef},
+            {valid : newOrgPwRe == "", message : "비밀번호 확인을 입력하세요.", inputRef : pwReRef},
+            {valid : pwChk == 3, message : "변경할 비밀번호와 비밀번호 확인이 일치하지 않습니다.", inputRef : pwReRef}
+        ];
 
-                for(let i=0; i<validations.length; i++){
-                    if(validations[i].valid){
-                        Swal.fire({
-                            title : "알림",
-                            text : validations[i].message,
-                            icon : "warning",
-                            confirmButtonText : "확인"
-                        });
-                        return;
-                    }
-                }
-            }else{ //유효성 체크 통과
-                let options = {};
-                options.url = serverUrl + "/org/updPw/" + orgNo + "/" + newOrgPw;
-                options.method = "post";
-
-                axiosInstance(options)
-                .then(function(res){
-                    Swal.fire({
-                        title : "알림",
-                        text : res.data.clientMsg,
-                        icon : res.data.alertIcon,
-                        confirmButtonText : "확인"
-                    })
-                    .then(function(result){
-                        setLoginOrg(null);
-                        setIsLogined(false);
-                        navigate("/login");
-                    });
+        for(let i=0; i<validations.length; i++){
+            if(validations[i].valid){
+                Swal.fire({
+                    title : "알림",
+                    text : validations[i].message,
+                    icon : "warning",
+                    confirmButtonText : "확인",
+                    didClose : validations[i].inputRef.current.focus()
                 });
+                return;
             }
         }
+
+        let options = {};
+        options.url = serverUrl + "/org/updPw/" + orgNo + "/" + newOrgPw;
+        options.method = "post";
+
+        axiosInstance(options)
+        .then(function(res){
+            Swal.fire({
+                title : "알림",
+                text : res.data.clientMsg,
+                icon : res.data.alertIcon,
+                confirmButtonText : "확인"
+            })
+            .then(function(result){
+                setLoginOrg(null);
+                setIsLogined(false);
+                navigate("/login");
+            });
+        });
     }
 
     return (
-        //현재 비밀번호 입력창
         <div>
-            {!result
-            ?
-            <form autoComplete="off" onSubmit={function(e){
-                e.preventDefault();
-                checkPw();
-            }}>
-                <div>
-                    <label htmlFor="orgPw">현재비밀번호</label>
-                    <input type="password" id="orgPw" value={org.orgPw} onChange={chgOrgPw}/>
-                    <button type="submit">확인</button>
-                </div>
-            </form>
-            ://새 비밀번호 입력창
-            <form autoComplete="off" onSubmit={function(e){
-                e.preventDefault();
-                updatePw();
-            }}>
-                <div>
-                    <label htmlFor="newOrgPw">변경할 비밀번호</label>
-                    <input type="password" id="newOrgPw" value={newOrgPw} onChange={chgNewOrgPw} onBlur={checkNewPw} readOnly={result ? false : true}/>
-                    <p>{pwChk == 2 ? "비밀번호는 영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p>
-                </div>
-                <div>
-                    <label htmlFor="newOrgPwRe">비밀번호 확인</label>
-                    <input type="password" id="newOrgPwRe" value={newOrgPwRe} onChange={chgNewOrgPwRe} onBlur={checkNewPw} readOnly={result ? false : true}/>
-                    <button type="submit">변경</button>
-                    <p>{pwChk == 3 ? "비밀번호와 일치하지 않습니다." : ""}</p>
-                </div>
-            </form>
-            }
+            <h2 className="page-title">비밀번호 변경</h2>
+            <div className={!result ? "updPw-div" : "updPw-div-plus"}>
+                {!result
+                ? //현재 비밀번호 입력창
+                <form autoComplete="off" onSubmit={function(e){
+                    e.preventDefault();
+                    checkPw();
+                }}>
+                    <div style={{display : "flex"}}>
+                        <label htmlFor="orgPw" className="label" style={{fontWeight : "bold"}}>현재 비밀번호</label>
+                        <TextField type="password" id="orgPw" className="input-login" inputRef={pwRef}
+                        value={org.orgPw} onChange={chgOrgPw}/>
+                        <Button variant="contained" type="submit" style={{width : "90px", marginLeft : "3px"}}>확인</Button>
+                    </div>
+                </form>
+                : //새 비밀번호 입력창
+                <form autoComplete="off" style={{display : "flex"}} onSubmit={function(e){
+                    e.preventDefault();
+                    updatePw();
+                }}>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th><label htmlFor="newOrgPw" className="label" style={{width : "110px"}}>변경할 비밀번호</label></th>
+                                <td>
+                                    <TextField type="password" id="newOrgPw" className="input-login" value={newOrgPw} onChange={chgNewOrgPw} onBlur={checkNewPw} inputRef={pwRef}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><p>{pwChk == 2 ? "*영대소문자, 숫자, 특수문자로 이루어진 6~30글자입니다." : ""}</p></td>
+                            </tr>
+                            <tr>
+                                <th><label htmlFor="newOrgPwRe" className="label" style={{width : "110px"}}>비밀번호 확인</label></th>
+                                <td>
+                                    <TextField type="password" id="newOrgPwRe" className="input-login" value={newOrgPwRe} onChange={chgNewOrgPwRe} onBlur={checkNewPw} inputRef={pwReRef}/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td><p>{pwChk == 3 ? "*비밀번호와 일치하지 않습니다." : ""}</p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <Button variant="contained" type="submit" style={{height : "90px", width : "90px"}}>변경</Button>
+                </form>
+                }
+            </div>
         </div>
         
     )

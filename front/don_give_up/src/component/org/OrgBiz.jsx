@@ -3,6 +3,7 @@ import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import PageNavi from "../common/PageNavi";
 import { useNavigate } from "react-router-dom";
+import Button from '@mui/material/Button';
 
 //기부 사업 보기
 export default function OrgBiz(){
@@ -40,52 +41,58 @@ export default function OrgBiz(){
     //버튼 클릭 시 호출 함수
     function selectBiz(e){
         setClickBtn(e.target.value);
+        setReqPage(1);
     }
 
     return (
         <div>
-            <button type="button" value="allBiz" onClick={selectBiz}>전체</button>
-            <button type="button" value="ingBiz" onClick={selectBiz}>진행 중</button>
-            <button type="button" value="doneBiz" onClick={selectBiz}>종료</button>
-            <table border={1}>
-                <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>사업명</th>
-                        {clickBtn == "allBiz"
-                        ?   <>
-                            <th>등록일</th>
-                            <th>상태</th>
-                            </>
-                        :   <>
-                            <th>모금 시작일</th>
-                            <th>모금 종료일</th>
-                            {clickBtn == "doneBiz"
-                            ? <>
-                              <th>상태</th> 
-                              <th>입금 여부</th>
-                              </>
-                            : ""}
-                            </>}
-                        <th>상세페이지</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {bizList.map(function(biz, index){
-                        function bizView(){
-                            navigate("/biz/view/" + biz.bizNo);
-                        }
+            <h2 className="page-title">기부 사업 보기</h2>
+            <div style={{height : "570px", width : "800px", margin : "20px auto"}}>
+                <div style={{float : "right", marginBottom : "5px"}}>
+                    <Button variant="contained" type="button" className="chgBtn" value="allBiz" onClick={selectBiz}>전체</Button>
+                    <Button variant="contained"  type="button" className="chgBtn" value="ingBiz" onClick={selectBiz} style={{margin : "0 5px"}}>진행 중</Button>
+                    <Button variant="contained"  type="button" className="chgBtn" value="doneBiz" onClick={selectBiz}>종료</Button>
+                </div>
+                <table className="tbl-donate">
+                    <thead>
+                        <tr>
+                            <th style={{width : "5%"}}>번호</th>
+                            <th>사업명</th>
+                            {clickBtn == "allBiz"
+                            ?   <>
+                                <th style={{width : "15%"}}>등록일</th>
+                                <th style={{width : "10%"}}>상태</th>
+                                </>
+                            :   <>
+                                <th style={{width : "15%"}}>모금 시작일</th>
+                                <th style={{width : "15%"}}>모금 종료일</th>
+                                {clickBtn == "doneBiz"
+                                ? <>
+                                <th style={{width : "10%"}}>상태</th> 
+                                <th style={{width : "10%"}}>입금 여부</th>
+                                </>
+                                : ""}
+                                </>}
+                            <th style={{width : "15%"}}>상세페이지</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {bizList.map(function(biz, index){
+                            function bizView(){
+                                navigate("/biz/view/" + biz.bizNo);
+                            }
 
-                        return  <tr key={"biz"+index}>
-                                    <td>{biz.rnum}</td>
-                                    <td>{biz.bizName}</td>
-                                    {clickBtn == "allBiz" ? <AllBiz biz={biz}/>
-                                                          : <ApprovalBiz biz={biz} clickBtn={clickBtn}/>}
-                                    <td><button onClick={bizView}>상세 페이지</button></td>
-                                </tr>
-                    })}
-                </tbody>
-            </table>
+                            return  <tr key={"biz"+index}>
+                                        <td>{biz.rnum}</td>
+                                        <td>{biz.bizName}</td>
+                                        {clickBtn == "allBiz" ? <AllBiz biz={biz}/>
+                                                            : <ApprovalBiz biz={biz} clickBtn={clickBtn}/>}
+                                        <th><Button variant="contained"  onClick={bizView}>상세 페이지</Button></th>
+                                    </tr>
+                        })}
+                    </tbody>
+                </table>
+            </div>
             <div className="admin-page-wrap" style={{marginTop : "30px"}}>
                 <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
             </div>
@@ -127,7 +134,7 @@ function ApprovalBiz(props){
                    biz.bizStatus == 2 ? "반려" : 
                    biz.bizStatus == 3 ? "삭제 요청" : "삭제"}
               </td> 
-              <td>{biz.payoutYN != null ? "O" : "X"}</td>
+              <td>{biz.payoutYN == 1 ? "O" : "X"}</td>
               </>
             : ""}
         </>

@@ -159,19 +159,16 @@ function MemberMyPage(){
     return (
         <ul className="sub-menu">
             <li>
-                <Link to="/member/update">내 정보 수정</Link>
-            </li>
-            <li>
-                <Link to="/member/donateList">기부 내역 조회</Link>
+                <Link to="/member/news">내 소식</Link>
             </li>
             <li>
                 <Link to="/member/likeOrgList">관심 단체</Link>
             </li>
             <li>
-                <Link to="/member/money/charge">예치금 충전/환불</Link>
+                <Link to="/member/donateList">내 활동</Link>
             </li>
             <li>
-                <Link to="#">회원 탈퇴</Link>
+                <Link to="/member/update">내 정보</Link>
             </li>
         </ul>
     )
@@ -183,13 +180,13 @@ function OrgMyPage(){
     return (
         <ul className="sub-menu">
             <li>
-                <Link to="/org/update">단체 정보 수정</Link>
+                <Link to="/org/news">내 소식</Link>
             </li>
             <li>
-                <Link to="/org/biz">기부 사업 관리</Link>
+                <Link to="/org/post">기부 사업 관리</Link>
             </li>
             <li>
-                <Link to="#">회원 탈퇴</Link>
+                <Link to="/org/update">내 정보</Link>
             </li>
         </ul>
     )

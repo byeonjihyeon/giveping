@@ -43,7 +43,8 @@ export default function likeOrgList(){
     
 
     return (
-        <>
+        <div className="like-org-list-wrap"> 
+            <div className="title">관심단체</div>
             {
             !likeOrgList ?
             ""    
@@ -51,9 +52,6 @@ export default function likeOrgList(){
                 <div>
                     <div className="likeOrgList-wrap">
                         {likeOrgList.map(function(likeOrg, index){
-
-                            
-
                             return <LikeOrg key={"likeOrg" + index} likeOrg={likeOrg} loginMember={loginMember} likeOrgList={likeOrgList} setLikeOrgList={setLikeOrgList}
                                              reload={reload} setReload={setReload} reqPage={reqPage} setReqPage={setReqPage} />
                         })}
@@ -63,9 +61,9 @@ export default function likeOrgList(){
                     </div>
                 </div>
                 :
-                <div>현재 관심단체가 존재하지 않습니다.</div>
+                <div className="no-like-org">현재 관심단체가 존재하지 않습니다.</div>
             } 
-        </>       
+        </div>       
     )
 }
 
@@ -114,8 +112,6 @@ function LikeOrg(props){
 
            }
         });
-
-        
     }
 
    
@@ -125,7 +121,7 @@ function LikeOrg(props){
                 {
                     activeBizList != null && activeBizList.length > 0   //==현재 진행중인 사업이 있어?
                     ?
-                    <div>모금 진행중</div>
+                    <div className="biz-ing">모금 진행중</div>
                     :
                     ""
                 }               
@@ -137,13 +133,15 @@ function LikeOrg(props){
                             "/images/default_img.png"     
                         } />
             </div>
-            <div className="likeOrg-name">
-                <div>{likeOrg.orgName}</div>
-                <img src='/images/favorite_38dp_EA3323.png' onClick={delLikeOrg} />
+            <div className="likeOrg-info">
+                <div className="name">{likeOrg.orgName}</div>
                  <div className="org-ctg-wrap">
                     {likeOrg.categoryList.map(function(category, index){
                         return <div className="org-ctg" key={"category" + index}>{category}</div>
                     })}
+                </div>
+                <div className="delBtn">
+                    <img src='/images/clear_24dp_C0C0C0.png' onClick={delLikeOrg} />
                 </div>
             </div> 
         </div>

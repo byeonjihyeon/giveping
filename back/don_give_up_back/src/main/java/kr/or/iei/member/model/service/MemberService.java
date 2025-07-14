@@ -2,6 +2,7 @@ package kr.or.iei.member.model.service;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.LoginMember;
 import kr.or.iei.common.model.dto.PageInfo;
@@ -23,6 +25,7 @@ import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.member.model.dto.Wallet;
+import kr.or.iei.member.model.dto.Charge;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -196,9 +199,7 @@ public class MemberService {
 		//사용자 입력 비밀번호 = 평문, DB의 pw는 암호화된 비밀번호이므로, BCrpyt 메소드사용
 		HashMap<String, Integer> memberMap = new HashMap<>();
 		memberMap.put("memberNo", member.getMemberNo());
-		
 		Member chkMember = dao.selectMember(memberMap);
-		
 		//기존 비밀번호 일치 결과 (boolean)
 		return encoder.matches(member.getMemberPw(), chkMember.getMemberPw());
 	}
@@ -331,14 +332,17 @@ public class MemberService {
 		return walletMap;
 	}
 	
-	//충전하기
+	//회원 충전하기 버튼 클릭시, 주문번호 미리 생성 및 금액 입력 +회원번호
 	@Transactional
 	public int charge(int memberNo, int charge) {
-		HashMap<String, Integer> memberMap = new HashMap<>();
+		HashMap<String, Object> memberMap = new HashMap<>();
 		memberMap.put("memberNo", memberNo);
 		memberMap.put("charge", charge);
 		
-		return dao.charge(memberMap);
+		//서버에 저장
+		int result = dao.charge(memberMap);
+		
+		return result;
 	}
 
 	// 회원별 설문조사 내역 리스트 조회
@@ -429,5 +433,40 @@ public class MemberService {
 		}
 		return result;
 	}
+	
+	//결제 실패시, 미리 생성한 주문번호 행 지우기
+	@Transactional
+	public void deleteCharge(String orderId) {
+		dao.deleteCharge(orderId);
+	}
 
+	public ArrayList<Biz> recommandBiz(int memberNo) {
+		
+		//1. 회원 관심카테고리 조회
+		List<String> categories = dao.selectCategory(memberNo); //[D01,D02]
+		
+		//2. 조회 (카테고리가 없다면 전체기부사업 조회)
+		List<Biz> bizList = dao.selectRecommandBizList(categories); 
+		ArrayList<Biz> list = (ArrayList<Biz>) bizList;	//형변
+		
+		if(list.size() <= 4) {	//리스트 길이가 4이거나, 작은 경우
+			return list;
+			
+		}else {	//리스트의길이가 4보다 큰 경우,
+			//리스트 섞기
+			Collections.shuffle(list);
+			
+			//3개 셀렉
+			ArrayList<Biz> selectList = new ArrayList<>();
+			for(int i=0; i<4; i++) {
+				Biz biz = list.get(i);
+				selectList.add(biz);
+			}
+			return selectList;
+		}
+
+	}
+
+	
+	
 }

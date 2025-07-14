@@ -13,6 +13,8 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import ToastEditor from '../news/ToastEditor';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 
 //기부 사업 등록
@@ -52,6 +54,14 @@ export default function OrgPost(){
 
     //사업 시작 날짜가 최소 7일 뒤에 시작되어야 해 확인하기 위하여
     const today = new Date();
+    //모금 종료일
+    const donateEndDate = new Date();
+    donateEndDate.setDate(today.getDate() + Number(donateBiz.bizDonateTerm) + 7);
+    //0000-00-00 형식으로 바꿔주기
+    const endYear = donateEndDate.getFullYear();
+    const endMonth = String(donateEndDate.getMonth() + 1).padStart(2, "0");
+    const endDay = String(donateEndDate.getDate()).padStart(2, "0");
+    const donateEndDateStr = endYear + "-" + endMonth + "-" + endDay;
     //7일 뒤 날짜 가져오기
     const nextWeek = new Date();
     nextWeek.setDate(today.getDate() + 7);
@@ -69,38 +79,16 @@ export default function OrgPost(){
             if(e.target.value < nextWeekStr){
                 Swal.fire({
                     title : "알림",
-                    text : "사업 시작일은 7일 뒤부터 가능합니다.",
+                    text : "사업 시작일은 모금 시작일보다 빠를 수 없습니다.",
                     icon : "warning",
                     confirmButtonText : "확인"
                 }).then(function(result){
                     e.target.value = "";
                 });
-            }else if(donateBiz.bizEnd != "" && e.target.value > donateBiz.bizEnd){
-                Swal.fire({
-                    title : "알림",
-                    text : "사업 종료일은 사업 시작일보다 빠를 수 없습니다.",
-                    icon : "warning",
-                    confirmButtonText : "확인"
-                }).then(function(result){
-                    e.target.value = "";
-                })
-            }else{
-                setDonateBiz({...donateBiz});
             }
         }
 
-        if(e.target.id == "bizEnd" && donateBiz.bizStart != "" && e.target.value < donateBiz.bizStart){
-            Swal.fire({
-                title : "알림",
-                text : "사업 종료일은 사업 시작일보다 빠를 수 없습니다.",
-                icon : "warning",
-                confirmButtonText : "확인"
-            }).then(function(result){
-                e.target.value = "";
-            })
-        }else{
-            setDonateBiz({...donateBiz});
-        }
+        setDonateBiz({...donateBiz});
     }
 
     //사용 계획 추가 클릭 시 호출 함수
@@ -152,77 +140,27 @@ export default function OrgPost(){
         }
     }
 
-    //대표 사진 변경 가능 여부를 다룰 변수
-    const [fix, setFix] = useState(false);
-
-    //대표 사진 확정 버튼 클릭 시 호출 함수
-    function fixThumbImg(){
-        Swal.fire({
-            title : "알림",
-            text : "확정 시 대표 사진 이미지는 변경하지 못합니다.",
-            icon : "warning",
-            showCancelButton : true,
-            cancelButtonText : "취소",
-            confirmButtonText : "확정"
-        }).then(function(result){
-            if(result.isConfirmed){ //확정 버튼 클릭 시 
-                //대표 사진 변경 못하게 변수 변경
-                setFix(true);
-                
-                //DB에 대표 사진 저장
-                const form = new FormData();
-
-                if(bizImg != null){
-                    form.append("bizImg", bizImg);
-                    form.append("orgNo", orgNo);
-
-                    let options = {};
-                    options.url = serverUrl + "/biz/thumb";
-                    options.method = "post";
-                    options.data = form;
-                    options.headers = {};
-                    options.headers.contentType = "multipart/form-data";
-                    options.headers.processData = false; //쿼리스트링 X
-                    
-                    axiosInstance(options)
-                    .then(function(res){
-                        const newDonateBiz = res.data.resData;
-                        setDonateBiz({...donateBiz, bizNo : newDonateBiz.bizNo});
-                    })
-                }
-            };
-        });
-    }
-
+    //사용 계획 변경 시마다 변수에 변경된 값 저장
     useEffect(function(){
         setDonateBiz({...donateBiz, bizPlanList : bizPlanList});
     }, [bizPlanList]);
     
     //등록 버튼 클릭 시 실행 함수
     function insertBizPlan(){
-        //콤마 제거를 위해
-        const cleanedDonateBiz = Object.assign({}, donateBiz);
-
-        // bizPlanList 내 각 항목의 bizPlanMoney 콤마 제거
-        cleanedDonateBiz.bizPlanList = cleanedDonateBiz.bizPlanList.map(function (plan) {
-            return Object.assign({}, plan, {
-            bizPlanMoney: String(plan.bizPlanMoney).replace(/,/g, "")
-            });
-        });
-
         //유효성 체크
         //유효성 조건 리스트
         const validations = [
-            { valid: donateBiz.bizDonateTerm == "" || donateBiz.bizDonateTerm == 0, message: "모금 기간을 선택하세요." },
-            { valid: donateBiz.bizStart == "", message: "사업 시작일을 선택하세요." },
-            { valid: donateBiz.bizEnd == "", message: "사업 종료일을 선택하세요." },
-            { valid: donateBiz.bizGoal == 0, message: "사용 용도 및 산출 근거 또는 사용 금액을 입력하세요." },
-            { valid: donateBiz.bizGoal >= 1000000000, message: "전체 목표 금액은 10억 미만으로 설정해주세요." },
-            { valid: donateBiz.donateCode == "", message: "기부 코드를 선택하세요." },
-            { valid: donateBiz.bizName == "", message: "사업명을 입력하세요." },
-            { valid: donateBiz.bizContent == "", message: "사업 내용을 입력하세요." },
+            { valid: donateBiz.bizDonateTerm == "" || donateBiz.bizDonateTerm == 0, message: "모금 기간을 선택하세요."},
+            { valid: donateBiz.bizStart == "", message: "사업 시작일을 선택하세요."},
+            { valid: donateBiz.bizEnd == "", message: "사업 종료일을 선택하세요."},
+            { valid: donateBiz.bizEnd != "" && donateBiz.bizStart > donateBiz.bizEnd, message: "사업 종료일은 사업 시작일보다 빠를 수 없습니다."},
+            { valid: donateBiz.bizDonateTerm != "" && donateEndDateStr > donateBiz.bizEnd, message: "사업 종료일은 모금 종료일보다 빠를 수 없습니다."},
+            { valid: donateBiz.bizGoal == 0, message: "사용 용도 및 산출 근거 또는 사용 금액을 입력하세요."},
+            { valid: donateBiz.bizGoal >= 1000000000, message: "전체 목표 금액은 10억 미만으로 설정해주세요."},
+            { valid: donateBiz.donateCode == "", message: "기부 코드를 선택하세요."},
             { valid: bizImg == null, message: "대표 사진 등록해주세요." },
-            { valid: !fix, message: "대표 사진 확정 처리를 해주세요." }
+            { valid: donateBiz.bizName == "", message: "사업명을 입력하세요."},
+            { valid: donateBiz.bizContent == "", message: "사업 내용을 입력하세요."}
         ];
     
         //검증 실패 시 첫 번째 오류 메시지 띄우고 return
@@ -261,7 +199,7 @@ export default function OrgPost(){
 
         Swal.fire({
             title : "알림",
-            text : "사업신청후 7일 경과 후에도 승인처리 되지 않은 경우 자동 반려처리됩니다. (7일의 기준은 25-06-20 오후 3:00에 신청 시 마감 시한은 25-6-27 23:59)",
+            text : "사업 신청 후 7일 경과 후에도 미승인 시 자동 반려처리됩니다. (마감 시한은 신청일 기준 7일 뒤 23:59까지)",
             icon : "warning",
             showCancelButton : true,
             confirmButtonText : "확인",
@@ -271,20 +209,42 @@ export default function OrgPost(){
             if(result.isConfirmed){
                 let options = {};
                 options.url = serverUrl + "/biz/post";
-                options.method = "patch";
+                options.method = "post";
                 options.data = donateBiz
         
                 axiosInstance(options)
                 .then(function(res){
-                    Swal.fire({
-                        title : "알림",
-                        text : res.data.clientMsg,
-                        icon : res.data.alertIcon,
-                        confirmButtonText : "확인"
-                    })
-                    .then(function(result){
-                         navigate("/org/biz"); // 기부 사업 보기 메뉴로 이동
-                    });
+                    const bizNo = res.data.resData;
+                    if(bizNo > 0){ //사업 번호가 있으면 등록
+                        const form = new FormData();
+
+                        if(bizImg != null){
+                            form.append("bizImg", bizImg);
+                            form.append("bizNo", bizNo);
+
+                            let options = {};
+                            options.url = serverUrl + "/biz/thumb";
+                            options.method = "post";
+                            options.data = form;
+                            options.headers = {};
+                            options.headers.contentType = "multipart/form-data";
+                            options.headers.processData = false; //쿼리스트링 X;
+
+                            axiosInstance(options)
+                            .then(function(res){
+                                Swal.fire({
+                                    title : "알림",
+                                    text : res.data.clientMsg,
+                                    icon : res.data.alertIcon,
+                                    confirmButtonText : "확인"
+                                })
+                                .then(function(result){
+                                     navigate("/org"); // 기부 사업 보기 메뉴로 이동
+                                });
+                            });
+                        }
+                    }
+
                 });
             }
         })
@@ -292,13 +252,13 @@ export default function OrgPost(){
 
     return (
         <div>
+            <h2 className="page-title">기부 사업 등록</h2>
             <form autoComplete="off" onSubmit={function(e){
                 e.preventDefault();
                 insertBizPlan();//등록 버튼 클릭 시 실행 함수
-            }}>
+            }} className="post-form">
                 <div>
-                    <div>희망 모금 기간</div>
-                    <div>*모금 시작일은 등록일로부터 7일 뒤입니다.(예시 : 등록일 - 7월 5일 / 모금 시작일 - 7월 12일)</div>
+                    <h3>희망 모금 기간</h3>
                     <FormControl>
                         <RadioGroup row name="biz-donate-date" onChange={selectDonateDate}
                         aria-labelledby="demo-row-radio-buttons-group-label"
@@ -308,33 +268,36 @@ export default function OrgPost(){
                             <FormControlLabel value="90" control={<Radio />} label="90일" />
                         </RadioGroup>
                     </FormControl>
+                    <p>*모금 시작일은 등록일로부터 7일 뒤, 모금 종료일은 선택한 희망 모금 기간 +7일입니다.</p>
+                    <p>(예시 : 등록일 - 7월 5일, 선택 희망 모금일 - 30일 / 모금 시작일 - 7월 12일 / 모금 종료일 - 8월 10일)</p>
                 </div>
                 <div>
-                    <div>사업 기간</div>
+                    <h3>사업 기간</h3>
                     <div style={{display : "flex"}}>
-                        <div className="biz-start">
+                        <div className="biz-date">
                             <div>시작일</div>
-                            <input type="date" id="bizStart" onChange={chgBiz}/> ~ &nbsp;
+                            <TextField type="date" id="bizStart" onChange={chgBiz}/>
                         </div>
-                        <div className="biz-end">
+                        <h4>~</h4>
+                        <div className="biz-date">
                             <div>종료일</div>
-                            <input type="date" id="bizEnd" onChange={chgBiz}/>
+                            <TextField type="date" id="bizEnd" onChange={chgBiz}/>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div>모금액 사용 계획</div>
+                    <h3>모금액 사용 계획</h3>
                     <div>
                         {bizPlanList.map(function(bizPlan, index){
                             return  <BizPlan key={"bizPlan"+index} bizPlan={bizPlan} index={index} bizPlanList={bizPlanList} setBizPlanList={setBizPlanList}
                                             donateBiz={donateBiz} setDonateBiz={setDonateBiz}/>
                         })}
-                        <button type="button" onClick={addBizPlan}>사용 계획 추가</button>
+                        <div style={{marginBottom : "5px"}}>목표 금액 : {(donateBiz.bizGoal || 0).toLocaleString("ko-KR")}원</div>
+                        <Button variant="contained" type="button" onClick={addBizPlan}>사용 계획 추가</Button>
                     </div>
-                    <span>목표 금액 : {(donateBiz.bizGoal || 0).toLocaleString("ko-KR")}원</span>
                 </div>
                 <div>
-                    <div>기부 카테고리 선택</div>
+                    <h3>기부 카테고리 선택</h3>
                     <FormControl>
                         <RadioGroup row name="biz-donate-date" onChange={selectDonateCtg}
                         aria-labelledby="demo-row-radio-buttons-group-label"
@@ -347,25 +310,28 @@ export default function OrgPost(){
                 </div>
                 <hr/>
                 <div>
-                    <div>기부 사업명</div>
-                    <input type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz}/>
+                    <div style={{width : "180px", padding : "15px 0"}}>
+                        <h3>대표 사진 등록</h3>
+                        <div style={{height : "100px"}}>
+                            <img src={bizThumbImg ? bizThumbImg : "/images/default_img.png"} style={{height : "100px"}}
+                                onClick={bizThumbImg ? null : function(e){thumbImg.current.click();}}/>
+                            <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
+                        </div>
+                    </div>
+                    <div style={{padding : "15px 0"}}>
+                        <h3>기부 사업명</h3>
+                        <TextField type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz} style={{width : "600px"}}/>
+                    </div>
                 </div>
                 <div>
-                    <div>대표 사진 등록</div>
-                    <img src={bizThumbImg ? bizThumbImg : "/images/default_img.png"} style={{width : "100px"}}
-                        onClick={fix ? null : function(e){thumbImg.current.click();}}/>
-                    <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
-                    <button type="button" onClick={fixThumbImg}>확정</button>
-                </div>
-                <div>
-                    <div>본문</div>
+                    <h3>사업 내용</h3>
                     <div>
                         {/*news 폴더 안에 있는 ToastEditor 재사용*/}
                         <ToastEditor donateBiz={donateBiz} setDonateBiz={setDonateBiz} type={0}/>
                     </div>
                 </div>
-                <div>
-                    <button type="submit">등록</button>
+                <div style={{textAlign : "center"}}>
+                    <Button variant="contained" type="submit" style={{width : "180px", height : "50px", fontSize : "20px"}}>등록</Button>
                 </div>
             </form>
         </div>
@@ -439,10 +405,11 @@ function BizPlan(props){
 
     return(
         <div name="div-bizPlan">
-            <input type="text" name="bizPlanPurpose" placeholder="사용 용도 및 산출 근거" value={bizPlan.bizPlanPurpose} onChange={chgBizPlan}/>
-            <input type="text" name="bizPlanMoney" placeholder="금액" value={isNaN(bizPlan.bizPlanMoney) ? "" : bizPlan.bizPlanMoney} onChange={chgBizPlan}/>
+            <TextField type="text" name="bizPlanPurpose" className="plan-purpose" placeholder="사용 용도 및 산출 근거" value={bizPlan.bizPlanPurpose} onChange={chgBizPlan}/>
+            <TextField type="text" name="bizPlanMoney" className="plan-money" placeholder="금액"
+            value={isNaN(bizPlan.bizPlanMoney) ? "" : bizPlan.bizPlanMoney} onChange={chgBizPlan} style={{marginLeft : "10px", marginBottom : "5px"}}/>
             {index != 0
-            ?<span onClick={function(){deleteBizPlan(index)}} style={{cursor : "pointer"}}> ⛔</span>
+            ?<span onClick={function(){deleteBizPlan(index)}} style={{cursor : "pointer", lineHeight : "35px"}}> ⛔</span>
             : ""}
         </div>
     )

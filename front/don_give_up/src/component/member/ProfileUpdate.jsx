@@ -76,62 +76,60 @@ export default function ProfileUpdate(props){
     }
 
     return (
-        <div>
-            <div className="input-wrap">
-                {
-                 profileImg ?   //미리보기 파일이 있는지?
-                    <img className="input-title-wrap"  src={profileImg} onClick={function(e){
-                        profileImgEl.current.click();
-                    }} />
-                 :
-                member.memberProfile ? //서버에 저장된 프로필이미지가 있는지?
-                <img className="input-title-wrap"  src={serverUrl + "/member/" + member.memberProfile.substring(0,8) + "/" + member.memberProfile} onClick={
-                    function(e){
-                        profileImgEl.current.click();
-                    }} />    
-
-                 :
-                <img className="input-title-wrap"  src='/images/default_profile.jpg' onClick={function(e){
+        <div className="input-profile-wrap">
+            <div className="profile-img-wrap">
+                <div className="profile-img" onClick={function(e){
                     profileImgEl.current.click();
-                }} />
+                }}>
+                {
+                    profileImg ?   //미리보기 파일이 있는지?
+                        <img className="profile"  src={profileImg}  />
+                    :
+                    member.memberProfile ? //서버에 저장된 프로필이미지가 있는지?
+                    <img className="profile" src={serverUrl + "/member/" + member.memberProfile.substring(0,8) + "/" + member.memberProfile} />    
+                    :
+                    <img className="profile" src='/images/default_profile.jpg' />
                 }
+                </div>
                 <input type='file' accept="image/*" id='memberProfile' style={{display: 'none'}} ref={profileImgEl} onChange={chgProfileImg} />
-                
             </div>
-            <div>
-                <button onClick={chgProfile}>프로필 변경하기</button>
-                <input type="button" value='기본이미지로 변경' onClick={function(e){
-                    //미리보기용, 서버전송용 변수 null 처리하여, 기본이미지로 변경 (서버에 저장된 파일이 없는경우!)
-                    if(member.memberProfile == null || member.memberProfile == ""){
-                        setProfileImg(null);
-                        setProfile(null);
-                        return;
-                    }
-
-                    //서버에 저장된 DB 및 파일 삭제 (서버에 저장된 파일이 있는 경우)
-                    Swal.fire({
-                        title : '알림',
-                        text : '프로필 초기화하시겠습니까?',
-                        icon : 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: '초기화',
-                        cancelButtonText: '취소'
-                    }).then(function(res){
-                        if(res.isConfirmed){
-                            let options = {};
-                            options.url = serverUrl + '/member/profile/' + loginMember.memberNo;
-                            options.method = 'patch';
-                            
-                            axiosInstance(options)
-                            .then(function(res){
-                                if(res.data.resData){
-                                setMember({...member, memberProfile: null});
-                                
-                                }
-                            })
+            <div className="profile-content">
+                <span>{member.memberId}</span>
+                <div className="profile-btns">
+                    <button onClick={chgProfile}>변경</button>
+                    <input type="button" value='초기화' onClick={function(e){
+                        //미리보기용, 서버전송용 변수 null 처리하여, 기본이미지로 변경 (서버에 저장된 파일이 없는경우!)
+                        if(member.memberProfile == null || member.memberProfile == ""){
+                            setProfileImg(null);
+                            setProfile(null);
+                            return;
                         }
-                    })
-                    }}/>
+
+                        //서버에 저장된 DB 및 파일 삭제 (서버에 저장된 파일이 있는 경우)
+                        Swal.fire({
+                            title : '알림',
+                            text : '프로필 초기화하시겠습니까?',
+                            icon : 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: '초기화',
+                            cancelButtonText: '취소'
+                        }).then(function(res){
+                            if(res.isConfirmed){
+                                let options = {};
+                                options.url = serverUrl + '/member/profile/' + loginMember.memberNo;
+                                options.method = 'patch';
+                                
+                                axiosInstance(options)
+                                .then(function(res){
+                                    if(res.data.resData){
+                                    setMember({...member, memberProfile: null});
+                                    
+                                    }
+                                })
+                            }
+                        })
+                        }}/>
+                </div>
             </div>
         </div>
     )

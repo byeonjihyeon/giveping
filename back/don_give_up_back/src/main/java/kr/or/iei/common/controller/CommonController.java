@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.or.iei.common.annotation.NoTokenCheck;
 import kr.or.iei.common.model.dto.CommonBiz;
+import kr.or.iei.common.model.dto.CommonOrg;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.model.service.CommonService;
@@ -59,7 +60,7 @@ public class CommonController {
 	@GetMapping("/bizList/{primaryNo}")
 	//@NoTokenCheck
 	public ResponseEntity<ResponseDTO> selectMainBizList(@PathVariable int primaryNo){
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "리스트 조회 중 오류 발생", null, "error");
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 리스트 조회 중 오류 발생", null, "error");
 		try {
 			ArrayList<CommonBiz> bizList = service.selectMainBizList(primaryNo);
 			res = new ResponseDTO(HttpStatus.OK, "", bizList, "");
@@ -69,6 +70,25 @@ public class CommonController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	// 일반회원 관심 카테고리에 따라서 기부 사업 리스트 조회 (로그인 x 시 or 단체 회원일 경우 => memberNo 를 0으로 보냄)
+	@GetMapping("/orgList/{primaryNo}")
+	public ResponseEntity<ResponseDTO> selectMainOrgList(@PathVariable int primaryNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 단체 리스트 조회 중 오류 발생", null, "error");
+		try {
+			System.out.println("primaryNo : " + primaryNo);
+			ArrayList<CommonOrg> orgList = service.selectMainOrgList(primaryNo);
+			
+			System.out.println("orgList : " +orgList);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", orgList, "");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
 	
 	
 }
