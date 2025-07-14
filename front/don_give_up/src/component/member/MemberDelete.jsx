@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import useUserStore from "../../store/useUserStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import createInstance from "../../axios/Interceptor";
 
 export default function MemberDelete(props){
@@ -11,7 +11,6 @@ export default function MemberDelete(props){
     
     //회원탈퇴후 초기화를 위해 스토리지변수 선언
     const {setIsLogined, loginMember, setLoginMember, setAccessToken, setRefreshToken } = useUserStore();
-
     //탈퇴 동의여부 state변수
     const [isAgreed, setIsAgreed] = useState(false);
 
@@ -21,8 +20,24 @@ export default function MemberDelete(props){
         memberPw : ""
     })
 
+    //환불요청중인 리스트를 관리할 변수
+    const [refundList, setRefundList] = useState([]);
+
     //비밀번호 확인여부 state변수
     const [isAuth, setIsAuth] = useState(false);
+
+    //출금요청중인 리스트 조회
+    useEffect(function(){
+        const options = {};
+        options.url = serverUrl + '/member/refund/' + loginMember.memberNo;
+        options.method= 'get';
+
+        axiosInstance(options)
+        .then(function(res){
+            setRefundList(res.data.resData);
+        })
+
+    }, [])
 
     //체크박스 onChange
     function chkAgree(e){
@@ -57,6 +72,12 @@ export default function MemberDelete(props){
 
     //탈퇴버튼 클릭시 동작함수
     function deleteMember(){
+        if(refundList != null && refundList.length > 0){
+            alert('출금 완료후에 탈퇴진행 가능합니다.');
+            return;
+        }
+
+
         let options = {};
         options.url = serverUrl + '/member/delete/' + loginMember.memberNo;
         options.method = 'patch'    //회원 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
@@ -91,12 +112,30 @@ export default function MemberDelete(props){
             </div>
             <div className="money-info">
                 <div>
-                    <div>보유금액</div>
+                    <div>현재 보유금액</div>
                     <div>{mainMember.totalMoney} 원</div>
                 </div>
-                <div>
-                    <div>출금 진행중인 금액</div>
-                    <div>원</div>
+                <div className="refund-ing">
+                    <div className="title">
+                        <span>출금 진행중인 건</span>
+                        <span className="invalid"> 모두 완료해야 탈퇴 가능합니다.</span></div>
+                    <div className="category">
+                        <div>구분</div>
+                        <div>금액</div>
+                        <div>요청일</div>
+                    </div>
+                    {refundList != null && refundList.length != 0 ?
+                        refundList.map(function(refund, index){
+                            return <div className="info">
+                                        <div>{index + 1}</div>
+                                        <div>{refund.refundMoney} 원</div>
+                                        <div>{refund.refundDate}</div>
+                                   </div>
+                        })
+                    :
+                    ""
+                   
+                    }
                 </div>
             </div>
             <div className="delete-agree">

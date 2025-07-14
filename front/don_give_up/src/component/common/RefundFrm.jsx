@@ -17,8 +17,8 @@ export default function RefundFrm(props){
     //서버 전송용 변수
     const [refund, setRefund] = useState({
         refundMoney : "",
-        memberAccount : member.memberBankCode,
-        memberAccountBank : member.memberBankAccount
+        memberAccount : member.memberBankAccount,
+        memberAccountBank : member.memberBankCode
     })
 
 

@@ -83,15 +83,19 @@ export default function NewsList(){
                 <span>내 소식</span>
             </div>
             <div className="myNews-mid">
-                <span></span>
+                <span>- 2일 지난 알림은 자동 삭제처리 됩니다.</span>
+                <span>- 알림 클릭시, 읽음 처리됩니다.</span>
             </div>
                 {
-                    Array.isArray(newsList) && newsList.length>0
+                    Array.isArray(newsList) && newsList.length > 0
                     ?
                     newsList.map(function(news, index){
-                        return  <div className="newsList-wrap" >
-                                    <News key={"news" + index} news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
-                                </div>
+                                
+                        return  <div className="mynews-list">
+                                    <div key={"news" + index} className="newsList-wrap" >
+                                        <News news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
+                                    </div>
+                                </div>   
                     })
                     :
                     <div className="no-news-wrap">
@@ -218,8 +222,8 @@ function News(props){
             onClick = {handleClick}
             style={{
                 cursor: 'pointer',
-                color: news.alarmRead === 1 ? 'gray' : 'black',
-                backgroundColor: news.alarmRead === 1 ? '#f0f0f0' : 'white',
+                color: news.alarmRead === 1 ? 'gray' : '#333333',
+                border: news.alarmRead === 1 ? '1px solid #f0f0f0' : '1px solid lightblue',
             }}
         >
             <div>{content}</div>

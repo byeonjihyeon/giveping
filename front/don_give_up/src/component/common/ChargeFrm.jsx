@@ -69,6 +69,15 @@ export default function ChargeFrm(props){
         {add : 50000, content: "+ 50,000원"}
     ])
 
+    const chargeMethod = ([
+        {url: "", content : '신용·체크카드'},
+        {url: "", content : '빠른계좌이체'},
+        {url: "/images/KakaoPay.png", content : '카카오페이'},
+        {url: "/images/tosspay.png", content : '토스페이'},
+        {url: "/images/NPay.png", content : '네이버페이'},
+        {url: "", content : '무통장입금'}
+    ])
+
     //충전하기 버튼 클릭시 동작함수
     function recharge(){
         
@@ -94,7 +103,6 @@ export default function ChargeFrm(props){
             setMember({...member, totalMoney: sumStr});
             onClose(null);         
         })
-        
     }
 
     return (
@@ -130,6 +138,25 @@ export default function ChargeFrm(props){
                 <div onClick={function(){
                     inputEl.current.focus();
                 }}>직접입력</div>
+            </div>
+            
+            <div className="charge-method-wrap">
+                <div className="title">결제방법</div>    
+                <div className="charge-method">            
+                {chargeMethod.map(function(method, index){
+                    
+                    return <div key={"method" + index}>
+                            {
+                                method.url == "" ? 
+                                <span>{method.content}</span>
+                                :
+                                <img src={method.url} />
+                            }
+                            </div>
+                    
+                    
+                })}
+                </div>
             </div>
             <div className="charge-result">
                 <span>총 </span> 
