@@ -72,23 +72,23 @@ export default function OrgList(){
     }
 
     return(
-        <section className="section org-list" style={{height : "500px"}}>
+        <section className="section organization-list">
             <div className="page-title">후원단체</div>
             <div className="filter-search-wrapper">
                 <div className="category-filter">
                     {categoryList.map(function(ctg, index){
                         return  <button key={"ctg"+index}
-                                        style={{backgroundColor: checkCtgList.includes(ctg.donateCode) ? '#007bff' : '#f0f0f0',
-                                                color: checkCtgList.includes(ctg.donateCode) ? 'white' : '#333',
+                                        style={{backgroundColor: checkCtgList.includes(ctg) ? '#007bff' : '#ffffffff',
+                                                color: checkCtgList.includes(ctg) ? 'white' : '#333',
                                                 border: '1px solid',
-                                                borderColor: checkCtgList.includes(ctg.donateCode) ? '#0056b3' : '#ccc',
+                                                borderColor: checkCtgList.includes(ctg) ? '#0056b3' : '#ccc',
                                                 padding: '10px 20px',
                                                 margin: '0 6px 6px 0',
                                                 cursor: 'pointer',
                                                 borderRadius: '30px',
-                                                fontWeight: checkCtgList.includes(ctg.donateCode) ? 'bold' : 'normal',
+                                                fontWeight: checkCtgList.includes(ctg) ? 'bold' : 'normal',
                                                 fontSize: '1rem',
-                                                minWidth: 'center'}}
+                                                minWidth: 'center',}}
                                         onClick={function(){toggleCategory(ctg.donateCode);}}
                                 >{ctg.donateCtg}</button>
                     })}
