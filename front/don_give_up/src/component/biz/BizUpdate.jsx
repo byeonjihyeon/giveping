@@ -240,12 +240,6 @@ export default function BizUpdate(){
             setBizThumbImg(null);
         }
     }
-
-    /*
-    //대표 사진 변경 가능 여부를 다룰 변수
-    const [fix, setFix] = useState(false);
-    */
-
     
     useEffect(function(){
         setDonateBiz({...donateBiz, bizPlanList : bizPlanList});
@@ -364,17 +358,6 @@ export default function BizUpdate(){
                         axiosInstance(options)
                         .then(function(res){
                             
-                            /*
-                            const newDonateBiz = res.data.resData;
-
-                            setDonateBiz(prev => ({
-                                ...prev,
-                                bizNo: newDonateBiz.bizNo,
-                                bizThumbPath: newDonateBiz.bizThumbPath // 서버에서 전달받은 새 썸네일 경로로 갱신
-                            }));
-                            */
-                            
-                            
                             Swal.fire({
                                 title : "알림",
                                 text : res.data.clientMsg,
@@ -405,81 +388,23 @@ export default function BizUpdate(){
             }
         })
     }
-    /*
-    // 썸네일 함수 초기화
-    function resetThumbImage() {
-        //setFix(false); // 다시 수정 가능 상태로 전환
-        setBizImg(null); // 서버로 전송할 이미지 초기화
-        setBizThumbImg(null); // 미리보기 이미지 제거
-        // 기존 donateBiz의 bizThumbPath 제거 (원하면)
-        setDonateBiz(prev => ({
-            ...prev,
-            bizThumbPath: ""  // or null
-        }));
-    }
-    */
-    /*
-
-    //대표 사진 확정 버튼 클릭 시 호출 함수
-        function fixThumbImg(){
-            Swal.fire({
-                title : "알림",
-                text : "확정 시 대표 사진 이미지는 변경하지 못합니다.",
-                icon : "warning",
-                showCancelButton : true,
-                cancelButtonText : "취소",
-                confirmButtonText : "확정"
-            }).then(function(result){
-                if(result.isConfirmed){ //확정 버튼 클릭 시 
-                    //대표 사진 변경 못하게 변수 변경
-                    setFix(true);
-                    
-                    //DB에 대표 사진 저장
-                    const form = new FormData();
-    
-                    if(bizImg != null){
-                        form.append("bizImg", bizImg);
-                        form.append("orgNo", orgNo);
-    
-                        let options = {};
-                        options.url = serverUrl + "/biz/thumb";
-                        options.method = "post";
-                        options.data = form;
-                        options.headers = {};
-                        options.headers.contentType = "multipart/form-data";
-                        options.headers.processData = false; //쿼리스트링 X
-                        
-                        axiosInstance(options)
-                        .then(function(res){
-                            const newDonateBiz = res.data.resData;
-
-                            setDonateBiz(prev => ({
-                                ...prev,
-                                bizNo: newDonateBiz.bizNo,
-                                bizThumbPath: newDonateBiz.bizThumbPath // 서버에서 전달받은 새 썸네일 경로로 갱신
-                            }));
-                        });
-                    }
-                };
-            });
-        }
-            */
-
 
     return(
-       <div>
+        <>
+        <div className="page-title">기부 사업 정보 수정</div>
+       <div className="biz-form">
             <form autoComplete="off" onSubmit={function(e){
                 e.preventDefault();
                 insertBizPlan();//등록 버튼 클릭 시 실행 함수
             }}>
-                <div>
-                    <div>희망 모금 기간</div>
-                    <div className="biz-start">
-                            <span>{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</span>
-                        </div>
-                </div>
-                <div>
-                    <div>사업 기간</div>
+                <section className="form-section">
+                    <h3>희망 모금 기간</h3>
+                    <p className="date-range">{donateBiz.bizDonateStart} ~ {donateBiz.bizDonateEnd}</p>
+                </section>
+
+                {/* 사업 기간 */}
+                <section className="form-section">
+                    <h3>사업 기간</h3>
                     <div style={{display : "flex"}}>
                         <div className="biz-start">
                             <div>시작일</div>
@@ -490,25 +415,26 @@ export default function BizUpdate(){
                             <input type="date" id="bizEnd" value={donateBiz.bizEnd} onChange={chgBiz}/>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div>모금액 사용 계획</div>
-                    <div>
+                </section>
+
+                {/* 모금액 사용 계획 */}
+                <section className="form-section">
+                    <h3>모금액 사용 계획</h3>
                         {bizPlanList.map(function(bizPlan, index){
                             return  <BizPlan key={"bizPlan"+index} bizPlan={bizPlan} index={index} bizPlanList={bizPlanList} setBizPlanList={setBizPlanList}
                                             donateBiz={donateBiz} setDonateBiz={setDonateBiz} onDeletePlan={deleteBizPlan}/>
                         })}
-                        <button type="button" onClick={addBizPlan}>사용 계획 추가</button>
-                    </div>
-                    <span>목표 금액 : {(donateBiz.bizGoal || 0).toLocaleString("ko-KR")}원</span>
-                </div>
-                <div>
-                    <div>기부 카테고리 선택</div>
+                    <button type="button" onClick={addBizPlan} className="btn-add">+ 사용 계획 추가</button>
+                    <p className="goal-amount">목표 금액 : {(donateBiz.bizGoal || 0).toLocaleString("ko-KR")}원</p>
+                </section>
+
+                {/* 기부 카테고리 선택 */}
+                <section className="form-section">
+                    <h3>기부 카테고리 선택</h3>
                     <FormControl>
                         <RadioGroup row name="biz-donate-date" 
                                     value={donateBiz.donateCode} 
                                     onChange={selectDonateCtg}
-                                    aria-labelledby="demo-row-radio-buttons-group-label"
                         >
                             {donateCtgList.map(function(category, index){
                                 return <FormControlLabel key={"category"+index} value={category.donateCode} control={<Radio />} label={category.donateCtg}
@@ -516,14 +442,18 @@ export default function BizUpdate(){
                             })}
                         </RadioGroup>
                     </FormControl>
-                </div>
-                <hr/>
-                <div>
-                    <div>기부 사업명</div>
-                    <input type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz}/>
-                </div>
-                <div>
-                    <div>대표 사진 등록</div>
+                </section>
+
+
+                {/* 사업명 */}
+                <section className="form-section">
+                <h3>기부 사업명</h3>
+                <input type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz} className="input-text" />
+                </section>
+
+                {/* 대표 사진 */}
+                <section className="form-section">
+                    <h3>대표 사진 등록</h3>
                     <img 
                         src={
                             bizThumbImg
@@ -532,30 +462,27 @@ export default function BizUpdate(){
                             ? serverUrl + "/biz/thumb/" + donateBiz.bizThumbPath.substring(0,8) + "/" + donateBiz.bizThumbPath
                             : "/images/default_img.png"
                         }
-                        style={{ width: "100px", cursor: "pointer" }}
+                        className="thumb-preview"
                         onClick={() => thumbImg.current.click()}
+                        alt="대표 사진 미리보기"
                     />
                     <input type="file" id="bizThumbPath" style={{display : "none"}} onChange={chgBizThumb} ref={thumbImg}/>
+                </section>
 
-                    {/*<button type="button" onClick={resetThumbImage}>사진초기화</button>
-                    <div>
-                        <Button variant="contained" type="button" style={{bottom : "0", marginTop : "65px", marginLeft : "10px"}}>확정</Button>
-                    </div>
-                    */}
-                </div>
-                <div>
-                    <div>본문</div>
-                    <div>
+                {/* 본문 */}
+                <section className="form-section">
+                    <h3>본문</h3>
                         {/*news 폴더 안에 있는 ToastEditor 재사용*/}
                         <ToastEditor donateBiz={donateBiz} setDonateBiz={setDonateBiz} type={1}/>
-                    </div>
-                </div>
-                <div>
-                    <button type="submit">등록</button>
-                </div>
+                </section>
+                
+                {/* 등록 버튼 */}
+                <section className="form-section submit-section">
+                    <button type="submit" className="btn-submit">등록</button>
+                </section>
             </form>
         </div>
-        
+        </>
     );
 }
 
@@ -609,22 +536,29 @@ function BizPlan(props){
     }
 
     return(
-        <div name="div-bizPlan">
-            <input type="text" name="bizPlanPurpose" placeholder="사용 용도 및 산출 근거" value={bizPlan.bizPlanPurpose} onChange={chgBizPlan}/>
-            <input type="text" name="bizPlanMoney" placeholder="금액" value={isNaN(bizPlan.bizPlanMoney) ? "" : bizPlan.bizPlanMoney} onChange={chgBizPlan}/>
-            {index !== 0 && (
-                 <span
-                    onClick={() => onDeletePlan(index)}
-                    style={{ 
-                        marginLeft: "8px", 
-                        cursor: "pointer", 
-                        color: "red", 
-                        fontWeight: "bold" 
-                    }}
-                >
-                    ⛔
-                </span>
-            )}
+        <div className="bizplan-item">
+        <input
+            type="text"
+            name="bizPlanPurpose"
+            placeholder="사용 용도 및 산출 근거"
+            value={bizPlan.bizPlanPurpose}
+            onChange={chgBizPlan}
+            className="input-text"
+        />
+        <input
+            type="text"
+            name="bizPlanMoney"
+            placeholder="금액"
+            value={isNaN(bizPlan.bizPlanMoney) ? "" : bizPlan.bizPlanMoney}
+            onChange={chgBizPlan}
+            className="input-text"
+        />
+        {index !== 0 && (
+            <button type="button" onClick={() => onDeletePlan(index)} className="btn-delete">
+            ⛔
+            </button>
+        )}
         </div>
+
     );
 }

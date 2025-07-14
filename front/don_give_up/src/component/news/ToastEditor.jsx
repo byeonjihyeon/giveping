@@ -21,7 +21,7 @@ import createInstance from '../../axios/Interceptor';
         if (donateBiz && donateBiz.bizContent && editorRef.current) {
             editorRef.current.getInstance().setHTML(donateBiz.bizContent);
         }
-    }, [donateBiz.bizContent]);
+    }, [donateBiz.bizContent]); // 무한 로딩 방지
 
     function changeContent(){
         //에디터 본문에 작성한 내용 state 변수에 세팅

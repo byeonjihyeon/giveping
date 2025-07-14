@@ -151,7 +151,6 @@ export default function BizView(){
                 cancelButtonText : '취소'
             }).then(function(res){
                 if(res.isConfirmed){
-                /*
                     let options = {};
                     options.url = serverUrl + '/biz/delete/' + donateBiz.bizNo;
                     options.method = 'patch';
@@ -163,7 +162,6 @@ export default function BizView(){
                             navigate('/biz/list');
                         }
                     });
-                    */
                 }
                 }
         )};
@@ -213,23 +211,14 @@ export default function BizView(){
             }
         }
 
-
-    
+        // 기부금 달성률 계산
+        const goal = donateBiz.bizGoal || 0;
+        const donated = donateBiz.donateMoney || 0;
+        const percent = goal > 0 ? Math.floor((donated / goal) * 100) : 0;
 
     return (
         <section>
-            {/* 썸네일, 디데이, 제목, 모금율 그래프 */}
-            {/*
-           <div className="bizView-banner-wrap">
-                <div className="bizView-banner-info">
-                    <span className="bizView-banner-day">{calculateDDay(donateBiz.bizDonateEnd)}</span>
-                    <br/>
-                    <strong>{donateBiz.bizName}</strong>
-                </div>
-           </div>
-           */}
-
-        
+            {/* 썸네일, 디데이, 제목, 모금율 그래프 */}    
             <div
                 className="bizView-banner-wrap"
                 style={{
@@ -248,6 +237,16 @@ export default function BizView(){
                     <br/>
                     <strong>{donateBiz.bizName}</strong>
                 </div>
+
+                <div className="bizView-progress-container">
+                    <div className="bizView-progress-bar">
+                            <div className="bizView-progress-fill" style={{ width: `${percent}%` }}></div>
+                    </div>
+                    <div className="bizView-donate-stats">
+                        <span>{percent}%</span>
+                        <span>{donated.toLocaleString()}원</span>
+                    </div>
+                </div>
             </div>
          
 
@@ -263,17 +262,29 @@ export default function BizView(){
                           onClick={function(){handleTabClick('file');}}>소식후기</span>
                     {/* 관리자나 기부단체계정일 경우에만 보임 */}
                     {
-                        loginMember != null && (loginMember.memberLevel == 1 || loginMember.orgNo ==  donateBiz.orgNo)
-                        ?
-                        <span className={ "tabArea-left-text" + (activeTab === 'donateMember' ? " active" : "") } 
-                          onClick={function(){handleTabClick('donateMember');}}>기부회원</span>
-                        :''
+                        (loginOrg != null || loginMember != null) &&
+                        (
+                            (loginMember?.memberLevel === 1) ||
+                            (loginOrg?.orgNo != null && donateBiz?.orgNo != null && loginOrg.orgNo === donateBiz.orgNo)
+                        )
+                        ? (
+                            <span
+                            className={"tabArea-left-text" + (activeTab === 'donateMember' ? " active" : "")}
+                            onClick={() => handleTabClick('donateMember')}
+                            >
+                            기부회원
+                            </span>
+                        ) : ''
                     }
                 </div>
-                {/* 오른쪽에 위치 */}
+                {/* 오른쪽에 위치 , 일반 회원일 경우에만 보임 (관리자, 기부 단체 계정은 x) */}
                 <div className="tabArea-right">
-                    <span className="tabArea-right-text" onClick={openDonatePopup}>기부하기</span>
-
+                    {
+                        loginMember != null && (loginMember.memberLevel == 2)
+                        ?
+                        <span className="tabArea-right-text" onClick={openDonatePopup}>기부하기</span>
+                        :''
+                    }
                     {/* 기부 팝업 */}
                     {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}
 

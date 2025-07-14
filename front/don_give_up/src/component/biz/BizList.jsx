@@ -141,11 +141,12 @@ export default function BizList() {
                             padding: '10px 20px',
                             margin: '0 6px 6px 0',
                             cursor: 'pointer',
-                            borderRadius: '4px',
+                            borderRadius: '30px',
                             fontWeight: categories.includes(code) ? 'bold' : 'normal',
                             fontSize: '1rem',
                             boxShadow: categories.includes(code) ? '0 0 8px rgba(0,123,255,0.6)' : 'none',
                             transition: 'background-color 0.3s ease, color 0.3s ease',
+                            minWidth: 'center',
                         }}
                         onClick={() => toggleCategory(code)}
                         >
@@ -156,12 +157,13 @@ export default function BizList() {
                 </div>
 
                 <div className="search-box">
-                    <select value={searchType} onChange={handleSearchTypeChange}>
+                    <select name="searchType" id="searchType" value={searchType} onChange={handleSearchTypeChange}>
                         <option value="bizTitle">사업명</option>
                         <option value="orgName">단체명</option>
                     </select>
                     <input
                         type="text"
+                        name={searchType === "bizTitle" ? "bizTitle" : "orgName"}
                         placeholder={searchType === "bizTitle" ? "기부 사업명을 입력하세요" : "단체명을 입력하세요"}
                         value={searchType === "bizTitle" ? keyWord.bizTitle : keyWord.orgName}
                         onChange={handleInputChange}
