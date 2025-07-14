@@ -173,7 +173,7 @@ export default function OrgChangePw(){
                         <label htmlFor="orgPw" className="label" style={{fontWeight : "bold"}}>현재 비밀번호</label>
                         <TextField type="password" id="orgPw" className="input-login" inputRef={pwRef}
                         value={org.orgPw} onChange={chgOrgPw}/>
-                        <Button variant="contained" type="submit" style={{width : "90px", marginLeft : "3px"}}>확인</Button>
+                        <Button variant="contained" type="submit" style={{width : "90px", marginLeft : "3px"}} id="mui-btn">확인</Button>
                     </div>
                 </form>
                 : //새 비밀번호 입력창
@@ -205,7 +205,7 @@ export default function OrgChangePw(){
                             </tr>
                         </tbody>
                     </table>
-                    <Button variant="contained" type="submit" style={{height : "90px", width : "90px"}}>변경</Button>
+                    <Button variant="contained" type="submit" style={{height : "90px", width : "90px", fontSize : "20px"}} id="mui-btn">변경</Button>
                 </form>
                 }
             </div>

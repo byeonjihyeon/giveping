@@ -74,7 +74,7 @@ export default function JoinCategory(props) {
     }
 
     return (
-        <section className="section category-wrap">
+        <section className="section category-select-wrap">
             {member.memberId != ""
             ?
             <div className="page-title"><h1>관심 카테고리 선택</h1></div>
@@ -89,7 +89,7 @@ export default function JoinCategory(props) {
                 })}
             </ul>
             <div style={{marginTop : "140px", textAlign : "center"}}>
-                <Button variant="contained" onClick={join} style={{width : "180px", height : "50px", fontSize : "20px"}}>회원가입</Button>
+                <Button variant="contained" id="mui-btn" onClick={join} style={{width : "180px", height : "50px", fontSize : "20px"}}>회원가입</Button>
             </div>
         </section>
         );
