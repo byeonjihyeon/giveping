@@ -33,6 +33,7 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .search-box {
+  margin-bottom: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -43,7 +44,7 @@ ul.posting-wrap.grid-3x4 {
 .search-box select,
 .search-box input[type="text"],
 .search-box input[type="button"] {
-  height: 32px;
+
   font-size: 14px;
   padding: 4px 8px;
   border-radius: 4px;

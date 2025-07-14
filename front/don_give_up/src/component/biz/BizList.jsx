@@ -134,7 +134,7 @@ export default function BizList() {
                         <button
                         key={code}
                         style={{
-                            backgroundColor: categories.includes(code) ? '#007bff' : '#f0f0f0',
+                            backgroundColor: categories.includes(code) ? '#007bff' : '#ffffffff',
                             color: categories.includes(code) ? 'white' : '#333',
                             border: '1px solid',
                             borderColor: categories.includes(code) ? '#0056b3' : '#ccc',
@@ -144,8 +144,6 @@ export default function BizList() {
                             borderRadius: '30px',
                             fontWeight: categories.includes(code) ? 'bold' : 'normal',
                             fontSize: '1rem',
-                            boxShadow: categories.includes(code) ? '0 0 8px rgba(0,123,255,0.6)' : 'none',
-                            transition: 'background-color 0.3s ease, color 0.3s ease',
                             minWidth: 'center',
                         }}
                         onClick={() => toggleCategory(code)}
