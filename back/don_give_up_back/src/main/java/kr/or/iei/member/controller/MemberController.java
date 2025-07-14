@@ -524,7 +524,7 @@ public class MemberController {
 	@PostMapping("/refund/{memberNo}")
 	public ResponseEntity<ResponseDTO> refund(@PathVariable int memberNo, @RequestBody Refund refund) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신청중, 오류가 발생하였습니다.", false, "error");
-
+		System.out.println(refund);
 		try {
 			int result = service.refund(memberNo, refund);
 
@@ -594,6 +594,21 @@ public class MemberController {
 			res = new ResponseDTO(HttpStatus.OK, "", recommandList, "");
 			
 		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//출금진행중인 리스트 조회
+	@GetMapping("/refund/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectRefundList(@PathVariable int memberNo){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			ArrayList<Refund> refundList = service.selectRefundList(memberNo);
+			res = new ResponseDTO(HttpStatus.OK, "", refundList, "");
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 		

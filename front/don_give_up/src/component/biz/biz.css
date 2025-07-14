@@ -2,7 +2,7 @@
 .page-title{
   font-size: 2rem;      /* 글씨 크기 크게 */
   font-weight: 700;     /* 두껍게 (bold) */
-  margin-bottom: 1rem;  /* 아래 여백 추가 */
+  margin-bottom: 2rem;  /* 아래 여백 추가 */
 }
 
 
@@ -33,6 +33,7 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .search-box {
+  margin-bottom: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 8px;
@@ -44,7 +45,7 @@ ul.posting-wrap.grid-3x4 {
 .search-box select,
 .search-box input[type="text"],
 .search-box input[type="button"] {
-  height: 32px;
+
   font-size: 14px;
   padding: 0 8px;
   border-radius: 4px;
@@ -64,33 +65,40 @@ ul.posting-wrap.grid-3x4 {
 }
 
 
-/* ✅ 기부자 카드 스타일 */
-.member-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    font-size: 14px;
+/* 기부 회원 목록 */
+.donate-member-list-wrap {
+    margin-top: 20px;
+    overflow-x: auto;
 }
 
-.member-row {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
+.donate-member-list {
+    width: 100%;
 }
 
-.member-label {
-    width: 25%;
+.donate-member-header,
+.donate-member-row {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+.donate-member-header {
+    background-color: #f5f5f5;
     font-weight: bold;
     color: #333;
 }
 
-.member-value {
-    width: 25%;
+.donate-member-row {
+    background-color: #fff;
     color: #555;
 }
+
+.donate-member-row:nth-child(even) {
+    background-color: #fafafa;
+}
+
 
 /* ✅ 기부 통계 (퍼센트/금액) 간격 조정 */
 .donate-stats {
@@ -149,7 +157,7 @@ ul.posting-wrap.grid-3x4 {
 /* ===== 썸네일, 디데이, 제목 ===== */
 .bizView-banner-wrap {
     position: relative;
-    height: 240px;
+    height: 200px;
     background: #f1f1f1 url('/images/default_img.png') center/cover no-repeat;
     display: flex;
     flex-direction: column;
@@ -162,7 +170,7 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .bizView-banner-info {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.2);
     padding: 0.8rem 1.2rem;
     border-radius: 8px;
     color: white;
@@ -171,6 +179,7 @@ ul.posting-wrap.grid-3x4 {
     align-items: center;
     justify-content: center;
     text-align: center;
+    margin-top: 30px;
 }
 
 .bizView-banner-day {
@@ -192,7 +201,7 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .bizView-banner-info {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.3);
   display: inline-block;
   padding: 20px 30px;
   border-radius: 10px;
@@ -202,7 +211,7 @@ ul.posting-wrap.grid-3x4 {
 /* 진행률 컨테이너 */
 .bizView-progress-container {
   width: 900px;
-  margin: 0 auto;
+  margin: 55px auto 0 auto;
   padding: 10px 20px;
   border-radius: 10px;
 }
@@ -219,7 +228,7 @@ ul.posting-wrap.grid-3x4 {
 
 .bizView-progress-fill {
   height: 100%;
-  background-color: #ffd700; /* 노란색 진행 바 */
+  background-color: #007BFF; /* 노란색 진행 바 */
   width: 0%;
   transition: width 0.5s ease-in-out;
 }
@@ -265,6 +274,20 @@ ul.posting-wrap.grid-3x4 {
 
 .tabArea-left-text.active {
     background-color: #f0f0f0;
+}
+
+.tabArea-right-text {
+    cursor: pointer;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+    border: 1px solid #ccc; /* ✅ 오른쪽 탭에만 테두리 추가 */
+}
+
+.tabArea-right-text:hover {
+    background-color: #f0f0f0;
+    border-color: #999; /* ✅ hover 시 테두리 진하게 */
 }
 
 /* ===== 콘텐츠 영역 ===== */
@@ -330,6 +353,27 @@ ul.posting-wrap.grid-3x4 {
     font-weight: bold;
     font-size: 1.1rem;
 }
+/* 구글 icon*/
+.content-orgInfo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    gap: 0.5rem;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: border-color 0.2s;
+    position: relative;
+}
+
+.content-orgInfo-icon {
+    margin-left: auto;  /* 맨 오른쪽으로 밀기 */
+    font-size: 24px;
+    color: #666;
+    user-select: none;
+}
+
 
 .content-orgInfo-link {
     display: flex;
@@ -337,6 +381,10 @@ ul.posting-wrap.grid-3x4 {
     text-decoration: none;
     color: #333;
     gap: 0.5rem;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: border-color 0.2s;
 }
 
 .content-orgInfo-text {
@@ -612,13 +660,12 @@ ul.posting-wrap.grid-3x4 {
 
 /* 기부 사업 정보 수정 */
 .biz-form {
-  border: 2px solid #ccc;   /* 테두리 색과 두께 설정 */
-  border-radius: 10px;      /* 테두리 둥글게 (선택 사항) */
+  border: 1px solid rgb(112, 112, 112);   /* 테두리 색과 두께 설정 */
+  border-radius: 5px;      /* 테두리 둥글게 (선택 사항) */
   max-width: 720px;
   margin: 0 auto;
   padding: 24px;
   background-color: #fdfdfd;
-  border-radius: 12px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
   font-family: 'Noto Sans KR', sans-serif;
 }

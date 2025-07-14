@@ -6,6 +6,7 @@ import useUserStore from '../../store/useUserStore';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
+import Swal from "sweetalert2";
 
 
 // 알람 아이콘
@@ -23,10 +24,18 @@ export default function DotBadge() {
       } else if (loginOrg?.orgNo && !loginMember?.memberNo) {
         navigate("/org/news");     // 단체회원
       } else if (!loginMember && !loginOrg) {
-        alert("로그인이 필요합니다.");
+        Swal.fire({
+                  title : '알림',
+                  text : '로그인이 필요합니다.',
+                  icon : 'warning'
+            });
         navigate("/login"); // 로그인 페이지로 보내는 것도 가능
       } else {
-        alert("회원 정보가 올바르지 않습니다.");
+        Swal.fire({
+                  title : '알림',
+                  text : '회원 정보가 올바르지 않습니다.',
+                  icon : 'warning'
+            });
       }
     }
     

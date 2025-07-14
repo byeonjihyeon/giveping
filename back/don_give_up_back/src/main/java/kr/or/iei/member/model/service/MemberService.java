@@ -356,7 +356,7 @@ public class MemberService {
 		return dao.updateMemberAccount(member);
 	}
 	
-	//환불 신청하기
+	//출금 신청하기
 	@Transactional
 	public int refund(int memberNo, Refund refund) {
 		HashMap<String, Object> refundMap = new HashMap<>();
@@ -465,6 +465,11 @@ public class MemberService {
 			return selectList;
 		}
 
+	}
+	
+	//환불요청중인 리스트 조회
+	public ArrayList<Refund> selectRefundList(int memberNo) {
+		return dao.selectRefundList(memberNo);
 	}
 
 	

@@ -65,11 +65,7 @@ public class NewsService {
 		
 		//(2) 게시글 정보 등록
 		int result = dao.insertNews(news);
-		
-		
-		
-		//return result;
-		return 0;
+		return result;
 	}
 
 	public ArrayList<NewsOrg> selectOneOrg(String orgName) {

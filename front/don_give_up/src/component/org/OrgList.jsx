@@ -72,7 +72,7 @@ export default function OrgList(){
     }
 
     return(
-        <section className="section org-list">
+        <section className="section org-list" style={{height : "500px"}}>
             <div className="page-title">후원단체</div>
             <div className="filter-search-wrapper">
                 <div className="category-filter">
@@ -88,8 +88,6 @@ export default function OrgList(){
                                                 borderRadius: '30px',
                                                 fontWeight: checkCtgList.includes(ctg.donateCode) ? 'bold' : 'normal',
                                                 fontSize: '1rem',
-                                                boxShadow: checkCtgList.includes(ctg.donateCode) ? '0 0 8px rgba(0,123,255,0.6)' : 'none',
-                                                transition: 'background-color 0.3s ease, color 0.3s ease',
                                                 minWidth: 'center'}}
                                         onClick={function(){toggleCategory(ctg.donateCode);}}
                                 >{ctg.donateCtg}</button>

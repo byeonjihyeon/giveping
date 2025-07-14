@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
@@ -125,18 +125,18 @@ export default function MyHome(props){
                 <div className="myNews-title-wrap">
                     <span>내 소식</span>
                     <span>|</span>
-                    <span>총 {unreadAlarmCount} 건</span>
+                    <span>읽지 않은 <span>{unreadAlarmCount}</span>  건</span>
                 </div>
                 <div className="myNews-item">
                     <div className="m-newsList-wrap" >
                              {
-                                !newsList || newsList.filter(news => news.alarmRead === 0).length === 0 ? (
-                                <div>새로운 소식이 없습니다.</div>
-                                ) : (
+                                newsList.length === 0 ? (
+                                <div className="m-news-info">새로운 소식이 없습니다.</div>
+                                ) : 
+                                (  
                                 newsList
-                                    .filter(news => news.alarmRead === 0)
-                                    .slice(0, 3)
-                                    .map(function(news, index) {
+                                        .slice(0, 3)
+                                        .map(function(news, index) {
                                     return <News key={"news" + index} news={news} />;
                                     })
                                 )
@@ -144,12 +144,12 @@ export default function MyHome(props){
                     </div>
                 </div>
             </div>
-            <div className="mySurvey-wrap">
-                <div className="myNews-title-wrap">
-                    <span>설문조사</span>
+            <div className="m-mySurvey-wrap">
+                <div className="mySurvey-title-wrap">
+                    <span>기부가 마무리되었어요 ! 참여한 단체에 만족하셨나요 ?</span>
                 </div>
-                <div className="myNews-item">
-                    <div className="mynewsList-wrap">
+                <div className="mySurvey-item">
+                    <div className="mySurvey-wrap">
                             {
                                 newsList.filter(survey => 
                                 survey.alarmType === 0 &&
@@ -167,11 +167,11 @@ export default function MyHome(props){
             </div>
             <div className="interested-biz-wrap">
                 <div className="title">
-                    {member.memberName} 님, &nbsp;관심 가질만한 기부사업이 도착했어요! ☺️
+                    {member.memberName} 님, &nbsp;관심 가질만한 기부사업이 도착했어요 ! ☺️
                 </div>
                 <div className="recommand-biz-wrap">
                     {bizList.map(function(biz, index){
-                        return <Biz biz={biz} />
+                        return <Biz key={"biz" + index} biz={biz} />
                     })}
                 </div>
             </div>
@@ -195,7 +195,8 @@ function Biz(props){
                 <div className="biz-ctg">{biz.donateCtg}</div>        
             </div>
             <div className="info">
-                <div>{biz.bizName}</div>   
+                <div>{biz.bizName}</div> 
+                <div>{biz.orgName}</div>  
                 <div>{biz.bizContent}</div>             
             </div>
         </div>
@@ -226,12 +227,12 @@ function News(props){
         content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
     }
 
-    
+    /*
     // alarmRead가 0이 아닌 경우 렌더링하지 않음
     if (news.alarmRead !== 0) {
         return null;
     }
-    
+    */
 
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
     function handleClick() {
@@ -246,7 +247,11 @@ function News(props){
                 }
             }
             if (hasSurveyForBiz) {  // 설문조사한 이력 있는 경우 -> alert 창
-            alert('이미 설문조사에 참여했습니다.'); 
+            Swal.fire({
+                        title : '알림',
+                        text : '이미 설문조사에 참여했습니다.',
+                        icon : 'warning'
+                });
             } else {    // 설문조사한 이력 없는 경우 -> 설문조사창으로 이동
             navigate('/biz/view/' + news.bizNo + '?survey=open');
             }
@@ -258,7 +263,7 @@ function News(props){
             console.log("type 3 클릭")
         }else if(news.alarmType === 5){
         content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
-    }
+        }
     }
 
     // 알림 읽음 처리 함수
@@ -282,8 +287,8 @@ function News(props){
             onClick={handleClick} 
             style={{
                 cursor: 'pointer',
-                color: news.alarmRead === 1 ? 'gray' : 'black',
-                backgroundColor: news.alarmRead === 1 ? '#f0f0f0' : 'white',
+                color: news.alarmRead === 1 ? 'gray' : '#333333',
+                border: news.alarmRead === 1 ? '1px solid #f0f0f0' : '1px solid lightblue',
             }}
         >
             <div>{content}</div>
@@ -321,7 +326,11 @@ function Surveys(props){
                 }
             }
             if (hasSurveyForBiz) {  // 설문조사한 이력 있는 경우 -> alert 창 경고
-            alert('이미 설문조사에 참여했습니다.'); 
+            Swal.fire({
+                        title : '알림',
+                        text : '이미 설문조사에 참여했습니다.',
+                        icon : 'warning'
+                });
             } else {    // 설문조사한 이력 없는 경우 -> 설문조사창으로 이동
             navigate('/biz/view/' + survey.bizNo + '?survey=open');
             }
@@ -336,11 +345,16 @@ function Surveys(props){
                         ? serverUrl + "/biz/thumb/" + survey.bizThumb.substring(0, 8) + "/" + survey.bizThumb
                         : "/images/default_img.png"}
                 />
+                <div className="biz-end">사업종료</div>
             </div> 
-            <div className="posting-title">{survey.bizName}</div>
-            <div className="posting-sub-info">
-                <span>{survey.orgName}</span>
+            <div className="posting-info">
+                <div className="posting-title">{survey.bizName}</div>
+                <div className="posting-sub-info">{survey.orgName} </div> 
+                 <div className="move-survey">
+                    <Link to='#'>설문조사 참여하기 &gt;</Link>
+                </div>
             </div>
+           
     </div>
     );
 }

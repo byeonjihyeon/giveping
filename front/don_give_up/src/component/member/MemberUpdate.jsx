@@ -316,7 +316,7 @@ export default function MemberUpdate(props) {
                         <img src="/images/check_box_30dp_5985E1.png" />
                         <span>관심 카테고리를 선택하시면 원하는 정보를 더 빠르게 찾을 수 있어요!</span>
                     </div>
-                    <div className="category-wrap">
+                    <div className="m-category-wrap">
                         {allCategory.map(function(category, index){
                             
                             function chkCategory(e){
@@ -408,10 +408,10 @@ function MemberAddr(props){
     }
 
     return (
-        <div className="input-addr-wrap">
+        <div className="m-input-addr-wrap">
             <input id='addr-btn' type="button" onClick={DaumPostcode} value="주소 찾기" /> <br/>
-            <input type="text" id="memberAddrMain" placeholder="주소" value={member.memberAddrMain} readOnly /> <br/>
-            <input type="text" id="memberAddrDetail" placeholder="상세주소" maxLength={30} value={!member.memberAddrDetail ? "" : member.memberAddrDetail} ref={detailAddrEl} onChange={updAddr} />
+            <input type="text" id="m-memberAddrMain" placeholder="주소" value={member.memberAddrMain} readOnly /> <br/>
+            <input type="text" id="m-memberAddrDetail" placeholder="상세주소" maxLength={30} value={!member.memberAddrDetail ? "" : member.memberAddrDetail} ref={detailAddrEl} onChange={updAddr} />
         </div>
     )
 }

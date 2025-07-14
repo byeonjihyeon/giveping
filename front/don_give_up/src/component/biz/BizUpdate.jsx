@@ -391,8 +391,8 @@ export default function BizUpdate(){
 
     return(
         <>
-        <div className="page-title">기부 사업 정보 수정</div>
        <div className="biz-form">
+        <div className="page-title">기부 사업 정보 수정</div>
             <form autoComplete="off" onSubmit={function(e){
                 e.preventDefault();
                 insertBizPlan();//등록 버튼 클릭 시 실행 함수
@@ -450,7 +450,9 @@ export default function BizUpdate(){
                 <h3>기부 사업명</h3>
                 <input type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz} className="input-text" />
                 </section>
-
+                
+                <br/><hr /><br/>
+                
                 {/* 대표 사진 */}
                 <section className="form-section">
                     <h3>대표 사진 등록</h3>
@@ -473,7 +475,7 @@ export default function BizUpdate(){
                 <section className="form-section">
                     <h3>본문</h3>
                         {/*news 폴더 안에 있는 ToastEditor 재사용*/}
-                        <ToastEditor donateBiz={donateBiz} setDonateBiz={setDonateBiz} type={1}/>
+                        <ToastEditor donateBiz={donateBiz} setDonateBiz={setDonateBiz} type={1} />
                 </section>
                 
                 {/* 등록 버튼 */}

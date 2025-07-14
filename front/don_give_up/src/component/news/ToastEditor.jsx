@@ -17,19 +17,38 @@ import createInstance from '../../axios/Interceptor';
 
     const editorRef = useRef(null); //에디터와 연결할 ref 변수
 
-    useEffect(function() {
-        if (donateBiz && donateBiz.bizContent && editorRef.current) {
-            editorRef.current.getInstance().setHTML(donateBiz.bizContent);
+    useEffect(() => {
+        // 기부사업 수정
+        if (type !== 0 && donateBiz?.bizContent && editorRef.current) {
+            const editorInstance = editorRef.current.getInstance();
+            const currentHTML = editorInstance.getHTML();
+            if (currentHTML !== donateBiz.bizContent) {
+            editorInstance.setHTML(donateBiz.bizContent);
+            }
         }
-    }, [donateBiz.bizContent]); // 무한 로딩 방지
+        
+
+        // 소식 수정
+        if (type === 1 && newsContent && editorRef.current) {
+            const editorInstance = editorRef.current.getInstance();
+            const currentHTML = editorInstance.getHTML();
+            if (currentHTML !== newsContent) {
+            editorInstance.setHTML(newsContent);
+            }
+        }
+        }, [donateBiz?.bizContent, newsContent, type]); // 무한 로딩 방지
 
     function changeContent(){
         //에디터 본문에 작성한 내용 state 변수에 세팅
         const editorText = editorRef.current.getInstance().getHTML(); //<ul>밑줄</ul>
         if(setNewsContent && !setDonateBiz){
-            setNewsContent(editorText);
-        }else{
-            setDonateBiz({...donateBiz, bizContent : editorText});
+            if (editorText !== newsContent) {
+                setNewsContent(editorText);
+            }
+        }else if (setDonateBiz) {
+            if (editorText !== donateBiz.bizContent) {
+            setDonateBiz({...donateBiz, bizContent: editorText});
+            }
         }
     }
 
@@ -62,12 +81,13 @@ import createInstance from '../../axios/Interceptor';
         });
     }
 
+    const initialContent = (type === 0) ? (newsContent || '') : '';
+
     return(
         <div style={{width: '100%', marginTop : '20px'}}>
-            {type == 0 || (type == 1 && newsContent != '')
-            ?
+            
                 <Editor ref={editorRef} 
-                        initialValue={newsContent}
+                        initialValue={initialContent}
                         initialEditType="wysiwyg"
                         language="ko-KR"
                         height="600px"
@@ -77,23 +97,6 @@ import createInstance from '../../axios/Interceptor';
                         }}
                 >
                 </Editor>
-            : donateBiz
-                ? type == 0 || (type == 1 && donateBiz.bizContent != "")
-                    ?
-                        <Editor ref={editorRef} 
-                            initialValue={donateBiz.bizContent}
-                            initialEditType="wysiwyg"
-                            language="ko-KR"
-                            height="600px"
-                            onChange={changeContent}
-                            hooks={{
-                                addImageBlobHook : uploadImg
-                            }}
-                        >
-                        </Editor>
-                    : ""
-                : ""
-            }
         </div>    
     )
 

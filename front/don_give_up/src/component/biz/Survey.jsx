@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 import { useLocation } from 'react-router-dom';
+import Swal from "sweetalert2";
 
 export default function Survey(props){
     const onClose = props.onClose;
@@ -67,7 +68,11 @@ export default function Survey(props){
         const bizNo = donateBiz?.bizNo || stateBizNo;
 
         if (!bizNo) {
-        alert("기부사업 정보가 없습니다. 다시 시도해주세요.");
+        Swal.fire({
+                    title : '알림',
+                    text : '기부 사업 정보가 없습니다. 다시 시도해주세요.',
+                    icon : 'warning'
+            });
         return;
         }
 
@@ -77,18 +82,6 @@ export default function Survey(props){
             bizNo: bizNo
         }));
 
-        console.log("제출할 answers:", fixedAnswers);
-        /*
-        const isAllAnswered = answers.every(a => a.answerScore !== null);
-        if(!isAllAnswered){
-            alert("모든 질문에 답변해주세요.");
-            return;
-        }
-            */
-
-        + console.log("answers[0].bizNo:", fixedAnswers[0]?.bizNo);
-        //console.log("answers.bizNo : " + answers.bizNo); // answers 안에 bizNo 가 null임
-        
         let options={};
         options.url = serverUrl + "/biz/survey";
         options.data =  fixedAnswers;
