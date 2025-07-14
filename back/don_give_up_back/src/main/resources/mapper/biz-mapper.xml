@@ -103,7 +103,12 @@ select sum(donate_money) AS donateMoney
            b.biz_status,
            TO_CHAR(b.biz_reg_date, 'YYYY-MM-DD') as biz_reg_date,
            b.biz_edit,
-           b.biz_thumb
+           b.biz_thumb,
+           NVL((
+                SELECT SUM(d.donate_money)
+                FROM tbl_donation_list d
+                WHERE d.biz_no = b.biz_no
+            ), 0) AS donate_money
 		from tbl_donate_biz b
 		JOIN tbl_org o ON b.org_no = o.org_no
 		JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
@@ -119,6 +124,7 @@ select sum(donate_money) AS donateMoney
 		<result column="org_introduce" property="orgIntroduce"/>
 		<result column="donate_code" property="donateCode"/>
 		<result column="donate_ctg" property="donateCtg"/>
+		<result column="donate_money" property="donateMoney"/>
 		<result column="biz_content" property="bizContent"/>
 		<result column="biz_name" property="bizName"/>
 		<result column="biz_donate_start" property="bizDonateStart"/>
