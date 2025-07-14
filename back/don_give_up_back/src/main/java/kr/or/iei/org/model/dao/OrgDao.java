@@ -114,6 +114,12 @@ public interface OrgDao {
 	int selectOrgCount();
 	//단체 목록 조회 (후원단체 메뉴 눌렀을 때 보이는 단체 목록)
 	ArrayList<Org> selectOrgList(HashMap<String, Object> param);
+
+	//진행 중인 기부 사업 리스트
+	ArrayList<Biz> selectOrgIngBizList(int orgNo);
+	//종료된 기부 사업 리스트
+	ArrayList<Biz> selectOrgEndBizList(int orgNo);
+
  
 
 }
