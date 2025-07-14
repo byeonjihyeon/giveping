@@ -20,6 +20,8 @@ public class MailUtil {
 	@Autowired
 	private JavaMailSender mailSender;
 	
+	
+	// 기부사업 승인 메일 보낼 때 필요한 정보
 	public void sendApproveMail(String to, String bizName, String orgName) {
 		String subject ="[Don Give Up] 기부 사업 승인 안내";
 		String content =getApproveMailTemplate(bizName, orgName);
@@ -38,7 +40,7 @@ public class MailUtil {
 		e.printStackTrace();
 	}
 }
-	
+	// 기부사업 승인 메일 내용
 	private String getApproveMailTemplate(String bizName, String orgName) {
         return "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
                 + "<h2 style='color: #2d7ff9;'>[Don Give Up] 기부 사업 승인 안내</h2>"
@@ -51,6 +53,28 @@ public class MailUtil {
     }
 
 
+	 //기부사업 반려 메일 보낼 때 필요한 정보, 내용
+	  public void sendRejectMail(String orgEmail, String orgName, String bizName, String bizEdit) {
+		      try {
+		            MimeMessage message = mailSender.createMimeMessage();
+		            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+		            helper.setTo(orgEmail);
+		            helper.setSubject("[기부 사업 반려 안내]");
+		            String content = "<h3>" + orgName + "님</h3>" +
+		                             "<p>요청하신 사업 <strong>" + bizName + "</strong>이 아래 사유로 반려되었습니다.</p>" +
+		                             "<p><em>" + bizEdit + "</em></p>" +
+		                             "<p>반려된 사업은 수정 후 다시 사업등록을 해주셔야 합니다. 문의사항은 관리자에게 문의해주세요.</p>";
+		            helper.setText(content, true);
+
+		            mailSender.send(message);
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
+		    }
+	
+
+	// 단체 탈퇴 메일 보낼 때 필요한 정보
 	public void sendDelOrgMail(String to, String orgName) {
 		String subject ="[Don Give Up] 탈퇴 처리 완료 안내";
 		String content =getApproveMailTemplate(orgName);
@@ -70,6 +94,8 @@ public class MailUtil {
 	}
 }
 
+
+	// 단체 탈퇴 메일 내용
 	private String getApproveMailTemplate(String orgName) {
 		  return "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
 	                + "<h2 style='color: #2d7ff9;'>[Don Give Up] 탈퇴 처리 완료 안내</h2>"

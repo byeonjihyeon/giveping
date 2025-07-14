@@ -37,6 +37,38 @@ export default function OrgManage(){
     const [orgList, setOrgList] = useState([]);
     const [reqPage, setReqPage] = useState(1);
     const [pageInfo, setPageInfo] = useState({});
+    const [searchType, setSearchType]= useState('all');
+    const [keyword, setKeyword] =useState('');
+
+    //검색을 위한 함수
+     const fetchOrgList = (page) => {
+            const options = {
+                url: serverUrl + '/admin/orgManage/'+ page,
+                method: 'get',
+                params: { searchType, keyword }
+            };
+    
+            axiosInstance(options)
+                .then(res => {
+                    setOrgList(res.data.resData.orgList);
+                    setPageInfo(res.data.resData.pageInfo);
+                    console.log(orgList);
+                })
+                .catch(err => {
+                    console.error("조회 실패", err);
+                });
+        };
+    
+        useEffect(() => {
+            fetchOrgList(reqPage);
+        }, [reqPage, searchType, keyword]); //  검색 조건 변경도 반영
+    
+        const searchOrg = (e) => {
+            e.preventDefault();
+            setReqPage(1); // 페이지를 1로 초기화 → useEffect 실행
+            fetchOrgList(1);
+        };
+    
 
     
     //환불 신청 또는 내역 버튼 눌렀을 때 쓰이는 변수
@@ -74,7 +106,8 @@ export default function OrgManage(){
     return (
         <>
             <div className="page-title">단체 관리</div>
-             <div className="two-nav">
+           
+             <div className="org">
             <ul>
                  <li>
                     <button onClick={join}>가입신청</button>
@@ -84,10 +117,30 @@ export default function OrgManage(){
                  </li>
             </ul>
             </div>
+           <div className="search">
+                  <form className='form' onSubmit={searchOrg}  >
+                        <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+                            <option value="all">전체</option>
+                            <option value="name">단체명</option>
+                            <option value="id">단체아이디</option>
+                        </select>
+                        <input
+                            type="text"
+                            value={keyword}
+                            onChange={(e) => setKeyword(e.target.value)}
+                            placeholder="검색어 입력"
+                        />
+                        <button type="submit">검색</button>
+                    </form>
+                </div>
+
+
+
             <table className="tbl">
                 <thead>
                     <tr>
                         <th style={{width:"20%"}}>번호</th>
+                        <th style={{width:"20%"}}>단체아이디</th>
                         <th style={{width:"20%"}}>단체명</th>
                         <th style={{width:"20%"}}>신청일자</th>
                         <th style={{width:"20%"}}>상세정보</th>
@@ -105,14 +158,7 @@ export default function OrgManage(){
             </div>
         </>
     );
-
-
-
-
-
 }
-
-
 
 function Org(props) {
     const org = props.org;
@@ -172,10 +218,11 @@ function Org(props) {
         <>
         <tr>
             <td>{org.orgNo}</td>
+            <td>{org.orgId}</td>
             <td>{org.orgName}</td>
             <td>{org.orgEnrollDate.substring(0,10)}</td>
             <td>
-                <button className="show" onClick={handleOpen}>보기</button>
+                <button onClick={handleOpen}>보기</button>
             </td>
             <td> 
                 <Box sx={{ minWidth: 120 }}>
