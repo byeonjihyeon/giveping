@@ -1,56 +1,72 @@
-/* 소식 리스트 */
-.board-view-info {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  flex-wrap: wrap;
+/* news.css */
+
+.section.news-list-wrap {
+  padding: 20px;
+  background-color: #f9f9f9;
 }
 
-.board-view-top {
-    display: flex;
-    padding: 16px;
-    gap: 16px;
-    align-items: flex-start;
+.content-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.board-thumbnail {
-    flex: 0 0 auto;
-    width: 200px;
+.page-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
 }
 
-.board-thumbnail img {
-    width: 100%;
-    border-radius: 10px;
-    object-fit: cover;
+.btn-primary {
+  display: inline-block;
+  padding: 8px 18px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
-.board-view-preview {
-  margin-top: 28px;
-  display: flex;
-  flex-direction: column;
-  
+.btn-primary:hover {
+  background-color: #0056b3;
 }
 
-.board-thumbnail {
-  flex-shrink: 0;
-  width: 50%;
-  border-radius: 8px;
-  overflow: hidden;
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
 
-.board-thumbnail img {
-  max-width: 390px;
-  height: auto;
-  border-radius: 8px;
-  object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+.tbl th, .tbl td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 1rem;
+  color: #555;
 }
 
-.board-view-preview {
-  width: 50%;         /* 나머지 반을 차지 */
-  box-sizing: border-box;
-  padding-left: 1rem;
+.tbl thead {
+  background-color: #007bff;
+  color: white;
 }
+
+.tbl tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tbl tbody tr:hover {
+  background-color: #e9f5ff;
+}
+
+.admin-page-wrap {
+  text-align: center;
+  margin-top: 30px;
+}
+
 
 /* 제목은 테이블 위에 별도 배치 */
 .news-title {
@@ -163,6 +179,15 @@
 }
 
 /* 댓글 리스트 css */
+.no-comment {
+    color: #777;
+    font-size: 16px;
+    padding: 20px 0;
+    text-align: center;
+    font-style: italic;
+}
+
+
 .comment-item {
   display: flex;
   gap: 12px;
