@@ -129,13 +129,9 @@
 .banner-wrap>.title {
     color: white;
     font-size: 30px;
-    height: 85px;
+    height: 60px;
     margin-bottom: 10px;
     font-weight: 600;
-}
-
-.banner-wrap>.title>span{
-    line-height: 85px;
 }
 
 .main-category {
@@ -148,6 +144,7 @@
     padding: 5px 10px;
     border-radius: 20px;
     cursor: pointer;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.10); /* 수평 4px, 수직 4px, 흐림 8px, 검정색 그림자 */
 }
 
 
@@ -161,7 +158,7 @@
 .bar{
     width: 550px;
     height: 50px;
-    border: 2px solid #dcdcdc;
+    border: 3px solid #dcdcdc;
     background-color: white;
     border-radius: 25px;
     margin-top: 20px;
@@ -182,7 +179,6 @@
     cursor: pointer;
     display: flex;
     align-items: center; 
-    
 }
 
 .bar>.chose>span:first-of-type{
