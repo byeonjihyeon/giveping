@@ -320,7 +320,7 @@ export default function BizView(){
                         <div className="content-orgInfo-wrap">
                             <span className="content-orgInfo">모금단체</span>
                             {/* Link url 임시 설정 => "/org/view/"+orgNo  로 변경할것임.*/}
-                            <Link className="content-orgInfo-link" to={"/org/view/"+donateBiz.orgNo}>
+                            <Link className="content-orgInfo-link" to={"/organization/view/"+donateBiz.orgNo}>
                                 <img className="content-orgInfo-img"
                                         src={donateBiz.orgThumbPath
                                         ? serverUrl + "/org/thumb/" + donateBiz.orgThumbPath.substring(0, 8) + "/" + donateBiz.orgThumbPath
