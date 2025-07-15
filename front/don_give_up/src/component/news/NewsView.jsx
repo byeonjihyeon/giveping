@@ -163,6 +163,8 @@ export default function NewsView(){
                         </button>
                     </div> 
                     )}
+
+                        
                     </div>
                     </div>
                 </div>
@@ -250,6 +252,9 @@ function Comment(props){
 
     // 작성자인지 확인
     useEffect(function(){
+        console.log("댓글 memberNo:", comment.memberNo);
+        console.log("로그인 memberNo:", loginMember?.memberNo);
+
         if(loginMember && comment && loginMember.memberNo == comment.memberNo){
             setIsAuthor(true);
         }else{
@@ -337,8 +342,8 @@ function Comment(props){
         <div className="comment-meta">
             <span className="comment-author">{comment.memberId}</span>
             <span className="comment-time">{comment.commentTime}</span>
-
-            {isAuthor && !editMode || loginMember.memberLevel === 1 && (
+            {/* 댓글 수정, 삭제 => 관리자, 댓글 쓴 본인 가능. 댓글 신고 -> 댓글 쓴 본인은 불가능. */}
+            {((isAuthor && !editMode) || (loginMember?.memberLevel === 1 && !editMode)) && (
             <div className="comment-actions">
                 <span className="comment-action-text" onClick={handleEditClick} style={{ marginLeft: "auto" }}>
                 수정
@@ -348,7 +353,7 @@ function Comment(props){
                 </span>
             </div>
             )}
-            {isAuthor && editMode && (
+            {((isAuthor && editMode) || (loginMember?.memberLevel === 1 && editMode)) && (
             <div className="comment-actions">
                 <span className="comment-action-text" onClick={handleSaveEdit} style={{ marginLeft: "auto" }}>
                 완료

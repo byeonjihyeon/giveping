@@ -27,50 +27,47 @@ export default function Sidebar (props){
            <div className="profile-wrap">
                 <img src={  loginMember
                             ?   //개인 회원 로그인 시
-                                member.memberProfile
+                                member && member.memberProfile
                                 ? serverUrl + "/member/" + member.memberProfile.substring(0,8) + "/" + member.memberProfile
                                 : "/images/default_profile.jpg"
                             :   loginOrg
                                 ?   //단체 회원 로그인 시
-                                    org.orgThumbPath 
+                                    org && org.orgThumbPath 
                                     ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0,8) + "/" + org.orgThumbPath
                                     : "/images/default_profile.jpg"
                                 : "#"
                          }/>
                 <p>
-                    {loginMember ? member.memberName + " 님"
-                    : loginOrg ? org.orgName : ""}
+                    {loginMember && member ? member.memberName + " 님"
+                    : loginOrg && org ? org.orgName : ""}
                 </p>
                 <p>
-                    {loginMember ? member.memberEmail
-                    : loginOrg ? org.orgEmail : ""}
+                    {loginMember && member ? member.memberEmail
+                    : loginOrg && org ? org.orgEmail : ""}
                 </p>   
            </div>
            
-           { !isMyHome && loginMember //현재 url이 /member가 아닌지?
-            ?   loginMember
-                ?
+           {!isMyHome && (//현재 url이 /member가 아닌지?
+                loginMember ? (
                 <div className="profile-wrap-btm">
                     <NavLink to='/member/donateList' end>
                         <span>기부금액</span>
-                        <span>{member.totalDonateMoney == null ? 0 : member.totalDonateMoney} 원</span>
+                        <span>{member?.totalDonateMoney == null ? 0 : member.totalDonateMoney} 원</span>
                     </NavLink>
                     <div>
                         <span>보유금액</span>
-                        <span>{member.totalMoney} 원</span>   
+                        <span>{member?.totalMoney ?? 0} 원</span>   
                     </div>
                 </div>
-                : ""
-           : !isMyHome && loginOrg
-                ?
+                 ) : loginOrg ? (
                 <div className="profile-wrap-btm">
                     <div>
                         <span>단체 온도</span>
                         <span>{org.orgTemperature}ºC</span>
                     </div>
                 </div>
-                : ""
-            }
+                ) : null
+            )}
             
            <div className="side-menu-wrap">
                 <div className="side-menu">
