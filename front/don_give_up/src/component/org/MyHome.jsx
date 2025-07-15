@@ -58,8 +58,8 @@ export default function MyHome(props){
 
     return(
 
-        <div className="myNews-wrap">
-                <h2 className="page-title">마이페이지</h2>
+        <div className="myNews-wrap" style={{borderBottom : "none", marginTop : "30px"}}>
+                <h2 className="page-title" style={{textAlign : "left", marginLeft : "20px"}}>마이페이지</h2>
                 <div className="myPage-div">
                     <h3>Today 기부금 : {todayDonate == 0 ? 0 : todayDonate.toLocaleString("ko-KR")} 원</h3>
                 </div>

@@ -41,7 +41,7 @@ export default function OrgNewsList(){
 
     return (
         <>
-        <h2 className="page-title" style={{marginBottom : "20px"}}>내 소식</h2>
+        <h2 className="page-title" style={{marginBottom : "20px", textAlign : "left", marginLeft : "20px"}}>내 소식</h2>
         <div className="newsList-wrap" >
         {
             Array.isArray(newsList) && newsList.length>0

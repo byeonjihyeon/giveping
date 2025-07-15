@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import PageNavi from "../common/PageNavi";
@@ -16,6 +16,16 @@ export default function BizList() {
     const [searchType, setSearchType] = useState("bizTitle");
     const [categories, setCategories] = useState([]);
     const [isSearching, setIsSearching] = useState(false);  // 검색 상태 여부
+
+    const location = useLocation();
+    const codeArr = location.state;
+   
+    useEffect(function(){
+        console.log(codeArr);
+        if(codeArr != null){
+            setCategories(codeArr);
+        }
+    }, [])
 
     const [keyWord, setKeyWord] = useState({
         bizTitle: "",

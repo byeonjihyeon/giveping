@@ -252,11 +252,12 @@ export default function OrgPost(){
 
     return (
         <div>
-            <h2 className="page-title">기부 사업 등록</h2>
+            <h2 className="page-title" style={{textAlign : "left", marginLeft : "20px"}}>기부 사업 등록</h2>
             <form autoComplete="off" onSubmit={function(e){
                 e.preventDefault();
                 insertBizPlan();//등록 버튼 클릭 시 실행 함수
             }} className="post-form">
+                <hr style={{border : "2px solid #dcdcdc"}}/>
                 <div>
                     <h3>희망 모금 기간</h3>
                     <FormControl>
@@ -308,7 +309,7 @@ export default function OrgPost(){
                         </RadioGroup>
                     </FormControl>
                 </div>
-                <hr/>
+                <hr style={{border : "1px solid #dcdcdc"}}/>
                 <div>
                     <div style={{width : "180px", padding : "15px 0"}}>
                         <h3>대표 사진 등록</h3>
@@ -330,6 +331,7 @@ export default function OrgPost(){
                         <ToastEditor donateBiz={donateBiz} setDonateBiz={setDonateBiz} type={0}/>
                     </div>
                 </div>
+                <hr style={{border : "2px solid #dcdcdc"}}/>
                 <div style={{textAlign : "center"}}>
                     <Button variant="contained" type="submit" id="mui-btn" style={{width : "180px", height : "50px", fontSize : "20px"}}>등록</Button>
                 </div>
