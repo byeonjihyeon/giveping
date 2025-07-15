@@ -114,7 +114,7 @@ function MainNavi(){
 
     return (
         <ul className="main-menu">
-            <li>
+            <li className="baloo-2-logo">
                 <Link to="/">Don Give Up!</Link>
             </li>
             <li>
@@ -135,7 +135,7 @@ function MainNavi(){
                 {/*로그인한 회원에 따라 마이페이지 보여주기*/}
                 {!isLogined
                 ? /*비로그인일 때 개인 회원 마이페이지 목록 보여주기*/
-                <MemberMyPage/>
+                ""
                 : loginOrg
                 ?
                 <OrgMyPage/>

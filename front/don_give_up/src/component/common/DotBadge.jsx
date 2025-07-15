@@ -39,6 +39,7 @@ export default function DotBadge() {
       }
     }
     
+    let [count, setCount] = useState(0);
 
     useEffect(function(){
         // 로그인 안 했거나 회원 정보 없을 경우 return
@@ -61,7 +62,7 @@ export default function DotBadge() {
             .then(function(res){
                 console.log(res.data.resData);
 
-                const count = res.data.resData;
+                setCount(res.data.resData);
                 console.log("DotBadge에서 count : ", count);
                 if(count > 0){
                     console.log("안읽은알림갯수 : ", count);
@@ -75,13 +76,14 @@ export default function DotBadge() {
         }, [isLogined, loginMember, loginOrg]);
 
   return (
-    <Box sx={{ color: 'action.active' }} onClick={handleClick} style={{cursor: 'pointer'}}>
+    <Box sx={{ color: 'action.active'}} onClick={handleClick} style={{cursor: 'pointer'}}>
       <Badge
-        color="secondary"
-        variant="dot"
-        invisible={!hasNewAlert}  // true일 때 dot 표시(안 읽은 알람 있음), false면 숨김(안 읽은 알람 없음)
+        badgeContent={count}
+        color="primary"
+        /*variant="dot" */
+       /* invisible={!hasNewAlert} */ // true일 때 dot 표시(안 읽은 알람 있음), false면 숨김(안 읽은 알람 없음)
       >
-        <MailIcon />
+        <MailIcon sx={{fontSize: 25, color: '#B0B0B0'}} />
       </Badge>
     </Box>
   );
