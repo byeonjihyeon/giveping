@@ -11,6 +11,7 @@ import Select from '@mui/material/Select';
 import Modal from '@mui/material/Modal';
 import { Navigate, useNavigate } from "react-router-dom";
 import DeleteManage from "./DeleteManage";
+import "./admin.css";
 
 //상세보기 모달 스타일
 const modalStyle = {
@@ -136,15 +137,15 @@ export default function OrgManage(){
 
 
 
-            <table className="tbl">
+            <table className="admin-tbl">
                 <thead>
                     <tr>
-                        <th style={{width:"20%"}}>번호</th>
-                        <th style={{width:"20%"}}>단체아이디</th>
-                        <th style={{width:"20%"}}>단체명</th>
-                        <th style={{width:"20%"}}>신청일자</th>
-                        <th style={{width:"20%"}}>상세정보</th>
-                        <th style={{width:"20%"}}>상태</th>
+                        <th>번호</th>
+                        <th>단체아이디</th>
+                        <th>단체명</th>
+                        <th>신청일자</th>
+                        <th>상세정보</th>
+                        <th>상태</th>
                     </tr>
                 </thead>
                 <tbody>

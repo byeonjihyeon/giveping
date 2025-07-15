@@ -5,6 +5,7 @@ import * as React from 'react';
 import Switch from '@mui/material/Switch';
 import Modal from '@mui/material/Modal';
 import { Box, Checkbox, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import "./admin.css";
 
 
 
@@ -68,7 +69,7 @@ export default function DeleteManage(){
          
             </ul>
         </div>
-            <table className="tbl">
+            <table className="admin-tbl">
                 <thead>
                     <tr>
                         <th style={{width:"15%"}}>단체명</th>

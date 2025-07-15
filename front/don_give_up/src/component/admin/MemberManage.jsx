@@ -8,6 +8,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import "./admin.css";
+
 
 //회원 목록
 export default function MemberManage(){
@@ -112,18 +114,18 @@ function searchMember(e){
             </form>
         </div>
         
-            <table className="tbl">
+            <table className="admin-tbl">
                 <thead>
                     <tr>
-                        <th style={{width:"10%"}}>번호</th>
-                        <th style={{width:"10%"}}>아이디</th>
-                        <th style={{width:"10%"}}>이름</th>
-                        <th style={{width:"10%"}}>전화번호</th>
-                        <th style={{width:"10%"}}>이메일</th>
-                        <th style={{width:"10%"}}>주소</th>
-                        <th style={{width:"10%"}}>생년월일</th>
-                        <th style={{width:"10%"}}>가입일</th> 
-                        <th style={{width:"10%"}}>등급</th>     
+                        <th>번호</th>
+                        <th>아이디</th>
+                        <th>이름</th>
+                        <th>전화번호</th>
+                        <th>이메일</th>
+                        <th>주소</th>
+                        <th>생년월일</th>
+                        <th>가입일</th> 
+                        <th>등급</th>     
                     </tr>
                 </thead>
                 <tbody>

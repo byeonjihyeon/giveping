@@ -36,4 +36,6 @@ public class Member {
 	private List<Refund> refundHistory;				//출금내역
 	
 	private int unreadAlarm;						// 아직 읽지 않은 소식 갯수
+	
+	private int orgNo;	//관심 단체 번호
 }

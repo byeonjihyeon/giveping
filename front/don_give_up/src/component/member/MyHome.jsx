@@ -182,6 +182,8 @@ export default function MyHome(props){
 
 function Biz(props){
     const biz = props.biz;
+
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const navigate = useNavigate();
 
     return (

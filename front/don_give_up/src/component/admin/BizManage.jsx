@@ -5,6 +5,8 @@ import * as React from 'react';
 import Switch from '@mui/material/Switch';
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
+import "./admin.css";
+
 
 //상세보기 모달 스타일
 const modalStyle = {
@@ -47,8 +49,30 @@ export default function BizManage(){
 
     const [status, setStatus] = useState("");           // 상태 선택값
     const [keyword, setKeyword] = useState("");         // 키워드 입력값
-    const [searchType, setSearchType] = useState("name"); // 검색 타입 (ex: 사업명)
+    const [searchType, setSearchType] = useState("bizName"); // 검색 타입 (ex: 사업명)
 
+
+    //검색을 위한 함수
+     function handleSearch(page) {
+    let options ={
+        url : serverUrl + "/admin/bizManage/" + page,
+        method : 'get',
+        params: {status, searchType, keyword},
+        };
+
+        axiosInstance(options)
+        .then((res) => {
+            setBizList(res.data.resData.bizList);
+            setPageInfo(res.data.resData.pageInfo);
+        });
+        
+        }
+
+ useEffect(function(){
+     handleSearch(reqPage);
+        }, [reqPage, status, searchType, keyword]); 
+
+/*
     useEffect(function(){
         let options = {};
         options.url = serverUrl + "/admin/bizManage/" + reqPage;
@@ -65,18 +89,7 @@ export default function BizManage(){
     }, [reqPage]);
 
     
-  function handleSearch() {
-    let url = `${serverUrl}/admin/bizManage/1?`; // 1페이지부터 검색 시작
-    if (status !== "") url += `status=${status}&`;
-    if (keyword.trim() !== "") url += `keyword=${keyword}&searchType=${searchType}`;
-
-    axiosInstance.get(url)
-      .then((res) => {
-        setBizList(res.data.resData.bizList);
-        setPageInfo(res.data.resData.pageInfo);
-      });
-    
-    }
+*/
 
 
     return (
@@ -98,8 +111,8 @@ export default function BizManage(){
                 <FormControl sx={{ minWidth: 120 }}>
                     <InputLabel>검색구분</InputLabel>
                     <Select value={searchType} onChange={(e) => setSearchType(e.target.value)} label="검색구분">
-                    <MenuItem value="name">사업명</MenuItem>
-                    <MenuItem value="org">단체명</MenuItem>
+                    <MenuItem value="bizName">사업명</MenuItem>
+                    <MenuItem value="orgName">단체명</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -107,7 +120,7 @@ export default function BizManage(){
                 <Button variant="contained" onClick={handleSearch}>검색</Button>
                 </Box>
 
-            <table className="tbl">
+            <table className="admin-tbl">
                 <thead>
                     <tr>
                         <th style={{width:"15%"}}>글번호</th>

@@ -45,11 +45,14 @@ public interface AdminDao {
 
 	
 	//기부사업 관리 메소드
-	int selectBizCount();
+	int selectBizCount(Map<String, Object> listMap);
 
-	ArrayList<AdminBiz> selectBizList(PageInfo pageInfo);
+	ArrayList<AdminBiz> selectBizList(Map<String, Object> listMap);
 
 	int updateBizStatus(AdminBiz biz);
+	
+	AdminBiz selectBizStatus(int bizNo);
+	
 	
 	
 	//환불관리 메소드
@@ -60,12 +63,23 @@ public interface AdminDao {
 	int updateRefundStatus(AdminRefund refund);
 
 	
+	
     //신고내역 관리 메소드
 	int selectReportCount(String type);
 	
 	ArrayList<AdminReport> selectReportList(PageInfo pageInfo);
 
-	AdminBiz selectBizStatus(int bizNo);
+	HashMap<String, Object> selectCommentReportList(int reqPage, String startDate, String endDate);
+
+	HashMap<String, Object> selectOrgReportList(int reqPage, String startDate, String endDate);
+
+	ArrayList<AdminReport> selectCommentReportList(Map<String, Object> paramMap);
+
+	ArrayList<AdminReport> selectOrgReportList(Map<String, Object> paramMap);
+
+	int selectOrgReportCount(String tab, String startDate, String endDate);
+
+	int selectCommentReportCount(String tab, String startDate, String endDate);
 
 	
 	//탈퇴단체 메소드
@@ -87,17 +101,6 @@ public interface AdminDao {
 
 	int updatePayoutStatus(AdminPayout adminPayout);
 
-	HashMap<String, Object> selectCommentReportList(int reqPage, String startDate, String endDate);
-
-	HashMap<String, Object> selectOrgReportList(int reqPage, String startDate, String endDate);
-
-	ArrayList<AdminReport> selectCommentReportList(Map<String, Object> paramMap);
-
-	ArrayList<AdminReport> selectOrgReportList(Map<String, Object> paramMap);
-
-	int selectOrgReportCount(String tab, String startDate, String endDate);
-
-	int selectCommentReportCount(String tab, String startDate, String endDate);
 
 
 

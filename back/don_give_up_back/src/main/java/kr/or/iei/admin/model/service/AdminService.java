@@ -114,23 +114,40 @@ public class AdminService {
 	}
 	
 	//기부 사업리스트 조회
-	public HashMap<String, Object> selectBizList(int reqPage) {
+	public HashMap<String, Object> selectBizList(int reqPage, String status, String searchType, String keyword) {
 		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
-		int totalCount =dao.selectBizCount();
 		
+	     // 검색 조건 맵 생성
+	       Map<String, Object> listMap = new HashMap<>();
+	       listMap.put("status", status);
+	       listMap.put("searchType", searchType);
+	       listMap.put("keyword", keyword);
+	   	System.out.println("service-searchType: "+ searchType);
+	   	System.out.println("status:"+status);
+	       
+		int totalCount =dao.selectBizCount(listMap);
+		
+
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);
 		
-		ArrayList<AdminBiz> bizList =dao.selectBizList(pageInfo);
+		 listMap.put("start", pageInfo.getStart());
+	     listMap.put("end", pageInfo.getEnd());
+		
+		
+		ArrayList<AdminBiz> bizList =dao.selectBizList(listMap);
 		
 		HashMap<String,Object>bizMap =new HashMap<String,Object>();
 	    bizMap.put("bizList", bizList);
 		bizMap.put("pageInfo", pageInfo);
+	    bizMap.put("status", status);
+	    bizMap.put("searchType", searchType);
+	    bizMap.put("keyword", keyword);
 	
 	 return bizMap;
 	
 	}
-	
+
 	//기부사업 상태변경
 	@Transactional
 	public int updateBizStatus(AdminBiz biz) {

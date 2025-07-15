@@ -125,12 +125,36 @@
     </update>
     
 
-   <!--  전체 기부사업 수   -->
+   <!--  전체 기부사업 수 
 	<select id="selectBizCount" resultType="_int">
 	 select count(*) from tbl_donate_biz
 	</select>
+	   -->
+	  <!--  전체 기부사업 수 -->
+	 <select id="selectBizCount" parameterType="map" resultType="_int">
+       SELECT COUNT(*)
+       FROM tbl_donate_biz b
+        JOIN tbl_org o ON b.org_no = o.org_no
+        
+     <where>
+    <if test="status != null and status != ''">
+      b.biz_status = #{status}
+    </if>
+    <if test="keyword != null and keyword != ''">
+      <choose>
+        <when test="searchType == 'name'">
+          AND b.biz_name LIKE '%' || #{keyword} || '%'
+        </when>
+        <when test="searchType == 'org'">
+          AND o.org_name LIKE '%' || #{keyword} || '%'
+        </when>
+      </choose>
+    </if>
+  </where>
+</select>
 	 
-   <!--  전체 기부사업 목록 조회  -->
+	 
+   <!--  전체 기부사업 목록 조회  
     <select id="selectBizList" parameterType="PageInfo" resultType="AdminBiz">
 	 SELECT *
 		FROM (
@@ -158,8 +182,53 @@
 		    ) a
 		) a
 	 WHERE rnum BETWEEN #{start} AND #{end}
-		   
-   </select>
+	</select> -->
+	 
+	 <!--  전체 기부사업 목록 조회-->  
+  <select id="selectBizList" parameterType="map" resultType="AdminBiz">
+	  SELECT *
+		  FROM (
+		    SELECT ROWNUM AS rnum, a.*
+		    FROM (
+		      SELECT 
+		        b.biz_no AS bizNo,
+		        o.org_name AS orgName,
+		        c.donate_ctg AS bizCtg,
+		        b.biz_content AS bizContent,
+		        b.biz_donate_start AS bizDonateStart,
+		        b.biz_donate_end AS bizDonateEnd,
+		        b.biz_start AS bizStart,
+		        b.biz_end AS bizEnd,
+		        b.biz_goal AS bizGoal,
+		        b.biz_reg_date AS bizRegDate,
+		        b.biz_name AS bizName,
+		        b.biz_status AS bizStatus,
+		        b.biz_edit AS bizEdit,
+		        o.org_email AS orgEmail
+		      FROM tbl_donate_biz b
+		      JOIN tbl_org o ON b.org_no = o.org_no
+		      JOIN tbl_donate_code c ON b.donate_code = c.donate_code
+		      <where>
+		        <if test="status != null and status != ''">
+		          b.biz_status = #{status}
+		        </if>
+		        <if test="keyword != null and keyword != ''">
+		          <choose>
+		            <when test="searchType == 'bizName'">
+		              AND b.biz_name LIKE '%' || #{keyword} || '%'
+		            </when>
+		            <when test="searchType == 'orgName'">
+		              AND o.org_name LIKE '%' || #{keyword} || '%'
+		            </when>
+		          </choose>
+		        </if>
+		      </where>
+		      ORDER BY b.biz_status ASC, b.biz_reg_date DESC
+		    ) a
+		  )
+		  WHERE rnum BETWEEN #{start} AND #{end}
+	</select>
+   
  
    <!-- 기부 사업 상태 변경 -->
     <update id="updateBizStatus"

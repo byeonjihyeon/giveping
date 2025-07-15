@@ -187,7 +187,8 @@ body {
     text-align: center;
     margin-top: 30px;
 }
-#mui-btn {
+#mui-btn, #mui-btn-b, #mui-btn-bt,
+#mui-btn-btn, #mui-btn-btnb, #mui-bt {
     background-color: lightblue;
     color: black;
 }

@@ -20,6 +20,7 @@ import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.member.model.dto.MemberAlarm;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.org.model.dao.OrgDao;
 import kr.or.iei.org.model.dto.Org;
 
@@ -220,6 +221,7 @@ public class OrgService {
    }
 
    //단체 비밀번호 찾기
+   @Transactional
    public int selectOrgPw(Org org) {
 	   //1) 단체 비밀번호 찾기
 	   int result = dao.selectOrgPw(org);
@@ -261,8 +263,6 @@ public class OrgService {
 			//최종 임시 비밀번호
 			String newRandomPw = new String(charArr);
 			
-			System.out.println(newRandomPw);
-			
 			//메일로 보낼 메시지
 			SimpleMailMessage msg = new SimpleMailMessage();
 			msg.setTo("qor659659@gmail.com"); //메일을 받을 메일 주소 org.getOrgEmail();
@@ -298,6 +298,7 @@ public class OrgService {
 	}
 
 	//탈퇴 신청
+	@Transactional
 	public int deleteOrg(int orgNo) {
 		return dao.deleteOrg(orgNo);
 	}
