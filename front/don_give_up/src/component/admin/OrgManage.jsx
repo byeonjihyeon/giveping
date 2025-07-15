@@ -108,7 +108,7 @@ export default function OrgManage(){
         <>
             <div className="page-title">단체 관리</div>
            
-             <div className="org">
+             <div className="two-nav">
             <ul>
                  <li>
                     <button onClick={join}>가입신청</button>
@@ -184,10 +184,6 @@ function Org(props) {
             }
 
         });*/
-
-
-  
-
 
    // 단체 상태 값을 변경했을 때, 호출 함수  (onChange)
     function handleChange(e){

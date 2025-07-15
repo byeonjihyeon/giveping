@@ -68,7 +68,7 @@ export default function BizManage(){
         
         }
 
- useEffect(function(){
+    useEffect(function(){
      handleSearch(reqPage);
         }, [reqPage, status, searchType, keyword]); 
 
@@ -95,6 +95,7 @@ export default function BizManage(){
     return (
         <>
             <div className="page-title">기부 사업 관리</div>
+            <div className="search">
              <Box sx={{ display: 'flex', gap: 2, marginBottom: 3 }}>
                 <FormControl sx={{ minWidth: 120 }}>
                     <InputLabel>상태</InputLabel>
@@ -119,7 +120,7 @@ export default function BizManage(){
                 <TextField label="검색어" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
                 <Button variant="contained" onClick={handleSearch}>검색</Button>
                 </Box>
-
+           </div>
             <table className="admin-tbl">
                 <thead>
                     <tr>

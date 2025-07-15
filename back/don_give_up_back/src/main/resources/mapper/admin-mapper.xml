@@ -382,13 +382,14 @@
 		            comment_content AS commentContent,
 		            report_reason AS reportReason,
 		            report_detail_reason AS reportDetailReason,
-		            report_date AS reportDate
-		          
+		            report_date AS reportDate,
+		            n.news_no AS newsNo,
+		            c.comment_no as commentNo
 		        FROM tbl_report r  left join tbl_member m on r.report_member_no = m.member_no
                                    left join tbl_org o on r.org_no = o.org_no
                                    left join tbl_comment c on r.comment_no = c.comment_no
-                                   left join tbl_report_code d on r.report_code = d.report_code
-                                   
+                                   left join tbl_news n on c.news_no = n.news_no
+                                   left join tbl_report_code d on r.report_code = d.report_code               
                       <where>
                        r.comment_no IS NOT NULL
 					  <if test="startDate != null and startDate != ''">
@@ -415,11 +416,12 @@
 		        SELECT 
 		            report_no AS reportNo,
 		            member_name AS memberName,
-		            org_name AS orgName,
+		            o.org_name AS orgName,
+		            o.org_no AS orgNo,
 		            report_reason AS reportReason,
 		            report_detail_reason AS reportDetailReason,
 		            report_date AS reportDate
-		          
+		            
 		        FROM tbl_report r  left join tbl_member m on r.report_member_no = m.member_no
                                    left join tbl_org o on r.org_no = o.org_no
                                    left join tbl_comment c on r.comment_no = c.comment_no

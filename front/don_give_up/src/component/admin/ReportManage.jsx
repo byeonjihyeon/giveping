@@ -3,7 +3,7 @@ import createInstance from "../../axios/Interceptor";
 import PageNavi from "../common/PageNavi";
 import * as React from 'react';
 import Switch from '@mui/material/Switch';
-import { Checkbox } from "@mui/material";
+import { Checkbox, Tooltip } from "@mui/material";
 import { Tabs, Tab, Box, TextField, Button } from "@mui/material";
 import "./admin.css";
 
@@ -92,7 +92,8 @@ useEffect(() => {
 
   return (
     <>
-               <div className="page-title">신고  내역 관리</div>
+       <div className="page-title">신고 내역 관리</div>
+       <div className="search">
     <Box sx={{ width: "100%", typography: "body1", p: 2 }}>
       <Tabs value={tab} onChange={handleChangeTab}>
         <Tab label="댓글 신고" value="comment" />
@@ -120,6 +121,7 @@ useEffect(() => {
           검색
         </Button>
       </Box>
+    </div>
            <div>
         {reportList.length === 0 ? (
           <div>조회된 신고 내역이 없습니다.</div>
@@ -141,7 +143,30 @@ useEffect(() => {
                 <tr key={report.reportNo}>
                   <td>{report.reportNo}</td>
                   <td>{report.memberName}</td>
-                  <td>{tab === "comment" ? report.commentContent : report.orgName}</td>
+                 <td>
+                  {tab === "comment" ? (
+                    <Tooltip title={report.commentContent} arrow>
+                      <a
+                        href={`/news/view/${report.newsNo}#comment-${report.commentNo}`}
+                        style={{ textDecoration: "none", color: "#1976d2" }}
+                        target="_blank"
+                      >
+                        {report.commentContent.length > 10
+                          ? report.commentContent.slice(0, 10) + "..."
+                          : report.commentContent}
+                      </a>
+                    </Tooltip>
+                  ) : (
+                  
+                  <a
+                    href={`/organization/view/-${report.orgNo}`}
+                    style={{ textDecoration: "none", color: "#1976d2" }}
+                    target="_blank"
+                  >
+                    {report.orgName}
+                  </a>
+                  )}
+                 </td>
                   <td>{report.reportReason}</td>
                   <td>{report.reportDetailReason}</td>
                   <td>{report.reportDate.substring(0, 10)}</td>

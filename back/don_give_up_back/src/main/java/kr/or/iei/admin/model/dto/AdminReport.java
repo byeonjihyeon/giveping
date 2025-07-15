@@ -21,6 +21,9 @@ public class AdminReport {
      private String orgName;
      private String commentContent;
      private String reportReason;
+     private int newsNo;
+     
+     
      
      
 }
