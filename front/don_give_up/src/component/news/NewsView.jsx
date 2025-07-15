@@ -30,7 +30,11 @@ export default function NewsView(){
 
         // 입력된 댓글 내용이 없을 경우 return
         if(!newComment.trim()){
-            alert("댓글 내용을 입력해주세요");
+            Swal.fire({
+                    title : '알림',
+                    text : '댓글 내용을 입력해주세요.',
+                    icon : 'warning'
+            });
             return;
         }
 
@@ -115,15 +119,11 @@ export default function NewsView(){
             }
     )};
 
-
-        
-
-
     return(
         <>
-    <section className="section board-view-wrap">
+        <section className="section board-view-wrap">
                 <div className="board-view-content">
-                <div className="board-view-info">
+                <div className="board-view-top">
                     <div className="board-thumbnail">
                     <img
                         src={
@@ -136,14 +136,34 @@ export default function NewsView(){
                     </div>
 
                     <div className="board-view-preview">
+                        <span className="info-item bordered-pill">{news.orgName}</span>
                         <h2 className="news-title">{news.newsName}</h2>
-                            <div className="info-row">
-                                <span className="info-item">{news.orgName}</span><br/>
-                                <span className="info-item">작성시간 | </span>
-                                <span className="info-item">{news.newsDate}</span><br/>
-                                <span className="info-item">조회수 | </span>
-                                <span className="info-item">{news.readCount}</span>
-                            </div>
+    
+                        {/* 관리자 프로필 */}
+                    <div className="content-orgInfo">
+                        <img className="content-orgInfo-img" src="/images/adminProfile.png" alt="관리자 프로필" />
+                        <span className="content-orgInfo-text">
+                            <span className="content-orgInfo-name">관리자</span>
+                        </span>
+                    </div>
+
+
+                        <div className="info-row">
+                            <span className="info-item">작성일 | </span>
+                            <span className="info-item">{news.newsDate}</span><br/>
+                        </div>
+
+                        {(loginMember != null && (loginMember.memberLevel === 1 || loginOrg != null)) && (
+                        <div className="view-btn-zone">
+                        <Link to={"/news/update/" + news.newsNo} className="btn-primary lg">
+                            수정
+                        </Link>
+                        <button type="button" className="btn-secondary lg" onClick={deleteNews}>
+                            삭제
+                        </button>
+                    </div> 
+                    )}
+                    </div>
                     </div>
                 </div>
 
@@ -151,20 +171,6 @@ export default function NewsView(){
 
                 <div className="board-content-wrap">
                     {news.newsContent ? <Viewer initialValue={news.newsContent} /> : ""}
-                </div>
-                        {/*
-                {(loginMember != null && (loginMember.memberLevel === 1 || loginOrg != null)) && (
-                    
-                )}
-                    */ }
-                    <div className="view-btn-zone">
-                    <Link to={"/news/update/" + news.newsNo} className="btn-primary lg">
-                        수정
-                    </Link>
-                    <button type="button" className="btn-secondary lg" onClick={deleteNews}>
-                        삭제
-                    </button>
-                    </div> 
                 </div>
                 
             </section>
