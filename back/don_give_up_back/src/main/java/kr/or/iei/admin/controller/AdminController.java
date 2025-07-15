@@ -194,17 +194,14 @@ public class AdminController {
 		public ResponseEntity<ResponseDTO> selectReportList(@PathVariable int reqPage, @PathVariable String tab,
 				                                                                       @RequestParam(required = false, defaultValue = "") String startDate, 
 				                                                                       @RequestParam(required = false, defaultValue = "") String endDate) {
-			System.out.println("프런트에서 넘어온 startDate:"+ startDate ); // 2025-07-10
-			System.out.println("프런트에서 넘어온 endDate:"+ endDate ); // 2025-07-24
 			
 			 try {
 			HashMap<String, Object> reportMap=null;
 
 				if("comment".equals(tab)){
-					System.out.println("if(\"comment\".equals(tab)) 도착"); // 도착
+					
 					reportMap= service.selectCommentReportList(reqPage, tab, startDate, endDate);
 					//System.out.println("controller 에서 startDate :"  + startDate);
-					System.out.println("조회된 신고 리스트: " + reportMap);
 					
 				}else if("org".equals(tab)){
 					reportMap= service.selectOrgReportList(reqPage, tab, startDate, endDate);

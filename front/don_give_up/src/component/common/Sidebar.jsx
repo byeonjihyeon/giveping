@@ -24,6 +24,8 @@ export default function Sidebar (props){
 
     return (
         <div className="sidebar-wrap">
+            {loginMember?.memberLevel !==1 &&(
+            <>
            <div className="profile-wrap">
                 <img src={  loginMember
                             ?   //개인 회원 로그인 시
@@ -47,9 +49,8 @@ export default function Sidebar (props){
                 </p>   
            </div>
            
-           { !isMyHome && loginMember //현재 url이 /member가 아닌지?
-            ?   loginMember
-                ?
+           {!isMyHome && loginMember && (//현재 url이 /member가 아닌지?
+  
                 <div className="profile-wrap-btm">
                     <NavLink to='/member/donateList' end>
                         <span>기부금액</span>
@@ -60,17 +61,19 @@ export default function Sidebar (props){
                         <span>{member.totalMoney} 원</span>   
                     </div>
                 </div>
-                : ""
-           : !isMyHome && loginOrg
-                ?
+           )}
+               
+           {!isMyHome && loginOrg &&(
+                
                 <div className="profile-wrap-btm">
                     <div>
                         <span>단체 온도</span>
                         <span>{org.orgTemperature}ºC</span>
                     </div>
                 </div>
-                : ""
-            }
+           )}
+           </>
+           )}
             
            <div className="side-menu-wrap">
                 <div className="side-menu">

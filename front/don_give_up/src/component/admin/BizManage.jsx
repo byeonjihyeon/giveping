@@ -5,6 +5,8 @@ import * as React from 'react';
 import Switch from '@mui/material/Switch';
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
+import "./admin.css";
+
 
 //상세보기 모달 스타일
 const modalStyle = {
@@ -107,7 +109,7 @@ export default function BizManage(){
                 <Button variant="contained" onClick={handleSearch}>검색</Button>
                 </Box>
 
-            <table className="tbl">
+            <table className="admin-tbl">
                 <thead>
                     <tr>
                         <th style={{width:"15%"}}>글번호</th>
