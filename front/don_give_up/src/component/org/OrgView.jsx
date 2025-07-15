@@ -107,12 +107,12 @@ export default function OrgView(){
                         {categoryList.map(function(ctg, index){
                             return  <span key={"ctg"+index}>{orgCategoryList.map(function(code, index){
                                         return  <span key={"code"+index} className={ctg.donateCode == code ? "org-ctg-span" : ""}
-                                                    >{ctg.donateCode == code ? "#" + ctg.donateCtg : ""} </span>
+                                                    >{ctg.donateCode == code ? "#" + ctg.donateCtg : ""}</span>
                             })}</span>
                         })}
                     </div>
                     <div className="org-temperature">
-                        <span>{org.orgTemperature}ºC</span>
+                        <p style={{width : (org.orgTemperature * 2) + "%"}}>{org.orgTemperature}ºC</p>
                         <div className="progress-bar">
                             <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"}}></div>
                         </div>

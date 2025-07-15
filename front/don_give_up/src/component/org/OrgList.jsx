@@ -70,6 +70,8 @@ export default function OrgList(){
         console.log(searchOrgName);
         setIsClick(!isClick);
     }
+    
+    const emoji = ["👧", "👨‍🦳", "🌍", "🌳", "🤟", "🎨", "💧"];
 
     return(
         <section className="section organization-list">
@@ -77,6 +79,8 @@ export default function OrgList(){
             <div className="filter-search-wrapper">
                 <div className="category-filter">
                     {categoryList.map(function(ctg, index){
+                        const spanEmoji = emoji[index % emoji.length];
+
                         return  <button key={"ctg"+index}
                                         style={{backgroundColor: checkCtgList.includes(ctg.donateCode) ? '#007bff' : '#ffffffff',
                                                 color: checkCtgList.includes(ctg.donateCode) ? 'white' : '#333',
@@ -90,7 +94,7 @@ export default function OrgList(){
                                                 fontSize: '1rem',
                                                 minWidth: 'center',}}
                                         onClick={function(){toggleCategory(ctg.donateCode);}}
-                                >{ctg.donateCtg}</button>
+                                >{ctg.donateCtg} {spanEmoji}</button>
                     })}
                 </div>
                 <form autoComplete="off" onSubmit={function(e){
@@ -194,17 +198,10 @@ function BoardItem(props) {
                 <div className="posting-sub-info" onClick={function(){
                     navigate('/organization/view/' + org.orgNo);
                 }}>
+                    <span className="org-ctg-span" style={{border : "1px solid #ff5353ff", color : "#ff5353ff"}}>{org.orgTemperature}ºC</span><br/>
                     {org.categoryList && org.categoryList.map((orgCtg, idx) => (
-                    <span key={"orgCtg"+idx} className="org-ctg-span">#{orgCtg} </span>
+                    <span key={"orgCtg"+idx} className="org-ctg-span" style={{marginTop : "4px"}}>#{orgCtg} </span>
                     ))}
-                    <div className="progress-bar">
-                        <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"
-                                                                /*backgroundColor : org.orgTemperature < 20 ? "green"
-                                                                                : org.orgTemperature >= 20 && org.orgTemperature < 40 ? "lightgreen"
-                                                                                : org.orgTemperature >= 40 && org.orgTemperature < 60 ? "yellow"
-                                                                                : org.orgTemperature >= 60 && org.orgTemperature < 80 ? "orange" : "red"*/}}></div>
-                    </div>
-                    <span>{org.orgTemperature}ºC</span>
                 </div>
             </div>
         </li>
