@@ -34,22 +34,22 @@ export default function BizList() {
 
     // 카테고리 -> 카테고리 여러 개 눌렀을 때, 직렬화시키는 하는 함수
     function paramsSerializer(params) {
-  const parts = [];
+    const parts = [];
 
-  for (const key in params) {
-    const value = params[key];
-    if (Array.isArray(value)) {
-      // 배열이면 key=value1&key=value2 형태로 변환
-      value.forEach(function (v) {
-        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(v));
-      });
-    } else if (value !== undefined && value !== null) {
-      parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+    for (const key in params) {
+        const value = params[key];
+        if (Array.isArray(value)) {
+        // 배열이면 key=value1&key=value2 형태로 변환
+        value.forEach(function (v) {
+            parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(v));
+        });
+        } else if (value !== undefined && value !== null) {
+        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+        }
     }
-  }
 
-  return parts.join("&");
-}
+    return parts.join("&");
+    }
 
     useEffect(function () {
         if(isSearching){    // isSearching 이 true => 검색 상태
@@ -155,7 +155,7 @@ export default function BizList() {
                         ))}
                     </div>
 
-                    <div className="search-box">
+                    <div className="search-box" style={{ marginBottom: '20px' }}>
                         <select name="searchType" id="searchType" value={searchType} onChange={handleSearchTypeChange}>
                             <option value="bizTitle">사업명</option>
                             <option value="orgName">단체명</option>
@@ -206,10 +206,16 @@ function BoardItem(props) {
                 />
             </div>
             <div className="posting-info">
-                <div className="posting-title">{donateBiz.bizName}</div>
+                <div className="posting-title" style={{ fontSize: '24px' }}>{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
-                    <span>{donateBiz.orgName}</span>
-                    <span> #{donateBiz.donateCtg}</span>
+                    <span style={{
+                        border: '1px solid #007bff',
+                        borderRadius: '20px',
+                        padding: '4px 10px',
+                        display: 'inline-block',
+                        color: '#007bff'
+                        }}>{donateBiz.orgName}</span>
+                    <span style={{ color: '#757575ff', marginLeft: '10px' }}> #{donateBiz.donateCtg}</span>
                     <br />
                     <div className="progress-bar">
                         <div className="progress-fill" style={{ width: `${percent}%` }}></div>
