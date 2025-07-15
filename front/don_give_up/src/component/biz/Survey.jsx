@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 export default function Survey(props){
     const onClose = props.onClose;
     const donateBiz = props.donateBiz;
-    console.log("bizNos : " + donateBiz.bizNo);
+    const navigate = useNavigate();
 
     const {loginMember} = useUserStore();
     console.log(donateBiz.bizNo);
@@ -76,6 +76,20 @@ export default function Survey(props){
         return;
         }
 
+        // 모든 질문에 점수 선택했는지 확인 
+        const hasUnanswered = answers.some(function(answer){
+            return answer.answerScore == null;
+        });
+
+        if(hasUnanswered){
+            Swal.fire({
+                    title : '알림',
+                    text : '모든 질문에 점수를 선택해주세요.',
+                    icon : 'warning'
+            });
+            return;
+        }
+
          // answers를 bizNo 포함하여 재구성
         const fixedAnswers = answers.map(a => ({
             ...a,
@@ -92,6 +106,7 @@ export default function Survey(props){
             console.log(res.data.resData);
             if(res.data.resData){
                 onClose();  // 성공 시, 팝업 종료
+                navigate("/biz/view/"+bizNo);
             }
         });
         
@@ -100,12 +115,11 @@ export default function Survey(props){
 
     return(
         <div className="modal-overlay">
-            <div className="modal-content">
-                <h3>설문조사</h3>
-                <div style={{ margin: "15px 0" }}>
-                    <p><strong>질문 리스트</strong></p>
-                    <div className="button-group">
-                        
+            <div className="modal-contents survey-modal">
+                <h3 className="modal-title">설문조사</h3>
+                <div className="survey-body">
+                    <p className="survey-subtitle">질문</p>
+                    <div className="question-list">
                              {questionList.map((question, index) => (
                                 <QuestionItem key={"question" + index} question={question} selectedScore={answers[index]?.answerScore}
                                               onScoreChange={(score) => handleScoreChange(index, score)}
@@ -113,12 +127,13 @@ export default function Survey(props){
                             ))}
                     </div>
                 </div>
-
-                
+              
+                <div className="modal-actions">
                 <button onClick={submit}>제출하기</button>
                 <button onClick={onClose}>닫기</button>
             </div>
-        </div>
+            </div>
+            </div>
     )
 }
 
@@ -130,11 +145,11 @@ function QuestionItem(props){
 
     return(
         <div className="question-card">
-            <div className="question-row">
-                <div className="question-label">질문 {index+1}.</div>
-                <div className="question-value">{question.questionContent}</div>
+            <div className="question-header">
+                <div className="question-number">질문 {index+1}.</div>
+                <div className="question-text">{question.questionContent}</div>
             </div>
-            <div style={{marginTop: '8px'}}>
+             <div className="score-options">
                 {[1,2,3,4,5].map(score => (
                     <label key={score} style={{marginRight: '10px'}}>
                         <input 
@@ -142,15 +157,12 @@ function QuestionItem(props){
                             name={"question-" + question.questionNo}
                             value={score}
                             checked={selectedScore === score}
-                            onChange={() => onScoreChange(score)}
+                            onChange={function(){onScoreChange(score)}}
                             />
-                        {score}점
+                        <span className="score-value">{score}점</span>
                     </label>
                 ))}
                 </div>
-            <hr />
         </div>
-       
     );
-
 }

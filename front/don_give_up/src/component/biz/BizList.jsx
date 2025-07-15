@@ -34,22 +34,22 @@ export default function BizList() {
 
     // 카테고리 -> 카테고리 여러 개 눌렀을 때, 직렬화시키는 하는 함수
     function paramsSerializer(params) {
-  const parts = [];
+    const parts = [];
 
-  for (const key in params) {
-    const value = params[key];
-    if (Array.isArray(value)) {
-      // 배열이면 key=value1&key=value2 형태로 변환
-      value.forEach(function (v) {
-        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(v));
-      });
-    } else if (value !== undefined && value !== null) {
-      parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+    for (const key in params) {
+        const value = params[key];
+        if (Array.isArray(value)) {
+        // 배열이면 key=value1&key=value2 형태로 변환
+        value.forEach(function (v) {
+            parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(v));
+        });
+        } else if (value !== undefined && value !== null) {
+        parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
+        }
     }
-  }
 
-  return parts.join("&");
-}
+    return parts.join("&");
+    }
 
     useEffect(function () {
         if(isSearching){    // isSearching 이 true => 검색 상태

@@ -6,7 +6,7 @@ import useUserStore from "../../store/useUserStore";
 import Survey from './Survey';
 import BizFile from './BizFile';
 import Swal from "sweetalert2";
-import { green } from "@mui/material/colors";
+import { green, yellow } from "@mui/material/colors";
 
 export default function BizView(){
     const {loginMember, loginOrg, isLogined} = useUserStore();
@@ -31,8 +31,10 @@ export default function BizView(){
     // 기부 팝업 모달을 위한 변수 선언
     const [isDonateOpen, setIsDonateOpen] = useState(false);
 
-    // 기부하기 팝업 모달을 위한 변수 선언
+    // 설문조사하기 팝업 모달을 위한 변수 선언
     const [isSurveyOpen, setIsSurveyOpen] = useState(false);
+
+    const isSurveyOpenUrl = searchParams.get("survey") === "open";
 
     // 관리자 전용 버튼 가시화 위한 변수 선언
     const [showMemberList, setShowMemberList] = useState(false);
@@ -283,6 +285,13 @@ export default function BizView(){
                     }
                     {/* 기부 팝업 */}
                     {isDonateOpen && <Donate onClose={closeDonatePopup} donateBiz={donateBiz} />}
+                    
+                    {/* (설문조사 팝업 & 버튼 => 기부 이력 있는 회원만 버튼 보임)*/}
+                    {/* 설문조사 버튼 : biz/view/2?survey=open 주소로 왔을 때만 보임 */}
+                    {isSurveyOpenUrl ? <span className="tabArea-right-text" onClick={openSurveyPopup} style={{ backgroundColor: '#007BFF', color : '#ffffffff'}}>설문조사</span> : "" }
+
+                        {/* 설문조사 팝업 */}
+                        {isSurveyOpen && <Survey onClose={closeSurveyPopup} donateBiz={donateBiz} />}
 
                     {/* 관리자나 기부단체계정일 경우에만 보임 */}
                     {isOwnerOrAdmin && (
@@ -419,7 +428,7 @@ function FileTab(props){
                      setDelBizFileNo={setDelBizFileNo}
                      donateBiz={donateBiz}
                      bizNo={bizNo}
-                     />
+            />
 
         </div>
     );
@@ -463,37 +472,6 @@ function DonateMember(props){
         );
 }
 
-/*
-// 멤버 1명 객체
-function MemberItem(props){
-    const member = props.member;
-
-    return(
-        <div className="member-card">
-            <div className="member-info-grid">
-                <div className="label">아이디</div>
-                <div className="value">{member.memberId}</div>
-
-                <div className="label">이름</div>
-                <div className="value">{member.memberName}</div>
-
-                <div className="label">생년월일</div>
-                <div className="value">{member.memberBirth}</div>
-
-                <div className="label">전화번호</div>
-                <div className="value">{member.memberPhone}</div>
-
-                <div className="label">기부금액</div>
-                <div className="value">{member.donateMoney.toLocaleString()}원</div>
-
-                <div className="label">기부일시</div>
-                <div className="value">{member.donateDate}</div>
-            </div>
-        </div>
-    );
-
-}
-    */
 
 function Donate(props){
     const onClose = props.onClose;
@@ -569,51 +547,62 @@ function Donate(props){
                     });
                     navigate("/member");    // 충전하기 위해 /member 로 이동
                     return; 
+                    }else{
+                        Swal.fire({
+                        title : '알림',
+                        text : '기부 하시겠습니까?',
+                        icon : 'question',
+                        showCancelButton : true,
+                        confirmButtonText : '확인',
+                        cancelButtonText : '취소'
+                    }).then(function(res){
+                        // 기부 정보 객체 재구성
+                        const updatedPayInfo = {
+                            ...payInfo,
+                            donateMoney: selectedAmount
+                        };
+                            if(res.isConfirmed){
+                            let options={};
+                            options.url = serverUrl + "/biz/donate";
+                            options.data = updatedPayInfo;
+                            options.method="post";
+                            console.log(updatedPayInfo);
+                            
+                            axiosInstance(options)
+                            .then(function(res){
+                                console.log(res.data.resData);
+                                if(res.data.resData){
+                                    //성공할 경우, 팝업 닫음
+                                    onClose();
+                                }
+                            });
+                        }
+                    })
+
                     }
 
-    // 기부 정보 객체 재구성
-    const updatedPayInfo = {
-        ...payInfo,
-        donateMoney: selectedAmount
-    };
-
-        let options={};
-        options.url = serverUrl + "/biz/donate";
-        options.data = updatedPayInfo;
-        options.method="post";
-        console.log(updatedPayInfo);
-        
-        axiosInstance(options)
-        .then(function(res){
-            console.log(res.data.resData);
-            if(res.data.resData){
-                //성공할 경우, 팝업 닫음
-                onClose();
-            }
-        });
-        
     }
-
 
     return (
         <div className="modal-overlay">
-            <div className="modal-content">
-                <h3>기부하기</h3>
-                <div style={{ margin: "15px 0" }}>
-                    <p><strong>기부 금액 선택</strong></p>
-                    <div className="button-group">
+            <div className="modal-contents">
+                <h3 className="modal-title">기부하기</h3>
+
+                <div className="modal-section">
+                    <p className="section-title">기부 금액 선택</p>
+                    <div className="amount-button-group">
                         {[3000, 5000, 10000, 30000, 50000].map((amount) => (
                             <button
                                 key={amount}
-                                onClick={() => handleAmountClick(amount)}
-                                className={selectedAmount === amount ? "selected" : ""}
+                                onClick={function(){handleAmountClick(amount)}}
+                                className={"amount-button" + (selectedAmount === amount ? "selected" : "")}
                             >
                                 {amount.toLocaleString()}원
                             </button>
                         ))}
                         <button
                             onClick={handleCustomClick}
-                            className={customInputVisible ? "selected" : ""}
+                            className={"amount-button" + (customInputVisible ? "selected" : "")}
                         >
                             직접입력
                         </button>
@@ -624,6 +613,7 @@ function Donate(props){
                             placeholder="기부 금액 입력"
                             value={customAmount}
                             onChange={handleCustomAmountChange}
+                            className="custom-input"
                         />
                     )}
                 </div>
@@ -635,9 +625,10 @@ function Donate(props){
                         <p><strong>차감 후 잔액:</strong> {(totalMoney - selectedAmount).toLocaleString()}원</p>
                     </div>
                 )}
-                <div className="donate-button">
-                <button onClick={donatePay} disabled={selectedAmount <= 0}>결제하기</button>
-                <button onClick={onClose}>닫기</button>
+
+                <div className="modal-buttons">
+                <button onClick={donatePay} disabled={selectedAmount <= 0} className="btn-primary">결제하기</button>
+                <button onClick={onClose} className="btn-secondary">닫기</button>
                 </div>
             </div>
         </div>
