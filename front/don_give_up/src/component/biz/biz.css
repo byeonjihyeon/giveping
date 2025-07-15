@@ -39,7 +39,6 @@ ul.posting-wrap.grid-3x4 {
   gap: 8px;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 5px;
 }
 
 .search-box select,
@@ -100,7 +99,7 @@ ul.posting-wrap.grid-3x4 {
 }
 
 
-/* ✅ 기부 통계 (퍼센트/금액) 간격 조정 */
+/* 기부 통계 (퍼센트/금액) 간격 조정 */
 .donate-stats {
     display: flex;
     justify-content: space-between;
@@ -108,45 +107,221 @@ ul.posting-wrap.grid-3x4 {
     margin-top: 4px;
 }
 
-/* ✅ 모달 스타일 */
+/* 모달 스타일 */
 .modal-overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0,0,0,0.4);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
 }
 
-.modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
+.modal-contents {
+    background: #fff;
+    padding: 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     width: 400px;
     max-width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    animation: fadeIn 0.3s ease-in-out;
+    box-sizing: border-box;
+}
+
+.modal-title {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.section-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.amount-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.amount-button {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  background: #f8f8f8;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.amount-button:hover {
+  background: #eee;
+}
+
+.amount-button.selected {
+  background: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.custom-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.modal-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* 설문조사 모달 */
+.modal-contents.survey-modal {
+  background: #fff;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 600px;
+  max-width: 90%;
+  box-sizing: border-box;
+  animation: fadeIn 0.3s ease-in-out;
+  max-height: 80vh; /* 브라우저 창의 80%까지만 허용 */
+  overflow-y: auto; /* 내용이 넘치면 세로 스크롤 표시 */
+}
+
+.modal-title {
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.survey-body {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 10px; /* 스크롤 여백 */
+}
+
+.survey-subtitle {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #444;
+}
+
+/* 질문 카드 */
+.question-card {
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 1rem;
+}
+
+/* 질문 제목 */
+.question-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.question-number {
+  font-weight: bold;
+  color: #87CEEB;
+}
+
+.question-text {
+  flex: 1;
+  word-break: break-word;
+}
+
+/* 라디오 버튼 */
+.score-options {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.score-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.score-label input[type="radio"] {
+  accent-color: #28a745;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+/* 제출/닫기 버튼 영역 */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.modal-actions .btn-submit {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.modal-actions .btn-submit:hover {
+  background-color: #218838;
+}
+
+.modal-actions .btn-close {
+  background-color: #ccc;
+  color: #333;
+}
+
+.modal-actions .btn-close:hover {
+  background-color: #999;
 }
 
 
 
-/* ✅ 기부금 달성률 Progress Bar */
+
+
+/* 기부금 달성률 Progress Bar */
 .progress-bar {
     width: 100%;
     height: 12px;
     background-color: #eee;
     border-radius: 6px;
-    margin-top: 4px;
+    margin-top: 14px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background-color: #007BFF;
+    background-color: #87CEEB;
     transition: width 0.3s ease;
 }
 
@@ -228,7 +403,7 @@ ul.posting-wrap.grid-3x4 {
 
 .bizView-progress-fill {
   height: 100%;
-  background-color: #007BFF; /* 노란색 진행 바 */
+  background-color: #87CEEB; /* 노란색 진행 바 */
   width: 0%;
   transition: width 0.5s ease-in-out;
 }
@@ -282,12 +457,12 @@ ul.posting-wrap.grid-3x4 {
     padding: 0.5rem 1rem;
     border-radius: 6px;
     transition: background-color 0.2s;
-    border: 1px solid #ccc; /* ✅ 오른쪽 탭에만 테두리 추가 */
+    border: 1px solid #ccc;
 }
 
 .tabArea-right-text:hover {
     background-color: #f0f0f0;
-    border-color: #999; /* ✅ hover 시 테두리 진하게 */
+    border-color: #999; 
 }
 
 /* ===== 콘텐츠 영역 ===== */
@@ -471,7 +646,7 @@ ul.posting-wrap.grid-3x4 {
 
 /* 기부자 리스트 */
 .donateMember-zone button {
-    background-color: #007BFF;
+    background-color: #87CEEB;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -512,9 +687,9 @@ ul.posting-wrap.grid-3x4 {
 
 /* 선택된 버튼 스타일 */
 .button-group .selected {
-  background-color: #007BFF;
+  background-color: #87CEEB;
   color: white;
-  border-color: #007BFF;
+  border-color: #87CEEB;
 }
 
 /* 입력창 스타일 (직접입력 선택 시) */
@@ -541,7 +716,7 @@ ul.posting-wrap.grid-3x4 {
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background-color: #007BFF;
+  background-color: #87CEEB;
   color: white;
   transition: background-color 0.2s;
 }
@@ -579,7 +754,7 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .material-icons.file-icon {
-  color: #007bff;
+  color: #87CEEB;
   cursor: pointer;
 }
 
@@ -598,7 +773,7 @@ ul.posting-wrap.grid-3x4 {
 
 /* 수정 버튼 */
 .btn-edit {
-  background-color: #007bff;
+  background-color: #87CEEB;
   color: white;
   border: none;
   padding: 6px 12px;
@@ -639,7 +814,7 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #87CEEB;
   color: white;
   border: none;
   padding: 8px 20px;
@@ -745,7 +920,7 @@ ul.posting-wrap.grid-3x4 {
 .btn-submit {
   padding: 10px 24px;
   font-size: 1rem;
-  background-color: #007bff;
+  background-color: #87CEEB;
   color: white;
   border: none;
   border-radius: 6px;

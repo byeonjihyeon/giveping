@@ -25,20 +25,23 @@ public class NewsService {
 	private PageUtil pageUtil;
 
 	public HashMap<String, Object> selectNewsList(int reqPage) {
-		int viewCnt = 12;						// 한 페이지 당 게시글 수
+		int viewCnt = 10;						// 한 페이지 당 게시글 수
 		int pageNaviSize = 5;					// 페이지 네비게이션 길이
 		int totalcount = dao.selectNewsCount();//전체 게시글 수
 		
 		// 페이징 정보
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalcount);
 		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("start", pageInfo.getStart());
+		param.put("end", pageInfo.getEnd());
+		
 		// 게시글 목록 조회
-		ArrayList<News> newsList = dao.selectNewsList(pageInfo);
+		ArrayList<News> newsList = dao.selectNewsList(param);
 		
 		HashMap<String, Object> newsMap = new HashMap<String, Object>();
 		newsMap.put("newsList", newsList);
 		newsMap.put("pageInfo", pageInfo);
-		
 		return newsMap;
 	}
 

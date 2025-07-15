@@ -180,7 +180,7 @@ function OrgMyPage(){
                 <Link to="/org/news">내 소식</Link>
             </li>
             <li>
-                <Link to="/org/biz">기부 사업 관리</Link>
+                <Link to="/org/post">기부 사업 관리</Link>
             </li>
             <li>
                 <Link to="/org/update">내 정보</Link>

@@ -1,61 +1,104 @@
-/* 소식 리스트 */
-.board-view-info {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  flex-wrap: wrap;
+/* news.css */
+
+.section.news-list-wrap {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.content-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.btn-primary {
+  display: inline-block;
+  padding: 8px 18px;
+  background-color: #87CEEB;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+}
+
+.tbl th, .tbl td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: center;
+  font-size: 1rem;
+  color: #555;
+}
+
+.tbl thead {
+  background-color: #87CEEB;
+  color: white;
+}
+
+.tbl tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tbl tbody tr:hover {
+  background-color: #e9f5ff;
+}
+
+.admin-page-wrap {
+  text-align: center;
+  margin-top: 30px;
+}
+
+
+/* 제목은 테이블 위에 별도 배치 */
+.board-view-preview {
+  width: 600px;
+  position: relative;
+  margin-top: 47px;    
+  margin-left: 20px;    
+  padding-bottom: 50px;
 }
 
 .board-view-top {
-    display: flex;
-    padding: 16px;
-    gap: 16px;
-    align-items: flex-start;
-}
-
-.board-thumbnail {
-    flex: 0 0 auto;
-    width: 200px;
-}
-
-.board-thumbnail img {
-    width: 100%;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-.board-view-preview {
   display: flex;
-  flex-direction: column;
-  
+  gap: 20px; /* 이미지와 텍스트 사이 간격 */
+  align-items: flex-start; /* 위쪽 정렬 */
 }
 
 .board-thumbnail {
+  width: 500px;
   flex-shrink: 0;
-  width: 50%;
-  border-radius: 8px;
-  overflow: hidden;
 }
 
 .board-thumbnail img {
-  max-width: 390px;
+  width: 100%;
   height: auto;
-  border-radius: 8px;
   object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  border-radius: 6px;
 }
 
-.board-view-preview {
-  width: 50%;         /* 나머지 반을 차지 */
-  box-sizing: border-box;
-  padding-left: 1rem;
-}
-
-/* 제목은 테이블 위에 별도 배치 */
 .news-title {
   font-size: 3.0rem;
   font-weight: 600;
-  margin : 0.7rem 0 0.7rem 0
+  margin : 1rem 0 1rem 0
 }
 .tbl {
   font-size: 1.5rem;
@@ -87,18 +130,17 @@
 }
 
 .view-btn-zone {
-  margin-top: 0.8rem;
   display: flex;
+  justify-content: flex-end; 
   gap: 10px;
-  flex-wrap: wrap;
-  margin-left: auto;
+  margin-top: 30px;
 }
 
 .bordered-pill {
-  color: #007bff;
+  color: #87CEEB;
   display: inline-block;
   padding: 0.5rem 0.5rem;
-  border: 1px solid #007bff;
+  border: 1px solid #87CEEB;
   border-radius: 999px;
   background-color: #f9f9f9;
 
@@ -162,6 +204,15 @@
 }
 
 /* 댓글 리스트 css */
+.no-comment {
+    color: #777;
+    font-size: 16px;
+    padding: 20px 0;
+    text-align: center;
+    font-style: italic;
+}
+
+
 .comment-item {
   display: flex;
   gap: 12px;
@@ -251,7 +302,7 @@
 }
 
 .comment-input:focus {
-  border-color: #007bff;
+  border-color: #87CEEB;
 }
 
 /* 버튼 공통 (기존 btn-primary, btn-secondary 가 있을 경우 무시 가능) */
@@ -265,7 +316,7 @@
 
 /* 등록 버튼 */
 .btn-primary {
-   background-color: #007bff;
+   background-color: #87CEEB;
   color: white;
   border: none;
 }
@@ -275,6 +326,22 @@
   color: white;
   border: none;
 }
+
+.btn-secondary.lg {
+  width: 58.25px;
+  height: 33.75px;
+  font-size: 0.95rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
 
 .comment-submit-btn:hover {
   background-color: #0056b3;
@@ -289,7 +356,7 @@
 }
 
 .comment-action-text {
-  color: #007bff;
+  color: #87CEEB;
   font-size: 0.85rem;
   cursor: pointer;
   user-select: none;
@@ -369,12 +436,12 @@
 
 .input-item input[type="text"]:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: #87CEEB;
   box-shadow: 0 0 5px rgba(0,123,255,0.5);
 }
 
 .btn-primary.sm {
-  background-color: #007bff;
+  background-color: #87CEEB;
   color: white;
   padding: 3px 10px;
   font-size: 0.9rem;

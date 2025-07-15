@@ -98,7 +98,7 @@ export default function OrgDelete(){
 
     return (
         <section className="section org-delete-wrap">
-            <h2 className="page-title">탈퇴하기</h2>
+            <h2 className="page-title" style={{textAlign : "left", marginLeft : "20px"}}>탈퇴하기</h2>
             {bizList == ""
             ? ""
             :<>
