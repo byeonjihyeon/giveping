@@ -219,13 +219,18 @@ function BoardItem(props) {
                 <div className="posting-title" style={{ fontSize: '24px', margin: '10px 0' }}>{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
                     <span style={{
+                        fontWeight : '700',
+                        color : '#7a7a7aff'
+                        }}>{donateBiz.orgName}</span>
+                    <span style={{
+                        marginLeft : '17px',
                         border: '1px solid #007bff',
                         borderRadius: '20px',
                         padding: '4px 10px',
                         display: 'inline-block',
-                        color: '#007bff'
-                        }}>{donateBiz.orgName}</span>
-                    <span style={{ color: '#757575ff', marginLeft: '10px' }}> #{donateBiz.donateCtg}</span>
+                        color: '#007bff',
+                        fontWeight : '500'
+                        }}> #{donateBiz.donateCtg}</span>
                     <br />
                     <div className="progress-bar">
                         <div className="progress-fill" style={{ width: `${percent}%` }}></div>
