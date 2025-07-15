@@ -156,7 +156,9 @@ export default function MyHome(props){
                                 survey.alarmType === 0 &&
                                 !(survey.surveyList?.some(item => item.bizNo === survey.bizNo))
                                 ).length === 0 ? (
-                                <div>설문조사가 없습니다.</div>
+                                <div onClick={function(){
+                                    navigate('/biz/list')
+                                }}>기부한 활동이 없습니다. 이곳에서 다양한 활동을 탐색해보세요!</div>
                                 ) : (
                                 newsList.map(function(survey, index) {
                                     return <Surveys key={"survey" + index} survey={survey} />;
