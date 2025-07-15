@@ -24,9 +24,9 @@ export default function AdminMain(){
         });
         
     const [menuList, setMenuList] = useState([
-        {url : '/admin/memberManage',         name : "회원 관리"},
-        {url : '/admin/orgManage',      name: '단체 관리'},
-        {url : '/admin/bizManage' ,         name : '기부 사업 관리'},
+        {url : '/admin/memberManage',          name : "회원 관리"},
+        {url : '/admin/orgManage',             name : '단체 관리'},
+        {url : '/admin/bizManage' ,            name : '기부 사업 관리'},
         {url : '/admin/refundManage' ,         name : '환불 신청 관리'},
         {url : '/admin/reportManage' ,         name : '신고 내역 관리'},
         {url : '/admin/deleteManage' ,         name : '탈퇴 신청 관리'},

@@ -195,19 +195,25 @@ function AdminMyPage(){
     return (
         <ul className="sub-menu">
             <li>
-                <Link to="#">개인 회원 관리</Link>
+                <Link to="/admin/memberManage">개인 회원 관리</Link>
             </li>
             <li>
-                <Link to="#">단체 회원 관리</Link>
+                <Link to="/admin/orgManage">단체 회원 관리</Link>
             </li>
             <li>
-                <Link to="#">후원 사업 관리</Link>
+                <Link to="/admin/bizManage">기부 사업 관리</Link>
             </li>
             <li>
-                <Link to="#">환불 신청 관리</Link>
+                <Link to="/admin/refundManage">환불 신청 관리</Link>
             </li>
             <li>
-                <Link to="#">신고 내역 관리</Link>
+                <Link to="/admin/reportManage">신고 내역 관리</Link>
+            </li>
+             <li>
+                <Link to="/admin/deleteManage">탈퇴 신청 관리</Link>
+            </li>
+             <li>
+                <Link to="/admin/payoutManage">관리자 송금 관리</Link>
             </li>
         </ul>
     )

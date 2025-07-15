@@ -123,11 +123,16 @@ public class AdminController {
 
 	// 기부사업리스트조회
 	@GetMapping("/bizManage/{reqPage}")
-	public ResponseEntity<ResponseDTO> selectBizList(@PathVariable int reqPage) {
+	public ResponseEntity<ResponseDTO> selectBizList(@PathVariable int reqPage,
+		                                             @RequestParam (required = false) String status,
+			                                         @RequestParam (required = false) String searchType, 
+                                                     @RequestParam (required = false) String keyword) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회 중,오류가 발생하였습니다", null, "error");
+		System.out.println("controller-searchType: "+ searchType);
+		System.out.println("status:" + status);
 
 		try {
-			HashMap<String, Object> bizMap = service.selectBizList(reqPage);
+			HashMap<String, Object> bizMap = service.selectBizList(reqPage, status, searchType, keyword);
 			res = new ResponseDTO(HttpStatus.OK, "", bizMap, "");
 		} catch (Exception e) {
 			e.printStackTrace();
