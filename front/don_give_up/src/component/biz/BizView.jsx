@@ -278,7 +278,7 @@ export default function BizView(){
                 {/* 오른쪽에 위치 , 일반 회원일 경우에만 보임 (관리자, 기부 단체 계정은 x) */}
                 <div className="tabArea-right">
                     {
-                        loginMember != null && (loginMember.memberLevel == 2)
+                        loginMember != null && (loginMember.memberLevel == 2) && new Date(donateBiz.bizDonateEnd) > new Date()
                         ?
                         <span className="tabArea-right-text" onClick={openDonatePopup}>기부하기</span>
                         :''

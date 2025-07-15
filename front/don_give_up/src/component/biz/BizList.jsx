@@ -155,7 +155,7 @@ export default function BizList() {
                         ))}
                     </div>
 
-                    <div className="search-box">
+                    <div className="search-box" style={{ marginBottom: '20px' }}>
                         <select name="searchType" id="searchType" value={searchType} onChange={handleSearchTypeChange}>
                             <option value="bizTitle">사업명</option>
                             <option value="orgName">단체명</option>
@@ -206,10 +206,16 @@ function BoardItem(props) {
                 />
             </div>
             <div className="posting-info">
-                <div className="posting-title">{donateBiz.bizName}</div>
+                <div className="posting-title" style={{ fontSize: '24px' }}>{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
-                    <span>{donateBiz.orgName}</span>
-                    <span> #{donateBiz.donateCtg}</span>
+                    <span style={{
+                        border: '1px solid #007bff',
+                        borderRadius: '20px',
+                        padding: '4px 10px',
+                        display: 'inline-block',
+                        color: '#007bff'
+                        }}>{donateBiz.orgName}</span>
+                    <span style={{ color: '#757575ff', marginLeft: '10px' }}> #{donateBiz.donateCtg}</span>
                     <br />
                     <div className="progress-bar">
                         <div className="progress-fill" style={{ width: `${percent}%` }}></div>
