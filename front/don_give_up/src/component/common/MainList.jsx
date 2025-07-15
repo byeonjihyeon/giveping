@@ -32,7 +32,7 @@ export default function MainList(){
     }, []);
 
     
-    /*
+    
     // 기부 단체 리스트 (8개) 조회해오기
     useEffect(function(){
         let options = {};
@@ -45,7 +45,7 @@ export default function MainList(){
             })
             
             }, []);
-            */
+    
 
     const scroll = (direction) => {
         const scrollAmount = sliderRef.current.offsetWidth;
@@ -56,6 +56,7 @@ export default function MainList(){
     };
            
     return(
+        <>
         <div className="biz-list-container">
             <button className="scroll-btn left" onClick={() => scroll("left")}>{"<"}</button>
             <div className="biz-slider" ref={sliderRef}>
@@ -67,6 +68,19 @@ export default function MainList(){
             </div>
             <button className="scroll-btn right" onClick={() => scroll("right")}>{">"}</button>
         </div>
+
+        <div className="biz-list-container">
+            <button className="scroll-btn left" onClick={() => scroll("left")}>{"<"}</button>
+            <div className="biz-slider" ref={sliderRef}>
+                <ul className="biz-list">
+                    {orgList.map((org, index) => (
+                        <OrgItem key={"org" + index} org={org} />
+                    ))}
+                </ul>
+            </div>
+            <button className="scroll-btn right" onClick={() => scroll("right")}>{">"}</button>
+        </div>
+        </>
     )
 }
 
@@ -102,6 +116,39 @@ function BizItem(props){
                         <span>{percent}%</span>
                         <span>{donated.toLocaleString()}원</span>
                     </div>
+                </div>
+            </div>
+        </li>
+    );
+}
+
+function OrgItem(props){
+    const org = props.org;
+    const navigate = useNavigate();
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+
+    return (
+        <li className="posting-item" onClick={function(){navigate('/org/view/' + org.orgNo)}}>
+            <div className="posting-img">
+                <img
+                    src={org.orgThumbPath
+                        ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0, 8) + "/" + org.orgThumbPath
+                        : "/images/default_img.png"}
+                />
+            </div>
+            <div className="posting-info">
+                <div className="posting-title">{org.orgName}</div>
+                <div className="posting-sub-info">
+                    {org.categoryList && org.categoryList.length > 0 ? (
+                        org.categoryList.map((ctg, idx) => (
+                          <span key={idx}> #{ctg} </span>
+                        ))
+                      ) : (
+                        ''
+                      )}
+                </div>
+                <div className="posting-degree">
+                    <span> {org.orgTemperature}℃</span>
                 </div>
             </div>
         </li>
