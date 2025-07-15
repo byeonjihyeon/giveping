@@ -327,7 +327,7 @@ export default function BizView(){
                     {/* main-content-wrap의 오른쪽에 위치 */}
                     <div className="aside-content-wrap">
                         <div className="content-orgInfo-wrap">
-                            <span className="content-orgInfo">모금단체</span>
+                            <span className="content-orgInfo">후원단체</span>
                             {/* Link url 임시 설정 => "/org/view/"+orgNo  로 변경할것임.*/}
                             <Link className="content-orgInfo-link" to={"/organization/view/"+donateBiz.orgNo}>
                                 <img className="content-orgInfo-img"
@@ -595,14 +595,14 @@ function Donate(props){
                             <button
                                 key={amount}
                                 onClick={function(){handleAmountClick(amount)}}
-                                className={"amount-button" + (selectedAmount === amount ? "selected" : "")}
+                                className={"amount-button" + (selectedAmount === amount ? " selected" : "")}
                             >
                                 {amount.toLocaleString()}원
                             </button>
                         ))}
                         <button
                             onClick={handleCustomClick}
-                            className={"amount-button" + (customInputVisible ? "selected" : "")}
+                            className={"amount-button" + (customInputVisible ? " selected" : "")}
                         >
                             직접입력
                         </button>
@@ -619,16 +619,25 @@ function Donate(props){
                 </div>
 
                 {selectedAmount > 0 && (
-                    <div>
-                        <p><strong>기부 금액:</strong> {selectedAmount.toLocaleString()}원</p>
-                        <p><strong>나의 예치금 잔액:</strong> {totalMoney.toLocaleString()}원</p>
-                        <p><strong>차감 후 잔액:</strong> {(totalMoney - selectedAmount).toLocaleString()}원</p>
+                    <div className="donation-receipt">
+                        <div className="receipt-line">
+                            <span className="label">나의 예치금 잔액</span>
+                            <span className="value">{totalMoney.toLocaleString()}원</span>
+                        </div>
+                        <div className="receipt-line">
+                            <span className="label">- 기부 금액</span>
+                            <span className="value">{selectedAmount.toLocaleString()}원</span>
+                        </div>
+                        <div className="receipt-line total">
+                            <span className="label">= 차감 후 잔액</span>
+                            <span className="value">{(totalMoney - selectedAmount).toLocaleString()}원</span>
+                        </div>
                     </div>
                 )}
 
                 <div className="modal-buttons">
                 <button onClick={donatePay} disabled={selectedAmount <= 0} className="btn-primary">결제하기</button>
-                <button onClick={onClose} className="btn-secondary">닫기</button>
+                <button onClick={onClose} className="btn-secondary" style={{height: '38px'}}>닫기</button>
                 </div>
             </div>
         </div>

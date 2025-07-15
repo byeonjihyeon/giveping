@@ -127,9 +127,11 @@ ul.posting-wrap.grid-3x4 {
     border-radius: 16px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     width: 400px;
-    max-width: 90%;
     animation: fadeIn 0.3s ease-in-out;
     box-sizing: border-box;
+    width: 100%;
+    max-width: 400px;
+    overflow-x: hidden;
 }
 
 .modal-title {
@@ -171,7 +173,6 @@ ul.posting-wrap.grid-3x4 {
 }
 
 .custom-input {
-  width: 100%;
   padding: 8px 12px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -305,8 +306,49 @@ ul.posting-wrap.grid-3x4 {
   background-color: #999;
 }
 
+/* 기부하기 모달창 */
+.donation-receipt {
+  background-color: #f9fafe;
+  border: 1px solid #d0e3ff;
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 15px;
+  color: #333;
+  max-width: 400px;
+  margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
 
+.receipt-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+}
 
+.receipt-line.symbol {
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: #555;
+}
+
+.label {
+  font-weight: 600;
+  color: #005bbb;
+}
+
+.value {
+  font-weight: 500;
+}
+
+.receipt-line.total .value {
+  color: #d10000;
+  font-weight: 700;
+}
+
+.receipt-line.total .label {
+  color: #d10000;
+}
 
 
 /* 기부금 달성률 Progress Bar */
