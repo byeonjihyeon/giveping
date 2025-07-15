@@ -3,6 +3,7 @@ import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
 import PageNavi from '../common/PageNavi';
 import { isAfter, set } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 //회원 관심단체 리스트
 export default function likeOrgList(){
@@ -69,7 +70,7 @@ export default function likeOrgList(){
 
 //회원 관심단체 하나
 function LikeOrg(props){
-
+    const navigate = useNavigate();
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     
     const likeOrg = props.likeOrg;  //관심단체              
@@ -116,7 +117,9 @@ function LikeOrg(props){
 
    
     return (
-        <div className="likeOrg-wrap">
+        <div className="likeOrg-wrap" onClick={function(){
+            navigate("/organization/view/" + likeOrg.orgNo);
+        }}>
             <div className="likeOrg-logo">
                 {
                     activeBizList != null && activeBizList.length > 0   //==현재 진행중인 사업이 있어?

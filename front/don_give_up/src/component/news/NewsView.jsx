@@ -457,33 +457,33 @@ function Report(props){
         }
 
         const res = await Swal.fire({
-        title: '댓글을 신고하시겠습니까?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: '신고',
-        cancelButtonText: '취소'
-    });
+            title: '댓글을 신고하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '신고',
+            cancelButtonText: '취소'
+        });
 
-    if (!res.isConfirmed) return;
+        if (!res.isConfirmed) return;
 
-    // 신고 요청
-    let options = {};
-    options.url = serverUrl + "/news/comment/report";
-    options.method = "post";
-    options.data = {
-        commentNo: comment.commentNo,
-        reportCode: selectedCode,
-        reportMemberNo: loginMember.memberNo,
-        detailReason: detailReason
-    };
+        // 신고 요청
+        let options = {};
+        options.url = serverUrl + "/news/comment/report";
+        options.method = "post";
+        options.data = {
+            commentNo: comment.commentNo,
+            reportCode: selectedCode,
+            reportMemberNo: loginMember.memberNo,
+            detailReason: detailReason
+        };
 
-    axiosInstance(options)
-    .then(function(res){
-        console.log(res.data.resData);
-        // 성공 -> 팝업 닫기
-        onClose();
-    });
-}
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+            // 성공 -> 팝업 닫기
+            onClose();
+        });
+    }
 
     
 
@@ -494,7 +494,7 @@ function Report(props){
     
     return(
         <div className="modal-overlay">
-            <div className="modal-content">
+            <div className="modal-contents">
                 <h3>신고하기</h3>
                 <div style={{ margin: "15px 0" }}>
                     <p><strong>신고 댓글</strong></p>
@@ -505,8 +505,8 @@ function Report(props){
 
                     <div style={{ marginTop: "10px" }}>
                         <label htmlFor="reportCode"><strong>신고 사유 선택</strong></label>
-                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange}>
-                            <option value="">-- 사유를 선택하세요 --</option>
+                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
+                            <option value="">사유를 선택하세요</option>
                             {codeList.map((code) => (
                                 <option key={code.reportCode} value={code.reportCode}>
                                     {code.reportReason}

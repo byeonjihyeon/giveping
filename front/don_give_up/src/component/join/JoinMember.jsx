@@ -308,7 +308,7 @@ export default function JoinMember(props){
                         <tfoot>
                             <tr>
                                 <th colSpan={2}>
-                                    <Button variant="contained" type="submit" id="mui-btn" className="nextBtn" style={{margin : "10px 0", height : "40px", fontSize : "20px"}}>다음</Button>
+                                    <Button variant="contained" type="submit" id="mui-btn-btn" className="nextBtn" style={{margin : "10px 0", height : "40px", fontSize : "20px"}}>다음</Button>
                                 </th>
                             </tr>
                         </tfoot>
@@ -391,7 +391,7 @@ function MemberId(props){
         <>
             <TextField type="text" id="memberId" className="input-id" value={member.memberId} inputRef={memberIdRef}
             onChange={chgMember} onBlur={checkMemberId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
-            <Button variant="contained" type="button" onClick={checkMemberIdUnique} id="mui-btn" className="checkBtn" style={{marginLeft : "10px"}}>중복체크</Button>
+            <Button variant="contained" type="button" onClick={checkMemberIdUnique} id="mui-btn-btnb" className="checkBtn" style={{marginLeft : "10px"}}>중복체크</Button>
         </>
     )
 }
@@ -644,7 +644,7 @@ function MemberAddr(props){
     return (
         <>
             <TextField type="text" className="input-addr" inputRef={addressRef} placeholder="주소"  slotProps={{input: {readOnly: true}}}/>
-            <Button variant="contained" type="button" onClick={execDaumPostcode} id="mui-btn" tyle={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
+            <Button variant="contained" type="button" onClick={execDaumPostcode} id="mui-bt" tyle={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
             <TextField type="text" className="input-first" inputRef={detailAddressRef}
             value={member.memberAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
         </>

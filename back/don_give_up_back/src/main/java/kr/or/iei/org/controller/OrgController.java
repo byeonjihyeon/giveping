@@ -30,6 +30,7 @@ import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.util.FileUtil;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.MemberAlarm;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.org.model.dto.Org;
 import kr.or.iei.org.model.service.OrgService;
 
@@ -501,4 +502,5 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+
 }

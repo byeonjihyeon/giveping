@@ -42,15 +42,25 @@ export default function OrgNewsList(){
     return (
         <>
         <h2 className="page-title" style={{marginBottom : "20px", textAlign : "left", marginLeft : "20px"}}>내 소식</h2>
-        <div className="newsList-wrap" >
+        <div className="news-wrap" >
+            <div className="myNews-mid">
+                <span>- 2일 지난 알림은 자동 삭제처리 됩니다.</span>
+                <span>- 알림 클릭시, 읽음 처리됩니다.</span>
+            </div>
         {
             Array.isArray(newsList) && newsList.length>0
             ?
             newsList.map(function(news, index){
-                    return <News key={"news" + index} news={news}  setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginOrg={loginOrg}/>   
+                    return  <div className="mynews-list">
+                                <div key={"news"+index} className="newsList-wrap">
+                                    <News key={"news" + index} news={news}  setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginOrg={loginOrg}/>
+                                </div>
+                            </div>
             })
             :
+            <div className="no-news-wrap">
                 <p>새로운 소식이 없습니다.</p>
+            </div>
         }
         </div>
         </>
