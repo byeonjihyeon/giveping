@@ -68,7 +68,7 @@ export default function OrgData(){
 
     return (
         <section className="section data-wrap">
-            <h2 className="page-title">기부 사업 통계</h2>
+            <h2 className="page-title" style={{textAlign : "left", marginLeft : "20px"}}>기부 사업 통계</h2>
             {data.allBiz == 0 ? "" :
             <div>
                 <span className="data-title">전체 기부 사업 {data.allBiz}건</span> <br/>

@@ -80,20 +80,23 @@
 	<select id="selectMainOrgList" parameterType="int" resultMap="mainOrgMap">
 	    SELECT * FROM (
 	        SELECT DISTINCT
-	        	   o.org_no AS orgNo, 
-				   o.org_id AS orgId,
-			       o.org_name AS orgName,
-			       o.ORG_INTRODUCE AS orgIntroduce,
-			       o.ORG_ENROLL_DATE AS orgEnrollDate,
-			       o.ORG_TEMPERATURE AS orgTemperature,
-			       o.ORG_THUMB AS orgThumbPath
+	        	   o.org_no,
+				   o.org_id,
+			       o.org_name,
+			       o.ORG_INTRODUCE,
+			       o.ORG_ENROLL_DATE,
+			       o.ORG_TEMPERATURE,
+			       o.ORG_THUMB
 			FROM tbl_org o
 			JOIN tbl_org_donation od ON o.org_no = od.org_no
-			JOIN tbl_member_donation md ON od.donate_code = md.donate_code
 			<where>
 			o.org_status = 1
 			<if test="memberNo != null and memberNo != 0">
-			  AND md.member_no = #{memberNo}
+			    AND od.donate_code IN (
+			    SELECT donate_code 
+			    FROM tbl_member_donation 
+			    WHERE member_no = #{memberNo}
+			  )
 			</if>
 			</where>
 			order by o.org_temperature desc
@@ -111,16 +114,17 @@
 		<result column="org_thumb" property="orgThumbPath" />
 	
 	<collection property="categoryList"
-		select="selectCategoryList" column="orgNo"
+		select="selectCategoryList" column="org_no"
 		javaType="java.util.List" ofType="String">
 		</collection>
 	
 	</resultMap>
 	
 	<select id="selectCategoryList" parameterType="_int" resultType="string">
-	select donate_code
-		  from tbl_org_donation
-		 where org_no = #{orgNo}
+	SELECT dc.donate_ctg
+		FROM tbl_org_donation od
+		JOIN tbl_donate_code dc ON od.donate_code = dc.donate_code
+		WHERE od.org_no = #{orgNo}
 	</select>
 
 	

@@ -20,6 +20,7 @@ import CompanyIntroduction from './component/admin/CompanyIntro';
 import Organization from './component/org/Organization';
 
 
+
 function App() {
 
   //개인 회원 정보 저장 변수(서버 전송용)

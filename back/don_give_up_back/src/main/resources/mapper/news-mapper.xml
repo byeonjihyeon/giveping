@@ -7,8 +7,7 @@
 	</select>
 
 	<!-- 소식 리스트 조회 -->
-	<select id="selectNewsList" parameterType="PageInfo"
-		resultType="News">
+	<select id="selectNewsList" parameterType="map" resultType="News">
 		select news_no as newsNo,
 			member_no as memberNo,
 			org_no as orgNo,

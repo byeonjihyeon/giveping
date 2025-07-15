@@ -38,12 +38,12 @@ export default function NewsList(){
             ? <Link to="/news/write" className="btn-primary">글쓰기</Link>
             : ''}
             <table className="tbl">
-                <thead>
+                <thead className="tbl-thead-wrapper">
                     <tr>
-                        <th style={{width:"10%"}}>소식번호</th>
-                        <th style={{width:"40%"}}>제목</th>
-                        <th style={{width:"15%"}}>작성일</th>
-                        <th style={{width:"10%"}}>조회수</th>
+                        <th style={{width:"10%" , backgroundColor: "#87CEEB", color: "#ffffffff"}}>소식번호</th>
+                        <th style={{width:"40%" , backgroundColor: "#87CEEB", color: "#ffffffff"}}>제목</th>
+                        <th style={{width:"15%" , backgroundColor: "#87CEEB", color: "#ffffffff"}}>작성일</th>
+                        <th style={{width:"10%" , backgroundColor: "#87CEEB", color: "#ffffffff"}}>조회수</th>
                     </tr>
                 </thead>
                 <tbody>

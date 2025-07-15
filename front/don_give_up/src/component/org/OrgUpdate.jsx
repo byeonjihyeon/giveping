@@ -258,7 +258,7 @@ export default function OrgUpdate(props){
 
     return (
         <div>
-            <h2 className="page-title">단체 정보 수정</h2>
+            <h2 className="page-title" style={{textAlign : "left", marginLeft : "20px"}}>단체 정보 수정</h2>
             <div>
                 <form autoComplete="off" className="org-form" onSubmit={function(e){
                     e.preventDefault();
@@ -267,33 +267,33 @@ export default function OrgUpdate(props){
                     <table className="tbl-org">
                         <tbody>
                             <tr>
-                                <th><label className="label">프로필</label></th>
-                                <th>
+                                <th style={{borderTop : "3px solid #dcdcdc", width : "25%"}}><label className="label">프로필</label></th>
+                                <td style={{borderTop : "3px solid #dcdcdc"}}>
                                     <Profile orgNo={orgNo} org={org} setOrg={setOrg} profileImg={profileImg} setProfileImg={setProfileImg} profile={profile} setProfile={setProfile}/>
-                                </th>
+                                </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p></p></td></tr>
                             <tr>
                                 <th><label className="label">단체명</label></th>
                                 <td>
                                     <TextField type="text" id="orgName" className="input-first" value={org.orgName} onChange={chgOrg} inputRef={orgNameRef}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p></p></td></tr>
                             <tr>
                                 <th><label className="label">사업자 번호</label></th>
                                 <td>
                                     <TextField type="text" id="orgBiznum" className="input-first" value={org.orgBiznum} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요" inputRef={orgBiznumRef}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p></p></td></tr>
                             <tr>
                                 <th><label className="label">전화번호</label></th>
                                 <td>
                                     <TextField type="text" id="orgPhone" className="input-first" value={org.orgPhone} onChange={chgOrg} placeholder="'-'를 포함해서 작성해주세요" inputRef={orgPhoneRef}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p></p></td></tr>
                             <tr>
                                 <th><label className="label">이메일</label></th>
                                 <td>
@@ -301,21 +301,21 @@ export default function OrgUpdate(props){
                                         orgEmailDomain={orgEmailDomain} setOrgEmailDomain={setOrgEmailDomain} setEmailChk={setEmailChk}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p></p></td></tr>
                             <tr>
                                 <th><label className="label">주소</label></th>
                                 <td>
                                     <MemberAddr org={org} setOrg={setOrg} addressRef={addressRef}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p></p></td></tr>
                             <tr>
                                 <th><label className="label">단체 설명</label></th>
                                 <td>
                                     <TextField id="orgIntroduce" className="input-first" multiline rows={4} value={org.orgIntroduce} onChange={chgOrg} inputRef={orgIntroduceRef}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p className="key-up">{keyUp}/150</p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p className="key-up" style={{width : "420px"}}>{keyUp}/150</p></td></tr>
                             <tr>
                                 <th><label className="label">계좌번호</label></th>
                                 <td>
@@ -335,30 +335,30 @@ export default function OrgUpdate(props){
                                     <TextField type="text" id="orgAccount" className="input-account" value={org.orgAccount} onChange={chgOrg} inputRef={orgAccountRef}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p></p></td></tr>
                             <tr>
                                 <th><label className="label">홈페이지 URL</label></th>
                                 <td>
                                     <TextField type="text" id="orgUrl" className="input-first" value={org.orgUrl} onChange={chgOrg}/>
                                 </td>
                             </tr>
-                            <tr><td></td><td><p></p></td></tr>
+                            <tr><td className="line"></td><td className="line"><p></p></td></tr>
                             <tr>
                                 <th><label className="label">주요 카테고리</label></th>
-                                <th>
-                                    <ul className="select-ctg-wrap" style={{width : "420px"}}>
+                                <td>
+                                    <ul className="select-ctg-wrap" style={{width : "100%", margin : "5px 0"}}>
                                         {donateCtgList.map(function(category, index){
                                             return <DonateCtg key={"category"+index} category={category} org={org} setOrg={setOrg}
                                                                                     checkCtgList={checkCtgList} setCheckCtgList={setCheckCtgList}/>
                                         })}
                                     </ul>
-                                </th>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colSpan={2}>
-                                    <div style={{margin : "20px auto"}}>
+                                <th colSpan={2} style={{borderTop : "3px solid #dcdcdc"}}>
+                                    <div style={{margin : "15px auto"}}>
                                         <Button variant="contained" id="mui-btn" type="submit" className="orgBtn" style={{marginRight : "10px", height : "40px", fontSize : "20px"}}>수정</Button>
                                         <Button variant="contained" className="orgBtn" style={{height : "40px", fontSize : "20px"}} id="mui-btn">
                                             {org.orgStatus == 3 ? "" : <Link to="/org/delete">탈퇴하기</Link>}
@@ -428,18 +428,18 @@ function Profile(props){
     }
 
     return (
-        <div style={{display : "inline-block"}}>
-            <div style={{marginBottom : "5px"}}>
+        <div style={{display : "inline-block", display : "flex", position : "relative", width : "230px"}}>
+            <div className="org-update-img" style={{marginBottom : "5px"}}>
                 <img src={profileImg 
                         ? profileImg
                         : org.orgThumbPath
                             ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0, 8) + "/" + org.orgThumbPath
                             : "/images/default_profile.jpg"}
-                    onClick={function(e){profileImgEl.current.click();}} style={{height : "150px", border : "1px solid #b1adad"}}/>
+                    onClick={function(e){profileImgEl.current.click();}} style={{width : "150px", height : "150px", borderRadius : "100px"}}/>
                 <input type="file" accept="image/*" id="orgThumbPath" style={{display : "none"}} ref={profileImgEl} onChange={chgProfileImg}/>
             </div>
-            <div>
-                <Button variant="contained" onClick={chgDefault} id="mui-btn">기본 사진으로 변경</Button>
+            <div style={{position : "absolute", bottom : '10px', right : "0"}}>
+                <Button variant="contained" onClick={chgDefault} id="mui-btn">초기화</Button>
             </div>
         </div>
     )
@@ -592,8 +592,8 @@ function MemberAddr(props){
     return (
         <>
             <TextField type="text" id="orgAddrMain" className="input-addr" value={org.orgAddrMain} placeholder="주소" inputRef={addressRef}  slotProps={{input: {readOnly: true}}}/>
-            <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}} id="mui-btn">주소 찾기</Button> <br/>
-            <TextField type="text"id="orgAddrDetail" className="input-first" value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" inputRef={detailAddressRef}/>
+            <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px", marginTop : "10px"}} id="mui-btn">주소 찾기</Button> <br/>
+            <TextField type="text"id="orgAddrDetail" className="input-first" value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" inputRef={detailAddressRef} style={{marginTop : "3px"}}/>
         </>
     )
 }
@@ -626,7 +626,7 @@ function DonateCtg(props){
 
     return (
         <li className={"select-ctg" + (!checkCtgList ? "" : checkCtgList.includes(category.donateCode) ? " active" : "")}
-            onClick={function(){ toggleCategory(category.donateCode); }} style={{width : "63px", height : "25px", lineHeight : "25px", margin : "5px 5px"}}>
+            onClick={function(){ toggleCategory(category.donateCode); }} style={{width : "74px", height : "25px", lineHeight : "25px", margin : "5px 5px", padding : "8px"}}>
             {category.donateCtg}
         </li>
     )

@@ -13,18 +13,12 @@ export default function Header(){
 
     return (
         <header className="header">
-            <div className="header-wrap">
-                <div>
-                    <div className="logo">
-                        <img src="/images/GivePing.png"/>
-                        <Link to="/">Don Give Up!</Link>
-                    </div>
+                <div className="header-top">
                     <HeaderLink/>
                 </div>
                 <div className="header-menu">
                     <MainNavi/>
                 </div>
-            </div>
         </header>
     )
 }
@@ -58,7 +52,7 @@ function HeaderLink(){
                 {/*로그인 시 보여질 링크*/}
                 <li>
                     {loginMember
-                     ? loginMember.memberName
+                     ? loginMember.memberName + ' 님'
                      : loginOrg.orgName
                     }
                 </li>
@@ -120,6 +114,9 @@ function MainNavi(){
 
     return (
         <ul className="main-menu">
+            <li>
+                <Link to="/">Don Give Up!</Link>
+            </li>
             <li>
                 <Link to="/companyIntroduction">사업 소개</Link>
             </li>
@@ -183,7 +180,7 @@ function OrgMyPage(){
                 <Link to="/org/news">내 소식</Link>
             </li>
             <li>
-                <Link to="/org/biz">기부 사업 관리</Link>
+                <Link to="/org/post">기부 사업 관리</Link>
             </li>
             <li>
                 <Link to="/org/update">내 정보</Link>
