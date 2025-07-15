@@ -157,6 +157,7 @@ function OrgItem(props){
                     {org.categoryList && org.categoryList.length > 0 ? (
                         org.categoryList.map((ctg, idx) => (
                         <span key={idx} style={{
+                        marginRight: '5px',
                         border: '1px solid #007bff',
                         borderRadius: '20px',
                         padding: '4px 10px',
