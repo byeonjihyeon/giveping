@@ -151,9 +151,17 @@ function OrgItem(props){
             </div>
             <div className="posting-info">
                 <div className="posting-title" style={{ fontSize: '24px', margin: '10px 0' }}>{org.orgName}</div>
-                <div
-                    className="posting-category"
-                    >
+                <div className="posting-degree" style={{
+                        border: '1px solid #ff5353ff',
+                        borderRadius: '20px',
+                        padding: '4px 10px',
+                        display: 'inline-block',
+                        color: '#ff5353ff',
+                        fontWeight: '500',
+                    }}>
+                    <span> {org.orgTemperature}℃</span>
+                </div>
+                <div className="posting-category" style={{marginTop : '4px'}}>
                     {org.categoryList && org.categoryList.length > 0 ? (
                         org.categoryList.map((ctg, idx) => (
                         <span key={idx} style={{
@@ -170,12 +178,6 @@ function OrgItem(props){
                         ''
                     )}
                     </div>
-                <div className="posting-degree" style={{
-                        fontWeight : '700',
-                        color : '#7a7a7aff'
-                        }}>
-                    <span> {org.orgTemperature}℃</span>
-                </div>
             </div>
         </li>
     );
