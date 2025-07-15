@@ -126,7 +126,7 @@ export default function MemberDelete(props){
                     </div>
                     {refundList != null && refundList.length != 0 ?
                         refundList.map(function(refund, index){
-                            return <div className="info">
+                            return <div key={"refund" + index} className="info">
                                         <div>{index + 1}</div>
                                         <div>{refund.refundMoney} 원</div>
                                         <div>{refund.refundDate}</div>
@@ -157,7 +157,7 @@ export default function MemberDelete(props){
                 </div>
             </div>
             {
-            <div className="btn">
+            <div className="del-member-btn">
                 <button type="button" onClick={deleteMember} disabled={!isAgreed || !isAuth}>탈퇴하기</button>
             </div>
             }

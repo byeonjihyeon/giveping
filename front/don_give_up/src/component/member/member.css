@@ -2,6 +2,7 @@
    width: 1200px;
    margin: 0 auto;
    margin-top: 30px;
+   margin-bottom: 100px;
    display: flex;
    justify-content: center;
    gap: 50px;
@@ -15,6 +16,7 @@
 /* 사이드 메뉴 CSS */
 .sidebar-wrap {
     width: 200px;
+    max-height: 750px;
     border: 1px solid #dcdcdc;
   /*  background-color: #fafafa; */
 }
@@ -143,6 +145,14 @@
     font-size: 20px;
 }
 
+.donation-cnt a {
+    color: #333;
+}
+
+.donation-cnt a:hover {
+    font-weight: 500;
+}
+
 .money>span:first-of-type{
     font-size: 30px;
     font-weight: bold;
@@ -153,7 +163,7 @@
 }
 
 .myNews-wrap {
-    margin-top: 50px;
+    margin-top: 80px;
     border-bottom: 1px solid #dcdcdc;
 }
 
@@ -173,7 +183,7 @@
 }
 
 .myNews-title-wrap>span:nth-child(3)>span{
-    color: lightblue;
+    color: #6BB7D6;
     font-weight: bold;
 }
 
@@ -235,7 +245,7 @@
 }
 
 .m-mySurvey-wrap {
-    margin-top: 50px;
+    margin-top: 80px;
 }
 
 .mySurvey-title-wrap {
@@ -250,6 +260,7 @@
 
 .mySurvey-wrap{
     display: flex;
+    gap: 10px;
 }
 
 .survey-card>.posting-img {
@@ -261,9 +272,11 @@
     position: absolute;
     right: 10px;
     top: 10px;
-    background-color: #FFCBA4;
+    font-size: 13px;
+    background-color: #FF8C00;
+    color: white;
     padding: 5px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .survey-card>.posting-img>img {
@@ -278,6 +291,10 @@
   background-color: white;
   cursor: pointer;
   box-sizing: border-box;
+}
+
+.survey-card:hover {
+    border: 1px solid #c0c0c0;
 }
 .posting-title{
     font-weight: bold;
@@ -311,14 +328,17 @@
     background-color: #91C8E4;
     border: none;
     color: white;
+    cursor: pointer;
 }
+
 .refund-btn {
-    background-color: #dcdcdc;
-    border: none;
+    /* background-color: #dcdcdc; */
+    border: 1px solid #dcdcdc;
+    cursor: pointer;
 }
 
 .interested-biz-wrap {
-    margin-top: 50px;
+    margin-top: 80px;
     margin-bottom: 100px;
 }
 
@@ -342,6 +362,10 @@
     cursor: pointer;
 }
 
+.recommand-biz:hover {
+    border: 1px solid #c0c0c0;
+}
+
 .recommand-biz>.thumb {
     padding: 5px;
 }
@@ -350,10 +374,11 @@
     position: absolute;
     right: 5px;
     top: 5px;
-    border: none;
     background-color: lightblue;
-    padding: 5px 5px;
-    border-radius: 5px;
+    color: white;
+    padding: 5px 10px;
+    font-size: 13px;
+    border-radius: 10px;
 }
 
 .recommand-biz>.thumb>img {
@@ -364,7 +389,7 @@
 .recommand-biz>.info {
     padding: 5px
 }
-.recommand-biz>.info>div:first-of-type{
+.recommand-biz>.info>div:nth-of-type(2){
     font-weight: bold;
     margin-bottom: 5px;
 }
@@ -554,6 +579,10 @@
 }
 
 /* 기부 내역 */
+.member-donate-list-wrap-out {
+    margin-bottom: 100px;
+}
+
 
 .donation-list-title{
     font-size: 25px;
@@ -598,20 +627,10 @@
     justify-content: center;
     align-items: flex-start;
     font-size: 25px;
-    color: lightblue;
+    color: #6BB7D6;
     font-weight: bold;
 }
 
-.donation-summary>div>.content{
-    margin-top: 10px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    font-size: 25px;
-    color: lightblue;
-    font-weight: bold;
-}
 
 .donation-summary>div>.content>span{
     font-weight: lighter;
@@ -644,7 +663,8 @@
 }
 
 .member-donate-period+div>span{
-    color: lightblue;
+    color: #6BB7D6;
+    font-weight: bold;
     font-size: 18px;
 }
 
@@ -673,6 +693,10 @@
     border-bottom: none;
 }
 
+.donate-info>div:nth-of-type(2){
+    cursor: pointer;
+}
+
 .state-wrap {
     width: 13%;
 }
@@ -681,7 +705,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    border: 1px solid #91C8E4;
+    border: 2px solid #91C8E4;
     text-align: center;
     
 }
@@ -766,7 +790,7 @@
 .wallet-money>span {
     margin-left: 10px;
     font-size: 25px;
-    color: lightblue;
+    color: #6BB7D6;
     font-weight: bold;
 }
 
@@ -901,6 +925,10 @@
     padding: 10px;
 }
 
+.update-frm-wrap input {
+    color: #333;
+}
+
 .update-frm-title {
     font-size: 25px;
     font-weight: bold;
@@ -998,6 +1026,7 @@
 .profile-btns > *{
     width: 50px;
     height: 30px;
+    cursor: pointer;
 }
 
 .input-content-wrap>input{
@@ -1043,6 +1072,8 @@
     background-color: lightblue;
     border: none;
     border-radius: 5px;
+    cursor: pointer;
+    color: white;
 }
 
 .input-category-wrap{
@@ -1078,6 +1109,7 @@
 .chosed-category {
     background-color: lightblue;
     border: 1px solid lightblue;
+    color: white;
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -1090,6 +1122,8 @@
     font-size: 18px;
     background-color: lightblue;
     border: none;
+    cursor: pointer;
+    color: white;
 }
 
 .delete-wrap {
@@ -1193,11 +1227,13 @@
 }
 
 .update-pw-btn>button {
-    margin-top: 30px;
+    margin-top: 20px;
     width: 100%;
-    height: 40px;
+    height: 50px;
     font-size: 16px;
     background-color: lightblue;
+    color: white;
+    font-size: 20px;
     border: none;
     cursor: pointer;
 }
@@ -1281,6 +1317,7 @@
     width: 120px;
     height: 31px;
     border: 1px solid #dcdcdc;
+    color: #333;
 }
 
 #memberBankAccount {
@@ -1289,11 +1326,13 @@
     border: 1px solid #dcdcdc;
     box-sizing: border-box;
     padding-left: 10px;
+    color: #333;
 }
 
 .account-reg-wrap > button {
     height: 30px;
     width: 40px;
+    cursor: pointer;
     
 }
 
@@ -1302,12 +1341,14 @@
     height: 40px;
     font-size: 18px;
     background-color: lightblue;
+    color: white;
     border: none;
     cursor: pointer;
 }
 
 .account-msg {
     margin-bottom: 50px;
+    color: #0078FF;
 }
 
 /* 회원탈퇴 */
@@ -1329,6 +1370,14 @@
     height: 40px;
     line-height: 40px;
     padding-left: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+.notice-agree input[type='checkbox'] {
+    width: 20px;
+    height: 20px;
 }
 
 .member-delete-wrap>.money-info>div:first-of-type {
@@ -1336,7 +1385,7 @@
     margin-top: 30px;
     margin-bottom: 20px;
     gap: 50px;
-    font-size: 25px;
+    font-size: 20px;
     height: 50px;
     border-top: 1px solid #dcdcdc;
     border-bottom: 1px solid #dcdcdc;
@@ -1379,12 +1428,45 @@
     font-weight: bold;
 }
 
+.delete-agree button {
+    cursor: pointer;
+ 
+}
+
+.delete-agree input {
+    color: #333;
+    border: 1px solid #dcdcdc;
+    outline: none;
+}
+
 .delete-agree>.member-info>.title>div:last-of-type{
     border: 1px solid #dcdcdc;
     background-color: #f0f0f0;
     color :#a9a9a9;
     padding-right: 30px;
 }
+
+.del-member-btn>button:disabled {
+    margin-top: 20px;
+    width: 100px;
+    height: 40px;
+    background-color: #dcdcdc;
+    cursor:default
+}
+
+.del-member-btn>button {
+    margin-top: 20px;
+    width: 100px;
+    height: 40px;
+    cursor: pointer;
+    background-color: lightblue;
+    border: lightblue;
+    font-size: 18px;
+    color: white;
+    border-radius: 5px;
+}
+
+
 
 .refund-ing {
     display: flex;
@@ -1394,10 +1476,11 @@
 }
 
 .refund-ing>.title {
+    margin-top: 15px;
     display: flex;
     align-items: center;
     gap: 20px;
-    font-size: 25px;
+    font-size: 20px;
     margin-bottom: 10px;
     height: 30px;
 }
@@ -1408,7 +1491,7 @@
 
 .refund-ing>.category {
     display: flex;
-    font-size: 20px;
+    font-size: 18px;
     justify-content: space-around;
     height: 40px;
     border-top: 1px solid #dcdcdc;
@@ -1438,7 +1521,7 @@
 
 .refund-ing>.info {
     display: flex;
-    font-size: 20px;
+    font-size: 18px;
     justify-content: space-around;
     align-items: center;
     height: 40px;

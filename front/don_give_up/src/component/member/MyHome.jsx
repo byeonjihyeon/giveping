@@ -53,6 +53,7 @@ export default function MyHome(props){
 
     }, [])        
 
+    console.log("un: " + unreadAlarmCount);
     
     return (
         <div className="myHome-wrap">
@@ -68,7 +69,7 @@ export default function MyHome(props){
                         </div>
                         <div className="donation-cnt">
                             <div>기부횟수</div>
-                            <div>{!member.donationHistory ? "" :member.donationHistory.length} 회</div>
+                            <div><Link to='/member/donateList'>{!member.donationHistory ? "" :member.donationHistory.length} 회</Link></div>
                         </div>
                     </div>
                 </div>
@@ -181,9 +182,12 @@ export default function MyHome(props){
 
 function Biz(props){
     const biz = props.biz;
+    const navigate = useNavigate();
 
     return (
-        <div className="recommand-biz">
+        <div className="recommand-biz" onClick={function(){
+            navigate('/biz/view/'+biz.bizNo)
+        }}>
             <div className="thumb">
                 <img  src={
                             biz.bizThumbPath    //기존 썸네일 가지고있다면?
@@ -196,8 +200,7 @@ function Biz(props){
             </div>
             <div className="info">
                 <div>{biz.bizName}</div> 
-                <div>{biz.orgName}</div>  
-                <div>{biz.bizContent}</div>             
+                <div>{biz.orgName}</div>       
             </div>
         </div>
     )
@@ -276,10 +279,9 @@ function News(props){
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
+            setUnreadAlarmCount(unreadAlarmCount-1);
         });
     }
-
-    
 
     return (
         <div 

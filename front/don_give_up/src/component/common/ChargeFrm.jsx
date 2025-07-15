@@ -31,6 +31,7 @@ export default function ChargeFrm(props){
     //입력폼에 콤마로 단위찍어서 보여줄 변수
     const [commaCharge, setCommaCharge] = useState("0");
 
+
     //직접입력 선택시 금액입력칸으로 이동
     let inputEl = useRef(null);
 
@@ -38,6 +39,8 @@ export default function ChargeFrm(props){
     function addCommas(money){
         return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+
+    
 
     //금액input onChange (입력때마다 호출되어 제어)
     function chgCharge(e){
@@ -69,14 +72,17 @@ export default function ChargeFrm(props){
         {add : 50000, content: "+ 50,000원"}
     ])
 
-    const chargeMethod = ([
-        {url: "", content : '신용·체크카드'},
-        {url: "", content : '빠른계좌이체'},
-        {url: "/images/KakaoPay.png", content : '카카오페이'},
-        {url: "/images/tosspay.png", content : '토스페이'},
-        {url: "/images/NPay.png", content : '네이버페이'},
-        {url: "", content : '무통장입금'}
+    const [chargeMethod, setChargeMethod] = useState([
+        {url: "", content : '신용·체크카드', select:false},
+        {url: "", content : '빠른계좌이체', select:false},
+        {url: "/images/KakaoPay.png", content : '카카오페이', select:false},
+        {url: "/images/tosspay.png", content : '토스페이', select:false},
+        {url: "/images/NPay.png", content : '네이버페이', select:false},
+        {url: "", content : '무통장입금', select:false}
     ])
+
+    //결제 선택 확인 변수
+    const [selectMethod, setSelectMethod] = useState(false);
 
     //충전하기 버튼 클릭시 동작함수
     function recharge(){
@@ -86,6 +92,13 @@ export default function ChargeFrm(props){
             setChkCharge(1);
             return;
         }
+
+        if(!selectMethod){
+            setChargeMsg("결제방법 선택해주세요.");
+            setChkCharge(1);
+            return;
+        }
+
 
         let options = {};
         options.url = serverUrl + "/member/charge/" + loginMember.memberNo;
@@ -108,7 +121,7 @@ export default function ChargeFrm(props){
     return (
         <div className="charge-wrap">
             <div>
-                <div className="charge-input-wrap">
+                <div className="charge-input-wrap" >
                     <span>결제금액</span>
                     <div>
                         <input type='text' value={charge} onChange={chgCharge} ref={inputEl} placeholder="금액입력" /> 
@@ -125,6 +138,8 @@ export default function ChargeFrm(props){
                         let sum = Number(charge) + money.add;
                         
                         if(sum > 1000000){ //합이 백만원보다 크다면 종료.
+                            setChargeMsg("최대 충전 금액입니다.");
+                            setChkCharge(1);
                             return;
                         }
                         let sumStr = String(sum);
@@ -144,8 +159,24 @@ export default function ChargeFrm(props){
                 <div className="title">결제방법</div>    
                 <div className="charge-method">            
                 {chargeMethod.map(function(method, index){
-                    
-                    return <div key={"method" + index}>
+                                                                                                
+                    return <div key={"method" + index} className={method.select ? "select" : ""} onClick={function(){   //결제방법 하나 클릭시, class 활성화 (나머지는 비활성화)
+                                                                                                    let newChargeMethod = [...chargeMethod];        //결제 방법 깊은 복사
+                                                                                                    for(let i=0; i<newChargeMethod.length; i++){
+                                                                                                        if(i == index){
+                                                                                                            newChargeMethod[index].select = !newChargeMethod[index].select;
+                                                                                                            if(newChargeMethod[index].select){
+                                                                                                                setSelectMethod(true);
+                                                                                                            }else{
+                                                                                                                setSelectMethod(false);
+                                                                                                            }
+                                                                                                        }else{
+                                                                                                            newChargeMethod[i].select = false;
+                                                                                                        }
+                                                                                                    }
+
+                                                                                                    setChargeMethod(newChargeMethod);
+                                                                                            }}>
                             {
                                 method.url == "" ? 
                                 <span>{method.content}</span>
@@ -153,14 +184,12 @@ export default function ChargeFrm(props){
                                 <img src={method.url} />
                             }
                             </div>
-                    
-                    
                 })}
                 </div>
             </div>
             <div className="charge-result">
                 <span>총 </span> 
-                <span>{commaCharge}원</span>
+                <span>{commaCharge} 원</span>
             </div>
             <p className={chkCharge == 1 ? "charge-msg invalid" : "charge-msg"}> {chargeMsg}</p>
             <div className="charge">

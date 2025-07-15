@@ -56,8 +56,8 @@ export default function NewsList(){
                     ?
                     newsList.map(function(news, index){
                                 
-                        return  <div className="mynews-list">
-                                    <div key={"news" + index} className="newsList-wrap" >
+                        return  <div key={"news" + index} className="mynews-list">
+                                    <div  className="newsList-wrap" >
                                         <News news={news} setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginMember={loginMember}/>   
                                     </div>
                                 </div>   

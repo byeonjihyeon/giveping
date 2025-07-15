@@ -3,6 +3,7 @@ import createInstance from '../../axios/Interceptor';
 import useUserStore from '../../store/useUserStore';
 import DateSelectBar from '../common/DateSelectBar';
 import { format, startOfMonth, subYears } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 
 //기부내역 조회 리스트
@@ -91,6 +92,7 @@ export default function DonationHistory(props){
 function Donation(props){
 
     const donation = props.donation;
+    const navigate= useNavigate();
 
     return (
        <>
@@ -103,7 +105,9 @@ function Donation(props){
                 </div>
                 <div className="donate-info">
                     <div>{donation.donateDate}</div>
-                    <div className="bizname">{donation.bizName}</div>
+                    <div onClick={function(){
+                        navigate('/biz/view/' + donation.bizNo);
+                    }} className="bizname">{donation.bizName}</div>
                     <div>{donation.orgName}</div>
                 </div>
                 <div className="donate-money">

@@ -97,19 +97,19 @@
     z-index: 1;
     background: rgba(255, 255, 255, 0.8);
     border: none;
-    font-size: 24px;
+    font-size: 22px;
     cursor: pointer;
-    padding: 8px;
+    padding: 5px;
     border-radius: 50%;
     box-shadow: 0 0 6px rgba(0,0,0,0.2);
 }
 
 .scroll-btn.left {
-    left: 3px;
+    left: 2px;
 }
 
 .scroll-btn.right {
-    right: 3px;
+    right: 2px;
 }
 
 /* main banner */
@@ -124,6 +124,7 @@
     justify-content: center;
     align-items: center;   
     position: relative;
+    margin-bottom: 30px;
 }
 
 .banner-wrap>.title {
