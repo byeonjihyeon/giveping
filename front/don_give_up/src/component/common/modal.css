@@ -60,13 +60,17 @@
     text-align: right;
     height: 30px;
     padding-right: 10px;
+    outline: none;
+    color: #333;
 }
+
 
 .money-range {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
+    cursor: pointer;
 }
 
 .money-range>*{
@@ -76,6 +80,10 @@
     text-align: center;
     line-height: 30px;
     border-radius: 5px;
+}
+
+.money-range>*:hover{
+  border: 1px solid #c0c0c0;
 }
 
 .charge-result {
@@ -113,6 +121,7 @@
     padding: 5px;
     justify-content: center;
     gap: 10px;
+    cursor: pointer;
 }
 
 .charge-method>*{
@@ -125,6 +134,10 @@
     align-items: center;
 }
 
+.select {
+    border: 1px solid #0078FF;
+}
+
 .charge-method>div>img {
     width: 45%;
 }
@@ -135,9 +148,13 @@
 
 .charge>button{
     width: 100%;
-    height:40px;
+    height:50px;
+    color: white;
+    font-size: 20px;
     background-color: lightblue;
     border: none;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
 .charge-msg {
@@ -153,6 +170,7 @@
 
 .refund-wrap {
     margin: 15px 0px;
+    margin-bottom: 30px;
 }
 
 .possible-money{
@@ -179,7 +197,10 @@
     width: 100%;
     background-color: lightblue;
     border: none;
-    height: 30px;
+    height: 40px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
 }
 .input-refund {
     margin-top: 30px;
@@ -187,6 +208,7 @@
     border-bottom: 1px solid #dcdcdc;
     padding-right: 5px;
     height: 30px;
+   
 }
 
 .input-refund>input {
@@ -196,6 +218,11 @@
     padding-right: 10px;
     width: 90%;
     height: 30px;
+    outline: none;
+}
+
+.input-refund>input:focus {
+    border-bottom: 1px solid lightblue;
 }
 
 .refund-wrap p {

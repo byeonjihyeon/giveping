@@ -74,14 +74,14 @@ body {
     font-weight: 500;
 }
 
-.main-menu li {
+.main-menu>li {
     width: 15%;
     text-align: center;
     line-height: 55px;
     font-size: 20px;
 }
 
-.main-menu>a {
+.main-menu>li>a {
     display: block;
 }
 
@@ -103,6 +103,7 @@ body {
 }
 .sub-menu {
     border: 1px solid #dcdcdc;
+    border-top: none;
     position: absolute;
     display: none;
     background-color: white;

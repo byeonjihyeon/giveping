@@ -237,7 +237,7 @@ public class MemberService {
 	//회원 관심 단체리스트 조회
 	public HashMap<String, Object> selectOrgLikeList(int reqPage, int memberNo) {
 		
-		int viewCnt = 12;							//한 페이지당 게시글 수
+		int viewCnt = 9;							//한 페이지당 게시글 수
 		int pageNaviSize= 5;						//페이지 네비게이션 길이
 		int totalCount = dao.selectOrgLikeCnt(memberNo);	//전체 관심단체 수	
 		

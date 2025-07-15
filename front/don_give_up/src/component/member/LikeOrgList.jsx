@@ -26,6 +26,8 @@ export default function likeOrgList(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
+    const navigate= useNavigate();
+
     //서버에 회원 관심단체리스트 조회
     useEffect(function(){
         let options = {};
@@ -62,7 +64,11 @@ export default function likeOrgList(){
                     </div>
                 </div>
                 :
-                <div className="no-like-org">현재 관심단체가 존재하지 않습니다.</div>
+                
+                    <div className="no-like-org"><span onClick={function(){
+                                                                    navigate('/organization/list');
+                    }}>현재 관심단체가 존재하지 않습니다. <br/> 새로운 단체를 추가해보세요!</span></div>
+              
             } 
         </div>       
     )
@@ -88,7 +94,7 @@ function LikeOrg(props){
                     
     const axiosInstance = createInstance();
      
-    //하트 클릭시 동작함수 (하트눌렀을때 제거)
+    //x 클릭시 동작함수 (하트눌렀을때 제거)
     function delLikeOrg(){
         
     
@@ -117,36 +123,39 @@ function LikeOrg(props){
 
    
     return (
-        <div className="likeOrg-wrap" onClick={function(){
-            navigate("/organization/view/" + likeOrg.orgNo);
-        }}>
-            <div className="likeOrg-logo">
-                {
-                    activeBizList != null && activeBizList.length > 0   //==현재 진행중인 사업이 있어?
-                    ?
-                    <div className="biz-ing">모금 진행중</div>
-                    :
-                    ""
-                }               
-                <img  src={
-                            likeOrg.orgThumbPath    //기존 썸네일 가지고있다면?
-                            ?
-                            serverUrl + "/org/thumb/" + likeOrg.orgThumbPath.substring(0,8) + "/" + likeOrg.orgThumbPath
-                            :
-                            "/images/default_img.png"     
-                        } />
+        <div className="likeOrg-wrap" >
+             <div className="delBtn">
+                <img src='/images/clear_24dp_C0C0C0.png' onClick={delLikeOrg} />
             </div>
-            <div className="likeOrg-info">
-                <div className="name">{likeOrg.orgName}</div>
-                 <div className="org-ctg-wrap">
-                    {likeOrg.categoryList.map(function(category, index){
-                        return <div className="org-ctg" key={"category" + index}>{category}</div>
-                    })}
+            <div>
+                <div className="likeOrg-logo" onClick={function(){
+                     navigate("/organization/view/" + likeOrg.orgNo);
+                }}>
+                    {
+                        activeBizList != null && activeBizList.length > 0   //==현재 진행중인 사업이 있어?
+                        ?
+                        <div className="biz-ing">모금 진행중</div>
+                        :
+                        ""
+                    }               
+                    <img  src={
+                                likeOrg.orgThumbPath    //기존 썸네일 가지고있다면?
+                                ?
+                                serverUrl + "/org/thumb/" + likeOrg.orgThumbPath.substring(0,8) + "/" + likeOrg.orgThumbPath
+                                :
+                                "/images/default_img.png"     
+                            } />
                 </div>
-                <div className="delBtn">
-                    <img src='/images/clear_24dp_C0C0C0.png' onClick={delLikeOrg} />
-                </div>
-            </div> 
+                <div className="likeOrg-info">
+                    <div className="org-ctg-wrap">
+                        {likeOrg.categoryList.map(function(category, index){
+                            return <div className="org-ctg" key={"category" + index}>{category}</div>
+                        })}
+                    </div>
+                    <div className="name">{likeOrg.orgName}</div>
+                   
+                </div> 
+            </div>
         </div>
     )
 }
