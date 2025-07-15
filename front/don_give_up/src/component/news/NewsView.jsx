@@ -494,7 +494,7 @@ function Report(props){
     
     return(
         <div className="modal-overlay">
-            <div className="modal-content">
+            <div className="modal-contents">
                 <h3>신고하기</h3>
                 <div style={{ margin: "15px 0" }}>
                     <p><strong>신고 댓글</strong></p>
@@ -505,8 +505,8 @@ function Report(props){
 
                     <div style={{ marginTop: "10px" }}>
                         <label htmlFor="reportCode"><strong>신고 사유 선택</strong></label>
-                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange}>
-                            <option value="">-- 사유를 선택하세요 --</option>
+                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
+                            <option value="">사유를 선택하세요</option>
                             {codeList.map((code) => (
                                 <option key={code.reportCode} value={code.reportCode}>
                                     {code.reportReason}
