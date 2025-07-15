@@ -33,6 +33,7 @@ import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.member.model.dto.UpdateMember;
 import kr.or.iei.member.model.service.MemberService;
+import kr.or.iei.news.model.dto.NewsReport;
 
 @RestController
 @CrossOrigin("*")
@@ -664,6 +665,42 @@ public class MemberController {
 			ArrayList<Member> orgNoList = service.selectLikeOrg(memberNo);
 			
 			res = new ResponseDTO(HttpStatus.OK, "", orgNoList, "");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+
+	//단체 신고 코드 조회
+	@GetMapping("/report")
+	public ResponseEntity<ResponseDTO> selectReportCode() {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신고 코드 조회 중 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			ArrayList<NewsReport> codeList = service.selectReportCode();
+			
+			res = new ResponseDTO(HttpStatus.OK, "", codeList, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//단체 신고 등록
+	@PostMapping("/report")
+	public ResponseEntity<ResponseDTO> insertReportOrg(@RequestBody NewsReport nr) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신고 코드 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.insertReportOrg(nr);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "단체 신고가 완료되었습니다.", true, "success");
+			}
+			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

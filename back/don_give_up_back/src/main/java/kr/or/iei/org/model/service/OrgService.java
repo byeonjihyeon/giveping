@@ -20,6 +20,7 @@ import kr.or.iei.common.model.dto.PageInfo;
 import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.common.util.PageUtil;
 import kr.or.iei.member.model.dto.MemberAlarm;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.org.model.dao.OrgDao;
 import kr.or.iei.org.model.dto.Org;
 

@@ -457,33 +457,33 @@ function Report(props){
         }
 
         const res = await Swal.fire({
-        title: '댓글을 신고하시겠습니까?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: '신고',
-        cancelButtonText: '취소'
-    });
+            title: '댓글을 신고하시겠습니까?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '신고',
+            cancelButtonText: '취소'
+        });
 
-    if (!res.isConfirmed) return;
+        if (!res.isConfirmed) return;
 
-    // 신고 요청
-    let options = {};
-    options.url = serverUrl + "/news/comment/report";
-    options.method = "post";
-    options.data = {
-        commentNo: comment.commentNo,
-        reportCode: selectedCode,
-        reportMemberNo: loginMember.memberNo,
-        detailReason: detailReason
-    };
+        // 신고 요청
+        let options = {};
+        options.url = serverUrl + "/news/comment/report";
+        options.method = "post";
+        options.data = {
+            commentNo: comment.commentNo,
+            reportCode: selectedCode,
+            reportMemberNo: loginMember.memberNo,
+            detailReason: detailReason
+        };
 
-    axiosInstance(options)
-    .then(function(res){
-        console.log(res.data.resData);
-        // 성공 -> 팝업 닫기
-        onClose();
-    });
-}
+        axiosInstance(options)
+        .then(function(res){
+            console.log(res.data.resData);
+            // 성공 -> 팝업 닫기
+            onClose();
+        });
+    }
 
     
 

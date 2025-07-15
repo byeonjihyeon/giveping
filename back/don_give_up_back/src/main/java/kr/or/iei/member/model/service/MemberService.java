@@ -25,6 +25,7 @@ import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.member.model.dto.Wallet;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.member.model.dto.Charge;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
@@ -489,4 +490,14 @@ public class MemberService {
 		return dao.selectLikeOrg(memberNo);
 	}
 	
+	//단체 신고 코드 조회
+	public ArrayList<NewsReport> selectReportCode() {
+		return dao.selectReportCode();
+	}
+
+	//단체 신고 등록
+	@Transactional
+	public int insertReportOrg(NewsReport nr) {
+		return dao.insertReportOrg(nr);
+	}
 }

@@ -3,6 +3,7 @@ import createInstance from "../../axios/Interceptor";
 import { Link, useParams } from "react-router-dom";
 import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
+import Swal from "sweetalert2";
 
 
 //후원단체 상세페이지
@@ -19,7 +20,8 @@ export default function OrgView(){
     const [orgCategoryList, setOrgCategoryList] = useState([]); //단체 주요 카테고리
     const [ingBizList, setIngBizList] = useState([{}]);     //진행 중인 사업 3개
     const [endBizList, setEndBizList] = useState([{}]);     //종료된 사업 5개
-    const [addLike, setAddLike] = useState(false);
+    const [addLike, setAddLike] = useState(false);          //좋아요 눌렀는지 확인할 변수
+    const [isReportOpen, setIsReportOpen] = useState(false);//모달창 열기위한 변수
 
     
     //기부 카테고리 조회
@@ -92,14 +94,23 @@ export default function OrgView(){
         });
     }
 
+    //신고창 열기
+    function openReportPopup(){
+        setIsReportOpen(true);
+    }
+
+
     return (
         <section className="section org-view-wrap">
-            <span className="comment-action-text" style={{float : "right"}}>신고</span>
+            <div style={{display : "flex", justifyContent : "flex-end"}}>
+                {loginMember && loginMember.memberLevel == 2 ? 
+                <span className="material-icons favorite-heart" onClick={addLikeOrg}>{addLike ? "favorite" : "favorite_border"}</span> : ""}&nbsp;
+                {loginMember ? <span className="comment-action-text" style={{display : "block"}} onClick={openReportPopup}> 🚨신고</span> : ""}
+                {isReportOpen && <Report setIsReportOpen={setIsReportOpen} org={org}/>}
+            </div>
             <div style={{display : "flex"}}>
                 <div className="img-favorite-div">
                     <img className="org-thumb-image" src={org.orgThumbPath ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0,8) + "/" + org.orgThumbPath : "/images/default_img.png"}/>
-                    {loginMember && loginMember.memberLevel == 2 ? 
-                    <span className="material-icons favorite-heart" onClick={addLikeOrg}>{addLike ? "favorite" : "favorite_border"}</span> : ""}
                 </div>
                 <div className="org-info-div">
                     <div>
@@ -237,6 +248,133 @@ function EndBiz(props){
                         <span style={{float : "right"}}>{per}%</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    )
+}
+
+//신고창
+function Report(props){
+    const setIsReportOpen = props.setIsReportOpen;
+    const org = props.org;
+
+    const {loginMember} = useUserStore();
+
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
+
+    
+    const [selectedCode, setSelectedCode] = useState("");   //선택된 신고 코드
+    const [codeList, setCodeList] = useState([]);           //신고 코드 리스트 변수 저장하기
+    const [detailReason, setDetailReason] = useState("");   //신고 상세 사유 변수
+
+    // 신고 코드 가져오기
+    useEffect(function(){
+    let option = {};
+    option.url = serverUrl + "/member/report";
+    option.method = 'get';
+
+    axiosInstance(option)
+    .then(function(res){
+        setCodeList(res.data.resData);  // 신고 코드 리스트에 저장
+    });
+    },[])
+
+    //신고 코드 선택 시 호출 함수
+    function handleSelectChange(e){
+        setSelectedCode(e.target.value);
+    }
+
+    //신고 상세 사유 변경 시 호출 함수
+    function chgDetailReason(e){
+        setDetailReason(e.target.value);
+    }
+
+    //신고하기 클릭 시 호출 함수
+    async function handleReportClick() {
+        if (!selectedCode) {
+            Swal.fire({
+                title : "알림",
+                text : "신고 사유를 선택해주세요.",
+                icon : "warning",
+                confirmButtonText : "확인"
+            });
+            return;
+        }
+
+        if (!detailReason) {
+            Swal.fire({
+                title : "알림",
+                text : "신고 상세 사유를 입력해주세요.",
+                icon : "warning",
+                confirmButtonText : "확인"
+            });
+            return;
+        }
+
+        Swal.fire({
+            title : "단체를 신고하시겠습니까?",
+            icon : "question",
+            showCancelButton : true,
+            confirmButtonText : "신고",
+            cancelButtonText : "취소"
+        })
+        .then(function(res){
+            if(res.isConfirmed){
+                let options = {};
+                options.url = serverUrl + "/member/report";
+                options.method = "post";
+                options.data = {
+                    reportCode : selectedCode,
+                    orgNo : org.orgNo,
+                    reportMemberNo : loginMember.memberNo,
+                    detailReason : detailReason
+                };
+
+                axiosInstance(options)
+                .then(function(res){
+                    if(res.data.resData){
+                        closeReportPopup();
+                    }
+                });
+            }
+        })
+    }
+
+    //신고창 닫기
+    function closeReportPopup(){
+        setIsReportOpen(false);
+    }
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-contents">
+                <h3>신고하기</h3>
+                <div style={{ margin: "15px 0" }}>
+                    <p><strong>신고 단체</strong></p>
+                    <div className="button-group">
+                        <span>단체명: {org.orgName}</span> <br />
+                    </div>
+
+                    <div style={{ marginTop: "10px" }}>
+                        <label htmlFor="reportCode"><strong>신고 사유 선택</strong></label>
+                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
+                            <option value="">사유를 선택하세요</option>
+                            {codeList.map((code) => (
+                                <option key={code.reportCode} value={code.reportCode}>
+                                    {code.reportReason}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div>
+                        <input type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
+                    </div>
+                </div>
+
+                <button onClick={handleReportClick}>신고하기</button>
+                <button onClick={closeReportPopup}>닫기</button>
             </div>
         </div>
     )

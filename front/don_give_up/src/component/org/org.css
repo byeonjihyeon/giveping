@@ -145,6 +145,7 @@
     left: 5px;
     top: 5px;
     text-align: left;
+    color: black;
 }
 .org-update-img>img:hover {
     cursor: pointer;
@@ -157,10 +158,16 @@
     margin: 0 auto;
     margin-top: 130px;
 }
+.updPw-div label {
+    color: black;
+}
 .updPw-div-plus {
     width: 527px;
     margin: 0 auto;
     margin-top: 130px;
+}
+.updPw-div-plus label {
+    color: black;
 }
 .updPw-div-plus p {
     font-size: 12px;
@@ -328,11 +335,8 @@
 .org-biz-list>div:last-child {
     border-bottom: none;
 }
-.img-favorite-div {
-    position: relative;
-}
-.img-favorite-div .favorite-heart{
-    position: absolute;
+.org-view-wrap>div>.favorite-heart{
+    
     right: 15px;
     bottom: 5px;
     color: red;

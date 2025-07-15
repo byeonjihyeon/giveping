@@ -13,6 +13,7 @@ import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.member.model.dto.Wallet;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
 
@@ -141,4 +142,9 @@ public interface MemberDao {
 	//관심 단체 조회
 	ArrayList<Member> selectLikeOrg(int memberNo);
 	
+	//단체 신고 코드 조회
+	ArrayList<NewsReport> selectReportCode();
+
+	//단체 신고 등록
+	int insertReportOrg(NewsReport nr);
 }

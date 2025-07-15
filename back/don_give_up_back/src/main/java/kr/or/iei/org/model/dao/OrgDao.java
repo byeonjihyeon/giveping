@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.member.model.dto.MemberAlarm;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.org.model.dto.Org;
 
 @Mapper
@@ -120,6 +121,5 @@ public interface OrgDao {
 	//종료된 기부 사업 리스트
 	ArrayList<Biz> selectOrgEndBizList(int orgNo);
 
- 
 
 }
