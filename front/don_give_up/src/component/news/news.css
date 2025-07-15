@@ -69,10 +69,33 @@
 
 
 /* 제목은 테이블 위에 별도 배치 */
+.board-view-preview {
+  margin-top: 47px;    
+  margin-left: 20px;    
+}
+
+.board-view-top {
+  display: flex;
+  gap: 20px; /* 이미지와 텍스트 사이 간격 */
+  align-items: flex-start; /* 위쪽 정렬 */
+}
+
+.board-thumbnail {
+  width: 500px;
+  flex-shrink: 0;
+}
+
+.board-thumbnail img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
 .news-title {
   font-size: 3.0rem;
   font-weight: 600;
-  margin : 0.7rem 0 0.7rem 0
+  margin : 1rem 0 1rem 0
 }
 .tbl {
   font-size: 1.5rem;
