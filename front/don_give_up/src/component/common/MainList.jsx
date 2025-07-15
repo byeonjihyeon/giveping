@@ -10,7 +10,8 @@ export default function MainList(){
     const [bizList, setBizList] = useState([]);     // 기부 사업 리스트
     const [orgList, setOrgList] = useState([]);     // 기부 사업 리스트
 
-    const sliderRef = useRef(null);
+    const bizSliderRef = useRef(null);
+    const orgSliderRef = useRef(null);
 
 
     // 조건에 따라 primaryNo 설정 (회원으로 로그인 한 경우만 memberNo 보내기, 나머지는 0 값 보냄)
@@ -32,7 +33,7 @@ export default function MainList(){
     }, []);
 
     
-    /*
+    
     // 기부 단체 리스트 (8개) 조회해오기
     useEffect(function(){
         let options = {};
@@ -45,28 +46,43 @@ export default function MainList(){
             })
             
             }, []);
-            */
+    
 
-    const scroll = (direction) => {
-        const scrollAmount = sliderRef.current.offsetWidth;
-        sliderRef.current.scrollBy({
+    // 스크롤 함수 (biz, org 분리)
+    function scroll(ref, direction) {
+        const scrollAmount = ref.current.offsetWidth;
+        ref.current.scrollBy({
             left: direction === "left" ? -scrollAmount : scrollAmount,
             behavior: "smooth"
-        });
-    };
+    });
+}
            
     return(
+        <>
         <div className="biz-list-container">
-            <button className="scroll-btn left" onClick={() => scroll("left")}>{"<"}</button>
-            <div className="biz-slider" ref={sliderRef}>
+            <button className="scroll-btn left" onClick={() => scroll(bizSliderRef, "left")}>{"<"}</button>
+            <div className="biz-slider" ref={bizSliderRef}>
                 <ul className="biz-list">
                     {bizList.map((biz, index) => (
                         <BizItem key={"biz" + index} biz={biz} />
                     ))}
                 </ul>
             </div>
-            <button className="scroll-btn right" onClick={() => scroll("right")}>{">"}</button>
+            <button className="scroll-btn right" onClick={() => scroll(bizSliderRef, "right")}>{">"}</button>
         </div>
+
+        <div className="biz-list-container">
+            <button className="scroll-btn left" onClick={() => scroll(orgSliderRef, "left")}>{"<"}</button>
+            <div className="biz-slider" ref={orgSliderRef}>
+                <ul className="biz-list">
+                    {orgList.map((org, index) => (
+                        <OrgItem key={"org" + index} org={org} />
+                    ))}
+                </ul>
+            </div>
+            <button className="scroll-btn right" onClick={() => scroll(orgSliderRef, "right")}>{">"}</button>
+        </div>
+        </>
     )
 }
 
@@ -91,10 +107,21 @@ function BizItem(props){
                 />
             </div>
             <div className="posting-info">
-                <div className="posting-title">{biz.bizName}</div>
+                <div className="posting-title" style={{ fontSize: '24px', margin: '10px 0' }}>{biz.bizName}</div>
                 <div className="posting-sub-info">
-                    <span>{biz.orgName}</span>
-                    <span> #{biz.donateCtg}</span>
+                    <span style={{
+                        fontWeight : '700',
+                        color : '#7a7a7aff'
+                        }}>{biz.orgName}</span>
+                    <span style={{
+                        marginLeft : '17px',
+                        border: '1px solid #007bff',
+                        borderRadius: '20px',
+                        padding: '4px 10px',
+                        display: 'inline-block',
+                        color: '#007bff',
+                        fontWeight : '500'
+                        }}> #{biz.donateCtg}</span>
                     <div className="progress-bar">
                         <div className="progress-fill" style={{ width: `${percent}%` }}></div>
                     </div>
@@ -102,6 +129,51 @@ function BizItem(props){
                         <span>{percent}%</span>
                         <span>{donated.toLocaleString()}원</span>
                     </div>
+                </div>
+            </div>
+        </li>
+    );
+}
+
+function OrgItem(props){
+    const org = props.org;
+    const navigate = useNavigate();
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+
+    return (
+        <li className="posting-item" onClick={function(){navigate('/organization/view/' + org.orgNo)}}>
+            <div className="posting-img">
+                <img
+                    src={org.orgThumbPath
+                        ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0, 8) + "/" + org.orgThumbPath
+                        : "/images/default_img.png"}
+                />
+            </div>
+            <div className="posting-info">
+                <div className="posting-title" style={{ fontSize: '24px', margin: '10px 0' }}>{org.orgName}</div>
+                <div
+                    className="posting-category"
+                    >
+                    {org.categoryList && org.categoryList.length > 0 ? (
+                        org.categoryList.map((ctg, idx) => (
+                        <span key={idx} style={{
+                        border: '1px solid #007bff',
+                        borderRadius: '20px',
+                        padding: '4px 10px',
+                        display: 'inline-block',
+                        color: '#007bff',
+                        fontWeight: '500',
+                    }}>#{ctg}</span>
+                        ))
+                    ) : (
+                        ''
+                    )}
+                    </div>
+                <div className="posting-degree" style={{
+                        fontWeight : '700',
+                        color : '#7a7a7aff'
+                        }}>
+                    <span> {org.orgTemperature}℃</span>
                 </div>
             </div>
         </li>
