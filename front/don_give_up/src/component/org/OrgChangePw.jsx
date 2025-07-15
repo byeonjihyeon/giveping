@@ -161,7 +161,7 @@ export default function OrgChangePw(){
 
     return (
         <div>
-            <h2 className="page-title">비밀번호 변경</h2>
+            <h2 className="page-title" style={{textAlign : "left", marginLeft : "20px"}}>비밀번호 변경</h2>
             <div className={!result ? "updPw-div" : "updPw-div-plus"}>
                 {!result
                 ? //현재 비밀번호 입력창

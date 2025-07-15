@@ -78,25 +78,30 @@ export default function OrgList(){
                 <div className="category-filter">
                     {categoryList.map(function(ctg, index){
                         return  <button key={"ctg"+index}
-                                        style={{backgroundColor: checkCtgList.includes(ctg) ? '#007bff' : '#ffffffff',
-                                                color: checkCtgList.includes(ctg) ? 'white' : '#333',
+                                        style={{backgroundColor: checkCtgList.includes(ctg.donateCode) ? '#007bff' : '#ffffffff',
+                                                color: checkCtgList.includes(ctg.donateCode) ? 'white' : '#333',
                                                 border: '1px solid',
-                                                borderColor: checkCtgList.includes(ctg) ? '#0056b3' : '#ccc',
+                                                borderColor: checkCtgList.includes(ctg.donateCode) ? '#0056b3' : '#ccc',
                                                 padding: '10px 20px',
                                                 margin: '0 6px 6px 0',
                                                 cursor: 'pointer',
                                                 borderRadius: '30px',
-                                                fontWeight: checkCtgList.includes(ctg) ? 'bold' : 'normal',
+                                                fontWeight: checkCtgList.includes(ctg.donateCode) ? 'bold' : 'normal',
                                                 fontSize: '1rem',
                                                 minWidth: 'center',}}
                                         onClick={function(){toggleCategory(ctg.donateCode);}}
                                 >{ctg.donateCtg}</button>
                     })}
                 </div>
-                <div className="search-box">
-                    <input type="text" value={searchOrgName} onChange={chgOrgName} placeholder="단체명을 입력하세요"/>
-                    <input type="button" value="검색" onClick={chgIsClick}/>
-                </div>
+                <form autoComplete="off" onSubmit={function(e){
+                    e.preventDefault();
+                    chgIsClick();
+                }}>
+                    <div className="search-box">
+                        <input type="text" value={searchOrgName} onChange={chgOrgName} placeholder="단체명을 입력하세요"/>
+                        <input type="submit" value="검색"/>
+                    </div>
+                </form>
             </div>
 
             <div className="org-list-wrap">
@@ -132,18 +137,18 @@ function BoardItem(props) {
                                                : "/images/default_img.png"}/>
             </div>
             <div className="posting-info">
-                <div className="posting-title">{org.orgName}</div>
+                <div className="posting-title" style={{ fontSize: '24px' }}>{org.orgName}</div>
                 <div className="posting-sub-info">
                 
                 {org.categoryList && org.categoryList.map((orgCtg, idx) => (
-                <span key={idx}>#{orgCtg} </span>
+                <span key={"orgCtg"+idx} style={{color : "#757575ff"}}>#{orgCtg} </span>
         ))}
                     <div className="progress-bar">
-                        <div className="progress-fill" style={{width : org.orgTemperature + "%",
-                                                                backgroundColor : org.orgTemperature < 20 ? "green"
+                        <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"
+                                                                /*backgroundColor : org.orgTemperature < 20 ? "green"
                                                                                 : org.orgTemperature >= 20 && org.orgTemperature < 40 ? "lightgreen"
                                                                                 : org.orgTemperature >= 40 && org.orgTemperature < 60 ? "yellow"
-                                                                                : org.orgTemperature >= 60 && org.orgTemperature < 80 ? "orange" : "red"}}></div>
+                                                                                : org.orgTemperature >= 60 && org.orgTemperature < 80 ? "orange" : "red"*/}}></div>
                     </div>
                     <span>{org.orgTemperature}ºC</span>
                 </div>
