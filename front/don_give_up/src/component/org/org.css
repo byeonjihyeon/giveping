@@ -196,7 +196,7 @@
 }
 
 
-/* 검색창 */
+/* 후원 단체 리스트 */
 .search-box input[type="submit"] {
     
     font-size: 14px;
@@ -204,13 +204,21 @@
     border-radius: 4px;
     border: 1px solid #ccc;
 }
-
 .search-box input[type="submit"] {
     background-color: #007bff;
     color: white;
     border: none;
     cursor: pointer;
     height: 34px;
+}
+.organization-list .posting-info {
+    position: relative;
+}
+.organization-list .favorite-heart {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    color: red;
 }
 
 
@@ -299,4 +307,14 @@
 }
 .org-biz-list>div:last-child {
     border-bottom: none;
+}
+.img-favorite-div {
+    position: relative;
+}
+.img-favorite-div .favorite-heart{
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    color: red;
+    cursor: pointer;
 }

@@ -472,6 +472,21 @@ public class MemberService {
 		return dao.selectRefundList(memberNo);
 	}
 
-	
+	//관심 단체 추가
+	@Transactional
+	public int addLikeOrg(Member member) {
+		return dao.addLikeOrg(member);
+	}
+
+	//관심 단체 삭제
+	@Transactional
+	public int deleteLikeOrg(Member member) {
+		return dao.deleteLikeOrg(member);
+	}
+
+	//관심 단체 조회
+	public ArrayList<Member> selectLikeOrg(int memberNo) {
+		return dao.selectLikeOrg(memberNo);
+	}
 	
 }

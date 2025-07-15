@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import createInstance from "../../axios/Interceptor";
 import { Link, useParams } from "react-router-dom";
 import { Viewer } from "@toast-ui/react-editor";
+import useUserStore from "../../store/useUserStore";
 
 
 //후원단체 상세페이지
@@ -10,12 +11,15 @@ export default function OrgView(){
     const axiosInstance = createInstance();
     const param = useParams();
     const orgNo = param.orgNo
+    const {loginMember} = useUserStore();
+    const memberNo = loginMember.memberNo;
 
     const [categoryList, setCategoryList] = useState([]);   //전체 카테고리 정보
     const [org, setOrg] = useState({});                     //단체 1개 정보
     const [orgCategoryList, setOrgCategoryList] = useState([]); //단체 주요 카테고리
     const [ingBizList, setIngBizList] = useState([{}]);     //진행 중인 사업 3개
     const [endBizList, setEndBizList] = useState([{}]);     //종료된 사업 5개
+    const [addLike, setAddLike] = useState(false);
 
     
     //기부 카테고리 조회
@@ -45,13 +49,56 @@ export default function OrgView(){
             setEndBizList(data.endBizList);
         });
     }, []);
+
+    //관심 단체 조회
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + "/member/selectLikeOrg/" + memberNo;
+        options.method = "get";
+
+        axiosInstance(options)
+        .then(function(res){
+            const orgNoList = res.data.resData;
+            for(let i=0; i<orgNoList.length; i++){
+                if(orgNo == orgNoList[i].orgNo){
+                    setAddLike(true);
+                }
+            }
+        });
+    }, []);
     
+    //좋아요 클릭 시 호출 함수
+    function addLikeOrg(){
+        const data = {memberNo : memberNo, orgNo : org.orgNo};
+
+        let options = {};
+        if(!addLike){
+            options.url = serverUrl + "/member/addLikeOrg";
+            options.method = "post";
+            options.data = data;
+        }else {
+            options.url = serverUrl + "/member/deleteLikeOrg";
+            options.method = "delete";
+            options.data = data;
+        }
+
+        axiosInstance(options)
+        .then(function(res){
+            if(res.data.resData){
+                setAddLike(!addLike);
+            }
+        });
+    }
 
     return (
         <section className="section org-view-wrap">
             <span className="comment-action-text" style={{float : "right"}}>신고</span>
             <div style={{display : "flex"}}>
-                <img className="org-thumb-image" src={org.orgThumbPath ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0,8) + "/" + org.orgThumbPath : "/images/default_img.png"}/>
+                <div className="img-favorite-div">
+                    <img className="org-thumb-image" src={org.orgThumbPath ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0,8) + "/" + org.orgThumbPath : "/images/default_img.png"}/>
+                    {loginMember && loginMember.memberLevel == 2 ? 
+                    <span className="material-icons favorite-heart" onClick={addLikeOrg}>{addLike ? "favorite" : "favorite_border"}</span> : ""}
+                </div>
                 <div className="org-info-div">
                     <div>
                         <h2>{org.orgName}</h2>

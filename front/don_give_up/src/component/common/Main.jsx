@@ -20,7 +20,7 @@ export default function Main(){
                 </div>
                 <div className="main-category">
                     {categories.map(function(ctg, index){
-                        return <div>{ctg}</div>
+                        return <div key={"ctg"+index}>{ctg}</div>
                     })}
                 </div>
             </div>

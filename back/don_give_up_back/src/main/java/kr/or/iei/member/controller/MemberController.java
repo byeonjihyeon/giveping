@@ -614,4 +614,60 @@ public class MemberController {
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
+	//관심 단체 추가
+	@PostMapping("/addLikeOrg")
+	public ResponseEntity<ResponseDTO> addLikeOrg(@RequestBody Member member) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "관심 단체 추가 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.addLikeOrg(member);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "", true, "");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "관심 단체 추가 중 오류가 발생 했습니다.", false, "warning");
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//관심 단체 삭제
+	@DeleteMapping("/deleteLikeOrg")
+	public ResponseEntity<ResponseDTO> deleteLikeOrg(@RequestBody Member member) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "관심 단체 삭제 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.deleteLikeOrg(member);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "", true, "");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "관심 단체 삭제 중 오류가 발생 했습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//관심 단체 조회
+	@GetMapping("/selectLikeOrg/{memberNo}")
+	public ResponseEntity<ResponseDTO> selectLikeOrg(@PathVariable int memberNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "관심 단체 조회 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			ArrayList<Member> orgNoList = service.selectLikeOrg(memberNo);
+			
+			res = new ResponseDTO(HttpStatus.OK, "", orgNoList, "");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 }

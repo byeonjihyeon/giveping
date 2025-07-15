@@ -588,4 +588,23 @@
 	order by refunddate desc
 	</select>
 	
+	<!-- 관심 단체 추가 -->
+	<insert id="addLikeOrg" parameterType="Member">
+		insert into tbl_member_org
+		values (#{memberNo}, #{orgNo})
+	</insert>
+	
+	<!-- 관심 단체 삭제 -->
+	<delete id="deleteLikeOrg" parameterType="Member">
+		delete from tbl_member_org
+		 where member_no = #{memberNo}
+		   and org_no = #{orgNo}
+	</delete>
+	
+	<!-- 관심 단체 조회 -->
+	<select id="selectLikeOrg" parameterType="_int" resultType="Member">
+		select org_no as orgNo
+		  from tbl_member_org
+		 where member_no = #{memberNo}
+	</select>
 </mapper>	

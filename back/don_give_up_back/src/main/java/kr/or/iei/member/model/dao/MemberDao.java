@@ -131,5 +131,14 @@ public interface MemberDao {
 	
 	//환불요청중인 리스트 조회
 	ArrayList<Refund> selectRefundList(int memberNo);
+
+	//관심 단체 추가
+	int addLikeOrg(Member member);
+
+	//관심 단체 삭제
+	int deleteLikeOrg(Member member);
+
+	//관심 단체 조회
+	ArrayList<Member> selectLikeOrg(int memberNo);
 	
 }
