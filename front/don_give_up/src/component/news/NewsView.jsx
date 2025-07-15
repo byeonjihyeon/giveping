@@ -163,6 +163,8 @@ export default function NewsView(){
                         </button>
                     </div> 
                     )}
+
+                        
                     </div>
                     </div>
                 </div>
