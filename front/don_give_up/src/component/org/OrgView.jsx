@@ -12,7 +12,7 @@ export default function OrgView(){
     const param = useParams();
     const orgNo = param.orgNo
     const {loginMember} = useUserStore();
-    const memberNo = loginMember.memberNo;
+    const memberNo = loginMember ? loginMember.memberNo : "";
 
     const [categoryList, setCategoryList] = useState([]);   //전체 카테고리 정보
     const [org, setOrg] = useState({});                     //단체 1개 정보
@@ -52,19 +52,21 @@ export default function OrgView(){
 
     //관심 단체 조회
     useEffect(function(){
-        let options = {};
-        options.url = serverUrl + "/member/selectLikeOrg/" + memberNo;
-        options.method = "get";
-
-        axiosInstance(options)
-        .then(function(res){
-            const orgNoList = res.data.resData;
-            for(let i=0; i<orgNoList.length; i++){
-                if(orgNo == orgNoList[i].orgNo){
-                    setAddLike(true);
+        if(loginMember){
+            let options = {};
+            options.url = serverUrl + "/member/selectLikeOrg/" + memberNo;
+            options.method = "get";
+    
+            axiosInstance(options)
+            .then(function(res){
+                const orgNoList = res.data.resData;
+                for(let i=0; i<orgNoList.length; i++){
+                    if(orgNo == orgNoList[i].orgNo){
+                        setAddLike(true);
+                    }
                 }
-            }
-        });
+            });
+        }
     }, []);
     
     //좋아요 클릭 시 호출 함수
@@ -104,7 +106,8 @@ export default function OrgView(){
                         <h2>{org.orgName}</h2>
                         {categoryList.map(function(ctg, index){
                             return  <span key={"ctg"+index}>{orgCategoryList.map(function(code, index){
-                                        return  <span key={"code"+index}>{ctg.donateCode == code ? "#" + ctg.donateCtg : ""} </span>
+                                        return  <span key={"code"+index} className={ctg.donateCode == code ? "org-ctg-span" : ""}
+                                                    >{ctg.donateCode == code ? "#" + ctg.donateCtg : ""} </span>
                             })}</span>
                         })}
                     </div>
@@ -143,8 +146,8 @@ export default function OrgView(){
                         {org.orgUrl 
                         ?
                         <tr>
-                            <th><h3>홈페이지 주소</h3></th>
-                            <td>{org.orgUrl}</td>
+                            <th><h3>홈페이지</h3></th>
+                            <td><Link to={org.orgUrl}>{org.orgUrl}</Link></td>
                         </tr>
                         : ""
                         }
@@ -186,7 +189,9 @@ function IngBiz(props){
             <div className="org-biz-div">
                 <div><Link to={"/biz/view/" + biz.bizNo}><h3>{biz.bizName}</h3></Link></div>
                 {categoryList.map(function(ctg, index){
-                    return  <div key={"ctg"+index} className="org-biz-ctg">{ctg.donateCode == biz.donateCode ? "#" + ctg.donateCtg : ""}</div>
+                    return  <div key={"ctg"+index} className="org-biz-ctg">
+                                <span className={ctg.donateCode == biz.donateCode ? "org-ctg-span" : ""}>{ctg.donateCode == biz.donateCode ? "#" + ctg.donateCtg : ""}</span>
+                            </div>
                 })}
                 <div style={{minHeight : "57px"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
                 <div className="org-biz-progress">
@@ -218,7 +223,9 @@ function EndBiz(props){
             <div className="org-biz-div">
                 <div><Link to={"/biz/view/" + biz.bizNo}><h3>{biz.bizName}</h3></Link></div>
                 {categoryList.map(function(ctg, index){
-                    return  <div key={"ctg"+index} className="org-biz-ctg">{ctg.donateCode == biz.donateCode ? "#" + ctg.donateCtg : ""}</div>
+                    return  <div key={"ctg"+index} className="org-biz-ctg">
+                                <span className={ctg.donateCode == biz.donateCode ? "org-ctg-span" : ""}>{ctg.donateCode == biz.donateCode ? "#" + ctg.donateCtg : ""}</span>
+                            </div>
                 })}
                 <div style={{minHeight : "57px"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
                 <div className="org-biz-progress">

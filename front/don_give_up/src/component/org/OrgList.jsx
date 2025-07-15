@@ -127,25 +127,27 @@ function BoardItem(props) {
     const axiosInstance = createInstance();
     const navigate = useNavigate();
     const {loginMember} = useUserStore();
-    const memberNo = loginMember.memberNo;
+    const memberNo = loginMember ? loginMember.memberNo : "";
 
     const [addLike, setAddLike] = useState(false);
 
     //회원의 관심 단체 조회
     useEffect(function(){
-        let options = {};
-        options.url = serverUrl + "/member/selectLikeOrg/" + memberNo;
-        options.method = "get";
-
-        axiosInstance(options)
-        .then(function(res){
-            const orgNoList = res.data.resData;
-            for(let i=0; i<orgNoList.length; i++){
-                if(org.orgNo == orgNoList[i].orgNo){
-                    setAddLike(true);
+        if(loginMember){
+            let options = {};
+            options.url = serverUrl + "/member/selectLikeOrg/" + memberNo;
+            options.method = "get";
+    
+            axiosInstance(options)
+            .then(function(res){
+                const orgNoList = res.data.resData;
+                for(let i=0; i<orgNoList.length; i++){
+                    if(org.orgNo == orgNoList[i].orgNo){
+                        setAddLike(true);
+                    }
                 }
-            }
-        });
+            });
+        }
     }, []);
 
 
@@ -193,7 +195,7 @@ function BoardItem(props) {
                     navigate('/organization/view/' + org.orgNo);
                 }}>
                     {org.categoryList && org.categoryList.map((orgCtg, idx) => (
-                    <span key={"orgCtg"+idx} style={{color : "#757575ff"}}>#{orgCtg} </span>
+                    <span key={"orgCtg"+idx} className="org-ctg-span">#{orgCtg} </span>
                     ))}
                     <div className="progress-bar">
                         <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"

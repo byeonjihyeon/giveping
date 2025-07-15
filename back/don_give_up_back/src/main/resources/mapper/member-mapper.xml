@@ -553,7 +553,8 @@
 	                     (select donate_ctg from tbl_donate_code a where d.donate_code = a.donate_code) as donateCtg,
 	                     biz_name as bizName,
 	                     biz_content as bizContent,
-	                     biz_donate_end as bizDonateEnd
+	                     biz_donate_end as bizDonateEnd,
+	                     biz_thumb as bizThumbPath
 	               from tbl_donate_biz d
 	      		  where sysdate &lt; biz_donate_end
 	      		    and biz_status = 1

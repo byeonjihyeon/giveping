@@ -181,9 +181,13 @@ export default function MyHome(props){
 
 function Biz(props){
     const biz = props.biz;
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const navigate = useNavigate();
 
     return (
-        <div className="recommand-biz">
+        <div className="recommand-biz" onClick={function(){
+            navigate("/biz/view/" + biz.bizNo);
+        }}>
             <div className="thumb">
                 <img  src={
                             biz.bizThumbPath    //기존 썸네일 가지고있다면?
