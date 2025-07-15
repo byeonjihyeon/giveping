@@ -137,11 +137,11 @@ function BoardItem(props) {
                                                : "/images/default_img.png"}/>
             </div>
             <div className="posting-info">
-                <div className="posting-title">{org.orgName}</div>
+                <div className="posting-title" style={{ fontSize: '24px' }}>{org.orgName}</div>
                 <div className="posting-sub-info">
                 
                 {org.categoryList && org.categoryList.map((orgCtg, idx) => (
-                <span key={idx}>#{orgCtg} </span>
+                <span key={"orgCtg"+idx} style={{color : "#757575ff"}}>#{orgCtg} </span>
         ))}
                     <div className="progress-bar">
                         <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"

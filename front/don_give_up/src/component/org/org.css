@@ -45,18 +45,18 @@
 .tbl-donate {
     width: 800px;
     border-spacing: 0;
-    border-top: 3px solid #b1adad;
-    border-bottom: 2px solid #b1adad;
+    border-top: 3px solid #dcdcdc;
+    border-bottom: 2px solid #dcdcdc;
     margin: 0 auto;
 }
 .tbl-donate th {
     height: 45px;
-    border-bottom: 1px solid #b1adad;
+    border-bottom: 1px solid #dcdcdc;
 }
 .tbl-donate td {
     height: 45px;
     text-align: center;
-    border-bottom: 1px solid #b1adad;
+    border-bottom: 1px solid #dcdcdc;
 }
 .chgBtn {
     width: 80px;
@@ -85,21 +85,22 @@
 }
 .donate-data>div {
     box-sizing: border-box;
-    border-top: 1px solid #b1adad;
-    border-bottom: 1px solid #b1adad;
+    border-top: 1px solid #dcdcdc;
+    border-bottom: 1px solid #dcdcdc;
     align-content: center;
-    padding-left: 10px;
+    padding-left: 5px;
     height: 35px;
+    font-size: 14px;
 }
 .donate-data>div:first-child {
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
-    border-left: 1px solid #b1adad;
+    border-left: 1px solid #dcdcdc;
 }
 .donate-data>div:last-child {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
-    border-right: 1px solid #b1adad;
+    border-right: 1px solid #dcdcdc;
 }
 .span-circle {
     display: inline-block;
@@ -115,16 +116,40 @@
     margin-top: 20px;
 }
 .tbl-org {
+    width: 900px;
     margin: 0 auto;
+    border-spacing: 0;
 }
 .tbl-org p {
     display: block;
     height: 15px;
     font-size: 12px;
 }
+.tbl-org .line {
+    border-bottom: 1px solid #dcdcdc;
+}
 .orgBtn {
     width: 150px;
 }
+.tbl-org td>div {
+    margin-top: 10px;
+}
+.tbl-org th {
+    position: relative;
+}
+.tbl-org label {
+    position: absolute;
+    font-size: 20px;
+    width: 100%;
+    height: 100%;
+    left: 5px;
+    top: 5px;
+    text-align: left;
+}
+.org-update-img>img:hover {
+    cursor: pointer;
+}
+
 
 /*비밀번호 변경*/
 .updPw-div {
@@ -151,7 +176,7 @@
 }
 .change-title-wrap {
     height: 300px;
-    border: 1px solid #b1adad;
+    border: 1px solid #dcdcdc;
 }
 
 /*탈퇴하기*/

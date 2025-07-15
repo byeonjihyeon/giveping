@@ -46,7 +46,7 @@ export default function OrgBiz(){
 
     return (
         <div>
-            <h2 className="page-title">기부 사업 보기</h2>
+            <h2 className="page-title" style={{textAlign : "left", marginLeft : "20px"}}>기부 사업 보기</h2>
             <div style={{height : "570px", width : "800px", margin : "20px auto"}}>
                 <div style={{float : "right", marginBottom : "5px"}}>
                     <Button variant="contained" type="button" className="chgBtn" value="allBiz" onClick={selectBiz}>전체</Button>

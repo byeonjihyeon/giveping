@@ -165,7 +165,7 @@ body {
 /*회원가입 메인*/
 .join-wrap {
     width: 650px;
-    min-height: 600px;
+    min-height: 680px;
     margin: 20px auto;
     border: 1px solid #999;
     border-radius: 50px;
@@ -305,7 +305,7 @@ body {
 .login-wrap {
     width: 650px;
     min-height: 500px;
-    margin: 70px auto;
+    margin: 100px auto;
     border: 1px solid #999;
     border-radius: 50px;
 }
