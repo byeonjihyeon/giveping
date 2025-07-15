@@ -40,10 +40,10 @@ export default function NewsList(){
             <table className="tbl">
                 <thead className="tbl-thead-wrapper">
                     <tr>
-                        <th style={{width:"10%" , backgroundColor: "#85bdf8ff", color: "#ffffffff"}}>소식번호</th>
-                        <th style={{width:"40%" , backgroundColor: "#85bdf8ff", color: "#ffffffff"}}>제목</th>
-                        <th style={{width:"15%" , backgroundColor: "#85bdf8ff", color: "#ffffffff"}}>작성일</th>
-                        <th style={{width:"10%" , backgroundColor: "#85bdf8ff", color: "#ffffffff"}}>조회수</th>
+                        <th style={{width:"10%" , backgroundColor: "#87CEEB", color: "#ffffffff"}}>소식번호</th>
+                        <th style={{width:"40%" , backgroundColor: "#87CEEB", color: "#ffffffff"}}>제목</th>
+                        <th style={{width:"15%" , backgroundColor: "#87CEEB", color: "#ffffffff"}}>작성일</th>
+                        <th style={{width:"10%" , backgroundColor: "#87CEEB", color: "#ffffffff"}}>조회수</th>
                     </tr>
                 </thead>
                 <tbody>
