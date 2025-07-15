@@ -23,12 +23,18 @@ import kr.or.iei.admin.model.dto.AdminOrg;
 import kr.or.iei.admin.model.dto.AdminRefund;
 import kr.or.iei.admin.model.service.AdminService;
 import kr.or.iei.common.model.dto.ResponseDTO;
+import kr.or.iei.common.util.FileUtil;
+import kr.or.iei.common.util.JwtUtils;
 import kr.or.iei.member.model.dto.Member;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/admin")
 public class AdminController {
+
+    private final FileUtil fileUtil;
+
+    private final JwtUtils jwtUtils;
 
     private final OrgController orgController;
 
@@ -38,8 +44,10 @@ public class AdminController {
 	@Autowired
 	private JavaMailSender javaMailSender;
 
-    AdminController(OrgController orgController) {
+    AdminController(OrgController orgController, JwtUtils jwtUtils, FileUtil fileUtil) {
         this.orgController = orgController;
+        this.jwtUtils = jwtUtils;
+        this.fileUtil = fileUtil;
     }
 
 	// 전체 회원 리스트 조회
@@ -62,35 +70,40 @@ public class AdminController {
 	
 	
 	// 회원 등급 변경
-	 @PatchMapping("/memberManage") public ResponseEntity<ResponseDTO>
-	  changeMemberStatus(@RequestBody AdminMember member){ ResponseDTO res= new
-	  ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원등급 상태 변경 중 오류가 생겼습니다",false,
-	 "error");
+	 @PatchMapping("/memberManage")
+	  public ResponseEntity<ResponseDTO> changeMemberStatus(@RequestBody AdminMember member){
+		 
+	  ResponseDTO res= new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "회원등급 상태 변경 중 오류가 생겼습니다",false, "error");
 	  
-	  try { int result = service.changeMemberLevel(member); if(result>0) { res= new
-	  ResponseDTO(HttpStatus.OK, "변경이 완료되었습니다.", true,"success"); } }catch(Exception e){
-	 e.printStackTrace();
+	  try { 
+		  int result = service.changeMemberLevel(member); 
+		  if(result>0) {
+		  res= new ResponseDTO(HttpStatus.OK, "변경이 완료되었습니다.", true,"success"); 
+		  } 
+		} catch(Exception e){
+	      e.printStackTrace();
 	  
 	  } return new ResponseEntity<ResponseDTO>(res,res.getHttpStatus()); }
 	 
 	
 
 	// 단체 리스트 조회
-	@GetMapping("/orgManage/{reqPage}")
-	public ResponseEntity<ResponseDTO> selectOrgList(@PathVariable int reqPage) {
-		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회 중,오류가 발생하였습니다", null, "error");
+   @GetMapping("/orgManage/{reqPage}")
+   public ResponseEntity<ResponseDTO> selectOrgList(@PathVariable int reqPage,
+                                                    @RequestParam (required = false)String searchType, 
+                                                    @RequestParam (required = false)String keyword) {
+      ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회 중,오류가 발생하였습니다", null, "error");
 
-		try {
-			HashMap<String, Object> orgMap = service.selectOrgList(reqPage);
-			res = new ResponseDTO(HttpStatus.OK, "", orgMap, "");
-		} catch (Exception e) {
-			e.printStackTrace();
+      try {
+         HashMap<String, Object> orgMap = service.selectOrgList(reqPage, searchType, keyword);
+         res = new ResponseDTO(HttpStatus.OK, "", orgMap, "");
+      } catch (Exception e) {
+         e.printStackTrace();
 
-		}
-		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+      }
+      return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 
-	}
-
+   }
 	// 단체 상태 변경
 	@PatchMapping("/orgManage")
 	public ResponseEntity<ResponseDTO> updateOrgStatus(@RequestBody AdminOrg org) {
@@ -177,22 +190,45 @@ public class AdminController {
      }
 	
 	  // 신고내역 리스트 조회
-		@GetMapping("/reportManage/{reqPage}")
-		public ResponseEntity<ResponseDTO> selectReportList(@PathVariable int reqPage) {
-			ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 목록 조회 중,오류가 발생하였습니다", null, "error");
+		@GetMapping("/reportManage/{reqPage}/{tab}")
+		public ResponseEntity<ResponseDTO> selectReportList(@PathVariable int reqPage, @PathVariable String tab,
+				                                                                       @RequestParam(required = false, defaultValue = "") String startDate, 
+				                                                                       @RequestParam(required = false, defaultValue = "") String endDate) {
+			System.out.println("프런트에서 넘어온 startDate:"+ startDate ); // 2025-07-10
+			System.out.println("프런트에서 넘어온 endDate:"+ endDate ); // 2025-07-24
+			
+			 try {
+			HashMap<String, Object> reportMap=null;
 
-			try {
-				HashMap<String, Object> reportMap = service.selectReportList(reqPage);
-				res = new ResponseDTO(HttpStatus.OK, "", reportMap, "");
-			} catch (Exception e) {
-				e.printStackTrace();
+				if("comment".equals(tab)){
+					System.out.println("if(\"comment\".equals(tab)) 도착"); // 도착
+					reportMap= service.selectCommentReportList(reqPage, tab, startDate, endDate);
+					//System.out.println("controller 에서 startDate :"  + startDate);
+					System.out.println("조회된 신고 리스트: " + reportMap);
+					
+				}else if("org".equals(tab)){
+					reportMap= service.selectOrgReportList(reqPage, tab, startDate, endDate);
+				}else {
+					
+					  return new ResponseEntity<>(
+			                    new ResponseDTO(HttpStatus.BAD_REQUEST, "잘못된 신고 유형입니다", null, "error"),
+			                    HttpStatus.BAD_REQUEST);
+			        }
 
+				ResponseDTO res = new ResponseDTO(HttpStatus.OK, "", reportMap, "");
+			        return new ResponseEntity<>(res, HttpStatus.OK);
+
+			    } catch (Exception e) {
+			     
+			    ResponseDTO res =new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신고 목록 조회 중 오류 발생", null, "error");
+			        return new ResponseEntity<>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+			    }
 			}
-			return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 
-		}
 		
-	// 탈퇴 요청 리스트 조회
+
+
+		// 탈퇴 요청 리스트 조회
 		@GetMapping("/deleteManage/{reqPage}/{showType}")
 		public ResponseEntity<ResponseDTO> selectDeleteList(@PathVariable int reqPage, @PathVariable String showType) {
 			ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "탈퇴 요청 목록 조회 중,오류가 발생하였습니다", null, "error");

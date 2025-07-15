@@ -1,5 +1,6 @@
 package kr.or.iei.org.model.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kr.or.iei.biz.model.dto.Biz;
@@ -34,4 +35,9 @@ public class Org {
 	private String orgCtg;
 	private List<String> categoryList;	//주요 카테고리 리스트
 	private List<Biz> bizList;			//기부사업 리스트
+	
+	//후원 단체 리스트에 조회에 필요한 변수
+	private int reqPage;
+	private String searchOrgName;
+	private ArrayList<String> checkCtgList;
 }

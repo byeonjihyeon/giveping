@@ -21,6 +21,7 @@ import Organization from'./component/org/OrgList';
 import OrgView from './component/org/OrgView';
 
 
+
 function App() {
 
   //개인 회원 정보 저장 변수(서버 전송용)
@@ -55,7 +56,6 @@ function App() {
             <Route path="/search/:type" element={<SearchIdPw/>}/>
             <Route path='/companyIntroduction' element={<CompanyIntroduction/>}/>
             <Route path='/organization/*' element={<Organization/>}/>
-            <Route path="/orgView/:orgNo" element={<OrgView/>}/>
           </Routes>
         </main>
       <Footer/>

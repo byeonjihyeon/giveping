@@ -135,6 +135,7 @@ public class OrgController {
 	
 	//단체 1개 정보 조회
 	@GetMapping("/{orgNo}")
+	@NoTokenCheck
 	public ResponseEntity<ResponseDTO> selectOneOrg(@PathVariable int orgNo) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 정보 조회 중 오류가 발생했습니다.", null, "error");
 		
@@ -464,15 +465,32 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos
 	
 	//단체 목록 조회 (후원단체 메뉴 클릭 시)
 	@NoTokenCheck
-	@GetMapping("/organization/list/{reqPage}")
-	public ResponseEntity<ResponseDTO> selectOrgList(@PathVariable int reqPage) {
+	@PostMapping("/organization/list")
+	public ResponseEntity<ResponseDTO> selectOrgList(@RequestBody Org data) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 목록 조회 중 오류가 발생하였습니다.", null, "error");
-		  System.out.println("reqPage=" + reqPage);
+
 		try {
 			 
-			HashMap<String, Object> orgMap = service.selectOrgList(reqPage);
+			HashMap<String, Object> orgMap = service.selectOrgList(data);
+					
+			res = new ResponseDTO(HttpStatus.OK, "", orgMap, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		
-		  System.out.println("orgMap=" + orgMap);
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//단체 상세페이지
+	@GetMapping("/view/{orgNo}")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectOrgView(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 목록 조회 중 오류가 발생하였습니다.", null, "error");
+		
+		try {
+			
+			HashMap<String, Object> orgMap = service.selectOrgView(orgNo);
 			
 			res = new ResponseDTO(HttpStatus.OK, "", orgMap, "");
 			
@@ -482,4 +500,5 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
+	
 }

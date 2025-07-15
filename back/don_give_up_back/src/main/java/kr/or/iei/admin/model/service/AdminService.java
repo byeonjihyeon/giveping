@@ -36,37 +36,37 @@ public class AdminService {
 
 	// 회원리스트 조회
 	public HashMap<String, Object> selectMemberList(int reqPage, String searchType, String keyword) {
-		    int viewCnt = 10;          // 한 페이지당 보여줄 행 갯수 
-		    int pageNaviSize = 5;      // 페이지 네비게이션 길이
+	    int viewCnt = 10;          // 한 페이지당 보여줄 행 갯수 
+	    int pageNaviSize = 5;      // 페이지 네비게이션 길이
 
-		    // 검색 조건 맵 생성
-		    Map<String, Object> listMap = new HashMap<>();
-		    listMap.put("searchType", searchType);
-		    listMap.put("keyword", keyword);
+	    // 검색 조건 맵 생성
+	    Map<String, Object> listMap = new HashMap<>();
+	    listMap.put("searchType", searchType);
+	    listMap.put("keyword", keyword);
 
-		    // 총 회원 수 조회
-		    int totalCount = dao.selectMemberCount(listMap);
+	    // 총 회원 수 조회
+	    int totalCount = dao.selectMemberCount(listMap);
 
-		    // 페이지 정보 생성
-		    PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);
+	    // 페이지 정보 생성
+	    PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);
 
-		    // 페이지 정보 기반 범위 설정
-		    listMap.put("start", pageInfo.getStart());
-		    listMap.put("end", pageInfo.getEnd());
+	    // 페이지 정보 기반 범위 설정
+	    listMap.put("start", pageInfo.getStart());
+	    listMap.put("end", pageInfo.getEnd());
 
-		    // 실제 회원 리스트 조회
-		    ArrayList<AdminMember> memberList = dao.selectMemberList(listMap);
-		    System.out.println("멤버 리스트 크기: " + memberList.size());
+	    // 실제 회원 리스트 조회
+	    ArrayList<AdminMember> memberList = dao.selectMemberList(listMap);
+	    System.out.println("멤버 리스트 크기: " + memberList.size());
 
-		    // 결과 맵 생성
-		    HashMap<String, Object> memberMap = new HashMap<>();
-		    memberMap.put("memberList", memberList);
-		    memberMap.put("pageInfo", pageInfo);
-		    memberMap.put("searchType", searchType);
-		    memberMap.put("keyword", keyword);
+	    // 결과 맵 생성
+	    HashMap<String, Object> memberMap = new HashMap<>();
+	    memberMap.put("memberList", memberList);
+	    memberMap.put("pageInfo", pageInfo);
+	    memberMap.put("searchType", searchType);
+	    memberMap.put("keyword", keyword);
 
-		    return memberMap;
-	 }
+	    return memberMap;
+ }
 	
 	// 회원 등급 변경
 	@Transactional
@@ -77,22 +77,34 @@ public class AdminService {
 
 	
 	// 단체 회원리스트 조회
-	public HashMap<String, Object> selectOrgList(int reqPage) {
-		int viewCnt = 10;        //한 페이지당 보여줄 게시글 갯수 
-		int pageNaviSize = 5;    //페이지 네비게이션 길이
-		int totalCount =dao.selectOrgCount();
-		
-		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);
-		
-		ArrayList<AdminOrg> orgList =dao.selectOrgList(pageInfo);
-		
-		HashMap<String,Object>orgMap =new HashMap<String,Object>();
-	    orgMap.put("orgList", orgList);
-		orgMap.put("pageInfo", pageInfo);
-		
-		return orgMap;
-		
-	}
+	public HashMap<String, Object> selectOrgList(int reqPage, String searchType, String keyword) {
+	      int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
+	      int pageNaviSize = 5;    //페이지 네비게이션 길이
+	      
+	       // 검색 조건 맵 생성
+	       Map<String, Object> listMap = new HashMap<>();
+	       listMap.put("searchType", searchType);
+	       listMap.put("keyword", keyword);
+	       
+	      int totalCount =dao.selectOrgCount(listMap);
+	      
+	      PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);
+	      
+	       // 페이지 정보 기반 범위 설정
+	       listMap.put("start", pageInfo.getStart());
+	       listMap.put("end", pageInfo.getEnd());
+	      
+	       ArrayList<AdminOrg> orgList =dao.selectOrgList(listMap);
+	      
+	      HashMap<String,Object>orgMap =new HashMap<String,Object>();
+	      orgMap.put("orgList", orgList);
+	      orgMap.put("pageInfo", pageInfo);
+	      orgMap.put("searchType", searchType);
+	      orgMap.put("keyword", keyword);
+	      
+	      return orgMap;
+	      
+	   }
 	
 	//단체회원 상태 변경
 	@Transactional
@@ -185,10 +197,11 @@ public class AdminService {
 	}
 	
 	//신고 내역 조회
+	/*
 	public HashMap<String, Object> selectReportList(int reqPage) {
 		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
-		int totalCount =dao.selectReportCount();
+		int totalCount =dao.selectReportCount(type);
 		
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
 		
@@ -202,13 +215,12 @@ public class AdminService {
 	return reportMap;
 	
 	}
-
+*/
 	//탈퇴 신청 관리 (단체)
 	public HashMap<String, Object> selectDeleteList(int reqPage, String showType) {
 		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
 		int totalCount =dao.selectDeleteCount(showType);
-		System.out.println("totcnt:"+ totalCount);	
 		
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
 		
@@ -216,17 +228,15 @@ public class AdminService {
 		    paramMap.put("start", pageInfo.getStart());
 		    paramMap.put("end", pageInfo.getEnd());
 		    paramMap.put("showType", showType);
-		    System.out.println("showT="+ showType);
 		  
 		ArrayList<AdminOrg> deleteList =dao.selectDeleteList(paramMap);
-		System.out.println("deleteList" +deleteList );
+
 		
 		for (AdminOrg org : deleteList) {
 			List<AdminBiz> bizList = dao.selectOneOrgBizList(org.getOrgNo());
 			org.setBizList(bizList);  
 			
-		}
-	    
+		} 
 		
 		HashMap<String,Object> deleteMap =new HashMap<String,Object>();
 		    deleteMap.put("deleteList", deleteList);   
@@ -239,35 +249,26 @@ public class AdminService {
 	}
 	
 	//탈퇴상태 변경
-		@Transactional
-		public int updateDelStatus(AdminOrg org) {
+	@Transactional
+	public int updateDelStatus(AdminOrg org) {
 	        		
-			   AdminOrg orgStatus = dao.selectOrgStatus(org.getOrgNo());
+		 AdminOrg orgStatus = dao.selectOrgStatus(org.getOrgNo());
 
-			   int currentStatus = orgStatus.getOrgStatus();
-	               System.out.println("현재상태 :" + currentStatus );
-	           
-			    int result = dao.updateDelStatus(org);
+		 int currentStatus = orgStatus.getOrgStatus();
+	              
+	     int result = dao.updateDelStatus(org);
 			    
-			    System.out.println("orgStatus:"+org.getOrgStatus());
-			    
-			    
-			    if (result > 0 && currentStatus == 3 && org.getOrgStatus() == 4) {
+	     if (result > 0 && currentStatus == 3 && org.getOrgStatus() == 4) {
 		
-			    	  String to = orgStatus.getOrgEmail();
-			          String orgName = orgStatus.getOrgName();
+	     String to = orgStatus.getOrgEmail();
+	     String orgName = orgStatus.getOrgName();
 			          
-			        //Biz biz = dao.selectBizList(biz.getBizNo()); // 단체 이메일 필요
-			 
-			        System.out.println(to);
-			        System.out.println(orgName);
-			        
-			        mailUtil.sendDelOrgMail(to, orgName);
-			    }
+	     mailUtil.sendDelOrgMail(to, orgName);
+			   }
 
-			    return result;
+	    return result;
 
-		    }
+		   }
 
 
 	//관리자 송금 내역 조회
@@ -300,15 +301,68 @@ public class AdminService {
 		
 		return dao.updatePayoutStatus(adminPayout);
 	}
-    
+
+	// 댓글 신고내역 조회
+	public HashMap<String, Object> selectCommentReportList(int reqPage, String tab, String startDate, String endDate) {
+		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
+		int pageNaviSize = 5;    //페이지 네비게이션 길이
+		int totalCount =dao.selectCommentReportCount(tab,startDate,endDate);
+		
+		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("tab", tab); //comment
+	    paramMap.put("startDate", startDate); // null
+	    paramMap.put("endDate", endDate);// null
+	    paramMap.put("start", pageInfo.getStart());  // 1
+	    paramMap.put("end", pageInfo.getEnd());   //end : 10
+	   
+		
+		ArrayList<AdminReport> reportList =dao.selectCommentReportList(paramMap);
+		
+		
+		HashMap<String,Object> reportCoMap =new HashMap<String,Object>();
+	    reportCoMap.put("reportList", reportList);   
+	    reportCoMap.put("pageInfo", pageInfo);
+	    reportCoMap.put("startDate", startDate);
+	    reportCoMap.put("endDate", endDate);
+	
+	return reportCoMap;
+		
+	}
+    //단체 신고내역 조회
+	public HashMap<String, Object> selectOrgReportList(int reqPage,String tab, String startDate, String endDate) {
+		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
+		int pageNaviSize = 5;    //페이지 네비게이션 길이
+		int totalCount =dao.selectOrgReportCount(tab,startDate, endDate);
+		System.out.println("totcnt:"+totalCount);
+		System.out.println("startDate : " + startDate);
+		System.out.println("endDate : " + endDate);
+		
+		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
+		
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("tab", tab);
+	    paramMap.put("startDate", startDate);
+	    paramMap.put("endDate", endDate);
+	    paramMap.put("start", pageInfo.getStart()); 
+	    paramMap.put("end", pageInfo.getEnd());   
+		
+		ArrayList<AdminReport> reportList =dao.selectOrgReportList(paramMap);
+		System.out.println("신고 리스트:" +reportList );
+		System.out.println("paramMap:" + paramMap);
+		
+		HashMap<String,Object> reportOrgMap =new HashMap<String,Object>();
+	    reportOrgMap.put("reportList", reportList);   
+	    reportOrgMap.put("pageInfo", pageInfo);
+	    reportOrgMap.put("startDate", startDate);
+	    reportOrgMap.put("endDate", endDate);
+	
+	return reportOrgMap;
+		
+	}
 	
 	}
-
-
-
-	
-	
-	
 
 	
 	/*

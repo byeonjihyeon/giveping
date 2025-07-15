@@ -338,7 +338,7 @@ function Comment(props){
             <span className="comment-author">{comment.memberId}</span>
             <span className="comment-time">{comment.commentTime}</span>
 
-            {isAuthor && !editMode && (
+            {isAuthor && !editMode || loginMember.memberLevel === 1 && (
             <div className="comment-actions">
                 <span className="comment-action-text" onClick={handleEditClick} style={{ marginLeft: "auto" }}>
                 수정

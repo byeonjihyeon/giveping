@@ -9,14 +9,14 @@ import DotBadge from "./DotBadge";
 
 
 //헤더 JSX
-export default function Header(){
+export default function Header2(){
 
     return (
-        <header className="header">
-                <div className="header-top">
+        <header className="header2">
+                <div className="header2-top">
                     <HeaderLink/>
                 </div>
-                <div className="header-menu">
+                <div className="header2-menu">
                     <MainNavi/>
                 </div>
         </header>
@@ -45,14 +45,14 @@ function HeaderLink(){
     }
     
     return (
-        <ul className="header-list">
+        <ul className="header-list2">
             {isLogined
             ?
             <>
                 {/*로그인 시 보여질 링크*/}
                 <li>
                     {loginMember
-                     ? loginMember.memberName + ' 님'
+                     ? loginMember.memberName
                      : loginOrg.orgName
                     }
                 </li>
@@ -154,7 +154,7 @@ function MainNavi(){
 function MemberMyPage(){
 
     return (
-        <ul className="sub-menu">
+        <ul className="sub-menu2">
             <li>
                 <Link to="/member/news">내 소식</Link>
             </li>
@@ -175,7 +175,7 @@ function MemberMyPage(){
 function OrgMyPage(){
 
     return (
-        <ul className="sub-menu">
+        <ul className="sub-menu2">
             <li>
                 <Link to="/org/news">내 소식</Link>
             </li>

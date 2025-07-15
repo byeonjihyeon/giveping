@@ -129,6 +129,7 @@ export default function BizList() {
         <section className="section board-list">
                 <div className="page-title">기부 사업</div>
                 <div className="filter-search-wrapper">
+
                 <div className="category-filter">
                     {Object.entries(donateCategoryMap).map(([code, label]) => (
                         <button
@@ -151,23 +152,23 @@ export default function BizList() {
                         {label}
                         </button>
 
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                <div className="search-box">
-                    <select name="searchType" id="searchType" value={searchType} onChange={handleSearchTypeChange}>
-                        <option value="bizTitle">사업명</option>
-                        <option value="orgName">단체명</option>
-                    </select>
-                    <input
-                        type="text"
-                        name={searchType === "bizTitle" ? "bizTitle" : "orgName"}
-                        placeholder={searchType === "bizTitle" ? "기부 사업명을 입력하세요" : "단체명을 입력하세요"}
-                        value={searchType === "bizTitle" ? keyWord.bizTitle : keyWord.orgName}
-                        onChange={handleInputChange}
-                    />
-                    <input type="button" value="검색" onClick={srchSubmit} />
-                </div>
+                    <div className="search-box">
+                        <select name="searchType" id="searchType" value={searchType} onChange={handleSearchTypeChange}>
+                            <option value="bizTitle">사업명</option>
+                            <option value="orgName">단체명</option>
+                        </select>
+                        <input
+                            type="text"
+                            name={searchType === "bizTitle" ? "bizTitle" : "orgName"}
+                            placeholder={searchType === "bizTitle" ? "기부 사업명을 입력하세요" : "단체명을 입력하세요"}
+                            value={searchType === "bizTitle" ? keyWord.bizTitle : keyWord.orgName}
+                            onChange={handleInputChange}
+                        />
+                        <input type="button" value="검색" onClick={srchSubmit} />
+                    </div>
             </div>
 
             <div className="board-list-wrap">
