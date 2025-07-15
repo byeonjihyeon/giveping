@@ -10,7 +10,8 @@ export default function MainList(){
     const [bizList, setBizList] = useState([]);     // 기부 사업 리스트
     const [orgList, setOrgList] = useState([]);     // 기부 사업 리스트
 
-    const sliderRef = useRef(null);
+    const bizSliderRef = useRef(null);
+    const orgSliderRef = useRef(null);
 
 
     // 조건에 따라 primaryNo 설정 (회원으로 로그인 한 경우만 memberNo 보내기, 나머지는 0 값 보냄)
@@ -47,38 +48,39 @@ export default function MainList(){
             }, []);
     
 
-    const scroll = (direction) => {
-        const scrollAmount = sliderRef.current.offsetWidth;
-        sliderRef.current.scrollBy({
+    // 스크롤 함수 (biz, org 분리)
+    function scroll(ref, direction) {
+        const scrollAmount = ref.current.offsetWidth;
+        ref.current.scrollBy({
             left: direction === "left" ? -scrollAmount : scrollAmount,
             behavior: "smooth"
-        });
-    };
+    });
+}
            
     return(
         <>
         <div className="biz-list-container">
-            <button className="scroll-btn left" onClick={() => scroll("left")}>{"<"}</button>
-            <div className="biz-slider" ref={sliderRef}>
+            <button className="scroll-btn left" onClick={() => scroll(bizSliderRef, "left")}>{"<"}</button>
+            <div className="biz-slider" ref={bizSliderRef}>
                 <ul className="biz-list">
                     {bizList.map((biz, index) => (
                         <BizItem key={"biz" + index} biz={biz} />
                     ))}
                 </ul>
             </div>
-            <button className="scroll-btn right" onClick={() => scroll("right")}>{">"}</button>
+            <button className="scroll-btn right" onClick={() => scroll(bizSliderRef, "right")}>{">"}</button>
         </div>
 
         <div className="biz-list-container">
-            <button className="scroll-btn left" onClick={() => scroll("left")}>{"<"}</button>
-            <div className="biz-slider" ref={sliderRef}>
+            <button className="scroll-btn left" onClick={() => scroll(orgSliderRef, "left")}>{"<"}</button>
+            <div className="biz-slider" ref={orgSliderRef}>
                 <ul className="biz-list">
                     {orgList.map((org, index) => (
                         <OrgItem key={"org" + index} org={org} />
                     ))}
                 </ul>
             </div>
-            <button className="scroll-btn right" onClick={() => scroll("right")}>{">"}</button>
+            <button className="scroll-btn right" onClick={() => scroll(orgSliderRef, "right")}>{">"}</button>
         </div>
         </>
     )
@@ -138,7 +140,7 @@ function OrgItem(props){
             </div>
             <div className="posting-info">
                 <div className="posting-title">{org.orgName}</div>
-                <div className="posting-sub-info">
+                <div className="posting-category">
                     {org.categoryList && org.categoryList.length > 0 ? (
                         org.categoryList.map((ctg, idx) => (
                           <span key={idx}> #{ctg} </span>
