@@ -21,50 +21,61 @@ export default function NewsWrite(){
 
     // 소식 등록 버튼 클릭 시, 동작 함수
     function newsWrite(){
-        if(newsName != '' && newsContent != ''){
+         Swal.fire({
+            title : '알림',
+            text : '소식글을 등록하시겠습니까?',
+            icon : 'question',
+            showCancelButton : true,
+            confirmButtonText : '확인',
+            cancelButtonText : '취소'
+        }).then(function(res){
+            if(res.isConfirmed){
+        
+            if(newsName != '' && newsContent != ''){
 
-            if(orgNo == null || orgNo == undefined || orgNo ==''){
-                Swal.fire({
-                     title : '알림',
-                     text : '기부 단체를 선택해주세요',
-                     icon : 'warning'
+                if(orgNo == null || orgNo == undefined || orgNo ==''){
+                    Swal.fire({
+                        title : '알림',
+                        text : '기부 단체를 선택해주세요',
+                        icon : 'warning'
+                    });
+                    return; // axios 보내기 중지
+                }
+                const form = new FormData();    //파일 업로드 시, 사용할 수 있는 내장 객체
+
+                // 첫번째로 작성하는 문자열 ==> input의 name 속성값 역할을 함.
+                form.append("newsName", newsName);
+                form.append("newsContent", newsContent);
+                form.append("memberNo", loginMember.memberNo);   // 작성자 (관리자만 가능)
+                form.append("orgNo", orgNo); // 대상 단체 번호
+
+                if(newsThumb != null){ //썸네일 이미지 업로드한 경우에만
+                    form.append("newsThumb", newsThumb);
+                }
+
+                let options = {};
+                options.method = 'post';
+                options.url = serverUrl + '/news';
+                options.data = form;
+                options.headers = {};
+                options.headers.ContentType = "multipart/form-data";
+                options.headers.processData = false;    //쿼리스트링으로 변환하지 않도록 설정
+
+                axiosInstance(options)
+                .then(function(res){
+                    // 게시글 정상 등록 시, BoardList 컴포넌트로 전환
+                    navigate("/news/list");
                 });
-                return; // axios 보내기 중지
+
+            }else{
+                Swal.fire({
+                    title : '알림',
+                    text : '게시글 제목과 내용은 필수 입력값입니다.',
+                    icon : 'warning'
+                });
             }
-            const form = new FormData();    //파일 업로드 시, 사용할 수 있는 내장 객체
-
-            // 첫번째로 작성하는 문자열 ==> input의 name 속성값 역할을 함.
-            form.append("newsName", newsName);
-            form.append("newsContent", newsContent);
-            form.append("memberNo", loginMember.memberNo);   // 작성자 (관리자만 가능)
-            form.append("orgNo", orgNo); // 대상 단체 번호
-
-            if(newsThumb != null){ //썸네일 이미지 업로드한 경우에만
-                form.append("newsThumb", newsThumb);
-            }
-
-            let options = {};
-            options.method = 'post';
-            options.url = serverUrl + '/news';
-            options.data = form;
-            options.headers = {};
-            options.headers.ContentType = "multipart/form-data";
-            options.headers.processData = false;    //쿼리스트링으로 변환하지 않도록 설정
-
-            axiosInstance(options)
-            .then(function(res){
-                // 게시글 정상 등록 시, BoardList 컴포넌트로 전환
-                navigate("/news/list");
-            });
-
-        }else{
-            Swal.fire({
-                title : '알림',
-                text : '게시글 제목과 내용은 필수 입력값입니다.',
-                icon : 'warning'
-            });
-        }
-
+        }  
+    }); 
     }
 
 
@@ -80,7 +91,6 @@ export default function NewsWrite(){
                     {/* 게시글 작성과 수정하기 모두 UI는 동일하므로, 입력 요소들은 별도의 컴포넌트로 분리하여 작성.
                         props로 State 변수와 변경할 때 호출할 함수들 전달
                     */}
-                    {/*<NewsFrm loginMember={loginMember} */}
                     <NewsFrm
                                newsName={newsName}
                                setNewsName={setNewsName}

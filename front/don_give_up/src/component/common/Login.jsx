@@ -12,13 +12,16 @@ import { useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { useRef } from 'react';
+import Loading from './Loading';
 
 //로그인 페이지
 export default function Login(){
+    const [isLoading, setIsLoading] = useState(true);
     //스토리지에 저장한 데이터 추출하기
     const {isLogined, setLoginMember, setLoginOrg} = useUserStore();
 
     useEffect(function(){
+        setIsLoading(false);
         if(!isLogined){ //외부에서 강제 로그아웃 시킨 경우
             setLoginMember(null);
             setLoginOrg(null);
@@ -46,6 +49,7 @@ export default function Login(){
 
     return (
         <section className="section login-wrap">
+            {isLoading ? <Loading/> : ""}
             <div className="page-title"><h1>로그인</h1></div>
             <div className="login-div">
                 <div>

@@ -95,7 +95,6 @@ public class MemberService {
 		if(chkMember == null) {
 			return null;
 		}
-		
 		if(encoder.matches(member.getMemberPw(), chkMember.getMemberPw())) { //평문 비밀번호 == 암호화 비밀번호
 			String accessToken = jwtUtils.createMemberAccessToken(chkMember.getMemberNo(), chkMember.getMemberLevel(), chkMember.getMemberName());
 			String refreshToken = jwtUtils.createMemberRefreshToken(chkMember.getMemberNo(), chkMember.getMemberLevel(), chkMember.getMemberName());

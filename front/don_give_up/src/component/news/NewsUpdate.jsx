@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import useUserStore from "../../store/useUserStore";
 import NewsFrm from "./NewsFrm";
 import ToastEditor from "./ToastEditor";
+import Swal from "sweetalert2";
 
 export default function NewsUpdate(){
 
@@ -45,47 +46,50 @@ export default function NewsUpdate(){
     const navigate = useNavigate();
 
     function updateNews(){
-        /**/
-        console.log(newsNo);
-        console.log(newsName);
-        console.log(newsContent);
-        console.log(orgNo);
-        console.log(prevThumbPath);
-        console.log(newsThumb);
         
-        
-        if(newsName != null && newsContent != null){
-            const form = new FormData();
+        Swal.fire({
+            title : '알림',
+            text : '소식글을 수정하시겠습니까?',
+            icon : 'question',
+            showCancelButton : true,
+            confirmButtonText : '확인',
+            cancelButtonText : '취소'
+        }).then(function(res){
+            if(res.isConfirmed){
+                if(newsName != null && newsContent != null){
+                const form = new FormData();
 
-            form.append('newsNo', newsNo);                                //게시글 번호
-            form.append('newsName', newsName);                          //게시글 제목
-            form.append('newsContent', newsContent);                      //게시글 본문 내용
-            form.append('orgNo', orgNo);
+                form.append('newsNo', newsNo);                                //게시글 번호
+                form.append('newsName', newsName);                          //게시글 제목
+                form.append('newsContent', newsContent);                      //게시글 본문 내용
+                form.append('orgNo', orgNo);
 
-            //기존 썸네일 파일명
-            if(prevThumbPath != null){
-                form.append('prevThumbPath', prevThumbPath);
-            }
-            //새롭게 등록한 썸네일 파일 객체
-            if(newsThumb != null){
-                form.append('newsThumb', newsThumb);
-            }
-
-            let options = {};
-            options.url = serverUrl + '/news';
-            options.method = 'patch'; //수정 == PUT or PATCH == 일부 컬럼 정보 수정 == PATCH
-            options.data = form;
-            options.headers = {};
-            options.headers.contentType = 'multipart/form-data';
-            options.headers.processData = false; //쿼리 스트링 변환 X
-
-            axiosInstance(options)
-            .then(function(res){
-                if(res.data.resData){
-                    navigate('/news/view/'+newsNo);
+                //기존 썸네일 파일명
+                if(prevThumbPath != null){
+                    form.append('prevThumbPath', prevThumbPath);
                 }
-            });
-       }   
+                //새롭게 등록한 썸네일 파일 객체
+                if(newsThumb != null){
+                    form.append('newsThumb', newsThumb);
+                }
+
+                let options = {};
+                options.url = serverUrl + '/news';
+                options.method = 'patch'; //수정 == PUT or PATCH == 일부 컬럼 정보 수정 == PATCH
+                options.data = form;
+                options.headers = {};
+                options.headers.contentType = 'multipart/form-data';
+                options.headers.processData = false; //쿼리 스트링 변환 X
+
+                axiosInstance(options)
+                .then(function(res){
+                    if(res.data.resData){
+                        navigate('/news/view/'+newsNo);
+                    }
+                });
+        }
+        }  
+    });  
     }
 
 

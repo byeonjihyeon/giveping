@@ -12,12 +12,16 @@ export default function BizView(){
     const {loginMember, loginOrg, isLogined} = useUserStore();
     const param = useParams();
     const bizNo = param.bizNo;
-    //console.log(bizNo);
 
     const [searchParams] = useSearchParams();
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
+
+     console.log("BizView 렌더링 - 현재 bizNo:", bizNo); 
+
+    // 카테고리별 기부 사업 리스트 선언
+    const [bizCategoryList, setBizCategoryList] = useState([]);
 
     //서버에서 조회해온 게시글 1개 정보 저장 변수
     const [donateBiz, setDonateBiz] = useState({});
@@ -57,7 +61,6 @@ export default function BizView(){
 
     
     function openDonatePopup() {
-        //console.log("기부하기 버튼 클릭");
         if(loginOrg && loginOrg.orgNo === donateBiz.orgNo){
             Swal.fire({
                         title : '알림',
@@ -74,7 +77,6 @@ export default function BizView(){
     }
 
     function openSurveyPopup() {
-        //console.log("설문조사 버튼 클릭");
         setIsSurveyOpen(true);
     }
 
@@ -86,6 +88,19 @@ export default function BizView(){
         setIsDonateOpen(false);
     }
 
+    // 카테고리별 기부 사업 불러오기
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + '/biz/donateCode/' + bizNo;
+        options.method = 'get';
+
+        axiosInstance(options)
+        .then(function(res){
+        console.log("카테고리별 기부 사업 불러오기 : ", res.data.resData);
+        setBizCategoryList(res.data.resData);
+        });
+    }, [bizNo])
+
 
     // 기부 사업 내용 불러오기
     useEffect(function(){
@@ -93,15 +108,11 @@ export default function BizView(){
         options.url = serverUrl + '/biz/' + bizNo;
         options.method = 'get';
 
-
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
-            console.log("후원회원", res.data.resData.bizMemberList);
             setDonateBiz(res.data.resData);
             setMemberList(res.data.resData.bizMemberList);
             setPlanList(res.data.resData.bizPlanList);
-            console.log(res.data.resData.bizPlanList);
             //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
         });
 
@@ -121,22 +132,6 @@ export default function BizView(){
     }, [donateBiz.fileList]);
 
 
-/*
-    useEffect(function(){
-        let options = {};
-        options.url = serverUrl + '/biz/file/' + bizNo;
-        options.method = 'get';
-
-        axiosInstance(options)
-        .then(function(res){
-            //console.log(res.data.resData);
-            setPrevBizFileList(res.data.resData);
-            //doanteBiz 안에 있는 bizMemberList에는 member 객체가 여러 개 들어있음
-        });
-        console.log("삭제 대상 파일 번호 배열 변경됨:", delBizFileNo);
-    }, []);
-    */
-
     const navigate = useNavigate();
     // 삭제하기 클릭 시, 동작 함수
         function deleteBiz(){
@@ -155,7 +150,6 @@ export default function BizView(){
         
                     axiosInstance(options)
                     .then(function(res){
-                        console.log(res.data.resData);
                         if(res.data.resData){
                             navigate('/biz/list');
                         }
@@ -166,7 +160,6 @@ export default function BizView(){
 
         // 탭 변환
         const [activeTab, setActiveTab] = useState('intro');
-        console.log("loginMember : ", loginMember);
 
         function renderTab(){
             switch(activeTab){
@@ -193,7 +186,6 @@ export default function BizView(){
 
         // d-day 구하기
         function calculateDDay(donateEndDate) {
-            console.log("donateEndDate : ", donateEndDate);
             const today = new Date();
             const endDate = new Date(donateEndDate);
 
@@ -299,7 +291,7 @@ export default function BizView(){
                             {donateBiz.bizStatus !== 1 && (
                                 <span
                                     className="tabArea-right-text"
-                                    onclick={function(){ navigate("/biz/update/" + donateBiz.bizNo)}}
+                                    onClick={function(){ navigate("/biz/update/" + donateBiz.bizNo)}}
                                 >
                                     수정
                                 </span>
@@ -340,10 +332,57 @@ export default function BizView(){
                                 </span>
                             </Link>
                         </div>
+                        {/* 카테고리별 기부사업 소개 (2개) */}
+                        <div className="content-categoryInfo-wrap">
+                            <div className="category-section-title">함께 보는
+                                <span className="highlight-category-name"> #{donateBiz.donateCtg}</span> 기부 사업
+                            </div>
+                            <div className="category-items-container">
+                                {/* bizCategoryList 에서 1개씩 꺼내오기 */}
+                                {bizCategoryList?.map(function(bizCategory, index){
+                                    return <CategoryItem key={"bizCategory" + index} bizCategory={bizCategory}/>
+                                })}
+                            </div>
+                        </div>
                     </div>
                 </div>
            </div>
         </section>
+    );
+}
+
+function CategoryItem(props){
+    const bizCategory = props.bizCategory;
+    const navigate = useNavigate();
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+
+    // 기부금 달성률 계산
+    const goal = bizCategory.bizGoal || 0;
+    const donated = bizCategory.donateMoney || 0;
+    const percent = goal > 0 ? Math.floor((donated / goal) * 100) : 0;
+
+    return (
+        <li className="category-item" onClick={function(){navigate('/biz/view/'+bizCategory.bizNo)}}>
+            <div className="category-img">
+                <img
+                    src={bizCategory.bizThumbPath
+                        ? serverUrl + "/biz/thumb/" + bizCategory.bizThumbPath.substring(0, 8) + "/" + bizCategory.bizThumbPath
+                        : "/images/default_img.png"}
+                />
+            </div>
+            <div className="category-info">
+                <div className="category-title">{bizCategory.bizName}</div>
+                <div className="category-sub-info">
+                    <span>{bizCategory.orgName}</span>
+                </div>
+                <div className="category-progress-bar">
+                        <div className="category-progress-fill" style={{ width: `${percent}%` }}></div>
+                </div>
+                <div className="category-donate-stats">
+                    <span>{percent}% </span>
+                </div>
+            </div>
+        </li>
     );
 }
 
@@ -357,7 +396,7 @@ function IntroTab(props){
             <div className="content-bizContent">
                 {
                     donateBiz.bizContent
-                    ? <Viewer initialValue={donateBiz.bizContent} />
+                    ? <Viewer key={donateBiz.bizNo} initialValue={donateBiz.bizContent} />
                     : ''
                 }
             </div>
@@ -437,8 +476,6 @@ function FileTab(props){
 
 // 기부회원리스트 탭 컴포넌트
 function DonateMember(props){
-    const showMemberList = props.showMemberList;
-    const setShowMemberList = props.setShowMemberList;
     const memberList = props.memberList;
 
     return (
@@ -452,7 +489,7 @@ function DonateMember(props){
                         <div>생년월일</div>
                         <div>전화번호</div>
                         <div>기부금액</div>
-                        <div>기부일시</div>
+                        <div>기부일자</div>
                     </div>
                     {memberList.map((member, index) => (
                         <div className="donate-member-row" key={index}>
@@ -479,7 +516,6 @@ function Donate(props){
 
     //스토리지에 저장한 데이터 추출하기
     const {loginMember} = useUserStore();
-    console.log(loginMember.memberName);
     const memberNo = loginMember.memberNo;
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -529,7 +565,6 @@ function Donate(props){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData.totalMoney);
             setTotalMoney(res.data.resData.totalMoney); // 멤버별 잔여 예치금 저장
         });
     }, []);
@@ -566,11 +601,9 @@ function Donate(props){
                             options.url = serverUrl + "/biz/donate";
                             options.data = updatedPayInfo;
                             options.method="post";
-                            console.log(updatedPayInfo);
                             
                             axiosInstance(options)
                             .then(function(res){
-                                console.log(res.data.resData);
                                 if(res.data.resData){
                                     //성공할 경우, 팝업 닫음
                                     onClose();
@@ -629,7 +662,7 @@ function Donate(props){
                             <span className="value">{selectedAmount.toLocaleString()}원</span>
                         </div>
                         <div className="receipt-line total">
-                            <span className="label">= 차감 후 잔액</span>
+                            <span className="label">= 기부 후 잔액</span>
                             <span className="value">{(totalMoney - selectedAmount).toLocaleString()}원</span>
                         </div>
                     </div>
