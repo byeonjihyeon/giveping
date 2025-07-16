@@ -183,9 +183,9 @@ export default function BizList() {
 
             <div className="board-list-wrap">
                 <ul className="posting-wrap grid-3x4">
-                    {donateBizList.map((donateBiz, index) => (
-                        <BoardItem key={"donateBiz" + index} donateBiz={donateBiz} serverUrl={serverUrl} />
-                    ))}
+                    {donateBizList.map(function(donateBiz, index){
+                        return <BoardItem key={"donateBiz" + index} donateBiz={donateBiz} serverUrl={serverUrl} />
+                    })}
                 </ul>
             </div>
 

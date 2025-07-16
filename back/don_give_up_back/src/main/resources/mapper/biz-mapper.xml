@@ -436,4 +436,39 @@ from tbl_survey_question
 		   	   BIZ_THUMB = #{bizThumbPath}
 		 where biz_no = #{bizNo}
 	</update>
+	
+	<!-- 카테고리별 기부 사업 조회하기 -->
+	<select id="selectBizByCategory" parameterType="_int" resultType="Biz">
+	SELECT * FROM (
+	select b.biz_no AS bizNo,
+           b.org_no AS orgNo,
+           o.org_name AS orgName,
+           b.donate_code AS donateCode,
+           d.donate_ctg AS donateCtg,
+           b.biz_name AS bizName,
+           b.biz_content AS biz_content,
+           TO_CHAR(b.biz_donate_start, 'YYYY-MM-DD') AS bizDonateStart,
+           TO_CHAR(b.biz_donate_end, 'YYYY-MM-DD') AS bizDonateEnd,
+           TO_CHAR(b.biz_start, 'YYYY-MM-DD') AS bizStart,
+           TO_CHAR(b.biz_end, 'YYYY-MM-DD') AS bizEnd,
+           b.biz_goal AS bizGoal,
+           b.biz_status AS bizStatus,
+           TO_CHAR(b.biz_reg_date, 'YYYY-MM-DD') AS bizRegDate,
+           b.biz_edit AS bizEdit,
+           b.biz_thumb AS bizThumbPath,
+           NVL((
+               SELECT SUM(d.donate_money)
+               FROM tbl_donation_list d
+               WHERE d.biz_no = b.biz_no
+           ), 0) AS donateMoney
+    FROM tbl_donate_biz b
+    JOIN tbl_org o ON b.org_no = o.org_no
+    JOIN tbl_donate_code d ON b.donate_code = d.donate_code 
+    WHERE b.biz_status = 1
+    	AND b.biz_end >= sysdate 
+    	AND b.DONATE_CODE = (select donate_code from tbl_donate_biz where biz_no=#{_parameter})
+    	ORDER BY o.org_temperature DESC, b.biz_end
+    )
+	    WHERE ROWNUM &lt;= 2
+	</select>
 </mapper>
