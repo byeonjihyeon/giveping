@@ -63,7 +63,7 @@
 	        <where>
 	            b.biz_status = 1
 	            AND b.biz_end >= SYSDATE
-	            <if test="memberNo != null and memberNo != 0">
+	            <if test="memberNo != null and memberNo != 0 and memberLevel != 1">
 	                AND b.donate_code IN (
 	                    SELECT donate_code 
 	                    FROM tbl_member m
