@@ -76,10 +76,7 @@ public class CommonController {
 	public ResponseEntity<ResponseDTO> selectMainOrgList(@PathVariable int primaryNo){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 단체 리스트 조회 중 오류 발생", null, "error");
 		try {
-			System.out.println("primaryNo : " + primaryNo);
 			ArrayList<CommonOrg> orgList = service.selectMainOrgList(primaryNo);
-			
-			System.out.println("orgList : " +orgList);
 			
 			res = new ResponseDTO(HttpStatus.OK, "", orgList, "");
 		}catch(Exception e) {
