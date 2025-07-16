@@ -22,7 +22,7 @@ public class MailUtil {
 	
 	
 	// 기부사업 승인 메일 보낼 때 필요한 정보
-	public void sendApproveMail(String to, String bizName, String orgName) {
+	public void sendApproveMail(String orgEmail, String bizName, String orgName) {
 		String subject ="[Don Give Up] 기부 사업 승인 안내";
 		String content =getApproveMailTemplate(bizName, orgName);
 		
@@ -30,7 +30,7 @@ public class MailUtil {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 		
-		helper.setTo(to);
+		helper.setTo(orgEmail);
 		helper.setSubject(subject);
 		helper.setText(content, true);
 		
@@ -54,13 +54,13 @@ public class MailUtil {
 
 
 	 //기부사업 반려 메일 보낼 때 필요한 정보, 내용
-	  public void sendRejectMail(String orgEmail, String orgName, String bizName, String bizEdit) {
+	  public void sendRejectBizMail(String orgEmail, String orgName, String bizName, String bizEdit) {
 		      try {
 		            MimeMessage message = mailSender.createMimeMessage();
 		            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
 		            helper.setTo(orgEmail);
-		            helper.setSubject("[기부 사업 반려 안내]");
+		            helper.setSubject("[Don Give Up] 기부 사업 반려 안내");
 		            String content = "<h3>" + orgName + "님</h3>" +
 		                             "<p>요청하신 사업 <strong>" + bizName + "</strong>이 아래 사유로 반려되었습니다.</p>" +
 		                             "<p><em>" + bizEdit + "</em></p>" +
@@ -77,7 +77,7 @@ public class MailUtil {
 	// 단체 탈퇴 메일 보낼 때 필요한 정보
 	public void sendDelOrgMail(String to, String orgName) {
 		String subject ="[Don Give Up] 탈퇴 처리 완료 안내";
-		String content =getApproveMailTemplate(orgName);
+		String content =getDeleteMailTemplate(orgName);
 		
 	try {		
 		MimeMessage message = mailSender.createMimeMessage();
@@ -93,10 +93,8 @@ public class MailUtil {
 		e.printStackTrace();
 	}
 }
-
-
 	// 단체 탈퇴 메일 내용
-	private String getApproveMailTemplate(String orgName) {
+	private String getDeleteMailTemplate(String orgName) {
 		  return "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
 	                + "<h2 style='color: #2d7ff9;'>[Don Give Up] 탈퇴 처리 완료 안내</h2>"
 	                + "<p>안녕하세요, <strong>" + orgName + "</strong> 담당자님.</p>"
@@ -105,7 +103,58 @@ public class MailUtil {
 	                + "<hr style='margin: 20px 0;'/>"
 	                + "<br/>"
 	                + "</div>";
+	}
+
+	
+	
+	//단체 가입 승인 메일 정보
+	public void sendApproveOrgMail(String to, String orgName) {
+		String subject ="[Don Give Up] 단체 가입 승인 안내";
+		String content =getApproveOrgMailTemplate(orgName);
+		
+	try {		
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+		
+		helper.setTo(to);
+		helper.setSubject(subject);
+		helper.setText(content, true);
+		
+		mailSender.send(message);
+		
+	}catch(MessagingException e) {
+		e.printStackTrace();
+	}
+}
+	//단체 가입 승인 메일 내용
+	private String getApproveOrgMailTemplate(String orgName) {
+		
+	    return "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
+	    + "<h2 style='color: #2d7ff9;'>[Don Give Up] 단체 가입 승인 안내</h2>"
+	    + "<p>안녕하세요, <strong>" + orgName + "</strong> 담당자님.</p>"
+	    + "<p><strong style='color: #333;'> 가입 신청</strong> 이 검토 후 <span style='color: green; font-weight: bold;'>승인</span>되었습니다.</p>"
+	    + "<p>함께 해주셔서 감사합니다.</p>"
+	    + "<hr style='margin: 20px 0;'/>"
+	    + "<br/>"
+	    + "</div>";
+       }
+	public void sendRejectOrgMail(String orgEmail, String orgName) {
+	      try {
+	            MimeMessage message = mailSender.createMimeMessage();
+	            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+	            helper.setTo(orgEmail);
+	            helper.setSubject("[Don Give Up] 가입 신청 반려 안내");
+	            String content = "<h3>" + orgName + "님</h3>" +
+	                             "<p>가입 신청이 반려되었습니다.</p>" ;
+	                             
+	            helper.setText(content, true);
+
+	            mailSender.send(message);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 }
-		
-}
+

@@ -202,10 +202,14 @@ export default function NewsView(){
         
                 <div className="comment-list-wrap">
                     <br />
-                    {Array.isArray(news.commentList) &&
+                    {Array.isArray(news.commentList) && news.commentList.length > 0 ? (
                     news.commentList.map(function(comment, index){
                         return <Comment key={"comment"+index} comment={comment} commentList={commentList} setCommentList={setCommentList} newsNo={newsNo} reloadCommentList={reloadCommentList}/>
-                    })}
+                    })
+                   ) : (
+                        <p className ="no-comments">등록된 댓글이 없습니다..</p>
+                   )
+                }
                 </div>
                 </section>
         
@@ -517,7 +521,7 @@ function Report(props){
                     </div>
 
                     <div>
-                        <input class="report-reason" type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
+                        <input className="report-reason" type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
                     </div>
                 </div>
                 <div className="report-modal-buttons">

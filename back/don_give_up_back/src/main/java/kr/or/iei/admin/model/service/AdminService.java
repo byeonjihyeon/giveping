@@ -109,8 +109,32 @@ public class AdminService {
 	//단체회원 상태 변경
 	@Transactional
 	public int updateOrgStatus(AdminOrg org) {
-		
-	    return dao.updateOrgStatus(org);
+
+			 AdminOrg orgStatus = dao.selectOrgStatus(org.getOrgNo());
+
+			 int currentStatus = orgStatus.getOrgStatus();
+		              
+		     int result = dao.updateOrgStatus(org);
+				    
+		     if (result > 0 && currentStatus == 0 && org.getOrgStatus() == 1) {
+			
+		     String orgEmail= orgStatus.getOrgEmail();
+		     String orgName = orgStatus.getOrgName();
+		    	          
+		     mailUtil.sendApproveOrgMail(orgEmail, orgName);
+				 
+		     
+		     }else if (result > 0 && currentStatus == 0 && org.getOrgStatus() == 2) {
+		    	 
+		     String orgEmail = orgStatus.getOrgEmail();
+	         String orgName = orgStatus.getOrgName();
+				    	          
+			 mailUtil.sendRejectOrgMail(orgEmail, orgName);
+					
+		     }
+	 return result;
+
+		     
 	}
 	
 	//기부 사업리스트 조회
@@ -123,8 +147,6 @@ public class AdminService {
 	       listMap.put("status", status);
 	       listMap.put("searchType", searchType);
 	       listMap.put("keyword", keyword);
-	   	System.out.println("service-searchType: "+ searchType);
-	   	System.out.println("status:"+status);
 	       
 		int totalCount =dao.selectBizCount(listMap);
 		
@@ -153,27 +175,27 @@ public class AdminService {
 	public int updateBizStatus(AdminBiz biz) {
         		
 		   AdminBiz bizStatus = dao.selectBizStatus(biz.getBizNo());
-		   System.out.println("selectBizStatus 결과: " + bizStatus);  // null이면 문제 확정
-
+		   
 		   int currentStatus=  bizStatus.getBizStatus();
-               System.out.println("현재상태 :" + currentStatus );
-                       
-		    int result = dao.updateBizStatus(biz);
+
+		   int result = dao.updateBizStatus(biz);
 		    
-		    System.out.println("bizStatus:"+ biz.getBizStatus());
-		    
-		    
-		    if (result > 0 && currentStatus == 0 && biz.getBizStatus() == 1) {
-		    	System.out.println("result:" + result);
-		    	  String to = bizStatus.getOrgEmail();
+
+		   if (result > 0 && currentStatus == 0 && biz.getBizStatus() == 1) {
+		    	
+		    	  String orgEmail = bizStatus.getOrgEmail();
 		          String bizName = bizStatus.getBizName();
 		          String orgName = bizStatus.getOrgName();
-
-		        System.out.println(to);
-		        System.out.println(bizName);
-		        System.out.println(orgName);
-		        
-		        mailUtil.sendApproveMail(to, bizName, orgName);
+		          
+		        mailUtil.sendApproveMail(orgEmail, bizName, orgName);
+		          
+		   }else if (result > 0 && biz.getBizStatus() == 2) {
+		    	  String orgEmail = bizStatus.getOrgEmail();
+		          String bizName = bizStatus.getBizName();
+		          String orgName = bizStatus.getOrgName();
+		          String bizEdit = biz.getBizEdit();
+		          
+		      mailUtil.sendRejectBizMail(orgEmail, bizName, orgName,bizEdit);      
 		    }
 
 		return result;
@@ -378,6 +400,8 @@ public class AdminService {
 	return reportOrgMap;
 		
 	}
+
+
 	
 	}
 

@@ -195,11 +195,10 @@ public class OrgController {
 			int result = service.checkPw(org);
 			
 			if(result > 0) {				
-				res = new ResponseDTO(HttpStatus.OK, "비밀번호가 확인되었습니다.", true, "success");
+				res = new ResponseDTO(HttpStatus.OK, "", true, "");
 			}else {
-				res = new ResponseDTO(HttpStatus.OK, "비밀번호가 일치하지 않습니다.", false, "warning");
+				res = new ResponseDTO(HttpStatus.OK, "", false, "");
 			}
-			
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

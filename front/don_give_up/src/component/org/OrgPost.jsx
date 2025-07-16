@@ -46,10 +46,13 @@ export default function OrgPost(){
         bizPlanMoney : ""      //금액
     }]);
 
+    const [isSelect, setIsSelect] = useState(false);
+
     //모금 기간 선택 시 호출 함수
     function selectDonateDate(e){
         const donateTerm = e.target.value;
         setDonateBiz({...donateBiz, bizDonateTerm : donateTerm});
+        setIsSelect(true);
     }
 
     //사업 시작 날짜가 최소 7일 뒤에 시작되어야 해 확인하기 위하여
@@ -270,7 +273,7 @@ export default function OrgPost(){
                         </RadioGroup>
                     </FormControl>
                     <p>*모금 시작일은 등록일로부터 7일 뒤, 모금 종료일은 선택한 희망 모금 기간 +7일입니다.</p>
-                    <p>(예시 : 등록일 - 7월 5일, 선택 희망 모금일 - 30일 / 모금 시작일 - 7월 12일 / 모금 종료일 - 8월 10일)</p>
+                    <p>&nbsp;{isSelect ? "선택 희망 모금일 : " + donateBiz.bizDonateTerm + "일, 등록일/모금 시작일 : " + nextWeekStr + ", 모금 종료일 : " + donateEndDateStr : ""}</p>
                 </div>
                 <div>
                     <h3>사업 기간</h3>

@@ -195,6 +195,9 @@
     margin: 0 auto;
     font-size: 14px;
 }
+.org-delete-wrap label {
+    color: black;
+}
 
 /*마이페이지 홈*/
 .myPage-div {
@@ -350,4 +353,13 @@
 }
 .tbl-org-view a:hover {
     text-decoration: underline;
+}
+.progress-circle {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background-color: #ff5353ff;
+    top : 34px;
+    left: -10px;
+    border-radius: 10px;
 }
