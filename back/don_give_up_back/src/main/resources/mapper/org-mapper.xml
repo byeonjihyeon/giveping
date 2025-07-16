@@ -318,7 +318,7 @@
 		  left join tbl_donation_list
 		 using (biz_no)
 		 where org_no = #{orgNo}
-		   and to_char(donate_date, 'YYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')
+		   and to_char(donate_date, 'YYYY-MM-DD') = to_char(sysdate, 'YYYY-MM-DD')
 	</select>
 	<!-- 관심 회원 수 -->
 	<select id="selectLikeMember" parameterType="_int" resultType="_int">
