@@ -38,7 +38,7 @@ export default function MemberManage(){
             .then(res => {
                 setMemberList(res.data.resData.memberList);
                 setPageInfo(res.data.resData.pageInfo);
-                console.log(memberList);
+               
             })
             .catch(err => {
                 console.error("조회 실패", err);
