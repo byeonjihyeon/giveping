@@ -418,7 +418,7 @@ public class MemberService {
 			
 			//메일로 보낼 메시지
 			SimpleMailMessage msg = new SimpleMailMessage();
-			msg.setTo("qor659659@gmail.com");
+			msg.setTo(member.getMemberEmail());
 			msg.setFrom("dongiveup00@gmail.com");
 			msg.setSubject("Don Give Up 임시 비밀번호 안내");
 			msg.setText(member.getMemberId() + "님의 임시 비밀번호는 " + newRandomPw + " 입니다.");

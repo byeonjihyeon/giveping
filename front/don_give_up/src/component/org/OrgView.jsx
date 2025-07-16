@@ -123,9 +123,12 @@ export default function OrgView(){
                         })}
                     </div>
                     <div className="org-temperature">
-                        <p style={{width : (org.orgTemperature * 2) + "%"}}>{org.orgTemperature}ºC</p>
-                        <div className="progress-bar">
-                            <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"}}></div>
+                        <p style={{width : (org.orgTemperature * 2) + "%"}}>
+                            <span className="org-ctg-span" style={{color : "#ff5353ff", border : "1px solid #ff5353ff"}}>{org.orgTemperature}ºC</span>
+                            <span className="progress-circle"></span>
+                        </p>
+                        <div className="progress-bar" style={{marginTop : "8px"}}>
+                            <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "#ff5353ff", borderRadius : "5px"}}></div>
                         </div>
                     </div>
                 </div>
@@ -210,7 +213,7 @@ function IngBiz(props){
                         <div className="progress-fill" style={{width : per + "%"}}></div>
                     </div>
                     <div>
-                        <span style={{float : "left"}}>{(biz.donateMoney || 0).toLocaleString("ko-KR")}원</span>
+                        <span style={{float : "left", marginBottom : "5px"}}>{(biz.donateMoney || 0).toLocaleString("ko-KR")}원</span>
                         <span style={{float : "right"}}>{per}%</span>
                     </div>
                 </div>
@@ -244,7 +247,7 @@ function EndBiz(props){
                         <div className="progress-fill" style={{width : per + "%"}}></div>
                     </div>
                     <div>
-                        <span style={{float : "left"}}>{(biz.donateMoney || 0).toLocaleString("ko-KR")}원</span>
+                        <span style={{float : "left", marginBottom : "5px"}}>{(biz.donateMoney || 0).toLocaleString("ko-KR")}원</span>
                         <span style={{float : "right"}}>{per}%</span>
                     </div>
                 </div>
