@@ -220,18 +220,19 @@ function News(props){
     const axiosInstance = createInstance();
      const {loginMember, fetchUnreadAlarmCount} = useUserStore();
 
+
     if (
-        news.alarmType === 0 ||
-        news.alarmType === 1 ||
-        news.alarmType === 2 ||
-        news.alarmType === 5
+        news.alarmType === 3 ||
+        news.alarmType === 4
     ) {
         return null;
     }
 
     
     let content;
-    if(news.alarmType === 1){
+    if(news.alarmType === 0){
+        content = `[사업종료] ${news.orgName} 의 "${news.bizName}" 사업이 종료되었습니다. 설문조사를 해주세요.`;
+    }else if(news.alarmType === 1){
         content = `[첨부파일업로드] ${news.orgName} 의 "${news.bizName}" 사업이 업데이트 되었습니다.`;
     }else if(news.alarmType === 2){
         content = `[관심단체] ${news.orgName} 의 새로운 소식이 업데이트 되었습니다.`;
@@ -242,7 +243,25 @@ function News(props){
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
     function handleClick() {
         markAsRead(news.alarmNo);
-        if(news.alarmType === 1){
+        if(news.alarmType === 0){
+            var hasSurveyForBiz = false; // surveyList 중 bizNo가 news.bizNo와 같은 게 하나라도 있는지 검사하는 변수
+
+            for (var i = 0; i < news.surveyList.length; i++) {
+                if (news.surveyList[i].bizNo === news.bizNo) {
+                    hasSurveyForBiz = true; // 설문조사한 이력 있을 경우 hasSurveyForBiz가  true 값으로 변경됨
+                    break;
+                }
+            }
+            if (hasSurveyForBiz) {  // 설문조사한 이력 있는 경우 -> alert 창
+            Swal.fire({
+                        title : '알림',
+                        text : '이미 설문조사에 참여했습니다.',
+                        icon : 'warning'
+                });
+            } else {    // 설문조사한 이력 없는 경우 -> 설문조사창으로 이동
+            navigate('/biz/view/' + news.bizNo + '?survey=open');
+            }
+        }else if(news.alarmType === 1){
             navigate('/biz/view/' + news.bizNo);
         }else if(news.alarmType === 2){
             navigate('/news/view/' + news.newsNo);

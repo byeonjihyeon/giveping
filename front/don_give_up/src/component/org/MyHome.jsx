@@ -127,6 +127,17 @@ function News(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
+    // 알람 타입이 0,1,2,5 (일반 회원용) 일 경우, 랜더링 하지 않음
+    if (
+        news.alarmType === 0 ||
+        news.alarmType === 1 ||
+        news.alarmType === 2 ||
+        news.alarmType === 5
+    ) {
+        return null;
+    }
+    
+
     let content;
     if(news.alarmType === 3){
         content = `[입금완료] ${news.bizName} 기부사업의 모금액 입금이 완료되었습니다.`;
