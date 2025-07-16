@@ -53,7 +53,7 @@ export default function OrgManage(){
                 .then(res => {
                     setOrgList(res.data.resData.orgList);
                     setPageInfo(res.data.resData.pageInfo);
-                    console.log(orgList);
+                   
                 })
                 .catch(err => {
                     console.error("조회 실패", err);
@@ -69,13 +69,6 @@ export default function OrgManage(){
             setReqPage(1); // 페이지를 1로 초기화 → useEffect 실행
             fetchOrgList(1);
         };
-    
-
-    
-    //환불 신청 또는 내역 버튼 눌렀을 때 쓰이는 변수
-     const [showType, setShowType] = useState();  // "request" or "done"
-
-     
 
     useEffect(function(){
         let options = {};
@@ -199,6 +192,7 @@ function Org(props) {
             //DB 정상 변경되었을 때, 화면에 반영
             if(res.data.resData){
                 setOrgList([...orgList]);
+                alert("변경되었습니다")
             }
         });
     }

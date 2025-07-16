@@ -156,7 +156,7 @@ function BoardItem(props) {
 
     const [open, setOpen] = useState(false);
     const [rejectOpen, setRejectOpen] = useState(false);
-    const [rejectReason, setRejectReason] = useState("");
+    const [bizEdit, setBizEdit] = useState("");
     const [prevStatus, setPrevStatus] = useState(null); // 이전 상태 저장
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -182,15 +182,50 @@ function BoardItem(props) {
             return;
         }
 
-        updateBizStatus(newStatus);        // 나머지는 바로 반영
+        updateBizStatus(newStatus);  
+        console.log(newStatus)      // 나머지는 바로 반영
     }
 
     //  상태 업데이트
-    function updateBizStatus(newStatus, bizEdit = "") {
+    function updateBizStatus(newStatus, reason='') {
+      
+   const biz = props.biz
+    const url = serverUrl + '/admin/bizManage';
+
+    // 2. newStatus가 '2' (반려)일 때만 bizEdit을 포함
+    const dataToSend = {
+        bizNo: biz.bizNo,
+        bizStatus: newStatus
+    };
+
+    if (newStatus === 2) {
+        dataToSend.bizEdit = reason;
+    }
+
+    let options = {
+        url: url,
+        method: 'patch',
+        data: dataToSend
+        //{bizNo : biz.bizNo, bizStatus:newStatus, bizEdit: biz.bizEdit}
+    };
+ 
+    axiosInstance(options)
+        .then(response => {
+         setRejectOpen(false);
+         setBizList([...bizList]);
+            console.log("업데이트 성공:", response.data);
+            // 성공 시 처리 로직 (예: 성공 메시지 표시, 데이터 갱신)
+        })
+        .catch(error => {
+            console.error("업데이트 실패:", error);
+            // 실패 시 처리 로직 (예: 에러 메시지 표시)
+        });
+}
+        /*
         biz.bizStatus = newStatus;
 
         let options = {
-            url: serverUrl + '/admin/bizManage',
+            url: serverUrl +'/admin/bizManage/'+ bizEdit,
             method: 'patch',
             data: {
                 bizNo: biz.bizNo,
@@ -207,23 +242,24 @@ function BoardItem(props) {
             }
         });
     }
-
+*/
     //  반려 사유 제출
     function handleRejectSubmit() {
-        if (!rejectReason.trim()) {
+        if (!bizEdit.trim()) {
             alert("반려 사유를 입력해주세요.");
             return;
         }
 
-        updateBizStatus(2, rejectReason);
-        setRejectReason("");
+        updateBizStatus(2, bizEdit);
+        setBizEdit('');
+        console.log(bizEdit);
         setRejectOpen(false);
     }
 
     // 반려 취소
     function handleRejectCancel() {
         biz.bizStatus = prevStatus;        // 이전 상태로 되돌림
-        setRejectReason("");               // 사유 초기화
+        setBizEdit("");               // 사유 초기화
         setRejectOpen(false);              // 모달 닫기
         setBizList([...bizList]);          // 화면 갱신
     }
@@ -284,8 +320,8 @@ function BoardItem(props) {
                         label="반려 사유"
                         multiline
                         rows={4}
-                        value={rejectReason}
-                        onChange={(e) => setRejectReason(e.target.value)}
+                        value={biz.bizEdit}
+                        onChange={(e) => setBizEdit(e.target.value)}
                     />
                     <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
                         <Button variant="outlined" color="inherit" onClick={handleRejectCancel}>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -129,7 +130,7 @@ public class AdminController {
                                                      @RequestParam (required = false) String keyword) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회 중,오류가 발생하였습니다", null, "error");
 		System.out.println("controller-searchType: "+ searchType);
-		System.out.println("status:" + status);
+		
 
 		try {
 			HashMap<String, Object> bizMap = service.selectBizList(reqPage, status, searchType, keyword);
@@ -144,11 +145,11 @@ public class AdminController {
 
 	// 기부사업 상태 변경
 	@PatchMapping("/bizManage")
-	public ResponseEntity<ResponseDTO> changeMemberStatus(@RequestBody AdminBiz biz) {
+	public ResponseEntity<ResponseDTO> updateBizStatus(@RequestBody AdminBiz biz) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, " 변경 중 오류가 생겼습니다", false, "error");
-
+	
 		try {
-			System.out.println("biz:"+biz);
+	
 			int result = service.updateBizStatus(biz);
 			
 			if (result > 0) {

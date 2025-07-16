@@ -234,23 +234,31 @@
     <update id="updateBizStatus"
 	    parameterType="AdminBiz">
      update tbl_donate_biz
-     set biz_status = #{bizStatus}
-     where biz_no = #{bizNo}
+      <set>
+	     biz_status = #{bizStatus}
+	    <if test="bizStatus == 2">
+	      ,biz_edit = #{bizEdit}
+	    </if>
+     </set>
+	      where biz_no = #{bizNo}
     </update>
     
+     <!--현재 기부 사업 상태조회 시 resultMap -->
     <resultMap id="bizResultMap" type="AdminBiz">
 	  <result property="bizStatus" column="BIZ_STATUS"/>
 	  <result property="orgName" column="ORG_NAME"/>
 	  <result property="orgEmail" column="ORG_EMAIL"/>
 	  <result property="bizName" column="BIZ_NAME"/>
+	   <result property="bizEdit" column="BIZ_EDIT"/>
   </resultMap>
     
     <!--현재 기부 사업 상태 조회 -->
-    <select id= "selectBizStatus" parameterType="_int" resultMap="bizResultMap">
+    <select id="selectBizStatus" parameterType="_int" resultMap="bizResultMap">
     select b.biz_status,
            o.org_name,
 		   o.org_email,
-           b.biz_name
+           b.biz_name,
+           b.biz_edit
     from tbl_donate_biz b join tbl_org o on b.org_no=o.org_no
     where biz_no = #{bizNo}
     </select>
