@@ -60,6 +60,7 @@ export default function MainList(){
     return(
         <>
         <div className="biz-list-container">
+            <div className="content-title">요즘 뜨고 있는 기부사업이에요! 🔥 </div>
             <button className="scroll-btn left" onClick={() => scroll(bizSliderRef, "left")}>{"<"}</button>
             <div className="biz-slider" ref={bizSliderRef}>
                 <ul className="biz-list">
@@ -72,6 +73,9 @@ export default function MainList(){
         </div>
 
         <div className="biz-list-container">
+            <div className="content-title">
+                {loginMember ? loginMember.memberName + ' 님! 이런 단체는 어떠세요 ? 🔍'   : "관심 분야를 선택하면 맞춤 단체를 추천해드려요 ! 💡"  } 
+            </div>
             <button className="scroll-btn left" onClick={() => scroll(orgSliderRef, "left")}>{"<"}</button>
             <div className="biz-slider" ref={orgSliderRef}>
                 <ul className="biz-list">

@@ -10,6 +10,7 @@ import kr.or.iei.common.model.dao.CommonDao;
 import kr.or.iei.common.model.dto.CommonBiz;
 import kr.or.iei.common.model.dto.CommonOrg;
 import kr.or.iei.common.model.dto.DonateCode;
+import kr.or.iei.news.model.dto.News;
 
 @Service
 public class CommonService {
@@ -33,5 +34,34 @@ public class CommonService {
 
 	public ArrayList<CommonOrg> selectMainOrgList(int primaryNo) {
 		return dao.selectMainOrgList(primaryNo);
+	}
+	
+	//총 기부금 조회
+	public String selectDonationAmount() {
+		return dao.selectDonationAmount();
+	}
+	
+	//메인 페이지에 들어갈 최신 소식 조회
+	public ArrayList<News> selectMainNews() {
+		
+		ArrayList<News> newsList = dao.selectMainNews();
+		
+		//클라이언트에 전달할 메인 소식 리스트 (길이에 따라 2개, 또는 4개)
+		ArrayList<News> mainNewsList = new ArrayList<>();
+		
+		//전체 소식 갯수가 4개 이상이라면, 최신순으로 4개만등록
+		if(newsList.size() >= 4) {
+			for(int i=0; i<4; i++) {
+				News news = newsList.get(i);
+				mainNewsList.add(news);
+			}
+		}else if(newsList.size() > 1 && newsList.size() < 4) {	//전체 소식갯수가 1개 ~3개면 2개만 등록
+			for(int i=0; i<newsList.size(); i++) {
+				News news = newsList.get(i);
+				mainNewsList.add(news);
+			}
+		}
+		
+		return mainNewsList;
 	}
 }

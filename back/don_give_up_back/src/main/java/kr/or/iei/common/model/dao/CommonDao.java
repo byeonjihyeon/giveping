@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.or.iei.common.model.dto.CommonBiz;
 import kr.or.iei.common.model.dto.CommonOrg;
 import kr.or.iei.common.model.dto.DonateCode;
+import kr.or.iei.news.model.dto.News;
 
 @Mapper
 public interface CommonDao {
@@ -22,5 +23,11 @@ public interface CommonDao {
 
 	// 메인 페이지 - 기부 단체 조회
 	ArrayList<CommonOrg> selectMainOrgList(int memberNo);
+	
+	// 메인 페이지 - 총 기부금 조회
+	String selectDonationAmount();
+	
+	// 메인 페이지 - 최신 소식 조회
+	ArrayList<News> selectMainNews();
 
 }
