@@ -113,7 +113,7 @@ public class CommonController {
 		
 		try {
 			ArrayList<News> mainNewsList = service.selectMainNews();
-			
+			System.out.println(mainNewsList);
 			res = new ResponseDTO(HttpStatus.OK, "", mainNewsList, "");
 
 		}catch(Exception e) {

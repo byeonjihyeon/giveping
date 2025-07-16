@@ -55,7 +55,7 @@ public class CommonService {
 				News news = newsList.get(i);
 				mainNewsList.add(news);
 			}
-		}else if(newsList.size() > 1 && newsList.size() < 4) {	//전체 소식갯수가 1개 ~3개면 2개만 등록
+		}else if(newsList.size() >= 1 && newsList.size() < 4) {	//전체 소식갯수가 1개 ~3개면 2개만 등록
 			for(int i=0; i<newsList.size(); i++) {
 				News news = newsList.get(i);
 				mainNewsList.add(news);

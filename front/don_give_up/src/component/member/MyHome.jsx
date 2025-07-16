@@ -309,7 +309,8 @@ function News(props){
         >
             <div>{content}</div>
             <div>
-                <span>{news.bizName}</span> | <span>{news.alarmDate}</span>
+                <span>{news.bizName} </span>
+                <span>{news.alarmDate}</span>
             </div>
         </div>
     );
