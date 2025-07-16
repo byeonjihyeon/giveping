@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 
 
 export default function MyHome(props){
-    const {loginMember, loginOrg, unreadAlarmCount, setUnreadAlarmCount, setHasNewAlert} = useUserStore();
+    const {loginOrg, unreadAlarmCount} = useUserStore();
     const orgNo = loginOrg.orgNo;
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -122,9 +122,21 @@ export default function MyHome(props){
 function News(props){
     const news = props.news;
     const navigate = useNavigate();
+    const {fetchUnreadAlarmCount} = useUserStore();
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
+
+    // 알람 타입이 0,1,2,5 (일반 회원용) 일 경우, 랜더링 하지 않음
+    if (
+        news.alarmType === 0 ||
+        news.alarmType === 1 ||
+        news.alarmType === 2 ||
+        news.alarmType === 5
+    ) {
+        return null;
+    }
+    
 
     let content;
     if(news.alarmType === 3){
@@ -154,6 +166,9 @@ function News(props){
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
+
+            // DotBadge 업데이트를 위해 useUserStore의 함수 호출
+            fetchUnreadAlarmCount();
         });
     }
 

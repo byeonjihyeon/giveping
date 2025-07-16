@@ -366,6 +366,7 @@ function Comment(props){
 
             {isLogined &&
             loginMember?.memberNo != null &&
+            loginMember?.memberLevel == 2 &&
             loginMember.memberNo !== comment.memberNo && (
                 <div className="comment-actions">
                 <span className="comment-action-text" onClick={openReportPopup} style={{ marginLeft: "auto" }}>

@@ -11,23 +11,25 @@
 	</select>
 	
 	<select id="countAlarm" parameterType="map">
-	  SELECT COUNT(*)
-	  FROM tbl_alarm
-	  <where>
-	    <if test="memberNo != null">
-	      member_no = #{memberNo}
-	      AND alarm_type NOT IN (3,4)
-	    </if>
-	    <if test="orgNo != null">
-	      biz_no IN (
-	        SELECT biz_no FROM tbl_donate_biz WHERE org_no = #{orgNo}
-	      )
-	      AND member_no IS NULL
-	      AND alarm_type NOT IN (1,2,5)
-	    </if>
-	    AND alarm_read = 0
-	  </where>
+		  SELECT COUNT(*)
+		  FROM tbl_alarm
+		  <where>
+		    <if test="memberNo != null and orgNo == null">
+		      member_no = #{memberNo}
+		      AND alarm_type NOT IN (3,4)
+		      AND alarm_read = 0
+		    </if>
+		    <if test="orgNo != null and memberNo == null">
+		      biz_no IN (
+		        SELECT biz_no FROM tbl_donate_biz WHERE org_no = #{orgNo}
+		      )
+		      AND member_no IS NULL
+		      AND alarm_type NOT IN (0,1,2,5)
+		      AND alarm_read = 0
+		    </if>
+		  </where>
 	</select>
+
 
 
 	

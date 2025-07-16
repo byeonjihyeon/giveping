@@ -20,11 +20,11 @@ export default function MyHome(props){
     const {loginMember, unreadAlarmCount} = useUserStore();
     const [newsList, setNewsList] = useState([]);
 
-    const [reLoadMember, setReLoadMember] = useState({}); 
-
 	//모달창 상태
     const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
     const navigate = useNavigate();
+
+    console.log("unreadAlarmCount : ", unreadAlarmCount);
 
     // 알림 리스트 가져오기
     useEffect(function(){
@@ -218,7 +218,15 @@ function News(props){
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
+     const {loginMember, fetchUnreadAlarmCount} = useUserStore();
 
+
+    if (
+        news.alarmType === 3 ||
+        news.alarmType === 4
+    ) {
+        return null;
+    }
 
     
     let content;
@@ -228,18 +236,9 @@ function News(props){
         content = `[첨부파일업로드] ${news.orgName} 의 "${news.bizName}" 사업이 업데이트 되었습니다.`;
     }else if(news.alarmType === 2){
         content = `[관심단체] ${news.orgName} 의 새로운 소식이 업데이트 되었습니다.`;
-    }else if(news.alarmType === 3){
-        content = `[입금완료] ${news.bizNo} 의 모금액 입금이 완료되었습니다.`;
     }else if(news.alarmType === 5){
         content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
     }
-
-    /*
-    // alarmRead가 0이 아닌 경우 렌더링하지 않음
-    if (news.alarmRead !== 0) {
-        return null;
-    }
-    */
 
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
     function handleClick() {
@@ -266,8 +265,6 @@ function News(props){
             navigate('/biz/view/' + news.bizNo);
         }else if(news.alarmType === 2){
             navigate('/news/view/' + news.newsNo);
-        }else if(news.alarmType === 3){
-            console.log("type 3 클릭")
         }else if(news.alarmType === 5){
         content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
         }
@@ -275,15 +272,28 @@ function News(props){
 
     // 알림 읽음 처리 함수
     function markAsRead(alarmNo){
-        //console.log("alarmNo" , alarmNo)
         let options={};
         options.url= serverUrl + '/member/alarm/' + alarmNo;
         options.method = "patch";
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
-            setUnreadAlarmCount(unreadAlarmCount-1);
+        console.log(res.data.resData);
+            
+            // 안 읽은 알림 갯수 reload
+            let options = {};
+            options.url = serverUrl + '/countAlarm';
+            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
+            options.params = { memberNo: loginMember.memberNo };
+            options.method = 'get';
+    
+            axiosInstance(options)
+            .then(function(res){
+                console.log("MyHome 에서 안 읽은 알림 갯수 reload : ", res.data.resData);
+
+            // DotBadge 업데이트를 위해 useUserStore의 함수 호출
+            fetchUnreadAlarmCount();
+            });
         });
     }
 

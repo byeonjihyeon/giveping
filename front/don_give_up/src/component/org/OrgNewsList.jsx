@@ -5,7 +5,7 @@ import { Viewer } from "@toast-ui/react-editor";
 import useUserStore from "../../store/useUserStore";
 //내 소식(단체)
 export default function OrgNewsList(){
-    const { loginOrg, unreadAlarmCount, setUnreadAlarmCount, setHasNewAlert} = useUserStore();
+    const { loginOrg, setUnreadAlarmCount, setHasNewAlert} = useUserStore();
     // loginMember가 null일 때 대비
     if (!loginOrg) {
         return <div>로그인 정보가 없습니다.</div>;
@@ -14,6 +14,7 @@ export default function OrgNewsList(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const orgNo = loginOrg.orgNo;
+
 
     
     useEffect(function(){
@@ -71,9 +72,7 @@ export default function OrgNewsList(){
 function News(props){
     const news = props.news;
     const navigate = useNavigate();
-    const setHasNewAlert = props.setHasNewAlert;
-    const setUnreadAlarmCount = props.setUnreadAlarmCount;
-    const loginOrg = props.loginOrg;
+     const {fetchUnreadAlarmCount} = useUserStore();
     
     
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -99,12 +98,15 @@ function News(props){
         return null;
     }
 
-    /*
-    // alarmRead가 0이 아닌 경우 렌더링하지 않음
-    if (news.alarmRead !== 0) {
+    // 알람 타입이 일반회원용 알람이면 랜더링하지 않음
+    if (
+        news.alarmType === 0 ||
+        news.alarmType === 1 ||
+        news.alarmType === 2 ||
+        news.alarmType === 5
+    ) {
         return null;
     }
-    */
     
     let content;
     if(news.alarmType === 3){
@@ -134,27 +136,8 @@ function News(props){
         axiosInstance(options)
         .then(function(res){
             console.log(res.data.resData);
-            // 안 읽은 알림 갯수 reload
-            let options = {};
-            options.url = serverUrl + '/countAlarm';
-            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
-            options.params = { orgNo: loginOrg.orgNo };
-            options.method = 'get';
-    
-            axiosInstance(options)
-            .then(function(res){
-                console.log(res.data.resData);
-
-                const count = res.data.resData;
-                if(count > 0){
-                    console.log("안읽은알림갯수 : ", count);
-                    setHasNewAlert(true);
-                    setUnreadAlarmCount(count);    // 결과 unreadAlarmCount 에 set 하기
-                }else{
-                    setHasNewAlert(false);
-                    setUnreadAlarmCount(count);
-                }
-            });
+            // DotBadge 업데이트를 위해 useUserStore의 함수 호출
+            fetchUnreadAlarmCount();
         });
     }
     
