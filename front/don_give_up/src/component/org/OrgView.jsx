@@ -123,9 +123,12 @@ export default function OrgView(){
                         })}
                     </div>
                     <div className="org-temperature">
-                        <p style={{width : (org.orgTemperature * 2) + "%"}}>{org.orgTemperature}ºC</p>
-                        <div className="progress-bar">
-                            <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"}}></div>
+                        <p style={{width : (org.orgTemperature * 2) + "%"}}>
+                            <span className="org-ctg-span" style={{color : "#ff5353ff", border : "1px solid #ff5353ff"}}>{org.orgTemperature}ºC</span>
+                            <span className="progress-circle"></span>
+                        </p>
+                        <div className="progress-bar" style={{marginTop : "8px"}}>
+                            <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "#ff5353ff", borderRadius : "5px"}}></div>
                         </div>
                     </div>
                 </div>
@@ -204,13 +207,13 @@ function IngBiz(props){
                                 <span className={ctg.donateCode == biz.donateCode ? "org-ctg-span" : ""}>{ctg.donateCode == biz.donateCode ? "#" + ctg.donateCtg : ""}</span>
                             </div>
                 })}
-                <div style={{minHeight : "57px"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
+                <div style={{minHeight : "57px", maxHeight : "300px", overflow : "auto"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
                 <div className="org-biz-progress">
                     <div className="progress-bar">
                         <div className="progress-fill" style={{width : per + "%"}}></div>
                     </div>
                     <div>
-                        <span style={{float : "left"}}>{(biz.donateMoney || 0).toLocaleString("ko-KR")}원</span>
+                        <span style={{float : "left", marginBottom : "5px"}}>{(biz.donateMoney || 0).toLocaleString("ko-KR")}원</span>
                         <span style={{float : "right"}}>{per}%</span>
                     </div>
                 </div>
@@ -238,13 +241,13 @@ function EndBiz(props){
                                 <span className={ctg.donateCode == biz.donateCode ? "org-ctg-span" : ""}>{ctg.donateCode == biz.donateCode ? "#" + ctg.donateCtg : ""}</span>
                             </div>
                 })}
-                <div style={{minHeight : "57px"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
+                <div style={{minHeight : "57px", maxHeight : "300px", overflow : "auto"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
                 <div className="org-biz-progress">
                     <div className="progress-bar">
                         <div className="progress-fill" style={{width : per + "%"}}></div>
                     </div>
                     <div>
-                        <span style={{float : "left"}}>{(biz.donateMoney || 0).toLocaleString("ko-KR")}원</span>
+                        <span style={{float : "left", marginBottom : "5px"}}>{(biz.donateMoney || 0).toLocaleString("ko-KR")}원</span>
                         <span style={{float : "right"}}>{per}%</span>
                     </div>
                 </div>
@@ -347,21 +350,21 @@ function Report(props){
     }
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-contents">
+        <div className="report-modal-overlay">
+            <div className="report-modal-contents">
                 <h3>신고하기</h3>
                 <div style={{ margin: "15px 0" }}>
                     <p><strong>신고 단체</strong></p>
-                    <div className="button-group">
+                    <div className="report-button-group" style={{height : "25px"}}>
                         <span>단체명: {org.orgName}</span> <br />
                     </div>
 
                     <div style={{ marginTop: "10px" }}>
-                        <label htmlFor="reportCode"><strong>신고 사유 선택</strong></label>
-                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
-                            <option value="">사유를 선택하세요</option>
+                        <label htmlFor="reportCode" style={{fontSize: '20px', marginTop: '12px'}}><strong>신고 사유 선택</strong></label><br/>
+                        <select className="report-select" id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
+                            <option className="report-option" value="">사유를 선택하세요</option>
                             {codeList.map((code) => (
-                                <option key={code.reportCode} value={code.reportCode}>
+                                <option className="report-option" key={code.reportCode} value={code.reportCode}>
                                     {code.reportReason}
                                 </option>
                             ))}
@@ -369,12 +372,13 @@ function Report(props){
                     </div>
 
                     <div>
-                        <input type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
+                        <input className="report-reason" type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
                     </div>
                 </div>
-
-                <button onClick={handleReportClick}>신고하기</button>
-                <button onClick={closeReportPopup}>닫기</button>
+                <div className="report-modal-buttons">
+                    <button className="report-button" onClick={handleReportClick}>신고하기</button>
+                    <button className="report-button" onClick={closeReportPopup}>닫기</button>
+                </div>
             </div>
         </div>
     )

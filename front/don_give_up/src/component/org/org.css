@@ -351,3 +351,12 @@
 .tbl-org-view a:hover {
     text-decoration: underline;
 }
+.progress-circle {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background-color: #ff5353ff;
+    top : 34px;
+    left: -10px;
+    border-radius: 10px;
+}

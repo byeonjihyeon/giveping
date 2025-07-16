@@ -1202,6 +1202,7 @@
 .pw-input-wrap {
     border: 1px solid #dcdcdc;
     width: 60%;
+    margin: 0 auto;
 }
 
 
@@ -1230,6 +1231,7 @@
 .update-pw-btn {
     width: 100%;
     font-size: 18px;
+    margin: 0 auto;
 }
 
 .pwRe-msg{
