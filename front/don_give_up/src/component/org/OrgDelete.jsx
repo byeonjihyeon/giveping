@@ -57,8 +57,8 @@ export default function OrgDelete(){
             }
             Swal.fire({
                 title : "알림",
-                text : res.data.clientMsg,
-                icon : res.data.alertIcon,
+                text : "확인되었습니다.",
+                icon : "success",
                 confirmButtonText : "확인"
             });
         });

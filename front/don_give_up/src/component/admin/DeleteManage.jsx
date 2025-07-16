@@ -6,6 +6,7 @@ import Switch from '@mui/material/Switch';
 import Modal from '@mui/material/Modal';
 import { Box, Checkbox, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import "./admin.css";
+import Loading from "../common/Loading";
 
 
 
@@ -25,6 +26,7 @@ const modalStyle = {
 
 //탈퇴 내역 목록
 export default function DeleteManage(){
+    const [isLoading, setIsLoading] = useState(true);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     //탈퇴 목록 저장 변수
@@ -46,6 +48,7 @@ export default function DeleteManage(){
 
         axiosInstance(options)
         .then(function(res){
+            setIsLoading(false);
             //res.data.resData == boardMap
             setDeleteList(res.data.resData.deleteList); 
             setPageInfo(res.data.resData.pageInfo);
@@ -57,6 +60,7 @@ export default function DeleteManage(){
 
     return (
         <>
+            {isLoading ? <Loading/> : ""}
             <div className="page-title">탈퇴 신청 관리</div>
             <div className="two-nav">
             <ul>
@@ -80,7 +84,7 @@ export default function DeleteManage(){
                 </thead>
                 <tbody>
                    {deleteList.map(function(org, index){
-                        return <DelOrg key={"org"+index} org={org} setOrg={setOrg} showType={showType} setShowType={setShowType} deleteList={deleteList} setDeleteList={setDeleteList} updStatus={updStatus} setUpdStatus={setUpdStatus}/>
+                        return <DelOrg key={"org"+index} org={org} setOrg={setOrg} showType={showType} setShowType={setShowType} deleteList={deleteList} setDeleteList={setDeleteList} updStatus={updStatus} setUpdStatus={setUpdStatus} setIsLoading={setIsLoading}/>
                    })}
                 </tbody>
             </table>
@@ -97,6 +101,7 @@ function DelOrg(props) {
     const setOrg =props.setOrg;
     const deleteList = props.deleteList;
     const setDeleteList = props.setDeleteList;
+    const setIsLoading = props.setIsLoading;
 
     const updStatus=  props.updStatus;
     const setUpdStatus = props.setUpdStatus;
@@ -118,6 +123,7 @@ function DelOrg(props) {
 
     //상태 값을 변경했을 때, 호출 함수  (onChange)
     function handleChange(e){
+      setIsLoading(true);
       //  biz.boardStatus = board.boardStatus == 1 ? 2 : 1; //현재값이 1이면 2로 변경하고, 아니면 1로 변경
         org.orgStatus = e.target.value;
 
@@ -129,6 +135,7 @@ function DelOrg(props) {
         axiosInstance(options)
         .then(function(res){
             //DB 정상 변경되었을 때, 화면에 반영
+            setIsLoading(false);
             if(res.data.resData){
                 setDeleteList([...deleteList]);
                 setUpdStatus(!updStatus);
