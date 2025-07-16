@@ -334,8 +334,8 @@ export default function BizView(){
                         </div>
                         {/* 카테고리별 기부사업 소개 (2개) */}
                         <div className="content-categoryInfo-wrap">
-                            <div className="category-section-title">
-                                <span className="highlight-category-name">#{donateBiz.donateCtg}</span> 관련 기부 사업은?
+                            <div className="category-section-title">함께 보는
+                                <span className="highlight-category-name"> #{donateBiz.donateCtg}</span> 기부 사업
                             </div>
                             <div className="category-items-container">
                                 {/* bizCategoryList 에서 1개씩 꺼내오기 */}
