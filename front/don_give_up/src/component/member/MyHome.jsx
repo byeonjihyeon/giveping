@@ -20,11 +20,11 @@ export default function MyHome(props){
     const {loginMember, unreadAlarmCount} = useUserStore();
     const [newsList, setNewsList] = useState([]);
 
-    const [reLoadMember, setReLoadMember] = useState({}); 
-
 	//모달창 상태
     const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
     const navigate = useNavigate();
+
+    console.log("unreadAlarmCount : ", unreadAlarmCount);
 
     // 알림 리스트 가져오기
     useEffect(function(){
@@ -211,56 +211,34 @@ function News(props){
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
+     const {loginMember, fetchUnreadAlarmCount} = useUserStore();
 
+    if (
+        news.alarmType === 0 ||
+        news.alarmType === 1 ||
+        news.alarmType === 2 ||
+        news.alarmType === 5
+    ) {
+        return null;
+    }
 
     
     let content;
-    if(news.alarmType === 0){
-        content = `[사업종료] ${news.orgName} 의 "${news.bizName}" 사업이 종료되었습니다. 설문조사를 해주세요.`;
-    }else if(news.alarmType === 1){
+    if(news.alarmType === 1){
         content = `[첨부파일업로드] ${news.orgName} 의 "${news.bizName}" 사업이 업데이트 되었습니다.`;
     }else if(news.alarmType === 2){
         content = `[관심단체] ${news.orgName} 의 새로운 소식이 업데이트 되었습니다.`;
-    }else if(news.alarmType === 3){
-        content = `[입금완료] ${news.bizNo} 의 모금액 입금이 완료되었습니다.`;
     }else if(news.alarmType === 5){
         content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
     }
 
-    /*
-    // alarmRead가 0이 아닌 경우 렌더링하지 않음
-    if (news.alarmRead !== 0) {
-        return null;
-    }
-    */
-
     // 알림 아이템 클릭 시 호출되는 핸들러 함수
     function handleClick() {
         markAsRead(news.alarmNo);
-        if(news.alarmType === 0){
-            var hasSurveyForBiz = false; // surveyList 중 bizNo가 news.bizNo와 같은 게 하나라도 있는지 검사하는 변수
-
-            for (var i = 0; i < news.surveyList.length; i++) {
-                if (news.surveyList[i].bizNo === news.bizNo) {
-                    hasSurveyForBiz = true; // 설문조사한 이력 있을 경우 hasSurveyForBiz가  true 값으로 변경됨
-                    break;
-                }
-            }
-            if (hasSurveyForBiz) {  // 설문조사한 이력 있는 경우 -> alert 창
-            Swal.fire({
-                        title : '알림',
-                        text : '이미 설문조사에 참여했습니다.',
-                        icon : 'warning'
-                });
-            } else {    // 설문조사한 이력 없는 경우 -> 설문조사창으로 이동
-            navigate('/biz/view/' + news.bizNo + '?survey=open');
-            }
-        }else if(news.alarmType === 1){
+        if(news.alarmType === 1){
             navigate('/biz/view/' + news.bizNo);
         }else if(news.alarmType === 2){
             navigate('/news/view/' + news.newsNo);
-        }else if(news.alarmType === 3){
-            console.log("type 3 클릭")
         }else if(news.alarmType === 5){
         content = `[환불완료] 환불액 입금 처리가 완료되었습니다.`;
         }
@@ -268,14 +246,28 @@ function News(props){
 
     // 알림 읽음 처리 함수
     function markAsRead(alarmNo){
-        //console.log("alarmNo" , alarmNo)
         let options={};
         options.url= serverUrl + '/member/alarm/' + alarmNo;
         options.method = "patch";
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
+        console.log(res.data.resData);
+            
+            // 안 읽은 알림 갯수 reload
+            let options = {};
+            options.url = serverUrl + '/countAlarm';
+            // options.params 설정 : orgNo 인지 memberNo 인지에 따라 달라짐
+            options.params = { memberNo: loginMember.memberNo };
+            options.method = 'get';
+    
+            axiosInstance(options)
+            .then(function(res){
+                console.log("MyHome 에서 안 읽은 알림 갯수 reload : ", res.data.resData);
+
+            // DotBadge 알람 갯수 업데이트를 위해 useUserStore의 함수 호출
+            fetchUnreadAlarmCount();
+            });
         });
     }
 
