@@ -264,7 +264,7 @@
 }
 
 .mySurvey-wrap>div:hover{
-    text-decoration: underline;
+    /*text-decoration: underline;*/
     cursor: pointer;
 }
 

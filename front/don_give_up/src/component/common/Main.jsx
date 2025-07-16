@@ -1,10 +1,14 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainList from "./MainList";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import createInstance from '../../axios/Interceptor';
 
 export default function Main(){
+
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const axiosInstance = createInstance();
+
     //검색창에 보여줄 선택한 카테고리 배열
     const [choseList, setChoseList] = useState([]);
 
@@ -20,6 +24,36 @@ export default function Main(){
         {code: 'D06', name: '교육 🎨'},
         {code: 'D07', name: '재해지원 💧'}
     ]
+
+    //총 기부금액 변수
+    const [donationAmount, setDonationAmount] = useState(0);
+
+    //소식리스트 변수
+    const [mainNewsList, setMainNewsList] = useState([]);
+
+    //총 기부금 조회
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + '/donationAmount';
+        options.method = 'get'
+
+        axiosInstance(options)
+        .then(function(res){
+            setDonationAmount(res.data.resData);
+        });
+    },[]);
+
+    //소식 조회
+    useEffect(function(){
+        let options = {};
+        options.url = serverUrl + '/mainNews';
+        options.method = 'get'
+
+        axiosInstance(options)
+        .then(function(res){
+            setMainNewsList(res.data.resData);
+        })
+    },[]);
 
     return (
         <>
@@ -79,15 +113,68 @@ export default function Main(){
                     :
                     ""
                     }
-                    <Link to='/biz/list' state={codeArr} ><img src='/images/searchGlass_30dp_DCDCDC.png' /></Link>
-                    
+                    <Link to='/biz/list' state={codeArr} ><img src='/images/searchGlass_30dp_DCDCDC.png' /></Link> 
                 </div>
                 <div className="banner-img">
                     <img src='/images/GivePing.png' />
                 </div>
             </div>
-
             <MainList />
+            <div className="all-donation-status">  
+                <div className="title">
+                    <div>우리가 함께 만든 변화의 총합</div>
+                    <div className="today">오늘 기준</div>
+                </div>
+                <div className="all-money">
+                    <span>총 기부금</span>
+                    <span>₩ {donationAmount} 원</span>
+                    </div>       
+            </div>
+            
+            <div className="main-titles" >
+                <span className="content-title">단체 소식 💌</span>
+            </div>
+            <div className="main-newsList">
+                {mainNewsList.length != null && mainNewsList.length > 0 ?
+                    mainNewsList.map(function(news, index){
+                        return  <MainNews news={news} />
+                    })
+                :
+                <div>등록된 소식이 없습니다.</div>
+                }
+               
+            </div>
         </>
     )
 }
+
+//소식 컴포넌트
+function MainNews(props){
+    const news = props.news;
+    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+
+    const navigate = useNavigate();
+    return (
+        <div className="main-news" onClick={function(){
+            navigate('/news/view/' + news.newsNo);
+        }}>
+            <div className="thumb">
+                <img
+                        src={
+                        news.newsThumbPath
+                            ? serverUrl + "/news/thumb/" + news.newsThumbPath.substring(0, 8) + "/" + news.newsThumbPath
+                            : "/images/default_img.png"
+                        }
+                        alt="뉴스 썸네일"
+                    />
+            </div>
+            <div className="main-news-info"> 
+                <div className="orgName">{news.orgName}</div>
+                <div className="newsName">{news.newsName}</div>
+                <div className="link">자세히 보기  &gt;</div>
+            </div>
+        </div>
+    )
+
+}
+    

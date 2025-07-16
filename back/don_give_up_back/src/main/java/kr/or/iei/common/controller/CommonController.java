@@ -18,6 +18,7 @@ import kr.or.iei.common.model.dto.CommonOrg;
 import kr.or.iei.common.model.dto.DonateCode;
 import kr.or.iei.common.model.dto.ResponseDTO;
 import kr.or.iei.common.model.service.CommonService;
+import kr.or.iei.news.model.dto.News;
 
 @RestController
 @CrossOrigin("*")
@@ -86,6 +87,41 @@ public class CommonController {
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	//총 기부금액 조회
+	@GetMapping("/donationAmount")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectDonationAmount(){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부금 조회 중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			String amount = service.selectDonationAmount();
+			
+			res = new ResponseDTO(HttpStatus.OK, "", amount, "");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	//메인페이지에 들어갈 소식 조회(최신순으로)
+	@GetMapping("/mainNews")
+	@NoTokenCheck
+	public ResponseEntity<ResponseDTO> selectMainNews(){
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "소식 조회 중, 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			ArrayList<News> mainNewsList = service.selectMainNews();
+			
+			res = new ResponseDTO(HttpStatus.OK, "", mainNewsList, "");
+
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 	
 	
 }
