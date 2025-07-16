@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 import kr.or.iei.biz.model.dto.Biz;
 import kr.or.iei.biz.model.dto.BizDonationList;
 import kr.or.iei.biz.model.dto.BizFile;
@@ -362,6 +364,23 @@ public class BizController {
 			e.printStackTrace();
 		}
 		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
+	
+	// 카테고리별 기부 사업 조회하기
+	@GetMapping("/donateCode/{bizNo}")
+	@NoTokenCheck // 카테고리별 기부 사업 조회 : 로그인 필요 x
+	public ResponseEntity<ResponseDTO> selectBizByCategory(@PathVariable int bizNo){
+		System.out.println("bizNo : " + bizNo);
+		
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "카테고리별 기부 사업 조회 중, 오류가 발생하였습니다.", null, "error");
+		try {
+			ArrayList<Biz> bizList = service.selectBizByCategory(bizNo);
+			System.out.println("bizList : " + bizList);
+			res = new ResponseDTO(HttpStatus.OK, "", bizList, "");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	

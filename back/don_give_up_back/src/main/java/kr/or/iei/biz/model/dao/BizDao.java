@@ -82,6 +82,9 @@ public interface BizDao {
 	// 모금액 사용 계획 수정
 	int updateBizPlan(BizPlan plan);
 
+	// 카테고리별 기부 사업 조회하기
+	ArrayList<Biz> selectBizByCategory(int bizNo);
+
 	
 
 }

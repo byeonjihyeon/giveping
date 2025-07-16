@@ -2,7 +2,7 @@
 import { useRef, useState } from "react"
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
-
+import Swal from "sweetalert2";
 
 //충전 컴포넌트
 export default function ChargeFrm(props){
@@ -99,23 +99,38 @@ export default function ChargeFrm(props){
             return;
         }
 
-
-        let options = {};
-        options.url = serverUrl + "/member/charge/" + loginMember.memberNo;
-        options.method = 'post';
-        options.params = {charge};
-        
-        axiosInstance(options)
-        .then(function(res){
-            //console.log(member.totalMoney); 1,000,000 
-            let prevMoneyStr = member.totalMoney.split(',').join(''); //충전전 금액 1,000,000 => 1000000
-            let prevMoney = Number(prevMoneyStr);
-            let sum = prevMoney + Number(charge); 
-            let sumStr = addCommas(sum);   //1,200,000
+        Swal.fire({
+            title : '알림',
+            text : '결제를 진행할까요?',
+            icon : 'warning',
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText : '취소'
+        }).then(function(res){
             
-            setMember({...member, totalMoney: sumStr});
-            onClose(null);         
-        })
+            if(res.isConfirmed){
+              
+                let options = {};
+                options.url = serverUrl + "/member/charge/" + loginMember.memberNo;
+                options.method = 'post';
+                options.params = {charge};
+                
+                axiosInstance(options)
+                .then(function(res){
+                    //console.log(member.totalMoney); 1,000,000 
+                    let prevMoneyStr = member.totalMoney.split(',').join(''); //충전전 금액 1,000,000 => 1000000
+                    let prevMoney = Number(prevMoneyStr);
+                    let sum = prevMoney + Number(charge); 
+                    let sumStr = addCommas(sum);   //1,200,000
+                    
+                    setMember({...member, totalMoney: sumStr});
+                    onClose(null);         
+                })
+
+            }
+
+        });
+
     }
 
     return (

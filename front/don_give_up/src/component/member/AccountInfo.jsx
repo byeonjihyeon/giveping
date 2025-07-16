@@ -1,6 +1,7 @@
 import { useRef, useState } from "react"
 import createInstance from "../../axios/Interceptor";
 import useUserStore from "../../store/useUserStore";
+import Swal from "sweetalert2";
 
 //계좌 인증 및 등록 컴포넌트
 export default function AccountInfo(props){
@@ -68,15 +69,28 @@ export default function AccountInfo(props){
    //초기화 버튼 클릭시 동작함수
    function updAccount(){
        
-        let options  = {};
-        options.url = serverUrl + "/member/account";
-        options.data = member;
-        options.method = 'patch';
+        Swal.fire({
+                    title : '알림',
+                    text : '등록된 계좌를 초기화하시겠습니까?',
+                    icon : 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: '확인',
+                    cancelButtonText : '취소'
+                }).then(function(res){
+                    if(res.isConfirmed){
+                        let options  = {};
+                        options.url = serverUrl + "/member/account";
+                        options.data = member;
+                        options.method = 'patch';
+                
+                        axiosInstance(options)
+                        .then(function(res){
+                            setMainMember({...mainMember, memberBankCode: member.memberBankCode, memberBankAccount: member.memberBankAccount});
+                        })
+                    }        
+        });
 
-        axiosInstance(options)
-        .then(function(res){
-            setMainMember({...mainMember, memberBankCode: member.memberBankCode, memberBankAccount: member.memberBankAccount});
-        })
+
    }
    
    //등록하기 버튼 클릭시 동작함수

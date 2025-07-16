@@ -245,6 +245,10 @@ public class BizService {
 
 	    return bizResult > 0 ? 1 : 0;
 	}
+	// 카테고리별 기부 사업 조회하기
+	public ArrayList<Biz> selectBizByCategory(int bizNo) {
+		return dao.selectBizByCategory(bizNo);
+	}
 
 	
 

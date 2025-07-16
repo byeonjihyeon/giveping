@@ -264,7 +264,7 @@
 }
 
 .mySurvey-wrap>div:hover{
-    text-decoration: underline;
+    /*text-decoration: underline;*/
     cursor: pointer;
 }
 
@@ -943,6 +943,7 @@
     width: 50px;
     height: 30px;
     font-size: 16px;
+    cursor: pointer;
 }
 /* 회원 수정 페이지 */
 .update-frm-wrap {

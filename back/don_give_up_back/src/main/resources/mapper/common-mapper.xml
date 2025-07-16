@@ -128,6 +128,23 @@
 		JOIN tbl_donate_code dc ON od.donate_code = dc.donate_code
 		WHERE od.org_no = #{orgNo}
 	</select>
-
 	
+	<!-- 총 기부금 조회 -->
+	<select id="selectDonationAmount"
+	resultType="String">
+	select to_char(sum(donate_money), 'FM999,999,999PR') from tbl_donation_list
+	</select>
+	
+	<!-- 최신 소식 조회 -->
+	<select id="selectMainNews"
+	resultType="News">
+	select news_no as newsNo,
+    news_name as newsName,
+    news_thumb as newsThumbPath,
+    news_date as newsDate,
+    org_no as orgNo,
+    (select org_name from tbl_org o where n.org_no = o.org_no) as orgName
+ 	from tbl_news n
+	order by newsDate desc
+	</select>
 </mapper>
