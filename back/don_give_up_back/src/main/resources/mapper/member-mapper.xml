@@ -553,7 +553,8 @@
 	                     (select donate_ctg from tbl_donate_code a where d.donate_code = a.donate_code) as donateCtg,
 	                     biz_name as bizName,
 	                     biz_content as bizContent,
-	                     biz_donate_end as bizDonateEnd
+	                     biz_donate_end as bizDonateEnd,
+	                     biz_thumb as bizThumbPath
 	               from tbl_donate_biz d
 	      		  where sysdate &lt; biz_donate_end
 	      		    and biz_status = 1
@@ -588,4 +589,42 @@
 	order by refunddate desc
 	</select>
 	
+	<!-- 관심 단체 추가 -->
+	<insert id="addLikeOrg" parameterType="Member">
+		insert into tbl_member_org
+		values (#{memberNo}, #{orgNo})
+	</insert>
+	
+	<!-- 관심 단체 삭제 -->
+	<delete id="deleteLikeOrg" parameterType="Member">
+		delete from tbl_member_org
+		 where member_no = #{memberNo}
+		   and org_no = #{orgNo}
+	</delete>
+	
+	<!-- 관심 단체 조회 -->
+	<select id="selectLikeOrg" parameterType="_int" resultType="Member">
+		select org_no as orgNo
+		  from tbl_member_org
+		 where member_no = #{memberNo}
+	</select>
+	
+    <!-- 단체 신고 코드 조회 -->
+    <select id="selectReportCode" resultType="NewsReport">
+    	select report_code as reportCode,
+    		   report_reason as reportReason
+    	  from tbl_report_code
+    	 where (report_code like 'A%' or report_code like 'O%')
+    </select>
+    
+    <!-- 단체 신고 등록 -->
+    <insert id="insertReportOrg" parameterType="NewsReport">
+    	insert into tbl_report
+    	(report_no, report_code, org_no, report_member_no, report_detail_reason)
+    	values (seq_report.nextval,
+    			#{reportCode},
+    			#{orgNo},
+    			#{reportMemberNo},
+    			#{detailReason})
+    </insert>
 </mapper>	

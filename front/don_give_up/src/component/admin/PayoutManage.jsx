@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import FormHelperText from '@mui/material/FormHelperText';
 import { blue } from "@mui/material/colors";
-
+import "./admin.css";
 
 
 //관리자 모금액 송금 목록
@@ -73,17 +73,17 @@ export default function PayoutManage(){
          
             </ul>
         </div>
-            <table className="tbl">
+            <table className="admin-tbl">
                 <thead>
                     <tr>
-                        <th style={{width:"5%"}}>송금번호</th>
-                        <th style={{width:"12%"}}>단체명</th>
-                        <th style={{width:"12%"}}>기부사업</th>
-                        <th style={{width:"12%"}}>모금종료날짜</th>
-                        <th style={{width:"20%"}}>목표후원금</th>
-                        <th style={{width:"15%"}}>모금액(송금액)</th>
-                        <th style={{width:"15%"}}>송금여부</th>
-                        {showType === "done" && <th style={{ width: "15%" }}>송금완료일</th>}
+                        <th>송금번호</th>
+                        <th>단체명</th>
+                        <th>기부사업</th>
+                        <th>모금종료날짜</th>
+                        <th>목표후원금</th>
+                        <th>모금액(송금액)</th>
+                        <th>송금여부</th>
+                        {showType === "done" && <th>송금완료일</th>}
                         
                     </tr>
                 </thead>

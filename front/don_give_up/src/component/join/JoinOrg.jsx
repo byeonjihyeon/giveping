@@ -373,9 +373,9 @@ function insertOrg() {
                                     </Select>
                                     <TextField type="text" id="orgAccount" className="input-account" inputRef={orgAccountRef}
                                     value={org.orgAccount} onChange={chgOrg} onBlur={checkAccount} placeholder="'-'를 제외하고 숫자만 입력해주세요"/>
-                                    <p style={{color : "red"}}>*잘못 입력 시 송금에 차질이 생길 수 있습니다.</p>
                                 </td>
                             </tr>
+                            <tr><td></td><td><p style={{color : "red"}}>*잘못 입력 시 송금에 차질이 생길 수 있습니다.</p></td></tr>
                         </tbody>
                         <tfoot>
                             <tr>
@@ -463,7 +463,7 @@ function OrgId(props){
         <>
             <TextField type="text" id="orgId" className="input-id" value={org.orgId} inputRef={orgIdRef}
             onChange={chgOrg} onBlur={checkOrgId} placeholder="영대소문자와 숫자로 이루어진 6~20글자"/>
-            <Button variant="contained" type="button" onClick={checkOrgIdUnique} style={{marginLeft : "10px"}} id="mui-btn">중복체크</Button>
+            <Button variant="contained" type="button" onClick={checkOrgIdUnique} style={{marginLeft : "10px"}} id="mui-btn-bt">중복체크</Button>
         </>
     )
 }
@@ -616,7 +616,7 @@ function OrgAddr(props){
     return (
         <>
             <TextField type="text" id="orgAddrMain" className="input-addr" inputRef={addressRef} placeholder="주소" slotProps={{input: {readOnly: true}}}/>
-            <Button variant="contained" type="button" id="mui-btn" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
+            <Button variant="contained" type="button" id="mui-btn-b" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
             <TextField type="text" id="orgAddrDetail" className="input-first" inputRef={detailAddressRef}
             value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
         </>

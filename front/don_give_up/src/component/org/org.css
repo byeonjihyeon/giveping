@@ -145,6 +145,7 @@
     left: 5px;
     top: 5px;
     text-align: left;
+    color: black;
 }
 .org-update-img>img:hover {
     cursor: pointer;
@@ -157,10 +158,16 @@
     margin: 0 auto;
     margin-top: 130px;
 }
+.updPw-div label {
+    color: black;
+}
 .updPw-div-plus {
     width: 527px;
     margin: 0 auto;
     margin-top: 130px;
+}
+.updPw-div-plus label {
+    color: black;
 }
 .updPw-div-plus p {
     font-size: 12px;
@@ -196,7 +203,7 @@
 }
 
 
-/* 검색창 */
+/* 후원 단체 리스트 */
 .search-box input[type="submit"] {
     
     font-size: 14px;
@@ -204,7 +211,6 @@
     border-radius: 4px;
     border: 1px solid #ccc;
 }
-
 .search-box input[type="submit"] {
     background-color: #007bff;
     color: white;
@@ -212,21 +218,40 @@
     cursor: pointer;
     height: 34px;
 }
+.organization-list .posting-info {
+    position: relative;
+}
+.organization-list .favorite-heart {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    color: red;
+}
+.org-ctg-span {
+    border: 1px solid #007bff;
+    border-radius: 20px;
+    padding: 4px 10px;
+    display: inline-block;
+    color: #007bff;
+    font-weight: 500;
+    margin-right: 4px;
+}
 
 
 /*상세 페이지*/
 .org-view-wrap {
-    width: 800px;
+    width: 1200px;
     margin: 20px auto;
 }
 .org-thumb-image {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     border-radius: 100px;
+    margin-left: 20px;
 }
 .org-info-div {
-    margin-left: 20px;
-    width: 630px;
+    margin-left: 40px;
+    width: 900px;
     position: relative;
 }
 .org-info-div * {
@@ -245,7 +270,7 @@
     margin-bottom: 10px;
 }
 .org-intro-div {
-    border: 1px solid #eee;
+    border: 1px solid #dcdcdc;
     padding: 8px;
     height: 65px;
 }
@@ -256,24 +281,34 @@
     width: 100%;
     border-spacing: 0;
 }
+.tbl-org-view h3 {
+    margin: 0 auto;
+    width: 150px;
+    text-align: left;
+}
 .tbl-org-view th,
 .tbl-org-view td {
     height: 50px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #dcdcdc;
 }
 .tbl-org-view tr:first-child>th,
 .tbl-org-view tr:first-child>td {
-    border-top: 1px solid #eee;
+    border-top: 2px solid #dcdcdc;
+}
+.tbl-org-view tr:last-child>th,
+.tbl-org-view tr:last-child>td {
+    border-bottom: 2px solid #dcdcdc;
 }
 .org-biz-img {
     width: 150px;
     height: 150px;
     border-radius: 100px;
     margin: 10px;
+    margin-left: 30px;
 }
 .org-biz-div {
     margin: 0 20px;
-    width: 590px;
+    width: 950px;
 }
 .org-biz-div a {
     color: black;
@@ -292,11 +327,27 @@
     margin-top: 10px;
 }
 .org-biz-list {
-    border: 1px solid #eee;
+    border: 1px solid #dcdcdc;
 }
 .org-biz-list>div {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #dcdcdc;
 }
 .org-biz-list>div:last-child {
     border-bottom: none;
+}
+.org-view-wrap>div>.favorite-heart{
+    
+    right: 15px;
+    bottom: 5px;
+    color: red;
+    cursor: pointer;
+}
+.tbl-org-view a {
+    color: black;
+}
+.tbl-org-view td {
+    color: black;
+}
+.tbl-org-view a:hover {
+    text-decoration: underline;
 }

@@ -25,6 +25,7 @@ import kr.or.iei.member.model.dto.MemberDonation;
 import kr.or.iei.member.model.dto.MemberSurveyAnswer;
 import kr.or.iei.member.model.dto.Refund;
 import kr.or.iei.member.model.dto.Wallet;
+import kr.or.iei.news.model.dto.NewsReport;
 import kr.or.iei.member.model.dto.Charge;
 import kr.or.iei.member.model.dto.Member;
 import kr.or.iei.org.model.dto.Org;
@@ -236,7 +237,7 @@ public class MemberService {
 	//회원 관심 단체리스트 조회
 	public HashMap<String, Object> selectOrgLikeList(int reqPage, int memberNo) {
 		
-		int viewCnt = 12;							//한 페이지당 게시글 수
+		int viewCnt = 9;							//한 페이지당 게시글 수
 		int pageNaviSize= 5;						//페이지 네비게이션 길이
 		int totalCount = dao.selectOrgLikeCnt(memberNo);	//전체 관심단체 수	
 		
@@ -472,6 +473,31 @@ public class MemberService {
 		return dao.selectRefundList(memberNo);
 	}
 
+	//관심 단체 추가
+	@Transactional
+	public int addLikeOrg(Member member) {
+		return dao.addLikeOrg(member);
+	}
+
+	//관심 단체 삭제
+	@Transactional
+	public int deleteLikeOrg(Member member) {
+		return dao.deleteLikeOrg(member);
+	}
+
+	//관심 단체 조회
+	public ArrayList<Member> selectLikeOrg(int memberNo) {
+		return dao.selectLikeOrg(memberNo);
+	}
 	
-	
+	//단체 신고 코드 조회
+	public ArrayList<NewsReport> selectReportCode() {
+		return dao.selectReportCode();
+	}
+
+	//단체 신고 등록
+	@Transactional
+	public int insertReportOrg(NewsReport nr) {
+		return dao.insertReportOrg(nr);
+	}
 }

@@ -125,12 +125,36 @@
     </update>
     
 
-   <!--  전체 기부사업 수   -->
+   <!--  전체 기부사업 수 
 	<select id="selectBizCount" resultType="_int">
 	 select count(*) from tbl_donate_biz
 	</select>
+	   -->
+	  <!--  전체 기부사업 수 -->
+	 <select id="selectBizCount" parameterType="map" resultType="_int">
+       SELECT COUNT(*)
+       FROM tbl_donate_biz b
+        JOIN tbl_org o ON b.org_no = o.org_no
+        
+     <where>
+    <if test="status != null and status != ''">
+      b.biz_status = #{status}
+    </if>
+    <if test="keyword != null and keyword != ''">
+      <choose>
+        <when test="searchType == 'name'">
+          AND b.biz_name LIKE '%' || #{keyword} || '%'
+        </when>
+        <when test="searchType == 'org'">
+          AND o.org_name LIKE '%' || #{keyword} || '%'
+        </when>
+      </choose>
+    </if>
+  </where>
+</select>
 	 
-   <!--  전체 기부사업 목록 조회  -->
+	 
+   <!--  전체 기부사업 목록 조회  
     <select id="selectBizList" parameterType="PageInfo" resultType="AdminBiz">
 	 SELECT *
 		FROM (
@@ -158,8 +182,53 @@
 		    ) a
 		) a
 	 WHERE rnum BETWEEN #{start} AND #{end}
-		   
-   </select>
+	</select> -->
+	 
+	 <!--  전체 기부사업 목록 조회-->  
+  <select id="selectBizList" parameterType="map" resultType="AdminBiz">
+	  SELECT *
+		  FROM (
+		    SELECT ROWNUM AS rnum, a.*
+		    FROM (
+		      SELECT 
+		        b.biz_no AS bizNo,
+		        o.org_name AS orgName,
+		        c.donate_ctg AS bizCtg,
+		        b.biz_content AS bizContent,
+		        b.biz_donate_start AS bizDonateStart,
+		        b.biz_donate_end AS bizDonateEnd,
+		        b.biz_start AS bizStart,
+		        b.biz_end AS bizEnd,
+		        b.biz_goal AS bizGoal,
+		        b.biz_reg_date AS bizRegDate,
+		        b.biz_name AS bizName,
+		        b.biz_status AS bizStatus,
+		        b.biz_edit AS bizEdit,
+		        o.org_email AS orgEmail
+		      FROM tbl_donate_biz b
+		      JOIN tbl_org o ON b.org_no = o.org_no
+		      JOIN tbl_donate_code c ON b.donate_code = c.donate_code
+		      <where>
+		        <if test="status != null and status != ''">
+		          b.biz_status = #{status}
+		        </if>
+		        <if test="keyword != null and keyword != ''">
+		          <choose>
+		            <when test="searchType == 'bizName'">
+		              AND b.biz_name LIKE '%' || #{keyword} || '%'
+		            </when>
+		            <when test="searchType == 'orgName'">
+		              AND o.org_name LIKE '%' || #{keyword} || '%'
+		            </when>
+		          </choose>
+		        </if>
+		      </where>
+		      ORDER BY b.biz_status ASC, b.biz_reg_date DESC
+		    ) a
+		  )
+		  WHERE rnum BETWEEN #{start} AND #{end}
+	</select>
+   
  
    <!-- 기부 사업 상태 변경 -->
     <update id="updateBizStatus"
@@ -313,13 +382,14 @@
 		            comment_content AS commentContent,
 		            report_reason AS reportReason,
 		            report_detail_reason AS reportDetailReason,
-		            report_date AS reportDate
-		          
+		            report_date AS reportDate,
+		            n.news_no AS newsNo,
+		            c.comment_no as commentNo
 		        FROM tbl_report r  left join tbl_member m on r.report_member_no = m.member_no
                                    left join tbl_org o on r.org_no = o.org_no
                                    left join tbl_comment c on r.comment_no = c.comment_no
-                                   left join tbl_report_code d on r.report_code = d.report_code
-                                   
+                                   left join tbl_news n on c.news_no = n.news_no
+                                   left join tbl_report_code d on r.report_code = d.report_code               
                       <where>
                        r.comment_no IS NOT NULL
 					  <if test="startDate != null and startDate != ''">
@@ -346,11 +416,12 @@
 		        SELECT 
 		            report_no AS reportNo,
 		            member_name AS memberName,
-		            org_name AS orgName,
+		            o.org_name AS orgName,
+		            o.org_no AS orgNo,
 		            report_reason AS reportReason,
 		            report_detail_reason AS reportDetailReason,
 		            report_date AS reportDate
-		          
+		            
 		        FROM tbl_report r  left join tbl_member m on r.report_member_no = m.member_no
                                    left join tbl_org o on r.org_no = o.org_no
                                    left join tbl_comment c on r.comment_no = c.comment_no

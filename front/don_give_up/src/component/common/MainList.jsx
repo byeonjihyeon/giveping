@@ -141,7 +141,7 @@ function OrgItem(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
 
     return (
-        <li className="posting-item" onClick={function(){navigate('/org/view/' + org.orgNo)}}>
+        <li className="posting-item" onClick={function(){navigate('/organization/view/' + org.orgNo)}}>
             <div className="posting-img">
                 <img
                     src={org.orgThumbPath

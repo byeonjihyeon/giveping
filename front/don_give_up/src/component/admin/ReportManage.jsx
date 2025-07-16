@@ -3,9 +3,9 @@ import createInstance from "../../axios/Interceptor";
 import PageNavi from "../common/PageNavi";
 import * as React from 'react';
 import Switch from '@mui/material/Switch';
-import { Checkbox } from "@mui/material";
+import { Checkbox, Tooltip } from "@mui/material";
 import { Tabs, Tab, Box, TextField, Button } from "@mui/material";
-
+import "./admin.css";
 
 export default function ReportManage() {
   const [tab, setTab] = useState("comment"); // comment or org
@@ -23,10 +23,6 @@ export default function ReportManage() {
 useEffect(() => {
 
     //fetchReportList();
-
-    console.log("axios 가기 전 startDate : ", startDate); // comment
-    console.log("axios 가기 전 endDate : ", endDate);
-
      axiosInstance({
       method: "get",
       url: serverUrl +"/admin/reportManage/" + reqPage +"/"+ tab,
@@ -36,7 +32,7 @@ useEffect(() => {
       },
     })
       .then((res) => {
-         console.log("응답 데이터 전체:", res.data);
+     
         if (res.data.resData) {
           setReportList(res.data.resData.reportList);
           setPageInfo(res.data.resData.pageInfo);
@@ -53,8 +49,6 @@ useEffect(() => {
   
 }, [reqPage, tab]);
 
-
-
   const handleChangeTab = (event, newValue) => {
     setTab(newValue);
     setReportList([]); // 탭 변경 시 리스트 초기화
@@ -65,9 +59,6 @@ useEffect(() => {
 
   const fetchReportList = () => {
     if((startDate && endDate)) {
-        console.log("fetchReportList에서 startDate : ", startDate);
-        console.log("fetchReportList에서 endDate : ", endDate);
-
         axiosInstance({
       method: "get",
       url: serverUrl +"/admin/reportManage/" + reqPage +"/"+ tab,
@@ -77,7 +68,7 @@ useEffect(() => {
       },
     })
       .then((res) => {
-         console.log("응답 데이터 전체:", res.data);
+
         if (res.data.resData) {
           setReportList(res.data.resData.reportList);
           setPageInfo(res.data.resData.pageInfo);
@@ -91,29 +82,24 @@ useEffect(() => {
         setReportList([]);
         setPageInfo({});
       });
-        /*
-      
-      */
+
     }else{
         alert("시작일과 종료일을 모두 입력해주세요.");
       return;
 
     }
-
-    
-    
-
-    
   };
 
   return (
     <>
+       <div className="page-title">신고 내역 관리</div>
+       <div className="search">
     <Box sx={{ width: "100%", typography: "body1", p: 2 }}>
       <Tabs value={tab} onChange={handleChangeTab}>
         <Tab label="댓글 신고" value="comment" />
         <Tab label="단체 신고" value="org" />
       </Tabs>
-
+   </Box>
       <Box sx={{ mt: 3, mb: 2, display: "flex", gap: 2, alignItems: "center" }}>
         <TextField
           label="시작일"
@@ -135,12 +121,13 @@ useEffect(() => {
           검색
         </Button>
       </Box>
-
-      <Box>
+    </div>
+           <div>
         {reportList.length === 0 ? (
           <div>조회된 신고 내역이 없습니다.</div>
         ) : (
-          <table className="tbl" style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div>
+          <table className="admin-tbl" >
             <thead>
               <tr>
                 <th>신고번호</th>
@@ -156,7 +143,30 @@ useEffect(() => {
                 <tr key={report.reportNo}>
                   <td>{report.reportNo}</td>
                   <td>{report.memberName}</td>
-                  <td>{tab === "comment" ? report.commentContent : report.orgName}</td>
+                 <td>
+                  {tab === "comment" ? (
+                    <Tooltip title={report.commentContent} arrow>
+                      <a
+                        href={`/news/view/${report.newsNo}#comment-${report.commentNo}`}
+                        style={{ textDecoration: "none", color: "#1976d2" }}
+                        target="_blank"
+                      >
+                        {report.commentContent.length > 10
+                          ? report.commentContent.slice(0, 10) + "..."
+                          : report.commentContent}
+                      </a>
+                    </Tooltip>
+                  ) : (
+                  
+                  <a
+                    href={`/organization/view/-${report.orgNo}`}
+                    style={{ textDecoration: "none", color: "#1976d2" }}
+                    target="_blank"
+                  >
+                    {report.orgName}
+                  </a>
+                  )}
+                 </td>
                   <td>{report.reportReason}</td>
                   <td>{report.reportDetailReason}</td>
                   <td>{report.reportDate.substring(0, 10)}</td>
@@ -164,9 +174,10 @@ useEffect(() => {
                   ))}
             </tbody>
           </table>
+          </div>
         )}
-      </Box>
-    </Box>
+     
+    </div>
      <div className="admin-page-wrap" style={{marginTop : "30px"}}>
                 <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
      </div>

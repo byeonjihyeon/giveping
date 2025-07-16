@@ -70,6 +70,8 @@ export default function OrgList(){
         console.log(searchOrgName);
         setIsClick(!isClick);
     }
+    
+    const emoji = ["👧", "👨‍🦳", "🌍", "🌳", "🤟", "🎨", "💧"];
 
     return(
         <section className="section organization-list">
@@ -77,6 +79,8 @@ export default function OrgList(){
             <div className="filter-search-wrapper">
                 <div className="category-filter">
                     {categoryList.map(function(ctg, index){
+                        const spanEmoji = emoji[index % emoji.length];
+
                         return  <button key={"ctg"+index}
                                         style={{backgroundColor: checkCtgList.includes(ctg.donateCode) ? '#007bff' : '#ffffffff',
                                                 color: checkCtgList.includes(ctg.donateCode) ? 'white' : '#333',
@@ -90,7 +94,7 @@ export default function OrgList(){
                                                 fontSize: '1rem',
                                                 minWidth: 'center',}}
                                         onClick={function(){toggleCategory(ctg.donateCode);}}
-                                >{ctg.donateCtg}</button>
+                                >{ctg.donateCtg} {spanEmoji}</button>
                     })}
                 </div>
                 <form autoComplete="off" onSubmit={function(e){
@@ -124,33 +128,80 @@ export default function OrgList(){
 function BoardItem(props) {
     const org = props.org;
     const serverUrl = props.serverUrl; 
+    const axiosInstance = createInstance();
     const navigate = useNavigate();
+    const {loginMember} = useUserStore();
+    const memberNo = loginMember ? loginMember.memberNo : "";
+
+    const [addLike, setAddLike] = useState(false);
+
+    //회원의 관심 단체 조회
+    useEffect(function(){
+        if(loginMember){
+            let options = {};
+            options.url = serverUrl + "/member/selectLikeOrg/" + memberNo;
+            options.method = "get";
+    
+            axiosInstance(options)
+            .then(function(res){
+                const orgNoList = res.data.resData;
+                for(let i=0; i<orgNoList.length; i++){
+                    if(org.orgNo == orgNoList[i].orgNo){
+                        setAddLike(true);
+                    }
+                }
+            });
+        }
+    }, []);
+
+
+    //좋아요 클릭 시 호출 함수
+    function addLikeOrg(){
+        const data = {memberNo : memberNo, orgNo : org.orgNo};
+
+        let options = {};
+        if(!addLike){
+            options.url = serverUrl + "/member/addLikeOrg";
+            options.method = "post";
+            options.data = data;
+        }else {
+            options.url = serverUrl + "/member/deleteLikeOrg";
+            options.method = "delete";
+            options.data = data;
+        }
+
+        axiosInstance(options)
+        .then(function(res){
+            if(res.data.resData){
+                setAddLike(!addLike);
+            }
+        });
+    }
 
     return (
-        <li className="posting-item" onClick={function(){
-            //상세보기 (BoardView) 컴포넌트 전환하며, 게시글 번호 전달
-            navigate('/organization/view/' + org.orgNo);
-        }}>
-            <div className="posting-img">
+        <li className="posting-item">
+            <div className="posting-img" onClick={function(){
+                navigate('/organization/view/' + org.orgNo);
+            }}>
                 {/* 썸네일 이미지가 등록된 경우에는 백엔드로 요청하고, 등록되지 않은 경우에는 기본 이미지 표기되도록 처리 */}
                 <img src={org.orgThumbPath ? serverUrl + "/org/thumb/" + org.orgThumbPath.substring(0,8) + "/" + org.orgThumbPath
                                                : "/images/default_img.png"}/>
             </div>
             <div className="posting-info">
-                <div className="posting-title" style={{ fontSize: '24px' }}>{org.orgName}</div>
-                <div className="posting-sub-info">
-                
-                {org.categoryList && org.categoryList.map((orgCtg, idx) => (
-                <span key={"orgCtg"+idx} style={{color : "#757575ff"}}>#{orgCtg} </span>
-        ))}
-                    <div className="progress-bar">
-                        <div className="progress-fill" style={{width : org.orgTemperature + "%", backgroundColor : "red"
-                                                                /*backgroundColor : org.orgTemperature < 20 ? "green"
-                                                                                : org.orgTemperature >= 20 && org.orgTemperature < 40 ? "lightgreen"
-                                                                                : org.orgTemperature >= 40 && org.orgTemperature < 60 ? "yellow"
-                                                                                : org.orgTemperature >= 60 && org.orgTemperature < 80 ? "orange" : "red"*/}}></div>
-                    </div>
-                    <span>{org.orgTemperature}ºC</span>
+                <div>
+                    <div className="posting-title" style={{ fontSize: '24px', width : "350px" }} onClick={function(){
+                        navigate('/organization/view/' + org.orgNo);
+                    }}>{org.orgName}</div>
+                    {loginMember && loginMember.memberLevel == 2 ? 
+                    <span className="material-icons favorite-heart" onClick={addLikeOrg}>{addLike ? "favorite" : "favorite_border"}</span> : ""}
+                </div>
+                <div className="posting-sub-info" onClick={function(){
+                    navigate('/organization/view/' + org.orgNo);
+                }}>
+                    <span className="org-ctg-span" style={{border : "1px solid #ff5353ff", color : "#ff5353ff"}}>{org.orgTemperature}ºC</span><br/>
+                    {org.categoryList && org.categoryList.map((orgCtg, idx) => (
+                    <span key={"orgCtg"+idx} className="org-ctg-span" style={{marginTop : "4px"}}>#{orgCtg} </span>
+                    ))}
                 </div>
             </div>
         </li>

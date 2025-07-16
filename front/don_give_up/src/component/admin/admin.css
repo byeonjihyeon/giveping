@@ -1,3 +1,37 @@
+.two-nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.two-nav li {
+  flex: 1;
+}
+
+.two-nav button {
+  width: 100%;
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.two-nav button:hover {
+  color: #1976d2;
+}
+
+.two-nav button.active {
+  color: #1976d2;
+  border-bottom: 2px solid #1976d2;
+  font-weight: bold;
+}
 
 .two-nav{
   display: flex;
@@ -5,7 +39,7 @@
   gap: 20px;                  /* 버튼 사이 간격 */
   padding: 10px;
 }
-
+/*
 .two-nav>li{
     list-style: none;
     padding: 0;
@@ -33,8 +67,10 @@
     height: 40px;
     cursor: pointer;
     font-size: 14px;
-    opacity: 0.85;              /* 투명도 조절 (0 ~ 1) */
-    transition: all 0.2s ease;  /* hover 효과 부드럽게 */ 
+    opacity: 0.85; 
+                
+                 
+    transition: all 0.2s ease;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
     
 }
@@ -42,8 +78,9 @@
     background-color: rgb(204, 204, 238);
 }
 .two-nav li:first-child {
-    margin-left: -10px;  /* gap의 반대 효과 */
+    margin-left: -10px; 
 }
+*/
 .detail{
     width: 450;
     height: 450;
@@ -121,4 +158,74 @@
 
 .MuiPaper-root {
     max-height: 200px;
+}
+.admin-wrap {
+  display: flex;
+  height: 1000px;
+  width: 1200px;
+}
+/*
+.admin-side {
+  width: 250px;
+  background-color: #f5f5f5;
+  border-right: 1px solid #ddd;
+}
+*/
+
+.admin-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+/*
+.admin-tbl{
+    width:fit-content;
+    height: auto;
+       width: auto;
+    table-layout: auto;
+    border-collapse: collapse;
+ 
+}
+.admin-tbl th{
+      width:fit-content;
+    height: auto;
+      border: 1px;
+    border-color: #456882;
+}
+    */.admin-tbl {
+  width: 100%; /* 콘텐츠에 맞게 너비 조절 */
+  table-layout: auto; /* 열 크기 자동 조절 */
+  border-collapse: collapse; /* 테두리 겹치기 */
+  margin: 20px 0;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  min-width: 600px; /* 너무 작게 안 보이도록 최소 너비 */
+  text-align: center;
+}
+
+.admin-tbl th,
+.admin-tbl td {
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+.admin-tbl th {
+  background-color: #f0f6fc;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.admin-tbl tr:nth-child(even) {
+  background-color: #fafafa;
+}
+.search {
+  display:flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  gap: 10px;                  /* 버튼 사이 간격 */
+  padding: 10px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  margin-top: 20px;
 }

@@ -8,8 +8,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import FormHelperText from '@mui/material/FormHelperText';
 import { blue } from "@mui/material/colors";
-
-
+import "./admin.css";
 
 //환불 신청 목록
 export default function RefundManage(){
@@ -73,7 +72,7 @@ export default function RefundManage(){
          
             </ul>
         </div>
-            <table className="tbl">
+            <table className="admin-tbl">
                 <thead>
                     <tr>
                         <th style={{width:"5%"}}>번호</th>

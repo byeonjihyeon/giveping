@@ -68,19 +68,21 @@ export default function MyHome(props){
                 </div>
                 <div className="myPage-div">
                     {categoryList.map(function(ctg, index){
-                        return  <h3 key={"ctg"+index} style={{display : "inline"}}>#{ctg} </h3>
+                        return  <h3 key={"ctg"+index} style={{display : "inline"}} className="org-ctg-span">#{ctg} </h3>
                     })}
                 </div>
                 <div className="myPage-div">
-                    <div className="myNews-title-wrap">
-                        <span>내 소식</span>
-                        <span> | 총 { unreadAlarmCount }  건</span>
+                    <div className="myNews-wrap">
+                        <div className="myNews-title-wrap">
+                            <span>내 소식</span>
+                            <span> | 총 { unreadAlarmCount }  건</span>
+                        </div>
                     </div>
                     <div className="myNews-item">
-                        <div className="newsList-wrap" >
+                        <div className="m-newsList-wrap" >
                                 {
                                 !newsList || newsList.filter(news => news.alarmRead === 0).length === 0 ? (
-                                <div>새로운 소식이 없습니다.</div>
+                                <div className="m-news-info">새로운 소식이 없습니다.</div>
                                 ) : (
                                 newsList
                                     .filter(news => news.alarmRead === 0)
