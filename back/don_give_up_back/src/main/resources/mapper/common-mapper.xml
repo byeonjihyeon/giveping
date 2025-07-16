@@ -145,6 +145,7 @@
     org_no as orgNo,
     (select org_name from tbl_org o where n.org_no = o.org_no) as orgName
  	from tbl_news n
+	where news_name != '삭제'
 	order by newsDate desc
 	</select>
 </mapper>
