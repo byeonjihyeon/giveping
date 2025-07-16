@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import MainList from "./MainList";
 import { Link, useNavigate } from "react-router-dom";
 import createInstance from '../../axios/Interceptor';
+import { format } from 'date-fns';
 
 export default function Main(){
 
@@ -30,6 +31,10 @@ export default function Main(){
 
     //소식리스트 변수
     const [mainNewsList, setMainNewsList] = useState([]);
+
+    //오늘 날짜
+    const today = new Date();
+    const formatDate = format(today, 'yyyy.MM.dd');
 
     //총 기부금 조회
     useEffect(function(){
@@ -123,7 +128,7 @@ export default function Main(){
             <div className="all-donation-status">  
                 <div className="title">
                     <div>우리가 함께 만든 변화의 총합</div>
-                    <div className="today">오늘 기준</div>
+                    <div className="today">{formatDate} 기준</div>
                 </div>
                 <div className="all-money">
                     <span>총 기부금</span>
@@ -132,7 +137,7 @@ export default function Main(){
             </div>
             
             <div className="main-titles" >
-                <span className="content-title">단체 소식 💌</span>
+                <span className="content-title">지금, 현장에서 전해온 소식 💌</span>
             </div>
             <div className="main-newsList">
                 {mainNewsList.length != null && mainNewsList.length > 0 ?

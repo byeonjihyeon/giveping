@@ -243,6 +243,7 @@
 .main-newsList {
     margin: 0 auto;
     margin-top: 30px;
+    margin-bottom: 80px;
     width: 1200px;
     display: flex;
     flex-wrap: wrap;
