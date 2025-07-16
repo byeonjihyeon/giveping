@@ -350,21 +350,21 @@ function Report(props){
     }
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-contents">
+        <div className="report-modal-overlay">
+            <div className="report-modal-contents">
                 <h3>신고하기</h3>
                 <div style={{ margin: "15px 0" }}>
                     <p><strong>신고 단체</strong></p>
-                    <div className="button-group">
+                    <div className="report-button-group" style={{height : "25px"}}>
                         <span>단체명: {org.orgName}</span> <br />
                     </div>
 
                     <div style={{ marginTop: "10px" }}>
-                        <label htmlFor="reportCode"><strong>신고 사유 선택</strong></label>
-                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
-                            <option value="">사유를 선택하세요</option>
+                        <label htmlFor="reportCode" style={{fontSize: '20px', marginTop: '12px'}}><strong>신고 사유 선택</strong></label><br/>
+                        <select className="report-select" id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
+                            <option className="report-option" value="">사유를 선택하세요</option>
                             {codeList.map((code) => (
-                                <option key={code.reportCode} value={code.reportCode}>
+                                <option className="report-option" key={code.reportCode} value={code.reportCode}>
                                     {code.reportReason}
                                 </option>
                             ))}
@@ -372,12 +372,13 @@ function Report(props){
                     </div>
 
                     <div>
-                        <input type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
+                        <input className="report-reason" type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
                     </div>
                 </div>
-
-                <button onClick={handleReportClick}>신고하기</button>
-                <button onClick={closeReportPopup}>닫기</button>
+                <div className="report-modal-buttons">
+                    <button className="report-button" onClick={handleReportClick}>신고하기</button>
+                    <button className="report-button" onClick={closeReportPopup}>닫기</button>
+                </div>
             </div>
         </div>
     )

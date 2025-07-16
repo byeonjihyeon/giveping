@@ -517,7 +517,7 @@ function Report(props){
                     </div>
 
                     <div>
-                        <input class="report-reason" type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
+                        <input className="report-reason" type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
                     </div>
                 </div>
                 <div className="report-modal-buttons">
