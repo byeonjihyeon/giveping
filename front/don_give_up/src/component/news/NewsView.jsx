@@ -494,22 +494,22 @@ function Report(props){
     }
     
     return(
-        <div className="modal-overlay">
-            <div className="modal-contents">
+        <div className="report-modal-overlay">
+            <div className="report-modal-contents">
                 <h3>신고하기</h3>
                 <div style={{ margin: "15px 0" }}>
-                    <p><strong>신고 댓글</strong></p>
-                    <div className="button-group">
-                        <span>댓글 번호: {comment.commentNo}</span> <br />
-                        <span>댓글 내용: {comment.commentContent}</span> <br />
+                    <p><strong style={{fontSize: '20px'}}>신고 댓글</strong></p>
+                    <div className="report-button-group">
+                        <span>작성자 아이디: {comment.memberId}</span> <br />
+                        <span>댓글 내용: {comment.commentContent}</span>
                     </div>
 
                     <div style={{ marginTop: "10px" }}>
-                        <label htmlFor="reportCode"><strong>신고 사유 선택</strong></label>
-                        <select id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
-                            <option value="">사유를 선택하세요</option>
+                        <label report-label htmlFor="reportCode" style={{fontSize: '20px', marginTop: '12px'}}><strong>신고 사유 선택</strong></label><br/>
+                        <select className="report-select" id="reportCode" value={selectedCode} onChange={handleSelectChange} style={{ width: "150px", fontSize : '14px'}}>
+                            <option className="report-option" value="">사유를 선택하세요</option>
                             {codeList.map((code) => (
-                                <option key={code.reportCode} value={code.reportCode}>
+                                <option className="report-option" key={code.reportCode} value={code.reportCode}>
                                     {code.reportReason}
                                 </option>
                             ))}
@@ -517,12 +517,13 @@ function Report(props){
                     </div>
 
                     <div>
-                        <input type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
+                        <input class="report-reason" type="text" id="detailReason" name="detailReason" value={detailReason} onChange={chgDetailReason} placeholder="상세 사유 입력"></input>
                     </div>
                 </div>
-
-                <button onClick={handleReportClick}>신고하기</button>
-                <button onClick={onClose}>닫기</button>
+                <div className="report-modal-buttons">
+                    <button className="report-button" onClick={handleReportClick}>신고하기</button>
+                    <button className="report-button" onClick={onClose}>닫기</button>
+                </div>
             </div>
         </div>
     );
