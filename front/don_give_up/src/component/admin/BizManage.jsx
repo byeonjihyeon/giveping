@@ -6,6 +6,7 @@ import Switch from '@mui/material/Switch';
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import "./admin.css";
+import Loading from "../common/Loading";
 
 
 //상세보기 모달 스타일
@@ -37,6 +38,7 @@ const style = {
 
 //기부 사업 목록
 export default function BizManage(){
+    const [isLoading, setIsLoading] = useState(true);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
@@ -54,14 +56,15 @@ export default function BizManage(){
 
     //검색을 위한 함수
      function handleSearch(page) {
-    let options ={
-        url : serverUrl + "/admin/bizManage/" + page,
-        method : 'get',
-        params: {status, searchType, keyword},
+        let options ={
+            url : serverUrl + "/admin/bizManage/" + page,
+            method : 'get',
+            params: {status, searchType, keyword},
         };
 
         axiosInstance(options)
         .then((res) => {
+            setIsLoading(false);
             setBizList(res.data.resData.bizList);
             setPageInfo(res.data.resData.pageInfo);
         });
@@ -94,6 +97,7 @@ export default function BizManage(){
 
     return (
         <>
+            {isLoading ? <Loading/> : ""}
             <div className="page-title">기부 사업 관리</div>
             <div className="search">
              <Box sx={{ display: 'flex', gap: 2, marginBottom: 3 }}>
@@ -135,7 +139,7 @@ export default function BizManage(){
                 </thead>
                 <tbody>
                    {bizList.map(function(biz, index){
-                        return <BoardItem key={"biz"+index} biz={biz} bizList={bizList} setBizList={setBizList} />
+                        return <BoardItem key={"biz"+index} biz={biz} bizList={bizList} setBizList={setBizList} setIsLoading={setIsLoading}/>
                    })}
                 </tbody>
             </table>
@@ -153,6 +157,7 @@ function BoardItem(props) {
     const biz = props.biz;
     const bizList = props.bizList;
     const setBizList = props.setBizList;
+    const setIsLoading = props.setIsLoading;
 
     const [open, setOpen] = useState(false);
     const [rejectOpen, setRejectOpen] = useState(false);
@@ -187,6 +192,7 @@ function BoardItem(props) {
 
     //  상태 업데이트
     function updateBizStatus(newStatus, bizEdit = "") {
+        setIsLoading(true);
         biz.bizStatus = newStatus;
 
         let options = {
@@ -200,6 +206,7 @@ function BoardItem(props) {
         };
 
         axiosInstance(options).then(function (res) {
+            setIsLoading(false);
             if (res.data.resData) {
                 alert("처리되었습니다.");
                 setRejectOpen(false);

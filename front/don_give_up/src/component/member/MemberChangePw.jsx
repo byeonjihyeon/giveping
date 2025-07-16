@@ -108,7 +108,7 @@ export default function MemberChangePw(){
             let options = {};
             options.url = serverUrl + '/member/updatePw';
             options.method = 'patch';
-            options.data = member;
+            options.data = {memberNo : loginMember.memberNo, memberPw : memberNewPw};
     
             axiosInstance(options)
             .then(function(res){
@@ -119,7 +119,7 @@ export default function MemberChangePw(){
     
                     navigate('/login');
                 }
-            })
+            });
         }
      }
 

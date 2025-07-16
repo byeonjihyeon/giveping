@@ -2,8 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
 import createInstance from "../../axios/Interceptor";
 import { useEffect, useRef, useState } from "react";
+import Loading from "./Loading";
 
 export default function MainList(){
+    const [isLoading, setIsLoading] = useState(true);
     const { isLogined, loginMember, loginOrg } = useUserStore();
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -28,6 +30,7 @@ export default function MainList(){
         .then(function(res){
             console.log(res.data.resData);
             setBizList(res.data.resData);
+            setIsLoading(false);
         });
 
     }, []);
@@ -43,9 +46,10 @@ export default function MainList(){
         .then(function(res){
             console.log(res.data.resData);
             setOrgList(res.data.resData);
+            setIsLoading(false);
             })
             
-            }, []);
+    }, []);
     
 
     // 스크롤 함수 (biz, org 분리)
@@ -60,6 +64,7 @@ export default function MainList(){
     return(
         <>
         <div className="biz-list-container">
+            {isLoading ? <Loading/> : ""}
             <button className="scroll-btn left" onClick={() => scroll(bizSliderRef, "left")}>{"<"}</button>
             <div className="biz-slider" ref={bizSliderRef}>
                 <ul className="biz-list">

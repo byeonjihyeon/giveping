@@ -12,6 +12,7 @@ import Modal from '@mui/material/Modal';
 import { Navigate, useNavigate } from "react-router-dom";
 import DeleteManage from "./DeleteManage";
 import "./admin.css";
+import Loading from "../common/Loading";
 
 //상세보기 모달 스타일
 const modalStyle = {
@@ -28,6 +29,7 @@ const modalStyle = {
 };
 
 export default function OrgManage(){
+    const [isLoading, setIsLoading] = useState(true);
 
    const navigate= useNavigate();
 
@@ -43,22 +45,24 @@ export default function OrgManage(){
 
     //검색을 위한 함수
      const fetchOrgList = (page) => {
-            const options = {
-                url: serverUrl + '/admin/orgManage/'+ page,
-                method: 'get',
-                params: { searchType, keyword }
-            };
-    
-            axiosInstance(options)
-                .then(res => {
-                    setOrgList(res.data.resData.orgList);
-                    setPageInfo(res.data.resData.pageInfo);
-                    console.log(orgList);
-                })
-                .catch(err => {
-                    console.error("조회 실패", err);
-                });
+
+        const options = {
+            url: serverUrl + '/admin/orgManage/'+ page,
+            method: 'get',
+            params: { searchType, keyword }
         };
+
+        axiosInstance(options)
+            .then(res => {
+                setOrgList(res.data.resData.orgList);
+                setPageInfo(res.data.resData.pageInfo);
+                setIsLoading(false);
+            })
+            .catch(err => {
+                console.error("조회 실패", err);
+                setIsLoading(false);
+            });
+    };
     
         useEffect(() => {
             fetchOrgList(reqPage);
@@ -106,6 +110,7 @@ export default function OrgManage(){
   
     return (
         <>
+            {isLoading ? <Loading/> : ""}
             <div className="page-title">단체 관리</div>
            
              <div className="two-nav">
@@ -150,7 +155,7 @@ export default function OrgManage(){
                 </thead>
                 <tbody>
                     { orgList.map(function(org, index){
-                        return <Org key={"org"+index} org={org} orgList={orgList} setOrgList={setOrgList} />
+                        return <Org key={"org"+index} org={org} orgList={orgList} setOrgList={setOrgList} setIsLoading={setIsLoading}/>
                     })}
                 </tbody>
             </table>
@@ -165,6 +170,7 @@ function Org(props) {
     const org = props.org;
     const orgList = props.orgList;
     const setOrgList = props.setOrgList;
+    const setIsLoading = props.setIsLoading;
     const [open, setOpen] = useState(false);
     
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
@@ -187,6 +193,7 @@ function Org(props) {
 
    // 단체 상태 값을 변경했을 때, 호출 함수  (onChange)
     function handleChange(e){
+        setIsLoading(true);
         org.orgStatus = e.target.value;
 
         let options = {};
@@ -196,6 +203,7 @@ function Org(props) {
 
         axiosInstance(options)
         .then(function(res){
+            setIsLoading(false);
             //DB 정상 변경되었을 때, 화면에 반영
             if(res.data.resData){
                 setOrgList([...orgList]);

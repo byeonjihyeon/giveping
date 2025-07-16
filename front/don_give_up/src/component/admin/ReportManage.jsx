@@ -159,7 +159,7 @@ useEffect(() => {
                   ) : (
                   
                   <a
-                    href={`/organization/view/-${report.orgNo}`}
+                    href={`/organization/view/${report.orgNo}`}
                     style={{ textDecoration: "none", color: "#1976d2" }}
                     target="_blank"
                   >

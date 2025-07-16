@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 
 //단체 탈퇴하기(신청)
 export default function OrgDelete(){
-    const serverUrl = import.meta.env.VITE_BACK_SERVER;
+    const serverUrl = import.meta.env.VITE_BACK_SERVER; //http://localhost:9999
     const axiosInstance = createInstance();
     const navigate = useNavigate();
 

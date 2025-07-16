@@ -161,8 +161,9 @@
 }
 .admin-wrap {
   display: flex;
-  height: 1000px;
+  min-height: 700px;
   width: 1200px;
+  margin: 0 auto;
 }
 /*
 .admin-side {
