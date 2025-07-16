@@ -299,7 +299,7 @@ export default function BizView(){
                             {donateBiz.bizStatus !== 1 && (
                                 <span
                                     className="tabArea-right-text"
-                                    onclick={function(){ navigate("/biz/update/" + donateBiz.bizNo)}}
+                                    onClick={function(){ navigate("/biz/update/" + donateBiz.bizNo)}}
                                 >
                                     수정
                                 </span>

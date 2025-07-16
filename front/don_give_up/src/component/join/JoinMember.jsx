@@ -644,7 +644,7 @@ function MemberAddr(props){
     return (
         <>
             <TextField type="text" className="input-addr" inputRef={addressRef} placeholder="주소"  slotProps={{input: {readOnly: true}}}/>
-            <Button variant="contained" type="button" onClick={execDaumPostcode} id="mui-bt" tyle={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
+            <Button variant="contained" type="button" onClick={execDaumPostcode} id="mui-bt" style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
             <TextField type="text" className="input-first" inputRef={detailAddressRef}
             value={member.memberAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
         </>

@@ -13,9 +13,11 @@ import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { useRef } from "react";
+import Loading from "./Loading";
 
 //아이디/비밀번호 찾기
 export default function SearchIdPw(){
+    const [isLoading, setIsLoading] = useState(true);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const navigate = useNavigate();
@@ -25,6 +27,7 @@ export default function SearchIdPw(){
     const type = param.type;
 
     useEffect(function(){
+        setIsLoading(false);
         setMember({memberId : "", memberName : "", memberEmail : ""});
         setOrg({orgId : "", orgName : "", orgEmail : ""});
         setMemberEmailId("");
@@ -129,7 +132,8 @@ export default function SearchIdPw(){
     const emailDomainRef = useRef(null);
 
     //확인 버튼 클릭 시 실행 함수
-    function findPw(){
+    function searchIdPw(){
+        setIsLoading(true);
         const validations = [
             {valid: type == "id" && selectRadio == "member" && member.memberName == "", message: "이름을 입력하세요.", inputRef: nameRef},
             {valid: type == "id" && selectRadio == "org" && org.orgName == "", message: "단체명을 입력하세요.", inputRef: nameRef},
@@ -176,6 +180,7 @@ export default function SearchIdPw(){
 
         axiosInstance(options)
         .then(function(res){
+            setIsLoading(false);
             Swal.fire({
                 title : "알림",
                 text : res.data.clientMsg,
@@ -191,6 +196,7 @@ export default function SearchIdPw(){
     
     return (
         <section className="section login-wrap">
+            {isLoading ? <Loading/> : ""}
             <div className="page-title"><h1>{type == "id" ? "아이디 찾기" : "비밀번호 찾기"}</h1></div>
             <div className="search-div">
                 <div>
@@ -204,7 +210,7 @@ export default function SearchIdPw(){
                 <div>
                     <form autoComplete="off" onSubmit={function(e){
                         e.preventDefault();
-                        findPw(); //확인 버튼 클릭 시 실행 함수
+                        searchIdPw(); //확인 버튼 클릭 시 실행 함수
                     }}>
                         <table>
                             <tbody>

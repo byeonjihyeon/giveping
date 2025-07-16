@@ -219,6 +219,7 @@ body {
     height: 100px;
     line-height: 100px;
     border: 1px solid #999;
+    color: black;
 }
 .join-select>a:first-child {
     border-top-left-radius: 20px;
@@ -239,6 +240,9 @@ body {
 }
 .tbl-join {
     margin: 0 auto;
+}
+.tbl-join label {
+    color: black;
 }
 .label {
     display: block;
@@ -373,4 +377,19 @@ body {
 }
 .input-login {
     width:300px;
+}
+
+/*로딩 페이지*/
+.loading-page {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
