@@ -204,7 +204,7 @@ function IngBiz(props){
                                 <span className={ctg.donateCode == biz.donateCode ? "org-ctg-span" : ""}>{ctg.donateCode == biz.donateCode ? "#" + ctg.donateCtg : ""}</span>
                             </div>
                 })}
-                <div style={{minHeight : "57px"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
+                <div style={{minHeight : "57px", maxHeight : "300px", overflow : "auto"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
                 <div className="org-biz-progress">
                     <div className="progress-bar">
                         <div className="progress-fill" style={{width : per + "%"}}></div>
@@ -238,7 +238,7 @@ function EndBiz(props){
                                 <span className={ctg.donateCode == biz.donateCode ? "org-ctg-span" : ""}>{ctg.donateCode == biz.donateCode ? "#" + ctg.donateCtg : ""}</span>
                             </div>
                 })}
-                <div style={{minHeight : "57px"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
+                <div style={{minHeight : "57px", maxHeight : "300px", overflow : "auto"}}>{biz.bizContent ? <Viewer initialValue={biz.bizContent}/> : ""}</div>
                 <div className="org-biz-progress">
                     <div className="progress-bar">
                         <div className="progress-fill" style={{width : per + "%"}}></div>
