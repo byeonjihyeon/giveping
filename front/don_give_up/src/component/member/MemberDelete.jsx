@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom"
 import useUserStore from "../../store/useUserStore";
 import { useEffect, useState } from "react";
 import createInstance from "../../axios/Interceptor";
+import Swal from "sweetalert2";
 
 export default function MemberDelete(props){
     const mainMember = props.member //MemberMain 부모컴포넌트에서 추출
@@ -77,23 +78,33 @@ export default function MemberDelete(props){
             return;
         }
 
+         Swal.fire({
+                        title : '알림',
+                        text : '탈퇴를 진행하시겠습니까?',
+                        icon : 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: '확인',
+                        cancelButtonText : '취소'
+                    }).then(function(res){
+                        if(res.isConfirmed){
+                            let options = {};
+                            options.url = serverUrl + '/member/delete/' + loginMember.memberNo;
+                            options.method = 'patch'    //회원 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
+                            
+                            axiosInstance(options)
+                            .then(function(res){
+                                if(res.data.resData){
+                                    //스토리지 정보 초기화
+                                    setIsLogined(false);
+                                    setLoginMember(null);
+                                    setAccessToken(null);
+                                    setRefreshToken(null);
+                                    navigate('/login');
+                                }
+                            })
+                        }
 
-        let options = {};
-        options.url = serverUrl + '/member/delete/' + loginMember.memberNo;
-        options.method = 'patch'    //회원 탈퇴 여부(0 : 정상, 1 : 탈퇴) -> 회원의 기부 내역을 보존하고자
-        
-        axiosInstance(options)
-        .then(function(res){
-            if(res.data.resData){
-                //스토리지 정보 초기화
-                setIsLogined(false);
-                setLoginMember(null);
-                setAccessToken(null);
-                setRefreshToken(null);
-                navigate('/login');
-            
-            }
-        })
+                    })
     }
     return(
         <div className="member-delete-wrap">

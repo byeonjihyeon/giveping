@@ -102,25 +102,44 @@ export default function MemberChangePw(){
             return;
         }
 
-
-        if(isAuth == true && isValid == 2){
-            //서버에 비밀번호 변경요청후, 정상 변경시, 재로그인 유도
-            let options = {};
-            options.url = serverUrl + '/member/updatePw';
-            options.method = 'patch';
-            options.data = {memberNo : loginMember.memberNo, memberPw : memberNewPw};
-    
-            axiosInstance(options)
-            .then(function(res){
-                if(res.data.resData){
-                    setIsLogined(false);
-                    setAccessToken(null);
-                    setRefreshToken(null);
-    
-                    navigate('/login');
-                }
-            });
+         if(memberNewPw != memberPwRe ){
+            alert('새비밀번호와 비밀번호 확인이 일치하지않습니다.');
+            return;
         }
+
+        Swal.fire({
+            title : '알림',
+            text : '비밀번호를 변경하시겠습니까?',
+            icon : 'warning',
+            showCancelButton: true,
+            confirmButtonText: '확인',
+            cancelButtonText : '취소'
+        }).then(function(res){
+
+            if(res.isConfirmed){
+                if(isAuth == true && isValid == 2){
+                    //서버에 비밀번호 변경요청후, 정상 변경시, 재로그인 유도
+                    let options = {};
+                    options.url = serverUrl + '/member/updatePw';
+                    options.method = 'patch';
+                    options.data = {memberNo : loginMember.memberNo, memberPw : memberNewPw};
+            
+                    axiosInstance(options)
+                    .then(function(res){
+                        if(res.data.resData){
+                            setIsLogined(false);
+                            setAccessToken(null);
+                            setRefreshToken(null);
+            
+                            navigate('/login');
+                        }
+                    });
+                }
+            }
+
+        })
+
+
      }
 
     return (

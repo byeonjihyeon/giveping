@@ -1,6 +1,7 @@
 import { add, format, isAfter, isBefore, min, parse } from "date-fns";
 import { useEffect, useRef, useState } from "react"
 import createInstance from "../../axios/Interceptor";
+import Swal from "sweetalert2";
 
 //DatePicker(달력) import
 import DatePicker from 'react-datepicker';
@@ -239,33 +240,41 @@ export default function MemberUpdate(props) {
         let delCategory = prevCategory.filter(function(code,index){return !choseCategory.includes(code)});
         //추가할 카테고리 : 현재카테고리 - 기존카테로기
         let addCategory = choseCategory.filter(function(code,index){return !prevCategory.includes(code)});
-        console.log("prev : " + prevCategory);
-        console.log("chose :" + choseCategory);
-        console.log("del: " +delCategory);
-        console.log("add : " + addCategory);
-
-        let options = {};
-        options.url = serverUrl + '/member';
-        options.method = 'patch';   //수정
-        options.data = {
-                        member: member,
-                        addCategory: addCategory,
-                        delCategory: delCategory        
+        
+            Swal.fire({
+                title : '알림',
+                text : '회원정보를 수정하시겠습니까?',
+                icon : 'warning',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText : '취소'
+            }).then(function(res){
+                if(res.isConfirmed){
+                    let options = {};
+                    options.url = serverUrl + '/member';
+                    options.method = 'patch';   //수정
+                    options.data = {
+                                    member: member,
+                                    addCategory: addCategory,
+                                    delCategory: delCategory        
+                                    }
+                   
+                    axiosInstance(options)
+                    .then(function(res){
+                        if(member.memberName != loginMember.memberName){                        //이름이 변경되었다면, 스토리지변수 또한 변경
+                            setLoginMember({...loginMember, memberName: member.memberName});    //스토리지영역도 변경적용 및 헤더, 사이드메뉴 재랜더링
+                            setMainMember({...mainMember, memberName: member.memberName});
                         }
-       
-        axiosInstance(options)
-        .then(function(res){
-            if(member.memberName != loginMember.memberName){                        //이름이 변경되었다면, 스토리지변수 또한 변경
-                setLoginMember({...loginMember, memberName: member.memberName});    //스토리지영역도 변경적용 및 헤더, 사이드메뉴 재랜더링
-                setMainMember({...mainMember, memberName: member.memberName});
-            }
+                        
+                        if(member.memberEmail != mainMember.memberEmail){
+                            setMainMember({...mainMember, memberEmail: member.memberEmail});
+                        }
             
-            if(member.memberEmail != mainMember.memberEmail){
-                setMainMember({...mainMember, memberEmail: member.memberEmail});
-            }
+                        setPrevCategory(choseCategory);
+                    })
+                }
+            });
 
-            setPrevCategory(choseCategory);
-        })
     }
 
     return (
