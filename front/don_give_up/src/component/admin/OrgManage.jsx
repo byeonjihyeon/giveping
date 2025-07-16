@@ -46,10 +46,12 @@ export default function OrgManage(){
     //검색을 위한 함수
      const fetchOrgList = (page) => {
 
+
         const options = {
             url: serverUrl + '/admin/orgManage/'+ page,
             method: 'get',
             params: { searchType, keyword }
+
         };
 
         axiosInstance(options)
@@ -73,13 +75,6 @@ export default function OrgManage(){
             setReqPage(1); // 페이지를 1로 초기화 → useEffect 실행
             fetchOrgList(1);
         };
-    
-
-    
-    //환불 신청 또는 내역 버튼 눌렀을 때 쓰이는 변수
-     const [showType, setShowType] = useState();  // "request" or "done"
-
-     
 
     useEffect(function(){
         let options = {};
@@ -207,6 +202,7 @@ function Org(props) {
             //DB 정상 변경되었을 때, 화면에 반영
             if(res.data.resData){
                 setOrgList([...orgList]);
+                alert("변경되었습니다")
             }
         });
     }
