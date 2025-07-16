@@ -138,8 +138,6 @@ function News(props){
             navigate('/biz/view/' + news.bizNo);
         }else if(news.alarmType === 2){
             navigate('/news/view/' + news.newsNo);
-        }else if(news.alarmType === 3){
-            console.log("type 3 클릭");
         }
     }
 

@@ -452,7 +452,7 @@ function DonateMember(props){
                         <div>생년월일</div>
                         <div>전화번호</div>
                         <div>기부금액</div>
-                        <div>기부일시</div>
+                        <div>기부일자</div>
                     </div>
                     {memberList.map((member, index) => (
                         <div className="donate-member-row" key={index}>
