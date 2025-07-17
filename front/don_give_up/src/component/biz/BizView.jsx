@@ -573,47 +573,45 @@ function Donate(props){
         // 잔여 예치금 - 결제 금액이 마이너스인 경우, 결제 못함
         if (totalMoney <= 0 || totalMoney - selectedAmount < 0) {
             await Swal.fire({
-                        title : '알림',
-                        text : '잔액이 부족합니다. 예치금을 충전해주세요.',
-                        icon : 'warning',
-                        showCancelButton : false,
-                        confirmButtonText : '확인'
-                    });
-                    navigate("/member");    // 충전하기 위해 /member 로 이동
-                    return; 
-                    }else{
-                        Swal.fire({
-                        title : '알림',
-                        text : '기부 하시겠습니까?',
-                        icon : 'question',
-                        showCancelButton : true,
-                        confirmButtonText : '확인',
-                        cancelButtonText : '취소'
-                    }).then(function(res){
-                        // 기부 정보 객체 재구성
-                        const updatedPayInfo = {
-                            ...payInfo,
-                            donateMoney: selectedAmount
-                        };
-                            if(res.isConfirmed){
-                            let options={};
-                            options.url = serverUrl + "/biz/donate";
-                            options.data = updatedPayInfo;
-                            options.method="post";
-                            
-                            axiosInstance(options)
-                            .then(function(res){
-                                if(res.data.resData){
-                                    //성공할 경우, 팝업 닫음
-                                    onClose();
-                                    window.location.reload(); // 페이지 새로고침
-                                }
-                            });
+                title : '알림',
+                text : '잔액이 부족합니다. 예치금을 충전해주세요.',
+                icon : 'warning',
+                showCancelButton : false,
+                confirmButtonText : '확인'
+            });
+            navigate("/member");    // 충전하기 위해 /member 로 이동
+            return; 
+            }else{
+                Swal.fire({
+                title : '알림',
+                text : '기부 하시겠습니까?',
+                icon : 'question',
+                showCancelButton : true,
+                confirmButtonText : '확인',
+                cancelButtonText : '취소'
+            }).then(function(res){
+                // 기부 정보 객체 재구성
+                const updatedPayInfo = {
+                    ...payInfo,
+                    donateMoney: selectedAmount
+                };
+                    if(res.isConfirmed){
+                    let options={};
+                    options.url = serverUrl + "/biz/donate";
+                    options.data = updatedPayInfo;
+                    options.method="post";
+                    
+                    axiosInstance(options)
+                    .then(function(res){
+                        if(res.data.resData){
+                            //성공할 경우, 팝업 닫음
+                            onClose();
+                            window.location.reload(); // 페이지 새로고침
                         }
-                    })
-
-                    }
-
+                    });
+                }
+            })
+        }
     }
 
     return (
