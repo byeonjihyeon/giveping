@@ -21,7 +21,6 @@ export default function BizList() {
     const codeArr = location.state;
    
     useEffect(function(){
-        console.log(codeArr);
         if(codeArr != null){
             setCategories(codeArr);
         }
@@ -129,7 +128,6 @@ export default function BizList() {
 
     axiosInstance(options)
       .then(function(res) {
-        console.log(res.data.resData);
         setDonateBizList(res.data.resData.donateBizList);
         setPageInfo(res.data.resData.pageInfo);
       });

@@ -24,7 +24,6 @@ export default function OrgNewsList(){
 
             axiosInstance(options)
             .then(function(res){
-                console.log(res.data.resData);
                 const alarms = res.data.resData;
                 setNewsList(alarms);
                 /*
@@ -134,7 +133,6 @@ function News(props){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             // DotBadge 업데이트를 위해 useUserStore의 함수 호출
             fetchUnreadAlarmCount();
         });

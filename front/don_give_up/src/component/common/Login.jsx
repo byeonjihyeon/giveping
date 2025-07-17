@@ -149,9 +149,6 @@ function DoLogin(props){
                         //Main 컴포넌트로 전환
                         navigate("/");
                     }
-                })
-                .catch(function(err){
-                    console.log(err);
                 });
             }
         }else{ //단체 회원 선택
@@ -198,9 +195,6 @@ function DoLogin(props){
                         //Main 컴포넌트로 전환
                         navigate("/");
                     }
-                })
-                .catch(function(err){
-                    console.log(err);
                 });
             }
         }

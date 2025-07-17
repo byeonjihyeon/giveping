@@ -18,7 +18,6 @@ export default function BizView(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
-     console.log("BizView 렌더링 - 현재 bizNo:", bizNo); 
 
     // 카테고리별 기부 사업 리스트 선언
     const [bizCategoryList, setBizCategoryList] = useState([]);
@@ -96,7 +95,6 @@ export default function BizView(){
 
         axiosInstance(options)
         .then(function(res){
-        console.log("카테고리별 기부 사업 불러오기 : ", res.data.resData);
         setBizCategoryList(res.data.resData);
         });
     }, [bizNo])

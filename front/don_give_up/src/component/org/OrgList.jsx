@@ -34,7 +34,6 @@ export default function OrgList(){
 
     //후원 단체 리스트 조회
     useEffect(function(){
-        console.log(isClick);
         const data = {reqPage : reqPage, searchOrgName : searchOrgName, checkCtgList : checkCtgList};
 
         let options = {};
@@ -67,7 +66,6 @@ export default function OrgList(){
     }
 
     function chgIsClick(){
-        console.log(searchOrgName);
         setIsClick(!isClick);
     }
     

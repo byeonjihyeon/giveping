@@ -117,7 +117,6 @@ export default function ChargeFrm(props){
                 
                 axiosInstance(options)
                 .then(function(res){
-                    //console.log(member.totalMoney); 1,000,000 
                     let prevMoneyStr = member.totalMoney.split(',').join(''); //충전전 금액 1,000,000 => 1000000
                     let prevMoney = Number(prevMoneyStr);
                     let sum = prevMoney + Number(charge); 

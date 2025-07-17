@@ -50,7 +50,6 @@ export default function ProfileUpdate(props){
             alert('파일 업로드후, 눌러주세요.');
             return;
         }
-        console.log(member.memberProfile);
         const form = new FormData();
         form.append('memberNo', loginMember.memberNo);      //회원 정보(번호, 아이디, 이름, 전화번호, 생년월일, 이메일, 주소)
         form.append('profile', profile);                    //업로드할 프로필 사진 '객체'

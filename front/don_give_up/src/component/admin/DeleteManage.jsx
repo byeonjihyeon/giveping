@@ -155,7 +155,6 @@ function DelOrg(props) {
     function orgBiz(props){
         const biz= props.biz;
        setBizOpen(true);
-           console.log(bizList);
     }
 
     function bizClose() {

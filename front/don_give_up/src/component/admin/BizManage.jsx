@@ -184,8 +184,7 @@ function BoardItem(props) {
             return;
         }
 
-        updateBizStatus(newStatus);  
-        console.log(newStatus)      // 나머지는 바로 반영
+        updateBizStatus(newStatus);
     }
 
     //  상태 업데이트
@@ -220,7 +219,6 @@ function BoardItem(props) {
          setIsLoading(false);
          setBizList([...bizList]);
 
-            console.log("업데이트 성공:", response.data);
             // 성공 시 처리 로직 (예: 성공 메시지 표시, 데이터 갱신)
         })
         .catch(error => {
@@ -260,7 +258,6 @@ function BoardItem(props) {
 
         updateBizStatus(2, bizEdit);
         setBizEdit('');
-        console.log(bizEdit);
         setRejectOpen(false);
     }
 

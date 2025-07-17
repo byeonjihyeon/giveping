@@ -12,7 +12,6 @@ export default function Survey(props){
     const navigate = useNavigate();
 
     const {loginMember} = useUserStore();
-    console.log(donateBiz.bizNo);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -36,7 +35,6 @@ export default function Survey(props){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             const questions = res.data.resData;
             setQuestionList(questions);
             //questionList안에는 question 객체가 여러 개 들어있음 => map 으로 객체 하나씩 꺼내오기
@@ -103,7 +101,6 @@ export default function Survey(props){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             if(res.data.resData){
                 onClose();  // 성공 시, 팝업 종료
                 navigate("/biz/view/"+bizNo);

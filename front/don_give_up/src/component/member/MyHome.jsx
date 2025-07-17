@@ -214,7 +214,6 @@ function Biz(props){
 function News(props){
     const news = props.news;
     const navigate = useNavigate();
-    console.log(news);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();

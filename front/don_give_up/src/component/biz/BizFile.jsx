@@ -68,7 +68,6 @@ export default function BizFile(props){
 
     // 파일 업로드 버튼 클릭 시 호출되는 함수
     function updateFile(){
-        console.log("updateFile 함수 호출");
         const form = new FormData();
         
         // bizNo 보내기
@@ -95,9 +94,7 @@ export default function BizFile(props){
 
             axiosInstance(options)
             .then(function(res){
-                console.log(res.data.resData); //true or false
                 if(res.data.resData){
-                    console.log("resData", res.data.resData)
 
                     fetchBizFileList(); //수정사항 반영 -> 재조회 
                    
@@ -115,10 +112,8 @@ export default function BizFile(props){
 
     // 첨부파일 목록 다시 가져오기
     function fetchBizFileList() {
-    console.log("fetchBizFileList 함수 도착");
     axiosInstance.get(serverUrl + "/biz/" + bizNo)
     .then(function(res) {
-        console.log(" fileList 재갱신: " , res.data.resData.fileList);
         setPrevBizFileList(res.data.resData.fileList); // 최신 파일 목록으로 갱신
     });
 }

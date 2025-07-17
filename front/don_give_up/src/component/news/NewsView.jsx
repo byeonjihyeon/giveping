@@ -46,14 +46,9 @@ export default function NewsView(){
             newsNo : newsNo,
             commentContent : newComment
         };
-
-        console.log("loginMember.memberNo", loginMember.memberNo);
-        console.log("newsNo", newsNo);
-        console.log("newComment", newComment);
         
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData); // 등록 완료 시, true 반환
             if(res.data.resData){
                 // 등록 완료일 경우
                 reloadCommentList(); // 댓글 목록 다시 불러오기
@@ -71,7 +66,6 @@ export default function NewsView(){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             setNews(res.data.resData);
         });
     }
@@ -85,7 +79,6 @@ export default function NewsView(){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             setNews(res.data.resData);
         });
     }, []);
@@ -110,7 +103,6 @@ export default function NewsView(){
     
                 axiosInstance(options)
                 .then(function(res){
-                    console.log(res.data.resData);
                     if(res.data.resData){
                         navigate('/news/list');
                     }
@@ -256,9 +248,6 @@ function Comment(props){
 
     // 작성자인지 확인
     useEffect(function(){
-        console.log("댓글 memberNo:", comment.memberNo);
-        console.log("로그인 memberNo:", loginMember?.memberNo);
-
         if(loginMember && comment && loginMember.memberNo == comment.memberNo){
             setIsAuthor(true);
         }else{
@@ -278,7 +267,6 @@ function Comment(props){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
  
             if(res.data.resData){
                 setEditMode(false);
@@ -310,7 +298,6 @@ function Comment(props){
                     if(res.data.resData) {
                         props.reloadCommentList();
                     }
-                    console.log(res.data.resData);
                 });
 
             }
@@ -322,7 +309,6 @@ function Comment(props){
 
     // 신고하기 버튼 클릭
     function openReportPopup(){
-        console.log("신고하기 버튼 클릭");
         setIsReportOpen(true);
     }
 
@@ -423,7 +409,6 @@ function Report(props){
 
     axiosInstance(option)
     .then(function(res){
-        console.log(res.data.resData);
         setCodeList(res.data.resData);  // 신고 코드 리스트에 저장
     });
     },[])
@@ -484,7 +469,6 @@ function Report(props){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             // 성공 -> 팝업 닫기
             onClose();
         });

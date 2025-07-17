@@ -372,9 +372,6 @@ function MemberId(props){
                         confirmButtonText : "확인"
                     });
                 }
-            })
-            .catch(function(err){
-                console.log(err);
             });
         }else{ //유효성 검증 실패인 경우
             Swal.fire({
