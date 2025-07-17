@@ -189,12 +189,13 @@ body {
     margin-top: 30px;
 }
 #mui-btn, #mui-btn-b, #mui-btn-bt,
-#mui-btn-btn, #mui-btn-btnb, #mui-bt {
+#mui-btn-btn, #mui-btn-btnb, #mui-bt,
+#mui-btns, #mui-btna {
     background-color: lightblue;
-    color: black;
+    color: white;
 }
-#mui-btn a {
-    color: black;
+#mui-btna a {
+    color: white;
 }
 #detail-btn {
     background-color: #999;
@@ -338,6 +339,7 @@ body {
 .select-ctg-wrap>.select-ctg.active {
   background-color: lightblue;
   border-color: lightblue;
+  color: white;
 }
 .key-up {
     text-align: right;

@@ -391,8 +391,8 @@ export default function OrgUpdate(props){
                             <tr>
                                 <th colSpan={2} style={{borderTop : "3px solid #dcdcdc"}}>
                                     <div style={{margin : "15px auto"}}>
-                                        <Button variant="contained" id="mui-btn" type="submit" className="orgBtn" style={{marginRight : "10px", height : "40px", fontSize : "20px"}}>수정</Button>
-                                        <Button variant="contained" className="orgBtn" style={{height : "40px", fontSize : "20px"}} id="mui-btn">
+                                        <Button variant="contained" id="mui-btns" type="submit" className="orgBtn" style={{marginRight : "10px", height : "40px", fontSize : "20px"}}>수정</Button>
+                                        <Button variant="contained" className="orgBtn" style={{height : "40px", fontSize : "20px"}} id="mui-btna">
                                             {org.orgStatus == 3 ? <Link href='javascript:void(0)' onClick={deleteCancel}>탈퇴취소</Link> : <Link to="/org/delete">탈퇴하기</Link>}
                                         </Button>
                                     </div>
