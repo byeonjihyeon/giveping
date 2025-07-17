@@ -38,7 +38,7 @@ const style = {
 
 //기부 사업 목록
 export default function BizManage(){
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
@@ -193,7 +193,9 @@ function BoardItem(props) {
 
     //  상태 업데이트
     function updateBizStatus(newStatus, reason='') {
-      setIsLoading(true);
+        if(newStatus == 1 || newStatus == 2){
+            setIsLoading(true);
+        }
 
     const biz = props.biz
     const url = serverUrl + '/admin/bizManage';
@@ -230,7 +232,6 @@ function BoardItem(props) {
         });
 }
         /*
->>>>>>> yujin
         biz.bizStatus = newStatus;
 
         let options = {

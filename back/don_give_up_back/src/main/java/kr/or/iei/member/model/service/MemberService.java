@@ -420,7 +420,7 @@ public class MemberService {
 			SimpleMailMessage msg = new SimpleMailMessage();
 			msg.setTo("qor659659@gmail.com"); //member.getMemberEmail();로 변경하기
 			msg.setFrom("dongiveup00@gmail.com");
-			msg.setSubject("Don Give Up 임시 비밀번호 안내");
+			msg.setSubject("[Don Give Up] 임시 비밀번호 안내");
 			msg.setText(member.getMemberId() + "님의 임시 비밀번호는 " + newRandomPw + " 입니다.");
 			
 			mailSender.send(msg);

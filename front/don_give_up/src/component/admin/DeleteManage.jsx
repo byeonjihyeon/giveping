@@ -26,7 +26,7 @@ const modalStyle = {
 
 //탈퇴 내역 목록
 export default function DeleteManage(){
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     //탈퇴 목록 저장 변수

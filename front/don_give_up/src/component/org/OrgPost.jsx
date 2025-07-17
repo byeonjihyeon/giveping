@@ -242,7 +242,7 @@ export default function OrgPost(){
                                     confirmButtonText : "확인"
                                 })
                                 .then(function(result){
-                                     navigate("/org"); // 기부 사업 보기 메뉴로 이동
+                                     navigate("/org"); //마이페이지로 이동
                                 });
                             });
                         }

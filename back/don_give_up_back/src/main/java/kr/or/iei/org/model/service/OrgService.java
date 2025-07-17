@@ -267,7 +267,7 @@ public class OrgService {
 			SimpleMailMessage msg = new SimpleMailMessage();
 			msg.setTo("qor659659@gmail.com"); //메일을 받을 메일 주소 org.getOrgEmail();
 			msg.setFrom("dongiveup00@gmail.com");
-			msg.setSubject("Don Give Up 임시 비밀번호 안내");
+			msg.setSubject("[Don Give Up] 임시 비밀번호 안내");
 			msg.setText(org.getOrgId() + "님의 임시 비밀번호는 " + newRandomPw + " 입니다.");
 			
 			mailSender.send(msg);
