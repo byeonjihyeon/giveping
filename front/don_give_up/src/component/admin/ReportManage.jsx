@@ -36,6 +36,7 @@ useEffect(() => {
         if (res.data.resData) {
           setReportList(res.data.resData.reportList);
           setPageInfo(res.data.resData.pageInfo);
+          console.log("commentDeleted: ", res.data.resData.reportList[0].commentDeleted);
         } else {
           setReportList([]);
           setPageInfo({});
@@ -136,6 +137,7 @@ useEffect(() => {
                 <th>신고코드</th>
                 <th>신고상세사유</th>
                 <th>신고일</th>
+                <th>삭제여부</th>
               </tr>
             </thead>
             <tbody>
@@ -144,32 +146,48 @@ useEffect(() => {
                   <td>{report.reportNo}</td>
                   <td>{report.memberName}</td>
                  <td>
-                  {tab === "comment" ? (
-                    <Tooltip title={report.commentContent} arrow>
-                      <a
-                        href={`/news/view/${report.newsNo}#comment-${report.commentNo}`}
-                        style={{ textDecoration: "none", color: "#1976d2" }}
-                        target="_blank"
-                      >
-                        {report.commentContent.length > 10
-                          ? report.commentContent.slice(0, 10) + "..."
-                          : report.commentContent}
-                      </a>
-                    </Tooltip>
-                  ) : (
-                  
-                  <a
-                    href={`/organization/view/${report.orgNo}`}
-                    style={{ textDecoration: "none", color: "#1976d2" }}
-                    target="_blank"
-                  >
-                    {report.orgName}
-                  </a>
-                  )}
-                 </td>
+                    {tab === "comment" ? (
+                      report.commentDeleted === 0 ? (
+                        <Tooltip title={report.commentContent} arrow>
+                          <a
+                            className="report-nev"
+                            href={`/news/view/${report.newsNo}#comment-${report.commentNo}`}
+                            style={{ textDecoration: "none", color: "#1976d2" }}
+                            target="_blank"
+                          >
+                            {report.commentContent.length > 10
+                              ? report.commentContent.slice(0, 10) + "..."
+                              : report.commentContent}
+                          </a>
+                        </Tooltip>
+                      ) : (
+                        <span style={{ color: "gray", opacity: 0.6 }}>
+                          {report.commentContent.length > 10
+                            ? report.commentContent.slice(0, 10) + "..."
+                            : report.commentContent}
+                        </span>
+                      )
+                    ) : (
+                      report.orgStatus === 1 || report.orgStatus === 3 ? (
+                        <a
+                          className="report-nev"
+                          href={`/organization/view/${report.orgNo}`}
+                          style={{ textDecoration: "none", color: "#1976d2" }}
+                          target="_blank"
+                        >
+                          {report.orgName}
+                        </a>
+                      ) : (
+                        <span style={{ color: "gray", opacity: 0.6 }}>
+                          {report.orgName}
+                        </span>
+                      )
+                    )}
+                  </td>
                   <td>{report.reportReason}</td>
                   <td>{report.reportDetailReason}</td>
                   <td>{report.reportDate.substring(0, 10)}</td>
+                  <td>{report.commentDeleted}</td>
                 </tr>
                   ))}
             </tbody>

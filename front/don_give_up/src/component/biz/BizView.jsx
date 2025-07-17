@@ -325,7 +325,8 @@ export default function BizView(){
                                 <img className="content-orgInfo-img"
                                         src={donateBiz.orgThumbPath
                                         ? serverUrl + "/org/thumb/" + donateBiz.orgThumbPath.substring(0, 8) + "/" + donateBiz.orgThumbPath
-                                        : "/images/default_img.png"}></img>
+                                        : "/images/default_img.png"}
+                                        ></img>
                                   <span className="content-orgInfo-text">
                                     <span className="content-orgInfo-name">{donateBiz.orgName}</span>
                                     <span className="content-orgInfo-introduce">{donateBiz.orgIntroduce}</span>
@@ -607,6 +608,7 @@ function Donate(props){
                                 if(res.data.resData){
                                     //성공할 경우, 팝업 닫음
                                     onClose();
+                                    window.location.reload(); // 페이지 새로고침
                                 }
                             });
                         }

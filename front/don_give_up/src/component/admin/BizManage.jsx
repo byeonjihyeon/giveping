@@ -38,7 +38,7 @@ const style = {
 
 //기부 사업 목록
 export default function BizManage(){
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
@@ -100,7 +100,7 @@ export default function BizManage(){
             {isLoading ? <Loading/> : ""}
             <div className="page-title">기부 사업 관리</div>
             <div className="search">
-             <Box sx={{ display: 'flex', gap: 2, marginBottom: 3 }}>
+             <Box sx={{ display: 'flex', gap: 1, marginBottom: 3 }}>
                 <FormControl sx={{ minWidth: 120 }}>
                     <InputLabel>상태</InputLabel>
                     <Select value={status} onChange={(e) => setStatus(e.target.value)} label="상태">
@@ -146,12 +146,9 @@ export default function BizManage(){
             <div className="admin-page-wrap" style={{marginTop : "30px"}}>
                 <PageNavi pageInfo={pageInfo} reqPage={reqPage} setReqPage={setReqPage} />
             </div>
-           
-
         </>
     );
 }
-
 
 function BoardItem(props) {
     const biz = props.biz;
@@ -193,7 +190,9 @@ function BoardItem(props) {
 
     //  상태 업데이트
     function updateBizStatus(newStatus, reason='') {
-      setIsLoading(true);
+        if(newStatus == 1 || newStatus == 2){
+            setIsLoading(true);
+        }
 
     const biz = props.biz
     const url = serverUrl + '/admin/bizManage';
@@ -230,7 +229,6 @@ function BoardItem(props) {
         });
 }
         /*
->>>>>>> yujin
         biz.bizStatus = newStatus;
 
         let options = {

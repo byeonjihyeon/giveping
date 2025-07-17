@@ -7,7 +7,7 @@ import useUserStore from "../../store/useUserStore";
 
 //마이페이지 소식페이지
 export default function NewsList(){
-    const {loginMember, unreadAlarmCount, setUnreadAlarmCount, setHasNewAlert} = useUserStore();
+    const {loginMember, setUnreadAlarmCount, setHasNewAlert} = useUserStore();
     // loginMember가 null일 때 대비
     if (!loginMember) {
         return <div>로그인 정보가 없습니다.</div>;
@@ -27,11 +27,6 @@ export default function NewsList(){
                 
                 const alarms = res.data.resData;
                 setNewsList(alarms);
-                /*
-                markAllAsRead(alarms.map(function(a) {
-                    return a.alarmNo;
-                }))
-                    */
             });
         }, []);
 

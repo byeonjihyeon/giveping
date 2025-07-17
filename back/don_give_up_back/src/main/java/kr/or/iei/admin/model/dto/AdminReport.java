@@ -24,6 +24,9 @@ public class AdminReport {
      private int newsNo;
      
      
-     
-     
+   //신고 내역 조회에서 필요한 것
+     //댓글 삭제여부 변수
+     private int commentDeleted;
+     //단체 상태 
+     private int orgStatus;
 }

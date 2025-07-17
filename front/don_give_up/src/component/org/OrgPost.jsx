@@ -242,7 +242,7 @@ export default function OrgPost(){
                                     confirmButtonText : "확인"
                                 })
                                 .then(function(result){
-                                     navigate("/org"); // 기부 사업 보기 메뉴로 이동
+                                     navigate("/org"); //마이페이지로 이동
                                 });
                             });
                         }
@@ -324,7 +324,8 @@ export default function OrgPost(){
                     </div>
                     <div style={{padding : "15px 0"}}>
                         <h3>기부 사업명</h3>
-                        <TextField type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz} style={{width : "600px"}}/>
+                        {/* max-length 추가 : TextField 의 @mui 때문에 inputProps 로 css 추가 */}
+                        <TextField type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz} style={{width : "600px"}} inputProps={{ maxLength: 30 }}/>
                     </div>
                 </div>
                 <div>

@@ -448,7 +448,7 @@ export default function BizUpdate(){
                 {/* 사업명 */}
                 <section className="form-section">
                 <h3>기부 사업명</h3>
-                <input type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz} className="input-text" />
+                <input type="text" id="bizName" value={donateBiz.bizName} onChange={chgBiz} className="input-text" maxLength={30}/>
                 </section>
                 
                 <br/><hr /><br/>

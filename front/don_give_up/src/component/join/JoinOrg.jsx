@@ -298,8 +298,9 @@ function insertOrg() {
                                     <label htmlFor="orgName" className="label">단체명</label>
                                 </th>
                                 <td>
+                                    {/* max-length 추가 : TextField 의 @mui 때문에 inputProps 로 css 추가 */}
                                     <TextField type="text" id="orgName" className="input-first" inputRef={orgNameRef}
-                                    value={org.orgName} onChange={chgOrg}/>
+                                    value={org.orgName} onChange={chgOrg} inputProps={{ maxLength: 30 }}/>
                                 </td>
                             </tr>
                             <tr><td></td><td><p></p></td></tr>

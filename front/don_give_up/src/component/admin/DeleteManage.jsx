@@ -26,7 +26,7 @@ const modalStyle = {
 
 //탈퇴 내역 목록
 export default function DeleteManage(){
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     //탈퇴 목록 저장 변수
@@ -49,10 +49,8 @@ export default function DeleteManage(){
         axiosInstance(options)
         .then(function(res){
             setIsLoading(false);
-            //res.data.resData == boardMap
             setDeleteList(res.data.resData.deleteList); 
             setPageInfo(res.data.resData.pageInfo);
-            console.log("deleteList: ", res.data.resData.deleteList);
         });
 
         //reqPage 변경 시, useEffect 내부 함수 재실행
@@ -157,13 +155,12 @@ function DelOrg(props) {
     function orgBiz(props){
         const biz= props.biz;
        setBizOpen(true);
+           console.log(bizList);
     }
 
     function bizClose() {
       setBizOpen(false);
     }
-
- 
 
     return (
         <>
@@ -248,7 +245,7 @@ function DelOrg(props) {
                                   </tr>
                                   </tbody>
                              </table>
-                                    <button onClick={handleClose}>닫기</button>    
+                                <button onClick={handleClose}>닫기</button>    
                      </Box>
              </Modal>
          <Modal open={bizOpen} onClose={bizClose}>
@@ -261,6 +258,7 @@ function DelOrg(props) {
                                     <th>사업 종료 날짜</th> 
                                     <th>사업모금액 입금 여부</th>
                                  </tr>
+
                                  {org.bizList && org.bizList.length > 0 ? (
                                   org.bizList.map((biz, index)=> (
                                     <tr key={'biz' + index}>

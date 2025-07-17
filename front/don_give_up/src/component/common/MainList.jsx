@@ -2,10 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import useUserStore from "../../store/useUserStore";
 import createInstance from "../../axios/Interceptor";
 import { useEffect, useRef, useState } from "react";
-import Loading from "./Loading";
 
 export default function MainList(){
-    const [isLoading, setIsLoading] = useState(true);
     const { isLogined, loginMember, loginOrg } = useUserStore();
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
@@ -16,8 +14,8 @@ export default function MainList(){
     const orgSliderRef = useRef(null);
 
 
-    // 조건에 따라 primaryNo 설정 (회원으로 로그인 한 경우만 memberNo 보내기, 나머지는 0 값 보냄)
-    const primaryNo = (isLogined && loginMember && loginMember.memberNo)
+    // 조건에 따라 primaryNo 설정 (회원으로 로그인 한 경우만 memberNo 보내기, 나머지는 0 값 보냄) (관리자도 0 값 보내도록 memberLevel 조건식 추가)
+    const primaryNo = (isLogined && loginMember && loginMember.memberNo && loginMember.memberLevel == 2)
                         ? loginMember.memberNo
                         : 0;
 
@@ -30,7 +28,6 @@ export default function MainList(){
         .then(function(res){
             console.log(res.data.resData);
             setBizList(res.data.resData);
-            setIsLoading(false);
         });
 
     }, []);
@@ -46,7 +43,6 @@ export default function MainList(){
         .then(function(res){
             console.log(res.data.resData);
             setOrgList(res.data.resData);
-            setIsLoading(false);
             })
             
     }, []);
@@ -67,7 +63,7 @@ export default function MainList(){
             <div className="content-title">요즘 뜨고 있는 기부사업이에요! 🔥 </div>
         </div>
         <div className="biz-list-container">
-            {isLoading ? <Loading/> : ""}
+            {/*isLoading ? <Loading/> : ""*/}
             <button className="scroll-btn left" onClick={() => scroll(bizSliderRef, "left")}>{"<"}</button>
             <div className="biz-slider" ref={bizSliderRef}>
                 <ul className="biz-list">
@@ -78,12 +74,11 @@ export default function MainList(){
             </div>
             <button className="scroll-btn right" onClick={() => scroll(bizSliderRef, "right")}>{">"}</button>
         </div>
-        
         <div className="main-titles" >
             <div className="content-title">
-                 {loginMember ? loginMember.memberName + ' 님! 이런 단체는 어떠세요 ? 🔍'   : "관심 분야를 선택하면 맞춤 단체를 추천해드려요 ! 💡"  } 
+                 {loginMember && loginMember.memberLevel == 2 ? loginMember.memberName + ' 님! 이런 단체는 어떠세요 ? 🔍'   : "관심 분야를 선택하면 맞춤 단체를 추천해드려요 ! 💡"  } 
             </div>
-        </div>
+        </div>           
         <div className="biz-list-container">
             <button className="scroll-btn left" onClick={() => scroll(orgSliderRef, "left")}>{"<"}</button>
             <div className="biz-slider" ref={orgSliderRef}>

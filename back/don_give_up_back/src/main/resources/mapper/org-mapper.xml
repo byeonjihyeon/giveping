@@ -188,6 +188,7 @@
 		  from tbl_org
 		 where org_name = #{orgName}
 		   and org_email = #{orgEmail}
+		   and org_status != 4
 	</select>
 	
 	<!-- 단체 비밀번호 찾기 -->
@@ -196,6 +197,7 @@
 		  from tbl_org
 		 where org_id = #{orgId}
 		   and org_email = #{orgEmail}
+		   and org_status != 4
 	</select>
 	
 	<!-- 임시 비밀번호로 변경 -->

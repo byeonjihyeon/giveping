@@ -276,7 +276,8 @@ export default function OrgUpdate(props){
                             <tr>
                                 <th><label className="label">단체명</label></th>
                                 <td>
-                                    <TextField type="text" id="orgName" className="input-first" value={org.orgName} onChange={chgOrg} inputRef={orgNameRef}/>
+                                    {/* max-length 추가 : TextField 의 @mui 때문에 inputProps 로 css 추가 */}
+                                    <TextField type="text" id="orgName" className="input-first" value={org.orgName} onChange={chgOrg} inputRef={orgNameRef} inputProps={{ maxLength: 30 }}/>
                                 </td>
                             </tr>
                             <tr><td className="line"></td><td className="line"><p></p></td></tr>
