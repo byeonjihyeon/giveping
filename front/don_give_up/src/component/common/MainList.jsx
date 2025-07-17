@@ -63,8 +63,10 @@ export default function MainList(){
            
     return(
         <>
-        <div className="biz-list-container">
+        <div className="main-titles" >
             <div className="content-title">요즘 뜨고 있는 기부사업이에요! 🔥 </div>
+        </div>
+        <div className="biz-list-container">
             {isLoading ? <Loading/> : ""}
             <button className="scroll-btn left" onClick={() => scroll(bizSliderRef, "left")}>{"<"}</button>
             <div className="biz-slider" ref={bizSliderRef}>
@@ -76,11 +78,13 @@ export default function MainList(){
             </div>
             <button className="scroll-btn right" onClick={() => scroll(bizSliderRef, "right")}>{">"}</button>
         </div>
-
-        <div className="biz-list-container">
+        
+        <div className="main-titles" >
             <div className="content-title">
-                {loginMember ? loginMember.memberName + ' 님! 이런 단체는 어떠세요 ? 🔍'   : "관심 분야를 선택하면 맞춤 단체를 추천해드려요 ! 💡"  } 
+                 {loginMember ? loginMember.memberName + ' 님! 이런 단체는 어떠세요 ? 🔍'   : "관심 분야를 선택하면 맞춤 단체를 추천해드려요 ! 💡"  } 
             </div>
+        </div>
+        <div className="biz-list-container">
             <button className="scroll-btn left" onClick={() => scroll(orgSliderRef, "left")}>{"<"}</button>
             <div className="biz-slider" ref={orgSliderRef}>
                 <ul className="biz-list">
@@ -116,10 +120,10 @@ function BizItem(props){
                 />
             </div>
             <div className="posting-info">
-                <div className="posting-title" style={{ fontSize: '24px', margin: '10px 0' }}>{biz.bizName}</div>
+                <div className="posting-title" style={{ overflow: 'hidden',fontSize: '19px', margin: '10px 0', fontWeight: "400", height: '45px' }}>{biz.bizName}</div>
                 <div className="posting-sub-info">
                     <span style={{
-                        fontWeight : '700',
+                        fontWeight : '600',
                         color : '#7a7a7aff'
                         }}>{biz.orgName}</span>
                     <span style={{
@@ -150,7 +154,7 @@ function OrgItem(props){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
 
     return (
-        <li className="posting-item" onClick={function(){navigate('/organization/view/' + org.orgNo)}}>
+        <li className="posting-item" style={{height: '350px'}} onClick={function(){navigate('/organization/view/' + org.orgNo)}}>
             <div className="posting-img">
                 <img
                     src={org.orgThumbPath
@@ -158,8 +162,8 @@ function OrgItem(props){
                         : "/images/default_img.png"}
                 />
             </div>
-            <div className="posting-info">
-                <div className="posting-title" style={{ fontSize: '24px', margin: '10px 0' }}>{org.orgName}</div>
+            <div className="posting-info" >
+                <div className="posting-title" style={{ fontSize: '19px', margin: '10px 0', fontWeight: "500", }}>{org.orgName}</div>
                 <div className="posting-degree" style={{
                         border: '1px solid #ff5353ff',
                         borderRadius: '20px',
@@ -167,6 +171,7 @@ function OrgItem(props){
                         display: 'inline-block',
                         color: '#ff5353ff',
                         fontWeight: '500',
+                        marginTop: "20px"
                     }}>
                     <span> {org.orgTemperature}℃</span>
                 </div>

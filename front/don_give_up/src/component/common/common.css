@@ -52,6 +52,8 @@
     box-sizing: border-box;
     margin: 0 auto;
     margin-bottom: 20px;
+    width: 1200px;
+    margin-top: 20px;
 }
 
 .biz-slider {
@@ -69,11 +71,16 @@
 
 .posting-item {
     flex: 0 0 calc(25% - 15px); /* 4개씩 보이게 설정 */
-    border: 1px solid #ccc;
+    border: 1px solid #dcdcdc;
     border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
     background-color: #fff;
+    height: 355px;
+}
+
+.posting-item:hover {
+    border: 1px solid #c0c0c0;
 }
 
 .posting-img img {
@@ -84,6 +91,11 @@
 
 .posting-info {
     padding: 10px;
+    height: 266px;
+}
+
+.posting-sub-info {
+    height: 81px;
 }
 
 .progress-bar {
