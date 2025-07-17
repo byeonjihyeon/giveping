@@ -9,6 +9,7 @@ import "./admin.css";
 import Loading from "../common/Loading";
 import { Viewer } from "@toast-ui/react-editor";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 //상세보기 모달 스타일
@@ -256,7 +257,12 @@ function BoardItem(props) {
     //  반려 사유 제출
     function handleRejectSubmit() {
         if (!bizEdit.trim()) {
-            alert("반려 사유를 입력해주세요.");
+            Swal.fire({
+                title : "알림",
+                text : "반려사유를 입력하세요.",
+                icon : "warning",
+                confirmButtonText :"확인"
+            });
             return;
         }
 

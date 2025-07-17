@@ -289,3 +289,6 @@
   cursor: pointer;
 }
 
+.swal2-container {
+  z-index: 2000;
+}
