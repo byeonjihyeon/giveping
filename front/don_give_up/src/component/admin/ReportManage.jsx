@@ -36,7 +36,6 @@ useEffect(() => {
         if (res.data.resData) {
           setReportList(res.data.resData.reportList);
           setPageInfo(res.data.resData.pageInfo);
-          console.log("commentDeleted: ", res.data.resData.reportList[0].commentDeleted);
         } else {
           setReportList([]);
           setPageInfo({});
@@ -94,35 +93,38 @@ useEffect(() => {
   return (
     <>
        <div className="page-title">신고 내역 관리</div>
-       <div className="search">
-    <Box sx={{ width: "100%", typography: "body1", p: 2 }}>
-      <Tabs value={tab} onChange={handleChangeTab}>
-        <Tab label="댓글 신고" value="comment" />
-        <Tab label="단체 신고" value="org" />
-      </Tabs>
-   </Box>
-      <Box sx={{ mt: 3, mb: 2, display: "flex", gap: 2, alignItems: "center" }}>
-        <TextField
-          label="시작일"
-          type="date"
-          InputLabelProps={{ shrink: true }}
-          value={startDate}
-          onChange={(e) =>{
-              console.log("시작일 선택:", e.target.value);
-            setStartDate(e.target.value)}}
-        />
-        <TextField
-          label="종료일"
-          type="date"
-          InputLabelProps={{ shrink: true }}
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-        />
-        <Button variant="contained" onClick={fetchReportList}>
-          검색
-        </Button>
-      </Box>
-    </div>
+       <div className="search-and-nav">
+          <div className="two-nav">
+              <Box sx={{ width: "100%", typography: "body1", p: 2 , paddingTop : "0"}}>
+                <Tabs value={tab} onChange={handleChangeTab} style={{float : "right"}}>
+                  <Tab label="댓글 신고" value="comment" style={{width : "100px"}}/>
+                  <Tab label="단체 신고" value="org" style={{width : "100px"}}/>
+                </Tabs>
+              </Box>
+          </div>
+          <div className="search">
+              <Box sx={{ mt: 3, mb: 2, display: "flex", gap: 2, alignItems: "center" }}>
+                <TextField
+                  label="시작일"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  value={startDate}
+                  onChange={(e) =>{
+                    setStartDate(e.target.value)}}
+                />
+                <TextField
+                  label="종료일"
+                  type="date"
+                  InputLabelProps={{ shrink: true }}
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+                <Button variant="contained" onClick={fetchReportList}>
+                  검색
+                </Button>
+              </Box>
+            </div>
+        </div>
            <div>
         {reportList.length === 0 ? (
           <div>조회된 신고 내역이 없습니다.</div>
@@ -153,7 +155,6 @@ useEffect(() => {
                             className="report-nev"
                             href={`/news/view/${report.newsNo}#comment-${report.commentNo}`}
                             style={{ textDecoration: "none", color: "#1976d2" }}
-                            target="_blank"
                           >
                             {report.commentContent.length > 10
                               ? report.commentContent.slice(0, 10) + "..."
@@ -173,7 +174,6 @@ useEffect(() => {
                           className="report-nev"
                           href={`/organization/view/${report.orgNo}`}
                           style={{ textDecoration: "none", color: "#1976d2" }}
-                          target="_blank"
                         >
                           {report.orgName}
                         </a>
@@ -260,48 +260,4 @@ export default function ReportManage(){
     );
 }
 
-//게시글 1개
-function Report(props) {
-    const report = props.report;
-    const reportList = props.reportList;
-    const setReportList = props.setReportList;
-
-    const serverUrl = import.meta.env.VITE_BACK_SERVER;
-    const axiosInstance = createInstance();
-
-
-    //상태 값을 변경했을 때, 호출 함수  (onChange)
-    function handleChange(){
-      //  biz.boardStatus = board.boardStatus == 1 ? 2 : 1; //현재값이 1이면 2로 변경하고, 아니면 1로 변경
-
-        let options = {};
-        options.url = serverUrl + '/admin/reportManage';
-        options.method = 'patch';
-        options.data = {reportNo : report.reportNo, reportStatus : report.reportStatus};
-
-        axiosInstance(options)
-        .then(function(res){
-            //DB 정상 변경되었을 때, 화면에 반영
-            if(res.data.resData){
-                setReportList([...reportList]);
-            }
-        });
-    }
-
-    return (
-        <tr>
-            <td>{report.reportNo}</td>
-            <td>{report.memberName}</td>
-            <td>{report.orgName}</td>
-            <td>{report.commentContent}</td>
-            <td>{report.reportReason}</td>
-            <td>{report.reportDetailReason}</td>
-             <td>{report.reportDate.substring(0,10)}</td>
-            <td>
-                <Checkbox>□</Checkbox>
-            </td>
-
-        </tr>
-    );
-}
     */

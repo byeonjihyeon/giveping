@@ -132,6 +132,9 @@ public class AdminController {
 	
 
 		try {
+			if(status.equals("5")) {
+				status = null;
+			}
 			HashMap<String, Object> bizMap = service.selectBizList(reqPage, status, searchType, keyword);
 			res = new ResponseDTO(HttpStatus.OK, "", bizMap, "");
 		} catch (Exception e) {
@@ -206,7 +209,6 @@ public class AdminController {
 				if("comment".equals(tab)){
 					
 					reportMap= service.selectCommentReportList(reqPage, tab, startDate, endDate);
-					//System.out.println("controller 에서 startDate :"  + startDate);
 					
 				}else if("org".equals(tab)){
 					reportMap= service.selectOrgReportList(reqPage, tab, startDate, endDate);
@@ -217,7 +219,6 @@ public class AdminController {
 			                    HttpStatus.BAD_REQUEST);
 			        }
 
-				System.out.println("reportMap : " + reportMap);
 				
 				ResponseDTO res = new ResponseDTO(HttpStatus.OK, "", reportMap, "");
 			        return new ResponseEntity<>(res, HttpStatus.OK);

@@ -111,7 +111,7 @@ public class NewsController {
 
 			// DB에 게시글 정보 등록
 			int result = service.insertNews(news);
-			System.out.println("result : " + result);
+
 			if(result > 0) {
 				res = new ResponseDTO(HttpStatus.OK, "게시글이 등록 되었습니다.", true, "success");
 			}
@@ -307,7 +307,6 @@ public class NewsController {
 	// 소식 게시판 댓글 등록
 	@PostMapping("/comment")
 	public ResponseEntity<ResponseDTO> regComment(@RequestBody Comment comment) {
-		System.out.println("comment : " + comment);
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "댓글 등록 처리 중, 오류가 발생하였습니다.", false, "error");
 
 		try {

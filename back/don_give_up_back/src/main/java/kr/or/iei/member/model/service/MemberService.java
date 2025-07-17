@@ -414,11 +414,10 @@ public class MemberService {
 			//최종 임시 비밀번호
 			String newRandomPw = new String(charArr);
 			
-			System.out.println(newRandomPw);
 			
 			//메일로 보낼 메시지
 			SimpleMailMessage msg = new SimpleMailMessage();
-			msg.setTo("qor659659@gmail.com"); //member.getMemberEmail();로 변경하기
+			msg.setTo(member.getMemberEmail()); //member.getMemberEmail();로 변경하기
 			msg.setFrom("dongiveup00@gmail.com");
 			msg.setSubject("[Don Give Up] 임시 비밀번호 안내");
 			msg.setText(member.getMemberId() + "님의 임시 비밀번호는 " + newRandomPw + " 입니다.");

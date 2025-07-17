@@ -7,6 +7,7 @@ import Modal from '@mui/material/Modal';
 import { Box, Checkbox, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import "./admin.css";
 import Loading from "../common/Loading";
+import { Link } from "react-router-dom";
 
 
 
@@ -16,8 +17,8 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
-  height: 500,
+  width: 700,
+  height: 700,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -60,17 +61,19 @@ export default function DeleteManage(){
         <>
             {isLoading ? <Loading/> : ""}
             <div className="page-title">탈퇴 신청 관리</div>
-            <div className="two-nav">
-            <ul>
-                 <li>
-                    <button onClick={() =>{ setShowType("request"); setReqPage(1);}}>탈퇴신청</button>
-                 </li>
-                 <li>
-                     <button onClick={() =>{ setShowType("done"); setReqPage(1);}}>탈퇴</button>
-                 </li>
-         
-            </ul>
-        </div>
+            <div className="search-and-nav">
+                <div className="two-nav">
+                    <ul>
+                        <li>
+                            <button onClick={() =>{ setShowType("request"); setReqPage(1);}} style={{width : "100px"}}>탈퇴신청</button>
+                        </li>
+                        <li>
+                            <button onClick={() =>{ setShowType("done"); setReqPage(1);}}>탈퇴</button>
+                        </li>
+                
+                    </ul>
+                </div>
+            </div>
             <table className="admin-tbl">
                 <thead>
                     <tr>
@@ -155,7 +158,6 @@ function DelOrg(props) {
     function orgBiz(props){
         const biz= props.biz;
        setBizOpen(true);
-           console.log(bizList);
     }
 
     function bizClose() {
@@ -192,7 +194,10 @@ function DelOrg(props) {
         </tr>
         <Modal open={open} onClose={handleClose}>
             <Box sx={modalStyle}>
-                    <h2>{org.orgName} 상세 정보</h2>    
+                    <h2 className="style-h2">
+                      <Link to={"/organization/view/" + org.orgNo}>{org.orgName} 상세 정보</Link>
+                    </h2>
+                    <div className="detail-div">
             <table className='detail' border={1}> 
                          <tbody>
                                 <tr>
@@ -221,7 +226,13 @@ function DelOrg(props) {
                                     </tr>
                                   <tr>
                                     <th>단체 소개</th> 
-                                     <td>{org.orgIntroduce}</td>
+                                        <td><div style={{width  :"450px"}}>
+                                            <textarea type="text" defaultValue={org.orgIntroduce}style={{width : "100%", height : "60px",
+                                                                                                        border : "none", resize : "none",
+                                                                                                        fontFamily: "Pretendard, sans-serif",
+                                                                                                        fontSize : "16px", fontWeight : "light",
+                                                                                                        color : "#333333"}}/>
+                                        </div></td>
                                      </tr>
                                   <tr>
                                     <th>단체 계좌은행</th> 
@@ -245,36 +256,43 @@ function DelOrg(props) {
                                   </tr>
                                   </tbody>
                              </table>
+                             </div>
+                             <div>
                                 <button onClick={handleClose}>닫기</button>    
+                            </div>
                      </Box>
              </Modal>
          <Modal open={bizOpen} onClose={bizClose}>
             <Box sx={modalStyle}>
-                    <h2>{org.orgName} 단체의 기부 사업 </h2>    
-            <table className='detail' border={1}> 
-                         <tbody>
-                                <tr>
-                                    <th>기부사업명</th> 
-                                    <th>사업 종료 날짜</th> 
-                                    <th>사업모금액 입금 여부</th>
-                                 </tr>
+                    <h2 className="style-h2">{org.orgName} 단체의 기부 사업</h2>
+                    <div className="detail-div">
+                      <table className='detail' border={1}> 
+                                  <tbody>
+                                          <tr>
+                                              <th>기부사업명</th> 
+                                              <th>사업 종료 날짜</th> 
+                                              <th>사업모금액 입금 여부</th>
+                                          </tr>
 
-                                 {org.bizList && org.bizList.length > 0 ? (
-                                  org.bizList.map((biz, index)=> (
-                                    <tr key={'biz' + index}>
-                                    <td>{biz.bizName}</td>
-                                    <td>{biz.bizEnd?.substring(0, 10)}</td>
-                                    <td>{biz.payoutStatus===0 ? 'N':'Y'}</td>
-                                    </tr>
-                                       ))
-                                       ) : (
-                                <tr>
-                                    <td colSpan={3}>등록된 기부 사업이 없습니다.</td>
-                                </tr>
-                                )}
-                        </tbody>
-            </table>
-                                    <button onClick={bizClose}>닫기</button>    
+                                          {org.bizList && org.bizList.length > 0 ? (
+                                            org.bizList.map((biz, index)=> (
+                                              <tr key={'biz' + index}>
+                                              <td>{biz.bizName}</td>
+                                              <td>{biz.bizEnd?.substring(0, 10)}</td>
+                                              <td>{biz.payoutStatus===0 ? 'N':'Y'}</td>
+                                              </tr>
+                                                ))
+                                                ) : (
+                                          <tr>
+                                              <td colSpan={3}>등록된 기부 사업이 없습니다.</td>
+                                          </tr>
+                                          )}
+                                  </tbody>
+                      </table>
+                    </div>
+                    <div>
+                        <button onClick={bizClose}>닫기</button>    
+                    </div>
                      </Box>
              </Modal>
 

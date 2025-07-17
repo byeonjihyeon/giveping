@@ -62,17 +62,19 @@ export default function PayoutManage(){
     return (
         <>
             <div className="page-title">관리자 모금액 송금 관리</div>
-        <div className="two-nav">
-            <ul>
-                 <li>
-                    <button onClick={() =>{ setShowType("todo"); setReqPage(1);}}>미송금내역</button>
-                 </li>
-                 <li>
-                     <button onClick={() =>{ setShowType("done"); setReqPage(1);}}>송금내역</button>
-                 </li>
-         
-            </ul>
-        </div>
+            <div className="search-and-nav">
+                <div className="two-nav">
+                    <ul>
+                        <li>
+                            <button onClick={() =>{ setShowType("todo"); setReqPage(1);}} style={{width : "120px"}}>미송금내역</button>
+                        </li>
+                        <li>
+                            <button onClick={() =>{ setShowType("done"); setReqPage(1);}}>송금내역</button>
+                        </li>
+                
+                    </ul>
+                </div>
+            </div>
             <table className="admin-tbl">
                 <thead>
                     <tr>

@@ -15,7 +15,7 @@ export default function OrgDelete(){
     const navigate = useNavigate();
 
     const {loginOrg} = useUserStore();
-    const orgNo = loginOrg.orgNo;
+    const orgNo = loginOrg ? loginOrg.orgNo : "";
 
     //진행 중인 기부 사업 리스트
     const [bizList, setBizList] = useState([{bizName : "", bizDonateEnd : "", bizEnd : "", payoutYN : ""}]);
@@ -54,13 +54,20 @@ export default function OrgDelete(){
         .then(function(res){
             if(res.data.resData){
                 setType(1);
+                Swal.fire({
+                    title : "알림",
+                    text : "확인되었습니다.",
+                    icon : "success",
+                    confirmButtonText : "확인"
+                });
+            }else {
+                Swal.fire({
+                    title : "알림",
+                    text : "비밀번호가 일치하지 않습니다.",
+                    icon : "warning",
+                    confirmButtonText : "확인"
+                });
             }
-            Swal.fire({
-                title : "알림",
-                text : "확인되었습니다.",
-                icon : "success",
-                confirmButtonText : "확인"
-            });
         });
     }
 

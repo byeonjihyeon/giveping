@@ -121,5 +121,8 @@ public interface OrgDao {
 	//종료된 기부 사업 리스트
 	ArrayList<Biz> selectOrgEndBizList(int orgNo);
 
+	//탈퇴취소하기
+	int deleteCancel(int orgNo);
+
 
 }

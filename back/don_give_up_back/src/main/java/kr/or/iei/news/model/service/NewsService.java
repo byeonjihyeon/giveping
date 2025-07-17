@@ -62,7 +62,6 @@ public class NewsService {
 	public int insertNews(News news) {
 		// (1) 게시글 번호 조회
 		int newsNo = dao.selectNewsNo();
-		System.out.println("newsNo : " + newsNo);
 		
 		news.setNewsNo(newsNo);
 		

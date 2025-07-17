@@ -372,9 +372,6 @@ public class AdminService {
 		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
 		int totalCount =dao.selectOrgReportCount(tab,startDate, endDate);
-		System.out.println("totcnt:"+totalCount);
-		System.out.println("startDate : " + startDate);
-		System.out.println("endDate : " + endDate);
 		
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
 		
@@ -386,8 +383,6 @@ public class AdminService {
 	    paramMap.put("end", pageInfo.getEnd());   
 		
 		ArrayList<AdminReport> reportList =dao.selectOrgReportList(paramMap);
-		System.out.println("신고 리스트:" +reportList );
-		System.out.println("paramMap:" + paramMap);
 		
 		HashMap<String,Object> reportOrgMap =new HashMap<String,Object>();
 	    reportOrgMap.put("reportList", reportList);   

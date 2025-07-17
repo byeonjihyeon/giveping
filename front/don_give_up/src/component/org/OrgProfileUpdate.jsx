@@ -13,7 +13,7 @@ export default function OrgProfileUpdate(props){
     
     //스토리지에서 회원번호 추출용도
     const {loginOrg} = useUserStore();
-    const orgNo = loginOrg.orgNo;
+    const orgNo = loginOrg ? loginOrg.orgNo : "";
     
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();

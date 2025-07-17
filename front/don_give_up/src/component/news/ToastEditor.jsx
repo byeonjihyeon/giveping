@@ -76,7 +76,6 @@ import createInstance from '../../axios/Interceptor';
         axiosInstance(options)
         .then(function(res){
             //res.data.resData = > "/editor/20250624/202506251234220487_23422.jpg"
-            console.log(res.data.resData);
             callbackFunc(serverUrl + res.data.resData);
         });
     }

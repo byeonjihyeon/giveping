@@ -20,6 +20,10 @@
     border: 1px solid #dcdcdc;
   /*  background-color: #fafafa; */
 }
+.sidebar-wrap.admin {
+    margin-top: 100px;
+    height: 494px;
+}
 
 .profile-wrap {
     display: flex;
@@ -88,6 +92,9 @@
     flex-direction: column;
     box-sizing: border-box;
     padding: 30px 20px;
+}
+.side-menu.admin {
+    padding-bottom: 100px;
 }
 
 .side-menu > a {
@@ -581,6 +588,8 @@
 .likeOrg-logo  > img:first-of-type {
     width: 100%;
     height: 100%;
+    background-color: white;
+    border: 1px solid #dcdcdc;
 }
 
 .likeOrg-name img {
@@ -594,7 +603,7 @@
     border-top: 1px solid #c8c8c8;
     border-bottom: 1px solid #c8c8c8;
     height: 300px;
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
     line-height: 25px;
 }
@@ -924,7 +933,7 @@
 }
 
 .wallet-result {
-    width: 10%;
+    width: 15%;
     text-align: end;
 }
 

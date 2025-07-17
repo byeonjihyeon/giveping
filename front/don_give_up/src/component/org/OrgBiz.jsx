@@ -12,7 +12,7 @@ export default function OrgBiz(){
     const navigate = useNavigate();
 
     const {loginOrg} = useUserStore();
-    const orgNo = loginOrg.orgNo;
+    const orgNo = loginOrg ? loginOrg.orgNo : "";
 
     //페이지 정보를 저장할 변수
     const [reqPage, setReqPage] = useState(1);
@@ -87,7 +87,16 @@ export default function OrgBiz(){
                                         <td>{biz.bizName}</td>
                                         {clickBtn == "allBiz" ? <AllBiz biz={biz}/>
                                                             : <ApprovalBiz biz={biz} clickBtn={clickBtn}/>}
-                                        <th><Button variant="contained"  onClick={bizView} id="detail-btn">상세 페이지</Button></th>
+                                        {/* biz.bizStatus가 4 (삭제 완료된 상태) 일 경우, 버튼 숨기기 */}
+                                        <th>
+                                            {biz.bizStatus === 4 ? (
+                                                    <>-</>
+                                                ) : (
+                                                    <Button variant="contained" onClick={bizView} id="detail-btn">
+                                                    상세 페이지
+                                                    </Button>
+                                                )}
+                                        </th>
                                     </tr>
                         })}
                     </tbody>

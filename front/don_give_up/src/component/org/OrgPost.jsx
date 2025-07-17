@@ -23,7 +23,7 @@ export default function OrgPost(){
     const axiosInstance = createInstance();
     
     const {loginOrg} = useUserStore();
-    const orgNo = loginOrg.orgNo;
+    const orgNo = loginOrg ? loginOrg.orgNo : "";
     const navigate = useNavigate();
 
     //기부 사업 내용

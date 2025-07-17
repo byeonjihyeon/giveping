@@ -39,7 +39,6 @@ export default function ChargeNrefund(props){
             //res.data.resData == walletMap
             setWalletHistory(res.data.resData.walletHistory);
             setPageInfo(res.data.resData.pageInfo);
-            console.log(res.data.resData.walletHistory);
         })
     },[reqPage, startDate, endDate, filter]);
 

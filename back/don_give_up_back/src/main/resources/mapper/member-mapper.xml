@@ -629,4 +629,5 @@
     			#{reportMemberNo},
     			#{detailReason})
     </insert>
+
 </mapper>	

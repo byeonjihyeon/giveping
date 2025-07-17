@@ -445,9 +445,6 @@ function OrgId(props){
                         confirmButtonText : "확인"
                     });
                 }
-            })
-            .catch(function(err){
-                console.log(err);
             });
         }else{ //유효성 검증 실패인 경우
             Swal.fire({
@@ -619,7 +616,7 @@ function OrgAddr(props){
             <TextField type="text" id="orgAddrMain" className="input-addr" inputRef={addressRef} placeholder="주소" slotProps={{input: {readOnly: true}}}/>
             <Button variant="contained" type="button" id="mui-btn-b" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
             <TextField type="text" id="orgAddrDetail" className="input-first" inputRef={detailAddressRef}
-            value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
+            value={org.orgAddrDetail} onChange={chgAddrDetail} inputProps={{ maxLength: 30 }} placeholder="상세주소"/>
         </>
     )
 }

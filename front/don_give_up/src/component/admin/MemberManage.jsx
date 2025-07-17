@@ -97,21 +97,23 @@ function searchMember(e){
     return (
         <>
         <div className="page-title">회원 관리</div>
-       <div className="search">
-        <form className='form' onSubmit={searchMember}  >
-                <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
-                    <option value="all">전체</option>
-                    <option value="id">아이디</option>
-                    <option value="name">이름</option>
-                </select>
-                <input
-                    type="text"
-                    value={keyword}
-                    onChange={(e) => setKeyword(e.target.value)}
-                    placeholder="검색어 입력"
-                />
-                <button type="submit">검색</button>
-            </form>
+        <div className="search-and-nav">
+        <div className="search">
+            <form className='form' onSubmit={searchMember}  >
+                    <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+                        <option value="all">전체</option>
+                        <option value="id">아이디</option>
+                        <option value="name">이름</option>
+                    </select>
+                    <input
+                        type="text"
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                        placeholder="검색어 입력"
+                    />
+                    <button type="submit" className="admin-btn">검색</button>
+                </form>
+            </div>
         </div>
         
             <table className="admin-tbl">
