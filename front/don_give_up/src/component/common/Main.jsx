@@ -142,7 +142,7 @@ export default function Main(){
             <div className="main-newsList">
                 {mainNewsList.length != null && mainNewsList.length > 0 ?
                     mainNewsList.map(function(news, index){
-                        return  <MainNews news={news} />
+                        return  <MainNews key={"news" + index} news={news} />
                     })
                 :
                 <div>등록된 소식이 없습니다.</div>

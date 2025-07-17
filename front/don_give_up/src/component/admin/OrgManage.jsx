@@ -29,7 +29,7 @@ const modalStyle = {
 };
 
 export default function OrgManage(){
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
    const navigate= useNavigate();
 
@@ -188,8 +188,10 @@ function Org(props) {
 
    // 단체 상태 값을 변경했을 때, 호출 함수  (onChange)
     function handleChange(e){
-        setIsLoading(true);
         org.orgStatus = e.target.value;
+        if(org.orgStatus != 0){
+            setIsLoading(true);
+        }
 
         let options = {};
         options.url = serverUrl + '/admin/orgManage';

@@ -128,7 +128,6 @@ function News(props){
     
         // 알림 읽음 처리 함수
     function markAsRead(alarmNo){
-        //console.log("alarmNo" , alarmNo)
         let options={};
         options.url= serverUrl + '/org/alarm/' + alarmNo;
         options.method = "patch";

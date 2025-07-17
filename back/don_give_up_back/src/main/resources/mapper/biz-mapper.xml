@@ -467,6 +467,7 @@ from tbl_survey_question
     WHERE b.biz_status = 1
     	AND b.biz_end >= sysdate 
     	AND b.DONATE_CODE = (select donate_code from tbl_donate_biz where biz_no=#{_parameter})
+    	AND b.biz_no != #{_parameter}
     	ORDER BY o.org_temperature DESC, b.biz_end
     )
 	    WHERE ROWNUM &lt;= 2

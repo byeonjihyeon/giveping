@@ -195,6 +195,9 @@
     margin: 0 auto;
     font-size: 14px;
 }
+.org-delete-wrap label {
+    color: black;
+}
 
 /*마이페이지 홈*/
 .myPage-div {

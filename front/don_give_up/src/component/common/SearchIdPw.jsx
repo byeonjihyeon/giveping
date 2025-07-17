@@ -17,7 +17,7 @@ import Loading from "./Loading";
 
 //아이디/비밀번호 찾기
 export default function SearchIdPw(){
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
     const navigate = useNavigate();
@@ -27,7 +27,6 @@ export default function SearchIdPw(){
     const type = param.type;
 
     useEffect(function(){
-        setIsLoading(false);
         setMember({memberId : "", memberName : "", memberEmail : ""});
         setOrg({orgId : "", orgName : "", orgEmail : ""});
         setMemberEmailId("");
@@ -133,7 +132,6 @@ export default function SearchIdPw(){
 
     //확인 버튼 클릭 시 실행 함수
     function searchIdPw(){
-        setIsLoading(true);
         const validations = [
             {valid: type == "id" && selectRadio == "member" && member.memberName == "", message: "이름을 입력하세요.", inputRef: nameRef},
             {valid: type == "id" && selectRadio == "org" && org.orgName == "", message: "단체명을 입력하세요.", inputRef: nameRef},
@@ -144,7 +142,7 @@ export default function SearchIdPw(){
             {valid: selectRadio == "member" && memberEmailDomain == "", message: "이메일 주소를 입력하세요.", inputRef: emailDomainRef},
             {valid: selectRadio == "org" && orgEmailDomain == "", message: "이메일 주소를 입력하세요.", inputRef: emailDomainRef}
         ]
-
+        
         for(let i=0; i<validations.length; i++){
             if(validations[i].valid){
                 Swal.fire({
@@ -157,7 +155,7 @@ export default function SearchIdPw(){
                 return;
             }
         }
-
+        
         let options = {};
         if(type == "id"){
             if(selectRadio == "member"){
@@ -168,6 +166,7 @@ export default function SearchIdPw(){
                 options.data = org;
             }
         }else {
+            setIsLoading(true);
             if(selectRadio == "member"){
                 options.url = serverUrl + "/member/searchPw";
                 options.data = member;
