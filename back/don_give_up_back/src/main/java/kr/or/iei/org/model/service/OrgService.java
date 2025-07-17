@@ -373,7 +373,7 @@ public class OrgService {
 		
 		int viewCnt = 12;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 12개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
-		int totalCount =dao.selectOrgCount();
+		int totalCount =dao.selectOrgCount(data);
 		
 		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
 		

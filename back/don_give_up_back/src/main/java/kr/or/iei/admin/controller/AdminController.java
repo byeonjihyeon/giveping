@@ -113,7 +113,7 @@ public class AdminController {
 		try {
 			int result = service.updateOrgStatus(org);
 			if (result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "", true, "");
+				res = new ResponseDTO(HttpStatus.OK, "변경이 완료되었습니다.", true, "success");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

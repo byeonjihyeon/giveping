@@ -13,6 +13,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import DeleteManage from "./DeleteManage";
 import "./admin.css";
 import Loading from "../common/Loading";
+import Swal from "sweetalert2";
 
 //상세보기 모달 스타일
 const modalStyle = {
@@ -205,7 +206,6 @@ function Org(props) {
             //DB 정상 변경되었을 때, 화면에 반영
             if(res.data.resData){
                 setOrgList([...orgList]);
-                alert("변경되었습니다")
             }
         });
     }
