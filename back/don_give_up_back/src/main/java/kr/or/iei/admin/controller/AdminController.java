@@ -129,8 +129,7 @@ public class AdminController {
 			                                         @RequestParam (required = false) String searchType, 
                                                      @RequestParam (required = false) String keyword) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "조회 중,오류가 발생하였습니다", null, "error");
-		System.out.println("controller-searchType: "+ searchType);
-		
+	
 
 		try {
 			HashMap<String, Object> bizMap = service.selectBizList(reqPage, status, searchType, keyword);
@@ -218,6 +217,8 @@ public class AdminController {
 			                    HttpStatus.BAD_REQUEST);
 			        }
 
+				System.out.println("reportMap : " + reportMap);
+				
 				ResponseDTO res = new ResponseDTO(HttpStatus.OK, "", reportMap, "");
 			        return new ResponseEntity<>(res, HttpStatus.OK);
 

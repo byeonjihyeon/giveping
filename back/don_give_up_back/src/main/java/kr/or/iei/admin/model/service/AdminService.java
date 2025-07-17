@@ -56,7 +56,6 @@ public class AdminService {
 
 	    // 실제 회원 리스트 조회
 	    ArrayList<AdminMember> memberList = dao.selectMemberList(listMap);
-	    System.out.println("멤버 리스트 크기: " + memberList.size());
 
 	    // 결과 맵 생성
 	    HashMap<String, Object> memberMap = new HashMap<>();
@@ -270,11 +269,10 @@ public class AdminService {
 		  
 		ArrayList<AdminOrg> deleteList =dao.selectDeleteList(paramMap);
 
-		
 		for (AdminOrg org : deleteList) {
-			List<AdminBiz> bizList = dao.selectOneOrgBizList(org.getOrgNo());
+			List<AdminBiz> bizList = dao.selectOneOrgBizList(org.getOrgNo());	
 			org.setBizList(bizList);  
-			
+		
 		} 
 		
 		HashMap<String,Object> deleteMap =new HashMap<String,Object>();
