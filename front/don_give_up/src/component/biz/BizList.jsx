@@ -214,7 +214,7 @@ function BoardItem(props) {
                 />
             </div>
             <div className="posting-info">
-                <div className="posting-title" style={{ fontSize: '24px', margin: '10px 0' }}>{donateBiz.bizName}</div>
+                <div className="posting-title" style={{ fontSize: '22px', margin: '10px 0', height: '54px' }}>{donateBiz.bizName}</div>
                 <div className="posting-sub-info">
                     <span style={{
                         fontWeight : '700',
