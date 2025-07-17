@@ -56,10 +56,11 @@ public class CommonService {
 				mainNewsList.add(news);
 			}
 		}else if(newsList.size() >= 1 && newsList.size() < 4) {	//전체 소식갯수가 1개 ~3개면 2개만 등록
-			
+
 			int limit = Math.min(2, newsList.size()); // 추가 : 소식이 1개일 때는 0개 조회되는 오류 수정
 			for(int i=0; i<limit; i++) {
 				mainNewsList.add(newsList.get(i));
+
 			}
 		}
 		
