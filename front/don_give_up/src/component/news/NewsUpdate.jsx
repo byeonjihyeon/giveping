@@ -10,7 +10,6 @@ export default function NewsUpdate(){
 
     const param = useParams(); //NewsView에서 URL에 포함시켜 전달한 게시글 번호 추출을 위함.
     const newsNo = param.newsNo;
-    console.log(newsNo);
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();

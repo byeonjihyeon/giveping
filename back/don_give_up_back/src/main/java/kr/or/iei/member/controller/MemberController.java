@@ -278,7 +278,6 @@ public class MemberController {
 				"error");
 
 		try {
-			System.out.println(member);
 			boolean chkResult = service.checkPw(member);
 
 			res = new ResponseDTO(HttpStatus.OK, "", chkResult, "");
@@ -525,7 +524,6 @@ public class MemberController {
 	@PostMapping("/refund/{memberNo}")
 	public ResponseEntity<ResponseDTO> refund(@PathVariable int memberNo, @RequestBody Refund refund) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "신청중, 오류가 발생하였습니다.", false, "error");
-		System.out.println(refund);
 		try {
 			int result = service.refund(memberNo, refund);
 

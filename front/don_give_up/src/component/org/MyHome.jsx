@@ -21,8 +21,7 @@ export default function MyHome(props){
     const [likeMember, setLikeMember] = useState(0);        //관심 회원 수
     const [categoryList, setCategoryList] = useState([]);   //주요 카테고리명
     const [bizList, setBizList] = useState([{}]);           //최근 사업 리스트
-    const [reLoadOrg, setReLoadOrg] = useState({}); 
-    console.log("MyHome에서 count : ", unreadAlarmCount);
+    const [reLoadOrg, setReLoadOrg] = useState({});
 
     //알림 리스트 가져오기
     useEffect(function(){
@@ -32,7 +31,6 @@ export default function MyHome(props){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             setNewsList(res.data.resData);
         });
     }, []);
@@ -47,7 +45,6 @@ export default function MyHome(props){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             const main = res.data.resData;
             setTodayDonate(main.todayDonate);
             setLikeMember(main.likeMember);
@@ -158,14 +155,12 @@ function News(props){
 
     // 알림 읽음 처리 함수
     function markAsRead(alarmNo){
-        //console.log("alarmNo" , alarmNo);
         let options={};
         options.url= serverUrl + '/org/alarm/' + alarmNo;
         options.method = "patch";
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
 
             // DotBadge 업데이트를 위해 useUserStore의 함수 호출
             fetchUnreadAlarmCount();

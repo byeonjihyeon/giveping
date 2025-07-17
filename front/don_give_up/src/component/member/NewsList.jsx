@@ -35,8 +35,6 @@ export default function NewsList(){
     const [newsList, setNewsList] = useState([]);
     //const [isNewsRead, setIsNewsRead] = useState(false); // 소식 읽었는지 여부 (초기값 : false / 읽을 경우 true로 변경)
 
-    console.log(newsList);
-
     return (
         <div className='news-wrap'>
             <div className="mynews-title">
@@ -70,7 +68,7 @@ export default function NewsList(){
 function News(props){
     const news = props.news;
     const navigate = useNavigate();
-    console.log(news);
+    
     const setHasNewAlert = props.setHasNewAlert;
     const setUnreadAlarmCount = props.setUnreadAlarmCount;
     const loginMember = props.loginMember;
@@ -138,14 +136,12 @@ function News(props){
 
         // 알림 읽음 처리 함수
     function markAsRead(alarmNo){
-        //console.log("alarmNo" , alarmNo)
         let options={};
         options.url= serverUrl + '/member/alarm/' + alarmNo;
         options.method = "patch";
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
 
             // 안 읽은 알림 갯수 reload
             let options = {};
@@ -156,11 +152,9 @@ function News(props){
     
             axiosInstance(options)
             .then(function(res){
-                console.log(res.data.resData);
 
                 const count = res.data.resData;
                 if(count > 0){
-                    console.log("안읽은알림갯수 : ", count);
                     setHasNewAlert(true);
                     setUnreadAlarmCount(count);    // 결과 unreadAlarmCount 에 set 하기
                 }else{

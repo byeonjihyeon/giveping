@@ -22,7 +22,6 @@ export default function NewsList(){
 
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             setNewsList(res.data.resData.newsList);
             setPageInfo(res.data.resData.pageInfo);
         })

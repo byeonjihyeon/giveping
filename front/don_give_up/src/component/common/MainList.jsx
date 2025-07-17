@@ -26,7 +26,6 @@ export default function MainList(){
         options.method = 'get';
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             setBizList(res.data.resData);
         });
 
@@ -41,7 +40,6 @@ export default function MainList(){
         options.method = 'get';
         axiosInstance(options)
         .then(function(res){
-            console.log(res.data.resData);
             setOrgList(res.data.resData);
             })
             

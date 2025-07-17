@@ -282,7 +282,6 @@ public class BizController {
 		
 		//DB에서 파일 1개 정보를 조회
 		BizFile bizFile = service.selectBizFile(bizFileNo);
-		System.out.println("bizFile : " + bizFile);
 		
 		//응답할 리소스로 만들어줄 파일 객체 생성
 		String savePath = uploadPath + "/biz/board/"; 
@@ -349,7 +348,6 @@ public class BizController {
 	@PatchMapping("/update")
 	public ResponseEntity<ResponseDTO> updateBiz(@RequestBody Biz biz) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "기부 사업 등록 중, 오류가 발생하였습니다.", false, "error");
-		System.out.println("biz : " + biz);
 		try {
 			
 			int result = service.updateBiz(biz);
@@ -371,12 +369,11 @@ public class BizController {
 	@GetMapping("/donateCode/{bizNo}")
 	@NoTokenCheck // 카테고리별 기부 사업 조회 : 로그인 필요 x
 	public ResponseEntity<ResponseDTO> selectBizByCategory(@PathVariable int bizNo){
-		System.out.println("bizNo : " + bizNo);
 		
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "카테고리별 기부 사업 조회 중, 오류가 발생하였습니다.", null, "error");
 		try {
 			ArrayList<Biz> bizList = service.selectBizByCategory(bizNo);
-			System.out.println("bizList : " + bizList);
+
 			res = new ResponseDTO(HttpStatus.OK, "", bizList, "");
 		}catch(Exception e) {
 			e.printStackTrace();

@@ -368,8 +368,7 @@ function MemberAddr(props){
 
     //상세주소 onChange 발동시
     function updAddr(e){
-        member[e.target.id] = e.target.value;
-        setMember({...member});
+        setMember({...member, memberAddrDetail : e.target.value});
     }
 
      function DaumPostcode() {

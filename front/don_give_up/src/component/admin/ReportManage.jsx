@@ -36,7 +36,6 @@ useEffect(() => {
         if (res.data.resData) {
           setReportList(res.data.resData.reportList);
           setPageInfo(res.data.resData.pageInfo);
-          console.log("commentDeleted: ", res.data.resData.reportList[0].commentDeleted);
         } else {
           setReportList([]);
           setPageInfo({});
@@ -108,7 +107,6 @@ useEffect(() => {
           InputLabelProps={{ shrink: true }}
           value={startDate}
           onChange={(e) =>{
-              console.log("시작일 선택:", e.target.value);
             setStartDate(e.target.value)}}
         />
         <TextField

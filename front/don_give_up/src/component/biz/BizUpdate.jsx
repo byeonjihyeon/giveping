@@ -46,7 +46,6 @@ export default function BizUpdate(){
     
             axiosInstance(options)
             .then(function(res){
-                console.log(res.data.resData);
 
                 const data = res.data.resData;
                 setPrevDonateBiz(data);
@@ -184,7 +183,6 @@ export default function BizUpdate(){
 
     // 삭제 대상에 planNo가 있을 경우에만 삭제 목록에 추가
     if (deletedPlan.planNo) {
-        console.log("deletedPlan.planNo : ", deletedPlan.planNo) // 나옴
         
         setDonateBiz(prev => ({
             ...prev,
@@ -327,7 +325,6 @@ export default function BizUpdate(){
                 options.url = serverUrl + "/biz/update";
                 options.method = "patch";
                 options.data = cleanedDonateBiz
-                console.log("donateBiz : " , donateBiz);
         
                 
                 axiosInstance(options)
@@ -343,8 +340,6 @@ export default function BizUpdate(){
                     if(bizImg != null){
                         form.append("bizImg", bizImg);
                         form.append("bizNo", bizNo);
-                        console.log("bizImg : ", bizImg);
-                        console.log("bizNo : ", bizNo);
     
                         let options = {};
                         options.url = serverUrl + "/biz/thumb";

@@ -256,6 +256,37 @@ export default function OrgUpdate(props){
  
     }
 
+    //탈퇴취소 클릭시 호출 함수
+    function deleteCancel(){
+        Swal.fire({
+            text : "탈퇴취소하시겠습니까?",
+            icon : "question",
+            showCancelButton : true,
+            confirmButtonText : "확인",
+            cancelButtonText : "취소"
+        })
+        .then(function(result){
+            if(result.isConfirmed){
+                let options = {};
+                options.url = serverUrl + "/org/deleteCancel/" + orgNo;
+                options.method = "patch";
+
+                axiosInstance(options)
+                .then(function(res){
+                    if(res.data.resData){
+                        setOrg({...org, orgStatus : 1});
+                        Swal.fire({
+                            title : "알림",
+                            text : res.data.clientMsg,
+                            icon : res.data.alertIcon,
+                            confirmButtonText : "확인"
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     return (
         <div>
             <h2 className="page-title" style={{textAlign : "left", marginLeft : "20px"}}>단체 정보 수정</h2>
@@ -362,7 +393,7 @@ export default function OrgUpdate(props){
                                     <div style={{margin : "15px auto"}}>
                                         <Button variant="contained" id="mui-btn" type="submit" className="orgBtn" style={{marginRight : "10px", height : "40px", fontSize : "20px"}}>수정</Button>
                                         <Button variant="contained" className="orgBtn" style={{height : "40px", fontSize : "20px"}} id="mui-btn">
-                                            {org.orgStatus == 3 ? "" : <Link to="/org/delete">탈퇴하기</Link>}
+                                            {org.orgStatus == 3 ? <Link href='javascript:void(0)' onClick={deleteCancel}>탈퇴취소</Link> : <Link to="/org/delete">탈퇴하기</Link>}
                                         </Button>
                                     </div>
                                 </th>
@@ -594,7 +625,8 @@ function MemberAddr(props){
         <>
             <TextField type="text" id="orgAddrMain" className="input-addr" value={org.orgAddrMain} placeholder="주소" inputRef={addressRef}  slotProps={{input: {readOnly: true}}}/>
             <Button variant="contained" type="button" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px", marginTop : "10px"}} id="mui-btn">주소 찾기</Button> <br/>
-            <TextField type="text"id="orgAddrDetail" className="input-first" value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소" inputRef={detailAddressRef} style={{marginTop : "3px"}}/>
+            <TextField type="text"id="orgAddrDetail" className="input-first" value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"
+            inputRef={detailAddressRef} style={{marginTop : "3px"}} inputProps={{ maxLength: 30 }}/>
         </>
     )
 }

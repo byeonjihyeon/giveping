@@ -54,13 +54,20 @@ export default function OrgDelete(){
         .then(function(res){
             if(res.data.resData){
                 setType(1);
+                Swal.fire({
+                    title : "알림",
+                    text : "확인되었습니다.",
+                    icon : "success",
+                    confirmButtonText : "확인"
+                });
+            }else {
+                Swal.fire({
+                    title : "알림",
+                    text : "비밀번호가 일치하지 않습니다.",
+                    icon : "warning",
+                    confirmButtonText : "확인"
+                });
             }
-            Swal.fire({
-                title : "알림",
-                text : "확인되었습니다.",
-                icon : "success",
-                confirmButtonText : "확인"
-            });
         });
     }
 

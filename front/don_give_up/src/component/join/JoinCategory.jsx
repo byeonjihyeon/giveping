@@ -67,10 +67,7 @@ export default function JoinCategory(props) {
                     navigate("/login"); //로그인 컴포넌트로 전환
                 }
             });
-        })
-        .catch(function(err){
-            console.log(err);
-        })
+        });
     }
 
     return (

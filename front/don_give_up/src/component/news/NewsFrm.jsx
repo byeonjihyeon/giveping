@@ -82,7 +82,6 @@ export default function NewsFrm(props){
 
         axiosInstance(options)
         .then(res => {
-            console.log(res.data.resData);
             if (res.data.resData.length > 0) {
                 setOrgList(res.data.resData);
                 setShowOrgList(true);
