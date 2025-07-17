@@ -206,7 +206,6 @@ public class AdminController {
 				if("comment".equals(tab)){
 					
 					reportMap= service.selectCommentReportList(reqPage, tab, startDate, endDate);
-					//System.out.println("controller 에서 startDate :"  + startDate);
 					
 				}else if("org".equals(tab)){
 					reportMap= service.selectOrgReportList(reqPage, tab, startDate, endDate);
@@ -217,7 +216,6 @@ public class AdminController {
 			                    HttpStatus.BAD_REQUEST);
 			        }
 
-				System.out.println("reportMap : " + reportMap);
 				
 				ResponseDTO res = new ResponseDTO(HttpStatus.OK, "", reportMap, "");
 			        return new ResponseEntity<>(res, HttpStatus.OK);

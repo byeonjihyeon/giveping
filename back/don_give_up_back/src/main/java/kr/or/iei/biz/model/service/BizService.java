@@ -221,7 +221,6 @@ public class BizService {
 	        }
 	        // (1) bizPlan 삭제 처리
 	        int result = dao.deleteBizPlans(deletedPlanNosList);
-	        //System.out.println("bizPlan 삭제 처리 result : " + result); // ok
 	    }
 
 	    
@@ -231,11 +230,9 @@ public class BizService {
 	            if (plan.getPlanNo() == 0) {
 	            	//(2) bizPlan 추가 처리 :  planNo가 0이라는 것은 아직 데이터베이스에 저장된 적 없는 새로운 계획 항목임을 의미함. => insert
 	                int result = dao.insertBizPlan(plan);
-	                System.out.println(" bizPlan 추가 처리  result : " + result);
 	            } else {
 	            	//(3) bizPlan 수정 처리
 	            	 int result = dao.updateBizPlan(plan);
-	            	 System.out.println("bizPlan 수정 처리 : " + result);
 	            }
 	        }
 	    }

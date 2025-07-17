@@ -181,7 +181,6 @@ public class OrgController {
 	@GetMapping("/category/{orgNo}")
 	public ResponseEntity<ResponseDTO> selectOrgCategories(@PathVariable int orgNo){
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "", fileUtil, uploadPath);
-		System.out.println(orgNo);
 		
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}	
@@ -339,7 +338,7 @@ public class OrgController {
 
 		try {
 			ArrayList<MemberAlarm> alarmList = service.selectOrgAlarmList(orgNo);
-			System.out.println("최종 alarmList :" + alarmList);
+
 			res= new ResponseDTO(HttpStatus.OK, "", alarmList , uploadPath);
 		} catch (Exception e) {
 			e.printStackTrace();
