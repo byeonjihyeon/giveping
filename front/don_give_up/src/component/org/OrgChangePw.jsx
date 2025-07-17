@@ -15,7 +15,7 @@ export default function OrgChangePw(){
     const navigate = useNavigate();
 
     const {loginOrg, setIsLogined, setLoginOrg} = useUserStore();
-    const orgNo = loginOrg.orgNo;
+    const orgNo = loginOrg ? loginOrg.orgNo : "";
 
     const [org, setOrg] = useState({orgNo : orgNo, orgPw : ""});
     const [isCheck, setIsCheck] = useState(false);      //비밀번호 확인 성공 여부

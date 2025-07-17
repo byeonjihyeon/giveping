@@ -15,7 +15,7 @@ export default function OrgDelete(){
     const navigate = useNavigate();
 
     const {loginOrg} = useUserStore();
-    const orgNo = loginOrg.orgNo;
+    const orgNo = loginOrg ? loginOrg.orgNo : "";
 
     //진행 중인 기부 사업 리스트
     const [bizList, setBizList] = useState([{bizName : "", bizDonateEnd : "", bizEnd : "", payoutYN : ""}]);

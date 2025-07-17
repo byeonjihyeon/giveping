@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 
 export default function MyHome(props){
     const {loginOrg, unreadAlarmCount} = useUserStore();
-    const orgNo = loginOrg.orgNo;
+    const orgNo = loginOrg ? loginOrg.orgNo : "";
 
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();

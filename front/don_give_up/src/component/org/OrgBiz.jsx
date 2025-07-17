@@ -12,7 +12,7 @@ export default function OrgBiz(){
     const navigate = useNavigate();
 
     const {loginOrg} = useUserStore();
-    const orgNo = loginOrg.orgNo;
+    const orgNo = loginOrg ? loginOrg.orgNo : "";
 
     //페이지 정보를 저장할 변수
     const [reqPage, setReqPage] = useState(1);
