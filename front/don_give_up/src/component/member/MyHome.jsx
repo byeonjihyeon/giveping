@@ -24,7 +24,6 @@ export default function MyHome(props){
     const [modalType, setModalType] = useState(null); //'charge' or 'refund' or 'null'
     const navigate = useNavigate();
 
-    console.log("unreadAlarmCount : ", unreadAlarmCount);
 
     // 알림 리스트 가져오기
     useEffect(function(){
@@ -34,7 +33,6 @@ export default function MyHome(props){
     
                 axiosInstance(options)
                 .then(function(res){
-                    console.log(res.data.resData);
                     setNewsList(res.data.resData);
                 });
             }, []);
@@ -51,9 +49,7 @@ export default function MyHome(props){
             setBizList(res.data.resData);
         })
 
-    }, [])        
-
-    console.log("un: " + unreadAlarmCount);
+    }, []);
     
     return (
         <div className="myHome-wrap">
@@ -277,7 +273,6 @@ function News(props){
 
         axiosInstance(options)
         .then(function(res){
-        console.log(res.data.resData);
             
             // 안 읽은 알림 갯수 reload
             let options = {};
@@ -288,7 +283,6 @@ function News(props){
     
             axiosInstance(options)
             .then(function(res){
-                console.log("MyHome 에서 안 읽은 알림 갯수 reload : ", res.data.resData);
 
             // DotBadge 업데이트를 위해 useUserStore의 함수 호출
             fetchUnreadAlarmCount();

@@ -616,7 +616,7 @@ function OrgAddr(props){
             <TextField type="text" id="orgAddrMain" className="input-addr" inputRef={addressRef} placeholder="주소" slotProps={{input: {readOnly: true}}}/>
             <Button variant="contained" type="button" id="mui-btn-b" onClick={execDaumPostcode} style={{marginLeft : "10px", marginBottom : "5px"}}>주소 찾기</Button> <br/>
             <TextField type="text" id="orgAddrDetail" className="input-first" inputRef={detailAddressRef}
-            value={org.orgAddrDetail} onChange={chgAddrDetail} placeholder="상세주소"/>
+            value={org.orgAddrDetail} onChange={chgAddrDetail} inputProps={{ maxLength: 30 }} placeholder="상세주소"/>
         </>
     )
 }
