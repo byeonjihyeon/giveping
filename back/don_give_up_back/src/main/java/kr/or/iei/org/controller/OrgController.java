@@ -501,5 +501,24 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos
 		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
 	}
 	
+	//탈퇴취소하기
+	@PatchMapping("/deleteCancel/{orgNo}")
+	public ResponseEntity<ResponseDTO> deleteCancel(@PathVariable int orgNo) {
+		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "탈퇴취소 중 오류가 발생하였습니다.", false, "error");
+		
+		try {
+			int result = service.deleteCancel(orgNo);
+			
+			if(result > 0) {
+				res = new ResponseDTO(HttpStatus.OK, "탈퇴취소 되었습니다.", true, "success");
+			}else {
+				res = new ResponseDTO(HttpStatus.OK, "탈퇴취소 중 오류가 발생하였습니다.", false, "warning");
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<ResponseDTO>(res, res.getHttpStatus());
+	}
 
 }

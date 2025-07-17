@@ -421,6 +421,12 @@ public class OrgService {
 		return orgMap;
 	}
 
+	//탈퇴취소하기
+	@Transactional
+	public int deleteCancel(int orgNo) {
+		return dao.deleteCancel(orgNo);
+	}
+
 		
 }
 
