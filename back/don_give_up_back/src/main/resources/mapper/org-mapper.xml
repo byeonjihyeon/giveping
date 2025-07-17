@@ -156,7 +156,7 @@
 		       to_char(biz_donate_start-7, 'YYYY-MM-DD') as bizEnrollDate,
 		       to_char(biz_donate_start, 'YYYY-MM-DD') as bizDonateStart,
 		       to_char(biz_donate_end,'YYYY-MM-DD') as bizDonateEnd,
-		       to_char(biz_start, 'YYYY-MM-DD') as bizSatrt,
+		       to_char(biz_start, 'YYYY-MM-DD') as bizStart,
 		       to_char(biz_end, 'YYYY-MM-DD') as bizEnd,
 		       biz_goal as bizGoal,
 		       biz_status as bizStatus,
