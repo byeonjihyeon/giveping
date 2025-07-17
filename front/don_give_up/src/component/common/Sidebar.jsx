@@ -23,7 +23,7 @@ export default function Sidebar (props){
 */ 
 
     return (
-        <div className="sidebar-wrap">
+        <div className={"sidebar-wrap" + (loginMember && loginMember.memberLevel == 1 ? " admin" : "")}>
             {loginMember?.memberLevel !==1 &&(
             <>
            <div className="profile-wrap">
@@ -75,7 +75,7 @@ export default function Sidebar (props){
            </>
            )}  
            <div className="side-menu-wrap">
-                <div className="side-menu">
+                <div className={"side-menu" + (loginMember && loginMember.memberLevel == 1 ? " admin" : "")}>
                     {menuList.map(function(menu, index){
                         return <OneSideMenu key={"menu" + index} menu={menu} />
                     })}

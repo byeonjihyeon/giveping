@@ -68,8 +68,8 @@ export default function MyHome(props){
                         return  <h3 key={"ctg"+index} style={{display : "inline"}} className="org-ctg-span">#{ctg} </h3>
                     })}
                 </div>
-                <div className="myPage-div">
-                    <div className="myNews-wrap">
+                <div className="myPage-div" style={{marginBottom : "40px"}}>
+                    <div className="myNews-wrap" style={{marginTop : "40px"}}>
                         <div className="myNews-title-wrap">
                             <span>내 소식</span>
                             <span> | 총 { unreadAlarmCount }  건</span>

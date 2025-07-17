@@ -132,6 +132,9 @@ public class AdminController {
 	
 
 		try {
+			if(status.equals("5")) {
+				status = null;
+			}
 			HashMap<String, Object> bizMap = service.selectBizList(reqPage, status, searchType, keyword);
 			res = new ResponseDTO(HttpStatus.OK, "", bizMap, "");
 		} catch (Exception e) {

@@ -7,6 +7,8 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import "./admin.css";
 import Loading from "../common/Loading";
+import { Viewer } from "@toast-ui/react-editor";
+import { Link } from "react-router-dom";
 
 
 //상세보기 모달 스타일
@@ -15,8 +17,8 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
-  height: 500,
+  width: 700,
+  height: 700,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -49,7 +51,7 @@ export default function BizManage(){
     //페이지 하단 페이지 네비게이션 저장 변수
     const [pageInfo, setPageInfo] = useState({});
 
-    const [status, setStatus] = useState("");           // 상태 선택값
+    const [status, setStatus] = useState(5);           // 상태 선택값
     const [keyword, setKeyword] = useState("");         // 키워드 입력값
     const [searchType, setSearchType] = useState("bizName"); // 검색 타입 (ex: 사업명)
 
@@ -99,31 +101,33 @@ export default function BizManage(){
         <>
             {isLoading ? <Loading/> : ""}
             <div className="page-title">기부 사업 관리</div>
-            <div className="search">
-             <Box sx={{ display: 'flex', gap: 1, marginBottom: 3 }}>
-                <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>상태</InputLabel>
-                    <Select value={status} onChange={(e) => setStatus(e.target.value)} label="상태">
-                    <MenuItem value="">전체</MenuItem>
-                    <MenuItem value="0">미확인</MenuItem>
-                    <MenuItem value="1">승인</MenuItem>
-                    <MenuItem value="2">반려</MenuItem>
-                    <MenuItem value="3">삭제요청</MenuItem>
-                    <MenuItem value="4">삭제</MenuItem>
-                    </Select>
-                </FormControl>
+            <div className="search-and-nav">
+                <div className="search">
+                <Box sx={{ display: 'flex', gap: 1, marginBottom: 3 }}>
+                    <FormControl sx={{ minWidth: 120 }}>
+                        <InputLabel>상태</InputLabel>
+                        <Select value={status} onChange={(e) => setStatus(e.target.value)} label="상태">
+                        <MenuItem value="5">전체</MenuItem>
+                        <MenuItem value="0">미확인</MenuItem>
+                        <MenuItem value="1">승인</MenuItem>
+                        <MenuItem value="2">반려</MenuItem>
+                        <MenuItem value="3">삭제요청</MenuItem>
+                        <MenuItem value="4">삭제</MenuItem>
+                        </Select>
+                    </FormControl>
 
-                <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel>검색구분</InputLabel>
-                    <Select value={searchType} onChange={(e) => setSearchType(e.target.value)} label="검색구분">
-                    <MenuItem value="bizName">사업명</MenuItem>
-                    <MenuItem value="orgName">단체명</MenuItem>
-                    </Select>
-                </FormControl>
+                    <FormControl sx={{ minWidth: 120 }}>
+                        <InputLabel>검색구분</InputLabel>
+                        <Select value={searchType} onChange={(e) => setSearchType(e.target.value)} label="검색구분">
+                        <MenuItem value="bizName">사업명</MenuItem>
+                        <MenuItem value="orgName">단체명</MenuItem>
+                        </Select>
+                    </FormControl>
 
-                <TextField label="검색어" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-                <Button variant="contained" onClick={handleSearch}>검색</Button>
-                </Box>
+                    <TextField value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder="검색어"/>
+                    <Button variant="contained" onClick={handleSearch}>검색</Button>
+                    </Box>
+            </div>
            </div>
             <table className="admin-tbl">
                 <thead>
@@ -276,7 +280,7 @@ function BoardItem(props) {
                 <td>{biz.orgName}</td>
                 <td>{biz.bizRegDate.substring(0, 10)}</td>
                 <td>{biz.bizName}</td>
-                <td><button onClick={bizDetail}>열람</button></td>
+                <td><button onClick={bizDetail} className="show">열람</button></td>
                 <td>
                     <Box sx={{ minWidth: 120 }}>
                         <FormControl fullWidth>
@@ -301,18 +305,24 @@ function BoardItem(props) {
             {/* 상세 모달 */}
             <Modal open={open} onClose={handleClose}>
                 <Box sx={modalStyle}>
-                    <h2>{biz.bizName} 상세 정보</h2>
-                    <table className='detail' border={1}>
-                        <tbody>
-                            <tr><th>단체명</th><td>{biz.orgName}</td></tr>
-                            <tr><th>기부 카테고리</th><td>{biz.bizCtg}</td></tr>
-                            <tr><th>사업 내용</th><td>{biz.bizContent}</td></tr>
-                            <tr><th>모금 기간</th><td>{biz.bizDonateStart.substring(0, 10)}~{biz.bizDonateEnd.substring(0, 10)}</td></tr>
-                            <tr><th>사업 기간</th><td>{biz.bizStart.substring(0, 10)}~{biz.bizEnd.substring(0, 10)}</td></tr>
-                            <tr><th>목표 후원 금액</th><td>{biz.bizGoal}</td></tr>
-                        </tbody>
-                    </table>
-                    <button onClick={handleClose}>닫기</button>
+                    <h2 className="style-h2">
+                        <Link to={"/biz/view/" + biz.bizNo}>{biz.bizName} 상세 정보</Link>
+                    </h2>
+                    <div className="detail-div">
+                        <table className='detail'>
+                            <tbody>
+                                <tr><th>단체명</th><td>{biz.orgName}</td></tr>
+                                <tr><th>기부 카테고리</th><td>{biz.bizCtg}</td></tr>
+                                <tr><th>사업 내용</th><td><div style={{maxWidth : "545px", maxHeight : "425px", overflow : "auto", margin: "0 auto"}}><Viewer initialValue={biz.bizContent}/></div></td></tr>
+                                <tr><th>모금 기간</th><td>{biz.bizDonateStart.substring(0, 10)}~{biz.bizDonateEnd.substring(0, 10)}</td></tr>
+                                <tr><th>사업 기간</th><td>{biz.bizStart.substring(0, 10)}~{biz.bizEnd.substring(0, 10)}</td></tr>
+                                <tr><th>목표 후원 금액</th><td>{(biz.bizGoal || 0).toLocaleString("ko-KR")}원</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <button onClick={handleClose}>닫기</button>
+                    </div>
                 </Box>
             </Modal>
 

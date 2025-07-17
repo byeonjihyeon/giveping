@@ -246,12 +246,12 @@ body {
 .tbl-join label {
     color: black;
 }
-.label {
+.tbl-join .label {
     display: block;
     width: 100px;
     height: 35px;
     line-height: 35px;
-    text-align: right;
+    text-align: left;
     padding-right: 10px;
 }
 .tbl-join p {

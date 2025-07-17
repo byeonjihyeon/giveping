@@ -61,28 +61,30 @@ export default function RefundManage(){
     return (
         <>
             <div className="page-title">환불 신청 관리</div>
-        <div className="two-nav">
-            <ul>
-                 <li>
-                    <button onClick={() =>{ setShowType("request"); setReqPage(1);}}>환불신청</button>
-                 </li>
-                 <li>
-                     <button onClick={() =>{ setShowType("done"); setReqPage(1);}}>환불내역</button>
-                 </li>
-         
-            </ul>
-        </div>
+            <div className="search-and-nav">
+                <div className="two-nav">
+                    <ul>
+                        <li>
+                            <button onClick={() =>{ setShowType("request"); setReqPage(1);}}>환불신청</button>
+                        </li>
+                        <li>
+                            <button onClick={() =>{ setShowType("done"); setReqPage(1);}}>환불내역</button>
+                        </li>
+                
+                    </ul>
+                </div>  
+            </div>
             <table className="admin-tbl">
                 <thead>
                     <tr>
                         <th style={{width:"5%"}}>번호</th>
-                        <th style={{width:"12%"}}>회원명</th>
+                        <th style={{width:"10%"}}>회원명</th>
                         <th style={{width:"12%"}}>환불금액</th>
                         <th style={{width:"12%"}}>은행</th>
-                        <th style={{width:"20%"}}>계좌</th>
-                        <th style={{width:"15%"}}>환불요청일</th>
-                        {showType === "done" && <th style={{ width: "15%" }}>환불완료일</th>}
-                        <th style={{width:"15%"}}>환불여부</th>
+                        <th style={{width:"18%"}}>계좌</th>
+                        <th style={{width:"13%"}}>환불요청일</th>
+                        {showType === "done" && <th style={{ width: "13%" }}>환불완료일</th>}
+                        <th style={{width:"13%"}}>환불여부</th>
                     </tr>
                 </thead>
                 <tbody>
