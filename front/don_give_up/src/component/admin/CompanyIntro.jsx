@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Header from "../common/Header";
 import * as React from 'react';
-import { Box, Typography, Divider,Fade } from '@mui/material';
+import { Box, Typography, Divider,Fade, Card, CardContent, Grid, CardActions, Button } from '@mui/material';
 
 
 
@@ -13,11 +13,10 @@ export default function CompanyIntroduction () {
             <div className="about-page">
       <header className="hero">
        
-        <img src="/images/default_img.png" alt="기부 이미지" />
-   
-
-        
-            <p>믿고 나누는 기부 플랫폼</p>
+       <div className="intro">
+        <img style={{height:400, width: 1000}} src="/images/intro3_img.jpg" alt="기부사이트 소개 이미지" />
+      </div>
+      
          </header>
 
     
@@ -45,37 +44,32 @@ export default function CompanyIntroduction () {
 
       <Divider sx={{ my: 3 }} />
 
-      <Typography variant="h5" gutterBottom sx={{ mt: 4, fontWeight: 'bold' }}>
-        주요 기능
-      </Typography>
-      <ul style={{ paddingLeft: '1.2em' }}>
-        <li>✅ 단체의 기부 사업 신청 및 수정</li>
-        <li>✅ 관리자의 사업 승인 / 반려 / 삭제 요청 처리</li>
-        <li>✅ 기부자들이 확인할 수 있는 사업 정보 열람 기능</li>
-        <li>✅ 반려 사유에 대한 피드백 및 개선 기능</li>
-        <li>✅ 기부 사업 상태 변경 및 모니터링</li>
-      </ul>
-  <section className="section">
-        <h2>왜 만들었을까요?</h2>
-        <br/><br/>
-        <p>
-          기부에 대한 불신, 정보 부족, 선택의 어려움...  
-          Don Give Up!은 기부자가 안심하고 기부할 수 있도록 만든 플랫폼입니다. <br/> <br/>
-        
+      
+  <div style={{display:"flex" ,justifyContent:"space-evenly" }}>
+  <div class="card">
+    <h2> 개인 회원이라면?</h2>
+    <p>
+      나에게 딱 맞는 기부 환경을 제공합니다.<br/>
+      • 관심 단체 소식 자동 알림<br/>
+      • 예치금 충전 / 환불 / 기부 내역 관리
+    </p>
+    <a href="/join/member" class="btn primary"> 개인회원 가입하기</a>
+  </div>
 
-          “당신의 작은 돈(Don)이 누군가에겐 포기하지 않게 하는 힘이 됩니다.”<br/> <br/>
+  <div className="card" style={{display:"gap:10" }}>
+    <h2> 단체 회원이라면?</h2>
+    <p/>
+      따뜻한 활동을 널리 알릴 수 있어요.<br/>
+      • 기부 사업 등록 및 수정<br/>
+      • 단체 소개 게시판 운영<br/>
+      • 신뢰 온도 상승으로 후원자 신뢰 확보
+    <br/>
+    <a href="/join/org" class="btn success">단체회원 가입하기</a>
+  </div>
+ </div>
+     </Box>
 
-          “희망을 주는 기부, Don Give Up!”
-        </p>
-</section>
-      <Divider sx={{ my: 3 }} />
-
-      <Typography variant="body1" sx={{ fontStyle: 'italic', color: '#666' }}>
-        💬 “소중한 기부가 더 나은 세상을 만드는 출발점이 될 수 있도록,<br />
-        우리는 정직하고 따뜻한 연결을 추구합니다.”
-      </Typography>
-    </Box>
-
+   
       {/* ...다른 섹션들 */}
     </div>
         </section>
