@@ -6,33 +6,40 @@ import Switch from '@mui/material/Switch';
 import { Checkbox, Tooltip } from "@mui/material";
 import { Tabs, Tab, Box, TextField, Button } from "@mui/material";
 import "./admin.css";
+import Swal from "sweetalert2";
 
 export default function ReportManage() {
-  const [tab, setTab] = useState("comment"); // comment or org
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
-  const [report, setReport] = useState();
-  const [reportList, setReportList] = useState([]);
   const axiosInstance = createInstance();
   const serverUrl = import.meta.env.VITE_BACK_SERVER;
- 
-     //페이지 하단 페이지 네비게이션 저장 변수
-    const [pageInfo, setPageInfo] = useState({});
-    const [reqPage, setReqPage] = useState(1);
 
+  //단체/댓글 신고 탭을 위한 변수
+  const [tab, setTab] = useState("comment"); // comment or org
+  
+  //신고내역리스트 변수
+  const [report, setReport] = useState();
+  const [reportList, setReportList] = useState([]);
+
+  //기간별 검색을 위한 변수
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  //페이지 하단 페이지 네비게이션 저장 변수
+  const [pageInfo, setPageInfo] = useState({});
+  const [reqPage, setReqPage] = useState(1);
+
+
+//신고 내역 목록
 useEffect(() => {
-
     //fetchReportList();
      axiosInstance({
       method: "get",
       url: serverUrl +"/admin/reportManage/" + reqPage +"/"+ tab,
       params: {
-        startDate : startDate || "",
-        endDate : endDate || "",
+       startDate : startDate || "",
+       endDate : endDate || "",
       },
     })
       .then((res) => {
-     
         if (res.data.resData) {
           setReportList(res.data.resData.reportList);
           setPageInfo(res.data.resData.pageInfo);
@@ -49,14 +56,17 @@ useEffect(() => {
   
 }, [reqPage, tab]);
 
+
+//단체신고/댓글신고탭을 바꿨을 때 동작
   const handleChangeTab = (event, newValue) => {
-    setTab(newValue);
-    setReportList([]); // 탭 변경 시 리스트 초기화
-    setStartDate("");
-    setEndDate("");
-    setReqPage(1);
+      setTab(newValue);
+      setReportList([]); // 탭 변경 시 리스트 초기화
+      setStartDate("");
+      setEndDate("");
+      setReqPage(1);
   };
 
+//단체/댓글 신고 탭에 따라서 기간별 검색결과가 달라지게 함. 
   const fetchReportList = () => {
     if((startDate && endDate)) {
         axiosInstance({
@@ -68,7 +78,6 @@ useEffect(() => {
       },
     })
       .then((res) => {
-
         if (res.data.resData) {
           setReportList(res.data.resData.reportList);
           setPageInfo(res.data.resData.pageInfo);
@@ -83,8 +92,14 @@ useEffect(() => {
         setPageInfo({});
       });
 
+  //시작일만 선택했을 때 뜨는 알림창
     }else{
-        alert("시작일과 종료일을 모두 입력해주세요.");
+      Swal.fire({
+            title : "알림",
+            text : "시작일과 종료일을 모두 입력해주세요.",
+            icon : "warning",
+            confirmButtonText :"확인"
+        });
       return;
 
     }
@@ -139,7 +154,6 @@ useEffect(() => {
                 <th>신고코드</th>
                 <th>신고상세사유</th>
                 <th>신고일</th>
-                <th>삭제여부</th>
               </tr>
             </thead>
             <tbody>
@@ -187,7 +201,6 @@ useEffect(() => {
                   <td>{report.reportReason}</td>
                   <td>{report.reportDetailReason}</td>
                   <td>{report.reportDate.substring(0, 10)}</td>
-                  <td>{report.commentDeleted}</td>
                 </tr>
                   ))}
             </tbody>
@@ -208,7 +221,7 @@ export default function ReportManage(){
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
-    //기부사업 목록 저장 변수
+    //신고내역 목록 저장 변수
     const [reportList, setReportList] = useState([]);
     //요청 페이지(초기에 1페이지 요청하므로 초기값은 1)
     const [reqPage, setReqPage] = useState(1);

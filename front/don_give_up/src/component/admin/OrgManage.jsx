@@ -46,8 +46,6 @@ export default function OrgManage(){
 
     //검색을 위한 함수
      const fetchOrgList = (page) => {
-
-
         const options = {
             url: serverUrl + '/admin/orgManage/'+ page,
             method: 'get',
@@ -73,7 +71,7 @@ export default function OrgManage(){
     
         const searchOrg = (e) => {
             e.preventDefault();
-            setReqPage(1); // 페이지를 1로 초기화 → useEffect 실행
+            setReqPage(1);                 // 페이지를 1로 초기화 → useEffect 실행
             fetchOrgList(1);
         };
 
@@ -90,7 +88,6 @@ export default function OrgManage(){
 
 
     },[reqPage]);
-
 
 
    // 가입요청 버튼 눌렀을 때
@@ -121,7 +118,7 @@ export default function OrgManage(){
                 </div>
             <div className="search">
                     <form className='form' onSubmit={searchOrg}  >
-                        <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+                        <select value={searchType} onChange={(e) => setSearchType(e.target.value)} style={{width:110, textAlign:"center"}}>
                             <option value="all">전체</option>
                             <option value="name">단체명</option>
                             <option value="id">단체아이디</option>
@@ -137,8 +134,6 @@ export default function OrgManage(){
                 </div>
             </div>
 
-
-
             <table className="admin-tbl">
                 <thead>
                     <tr>
@@ -146,7 +141,7 @@ export default function OrgManage(){
                         <th>단체아이디</th>
                         <th>단체명</th>
                         <th>신청일자</th>
-                        <th>상세정보</th>
+                        <th>단체상세정보</th>
                         <th>상태</th>
                     </tr>
                 </thead>
@@ -229,8 +224,12 @@ function Org(props) {
                 <button onClick={handleOpen} className="show">보기</button>
             </td>
             <td> 
-                <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
+                <Box sx={{ minWidth: 120 ,
+                           display:"flex",
+                           justifyContent:"center",
+                           alignItems:"center",
+                           height:"100%" }}>
+                        <FormControl sx={{ width: "auto" }}>
                             <InputLabel id="demo-simple-select-label">상태</InputLabel>
                                 <Select
                                         labelId="demo-simple-select-label"
@@ -243,11 +242,8 @@ function Org(props) {
                                     <MenuItem value={1}>승인</MenuItem>
                                     <MenuItem value={2}>반려</MenuItem>
                                   </Select>
-
                         </FormControl>
                  </Box>          
-       
-
            </td>
        </tr>
 
@@ -291,8 +287,9 @@ function Org(props) {
                                                                                                         fontFamily: "Pretendard, sans-serif",
                                                                                                         fontSize : "16px", fontWeight : "light",
                                                                                                         color : "#333333"}}/>
-                                        </div></td>
-                                        </tr>
+                                           </div>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <th>단체 계좌은행</th> 
                                         <td>{org.orgAccountBank}</td>
