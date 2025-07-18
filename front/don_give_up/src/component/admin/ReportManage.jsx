@@ -139,7 +139,6 @@ useEffect(() => {
                 <th>신고코드</th>
                 <th>신고상세사유</th>
                 <th>신고일</th>
-                <th>삭제여부</th>
               </tr>
             </thead>
             <tbody>
@@ -187,7 +186,6 @@ useEffect(() => {
                   <td>{report.reportReason}</td>
                   <td>{report.reportDetailReason}</td>
                   <td>{report.reportDate.substring(0, 10)}</td>
-                  <td>{report.commentDeleted}</td>
                 </tr>
                   ))}
             </tbody>

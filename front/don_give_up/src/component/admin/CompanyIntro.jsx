@@ -15,8 +15,7 @@ export default function CompanyIntroduction () {
        
        <div className="intro">
         <img style={{height:400, width: 1000}} src="/images/intro3_img.jpg" alt="기부사이트 소개 이미지" />
-      </div>
-      
+      </div>  
          </header>
 
     

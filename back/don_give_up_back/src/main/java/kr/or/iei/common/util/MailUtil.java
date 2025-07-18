@@ -55,6 +55,7 @@ public class MailUtil {
 
 	 //기부사업 반려 메일 보낼 때 필요한 정보, 내용
 	  public void sendRejectBizMail(String orgEmail, String orgName, String bizName, String bizEdit) {
+		 System.out.println("org");
 		      try {
 		            MimeMessage message = mailSender.createMimeMessage();
 		            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -62,6 +63,7 @@ public class MailUtil {
 		            helper.setTo(orgEmail);
 		            helper.setSubject("[Don Give Up] 기부 사업 반려 안내");
 		            String content = "<h3>" + orgName + "담당자님</h3>" +
+		            
 		                             "<p>요청하신 사업 <strong>" + bizName + "</strong>이 아래 사유로 반려되었습니다.</p>" +
 		                             "<p><em>" + bizEdit + "</em></p>" +
 		                             "<p>반려된 사업은 수정 후 다시 사업등록을 해주셔야 합니다. 문의사항은 관리자에게 문의해주세요.</p>";

@@ -120,7 +120,7 @@ export default function OrgManage(){
                 </div>
             <div className="search">
                     <form className='form' onSubmit={searchOrg}  >
-                        <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+                        <select value={searchType} onChange={(e) => setSearchType(e.target.value)} style={{width:110}}>
                             <option value="all">전체</option>
                             <option value="name">단체명</option>
                             <option value="id">단체아이디</option>

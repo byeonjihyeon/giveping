@@ -190,11 +190,11 @@ public class AdminService {
 		          
 		   }else if (result > 0 && biz.getBizStatus() == 2) {
 		    	  String orgEmail = bizStatus.getOrgEmail();
+		    	  String orgName = bizStatus.getOrgName();
 		          String bizName = bizStatus.getBizName();
-		          String orgName = bizStatus.getOrgName();
 		          String bizEdit = biz.getBizEdit();
 		          
-		      mailUtil.sendRejectBizMail(orgEmail, bizName, orgName,bizEdit);      
+		      mailUtil.sendRejectBizMail(orgEmail, orgName, bizName,bizEdit);      
 		    }
 
 		return result;
