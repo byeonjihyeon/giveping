@@ -133,11 +133,11 @@ export default function BizManage(){
             <table className="admin-tbl">
                 <thead>
                     <tr>
-                        <th style={{width:"15%"}}>글번호</th>
+                        <th style={{width:"15%"}}>사업번호</th>
                         <th style={{width:"15%"}}>단체명</th>
                         <th style={{width:"15%"}}>신청일</th>
                         <th style={{width:"15%"}}>사업명</th>
-                        <th style={{width:"15%"}}>신청정보열람</th>
+                        <th style={{width:"15%"}}>신청정보</th>
                         <th style={{width:"15%"}}>상태</th>
                         <th style={{width:"15%"}}>수정사항</th>
                     </tr>

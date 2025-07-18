@@ -24,6 +24,7 @@ export default function AdminMain(){
         });
         
     const [menuList, setMenuList] = useState([
+         {url : "/admin"},
         {url : '/admin/memberManage',          name : "회원 관리"},
         {url : '/admin/orgManage',             name : '단체 관리'},
         {url : '/admin/bizManage' ,            name : '기부 사업 관리'},
@@ -40,6 +41,7 @@ export default function AdminMain(){
               <Sidebar menuList={menuList} member={member}/>
             <div className="admin-content"> 
                 <Routes>
+                    <Route path='/' element={<MemberManage />}  />
                     <Route path="memberManage" element={<MemberManage />} />
                     <Route path="orgManage" element={<OrgManage />}/>
                     <Route path="bizManage" element={<BizManage />} />

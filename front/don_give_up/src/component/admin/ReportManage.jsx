@@ -6,6 +6,7 @@ import Switch from '@mui/material/Switch';
 import { Checkbox, Tooltip } from "@mui/material";
 import { Tabs, Tab, Box, TextField, Button } from "@mui/material";
 import "./admin.css";
+import Swal from "sweetalert2";
 
 export default function ReportManage() {
   const [tab, setTab] = useState("comment"); // comment or org
@@ -84,7 +85,12 @@ useEffect(() => {
       });
 
     }else{
-        alert("시작일과 종료일을 모두 입력해주세요.");
+      Swal.fire({
+            title : "알림",
+            text : "시작일과 종료일을 모두 입력해주세요.",
+            icon : "warning",
+            confirmButtonText :"확인"
+        });
       return;
 
     }
@@ -139,7 +145,7 @@ useEffect(() => {
                 <th>신고코드</th>
                 <th>신고상세사유</th>
                 <th>신고일</th>
-                <th>삭제여부</th>
+              
               </tr>
             </thead>
             <tbody>
@@ -187,7 +193,7 @@ useEffect(() => {
                   <td>{report.reportReason}</td>
                   <td>{report.reportDetailReason}</td>
                   <td>{report.reportDate.substring(0, 10)}</td>
-                  <td>{report.commentDeleted}</td>
+                
                 </tr>
                   ))}
             </tbody>

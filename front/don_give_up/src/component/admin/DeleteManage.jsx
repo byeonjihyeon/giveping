@@ -23,6 +23,7 @@ const modalStyle = {
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
+  textAlign:'center'
 };
 
 //탈퇴 내역 목록
@@ -78,8 +79,8 @@ export default function DeleteManage(){
                 <thead>
                     <tr>
                         <th style={{width:"15%"}}>단체명</th>
-                        <th style={{width:"15%"}}>상세정보</th>
-                        <th style={{width:"15%"}}>기부사업</th>
+                        <th style={{width:"15%"}}>단체정보</th>
+                        <th style={{width:"15%"}}>기부사업정보</th>
                         <th style={{width:"15%"}}>상태</th>    
                     </tr>
                 </thead>
@@ -144,7 +145,7 @@ function DelOrg(props) {
             }
         });
     }
-// 단체정보 상세보기 버튼 눌렀을 때 뜨는 모달창
+// 단체정보 보기 버튼 눌렀을 때 뜨는 모달창
    function orgDetail(){
        setOpen(true);
   
@@ -154,7 +155,7 @@ function DelOrg(props) {
         setOpen(false);
     }
 
- //기부사업 상세보기 버튼 눌렀을 때 모달창
+ //기부사업정보 보기 버튼 눌렀을 때 모달창
     function orgBiz(props){
         const biz= props.biz;
        setBizOpen(true);
@@ -171,10 +172,14 @@ function DelOrg(props) {
             <td><button className="show" onClick={orgDetail}>보기</button></td>
              <td><button className="show" onClick={orgBiz}>보기</button></td>
             
-       <td>
+       <td style={{textAlign:"center",verticalAlign: "middle"}}>
           {showType === "request" ? (
-                <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
+                <Box sx={{ minWidth: 120 ,
+                           display:"flex",
+                           justifyContent:"center",
+                           alignItems:"center",
+                           height:"100%" }}>
+                        <FormControl sx={{ minWidth: 120, width: "auto" }}>
                             <InputLabel id="demo-simple-select-label">상태</InputLabel>
                                 <Select
                                         labelId="demo-simple-select-label"

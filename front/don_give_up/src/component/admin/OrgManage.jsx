@@ -146,7 +146,7 @@ export default function OrgManage(){
                         <th>단체아이디</th>
                         <th>단체명</th>
                         <th>신청일자</th>
-                        <th>상세정보</th>
+                        <th>단체상세정보</th>
                         <th>상태</th>
                     </tr>
                 </thead>
@@ -229,8 +229,12 @@ function Org(props) {
                 <button onClick={handleOpen} className="show">보기</button>
             </td>
             <td> 
-                <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
+                <Box sx={{ minWidth: 120 ,
+                           display:"flex",
+                           justifyContent:"center",
+                           alignItems:"center",
+                           height:"100%" }}>
+                        <FormControl sx={{ width: "auto" }}>
                             <InputLabel id="demo-simple-select-label">상태</InputLabel>
                                 <Select
                                         labelId="demo-simple-select-label"

@@ -20,10 +20,6 @@
     border: 1px solid #dcdcdc;
   /*  background-color: #fafafa; */
 }
-.sidebar-wrap.admin {
-    margin-top: 100px;
-    height: 494px;
-}
 
 .profile-wrap {
     display: flex;
@@ -93,7 +89,19 @@
     box-sizing: border-box;
     padding: 30px 20px;
 }
+.sidebar-wrap.admin {
+    margin-top: 100px;
+    height: 494px;
+    margin-top: 100px;
+    height: 494px;
+    position: relative; 
+}
+
 .side-menu.admin {
+    padding-bottom: 100px;
+    position: sticky;
+    
+    top: 0; /* 필수! 스크롤 시 고정 시작 지점 */
     padding-bottom: 100px;
 }
 
