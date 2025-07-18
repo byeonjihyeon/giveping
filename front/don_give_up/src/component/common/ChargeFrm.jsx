@@ -26,7 +26,9 @@ export default function ChargeFrm(props){
     const [chkCharge, setChkCharge] = useState(0);
 
     //최대 충전금액 (100만원)
+    
     const max = "1000000";
+ 
     
     //입력폼에 콤마로 단위찍어서 보여줄 변수
     const [commaCharge, setCommaCharge] = useState("0");
@@ -53,11 +55,13 @@ export default function ChargeFrm(props){
 
         if(regExp.test(inputCharge) || inputCharge == ""){ //입력값이 "" 이거나 유효성 통과
             
+            
             if(inputCharge.length >= 7){    //입력값이 '1000000'원이 이상이면 최대금액으로 setCharge
                 setCharge(max);
                 setCommaCharge(addCommas(max)); 
                 return;
             }
+            
             setCharge(inputCharge);
             setCommaCharge(addCommas(inputCharge));
         }
@@ -156,6 +160,7 @@ export default function ChargeFrm(props){
                             setChkCharge(1);
                             return;
                         }
+                        
                         let sumStr = String(sum);
                         setCharge(sumStr);
                         setCommaCharge(addCommas(sumStr));
