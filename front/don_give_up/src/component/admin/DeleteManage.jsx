@@ -10,7 +10,6 @@ import Loading from "../common/Loading";
 import { Link } from "react-router-dom";
 
 
-
 //상세보기 모달 스타일
 const modalStyle = {
   position: 'absolute',
@@ -23,6 +22,8 @@ const modalStyle = {
   boxShadow: 24,
   p: 4,
   borderRadius: 2,
+  textAlign:'center'
+  
 };
 
 //탈퇴 내역 목록
@@ -39,7 +40,7 @@ export default function DeleteManage(){
     const [pageInfo, setPageInfo] = useState({});
     const [showType, setShowType] = useState("request");
      //미완료 => 완료 변경 시, 다시 10개의 목록 그릴 수 있도록 변경하기 위한 변수
-   const [updStatus, setUpdStatus] = useState(false);
+    const [updStatus, setUpdStatus] = useState(false);
     
 
     useEffect(function(){
@@ -78,8 +79,8 @@ export default function DeleteManage(){
                 <thead>
                     <tr>
                         <th style={{width:"15%"}}>단체명</th>
-                        <th style={{width:"15%"}}>상세정보</th>
-                        <th style={{width:"15%"}}>기부사업</th>
+                        <th style={{width:"15%"}}>단체정보</th>
+                        <th style={{width:"15%"}}>기부사업정보</th>
                         <th style={{width:"15%"}}>상태</th>    
                     </tr>
                 </thead>
@@ -103,11 +104,12 @@ function DelOrg(props) {
     const deleteList = props.deleteList;
     const setDeleteList = props.setDeleteList;
     const setIsLoading = props.setIsLoading;
-
+  
+    //탈퇴신청 =>탈퇴완료 변경 시, 다시 10개의 목록 그릴 수 있도록 변경하기 위한 변수
     const updStatus=  props.updStatus;
     const setUpdStatus = props.setUpdStatus;
 
-    
+
     // 탈퇴 요청과 탈퇴 완료를 나눠서 보기 위함.
     const showType =props.showType;
     //단체가 진행한 기부사업을 리스트로 받음 
@@ -115,17 +117,34 @@ function DelOrg(props) {
     const [bizList, setBizList] = useState([]);
 
     //모달창 변수 
-     const [open, setOpen] = useState(false);
-     const [bizOpen, setBizOpen] = useState(false);
-
+    const [open, setOpen] = useState(false);
+    const [bizOpen, setBizOpen] = useState(false);
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
+  // 단체정보 보기 버튼 눌렀을 때 뜨는 모달창
+   function orgDetail(){
+       setOpen(true);
+    }
 
-    //상태 값을 변경했을 때, 호출 함수  (onChange)
+    function handleClose() {
+        setOpen(false);
+    }
+
+  //기부사업정보 보기 버튼 눌렀을 때 모달창
+    function orgBiz(props){
+        const biz= props.biz;
+       setBizOpen(true);
+    }
+
+    function bizClose() {
+      setBizOpen(false);
+    }
+
+
+  //상태 값을 변경했을 때, 호출 함수  (onChange)
     function handleChange(e){
-      setIsLoading(true);
-      //  biz.boardStatus = board.boardStatus == 1 ? 2 : 1; //현재값이 1이면 2로 변경하고, 아니면 1로 변경
+       setIsLoading(true);
         org.orgStatus = e.target.value;
 
         let options = {};
@@ -140,28 +159,8 @@ function DelOrg(props) {
             if(res.data.resData){
                 setDeleteList([...deleteList]);
                 setUpdStatus(!updStatus);
-
             }
         });
-    }
-// 단체정보 상세보기 버튼 눌렀을 때 뜨는 모달창
-   function orgDetail(){
-       setOpen(true);
-  
-    }
-
-    function handleClose() {
-        setOpen(false);
-    }
-
- //기부사업 상세보기 버튼 눌렀을 때 모달창
-    function orgBiz(props){
-        const biz= props.biz;
-       setBizOpen(true);
-    }
-
-    function bizClose() {
-      setBizOpen(false);
     }
 
     return (
@@ -171,10 +170,14 @@ function DelOrg(props) {
             <td><button className="show" onClick={orgDetail}>보기</button></td>
              <td><button className="show" onClick={orgBiz}>보기</button></td>
             
-       <td>
+       <td style={{textAlign:"center",verticalAlign: "middle"}}>
           {showType === "request" ? (
-                <Box sx={{ minWidth: 120 }}>
-                        <FormControl fullWidth>
+                <Box sx={{ minWidth: 120 ,
+                           display:"flex",
+                           justifyContent:"center",
+                           alignItems:"center",
+                           height:"100%" }}>
+                        <FormControl sx={{ minWidth: 120, width: "auto" }}>
                             <InputLabel id="demo-simple-select-label">상태</InputLabel>
                                 <Select
                                         labelId="demo-simple-select-label"
@@ -227,7 +230,7 @@ function DelOrg(props) {
                                   <tr>
                                     <th>단체 소개</th> 
                                         <td><div style={{width  :"450px"}}>
-                                            <textarea type="text" defaultValue={org.orgIntroduce}style={{width : "100%", height : "60px",
+                                            <textarea type="text" defaultValue={org.orgIntroduce } readOnly style={{width : "100%", height : "60px",
                                                                                                         border : "none", resize : "none",
                                                                                                         fontFamily: "Pretendard, sans-serif",
                                                                                                         fontSize : "16px", fontWeight : "light",
@@ -293,9 +296,8 @@ function DelOrg(props) {
                     <div>
                         <button onClick={bizClose}>닫기</button>    
                     </div>
-                     </Box>
-             </Modal>
-
+              </Box>
+        </Modal>
              </>
     );
-}
+  }

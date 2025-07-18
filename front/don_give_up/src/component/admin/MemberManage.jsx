@@ -11,10 +11,8 @@ import Select from '@mui/material/Select';
 import "./admin.css";
 
 
-//회원 목록
+   //회원 목록
 export default function MemberManage(){
-
-
     const serverUrl = import.meta.env.VITE_BACK_SERVER;
     const axiosInstance = createInstance();
 
@@ -24,7 +22,6 @@ export default function MemberManage(){
     const [pageInfo, setPageInfo] = useState({});
     const [searchType, setSearchType]= useState('all');
     const [keyword, setKeyword] =useState('');
-
 
 
     const fetchMemberList = (page) => {
@@ -51,7 +48,7 @@ export default function MemberManage(){
 
     const searchMember = (e) => {
         e.preventDefault();
-        setReqPage(1); // 페이지를 1로 초기화 → useEffect 실행
+        setReqPage(1);                 // 페이지를 1로 초기화 → useEffect 실행
         fetchMemberList(1);
     };
 
@@ -100,7 +97,7 @@ function searchMember(e){
         <div className="search-and-nav">
         <div className="search">
             <form className='form' onSubmit={searchMember}  >
-                    <select value={searchType} onChange={(e) => setSearchType(e.target.value)}>
+                    <select value={searchType} onChange={(e) => setSearchType(e.target.value)} style={{width:"80px", textAlign:"center"}}>
                         <option value="all">전체</option>
                         <option value="id">아이디</option>
                         <option value="name">이름</option>
@@ -167,10 +164,7 @@ function Member(props) {
             if(res.data.resData){
                 setMemberList([...memberList]);
             }
-        });
-        
-
-    
+    });
 }
 
     return (

@@ -27,37 +27,19 @@ export default function RefundManage(){
     const [updStatus, setUpdStatus] = useState(false);
 
     useEffect(function(){
-
         let options = {};
         options.url = serverUrl + '/admin/refundManage/' + reqPage +'/'+ showType;
         options.method = 'get';
 
         axiosInstance(options)
         .then(function(res){
-            //res.data.resData == boardMap
             setRefundList(res.data.resData.refundList);
             setPageInfo(res.data.resData.pageInfo);
         });
 
-        //reqPage 변경 시, useEffect 내부 함수 재실행
+     //reqPage 변경 시, useEffect 내부 함수 재실행
     }, [reqPage, showType, updStatus]);
 
-  // 환불 상태에 따라 목록 필터링
-  /*
-    const filterList = refundList.filter(function(refund){
-
-        showType === "request" ? refund.refundStatus === 0 : refund.refundStatus === 1
-    });
-    */
-  /*
-  const filterList = refundList.filter(function(refund) {
-  if (showType === "request") {
-    return refund.refundStatus === 0;
-  } else {
-    return refund.refundStatus === 1;
-  }
-});
-*/
     return (
         <>
             <div className="page-title">환불 신청 관리</div>
@@ -138,14 +120,13 @@ function Refund(props) {
                 setUpdStatus(!updStatus);
             }
         });
-    
-
     }
+
     return (
         <tr>
             <td>{refund.refundNo}</td>
             <td>{refund.memberName}</td>
-            <td>{refund.refundMoney}원</td>
+            <td>{refund.refundMoney.toLocaleString()}원</td>
             <td>{refund.memberAccountBank}</td>
             <td>{refund.memberAccount}</td>
             <td>{refund.refundDate ? refund.refundDate.substring(0,10) : ''}</td>
@@ -163,7 +144,6 @@ function Refund(props) {
                                 <MenuItem value={1}>완료</MenuItem>
                         </Select>
                     </FormControl>
-       
                 ):("완료")}
             </td>
         </tr>

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class AdminRefund {
   private int refundNo;              // 환불 번호
   private String memberName;         // 회원 이름
-  private String refundMoney;        // 환불 금액
+  private int refundMoney;        // 환불 금액
   private String memberAccount;      // 환불 계좌번호
   private String memberAccountBank;  // 환불 계좌번호 은행명
   private String refundDate;         // 환불 요청 일자
