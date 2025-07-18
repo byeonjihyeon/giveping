@@ -53,7 +53,7 @@ public class MailUtil {
     }
 
 
-	 //기부사업 반려 메일 보낼 때 필요한 정보, 내용
+	 // 기부사업 반려 메일 보낼 때 필요한 정보, 내용
 	  public void sendRejectBizMail(String orgEmail, String orgName, String bizName, String bizEdit) {
 		 System.out.println("org");
 		      try {
@@ -81,18 +81,18 @@ public class MailUtil {
 		String subject ="[Don Give Up] 탈퇴 처리 완료 안내";
 		String content =getDeleteMailTemplate(orgName);
 		
-	try {		
-		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-		
-		helper.setTo(to);
-		helper.setSubject(subject);
-		helper.setText(content, true);
-		
-		mailSender.send(message);
-		
-	}catch(MessagingException e) {
-		e.printStackTrace();
+		try {		
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+			
+			helper.setTo(to);
+			helper.setSubject(subject);
+			helper.setText(content, true);
+			
+			mailSender.send(message);
+			
+		}catch(MessagingException e) {
+			e.printStackTrace();
 	}
 }
 	// 단체 탈퇴 메일 내용
@@ -109,26 +109,26 @@ public class MailUtil {
 
 	
 	
-	//단체 가입 승인 메일 정보
+	// 단체 가입 승인 메일 정보
 	public void sendApproveOrgMail(String to, String orgName) {
 		String subject ="[Don Give Up] 단체 가입 승인 안내";
 		String content =getApproveOrgMailTemplate(orgName);
 		
-	try {		
-		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-		
-		helper.setTo(to);
-		helper.setSubject(subject);
-		helper.setText(content, true);
-		
-		mailSender.send(message);
-		
-	}catch(MessagingException e) {
-		e.printStackTrace();
+		try {		
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+			
+			helper.setTo(to);
+			helper.setSubject(subject);
+			helper.setText(content, true);
+			
+			mailSender.send(message);
+			
+		}catch(MessagingException e) {
+			e.printStackTrace();
 	}
 }
-	//단체 가입 승인 메일 내용
+	// 단체 가입 승인 메일 내용
 	private String getApproveOrgMailTemplate(String orgName) {
 		
 	    return "<div style='font-family: Arial, sans-serif; padding: 20px;'>"
@@ -142,7 +142,7 @@ public class MailUtil {
        }
 	
 	
-	//단체 가입 반려 메일
+	// 단체 가입 반려 메일
 	public void sendRejectOrgMail(String orgEmail, String orgName) {
 	      try {
 	            MimeMessage message = mailSender.createMimeMessage();

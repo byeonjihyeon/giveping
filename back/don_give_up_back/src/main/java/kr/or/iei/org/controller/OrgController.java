@@ -467,7 +467,7 @@ public ResponseEntity<ResponseDTO> updateAlarmRead(@PathVariable String alarmNos
 	@PostMapping("/organization/list")
 	public ResponseEntity<ResponseDTO> selectOrgList(@RequestBody Org data) {
 		ResponseDTO res = new ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "단체 목록 조회 중 오류가 발생하였습니다.", null, "error");
-
+		
 		try {
 			 
 			HashMap<String, Object> orgMap = service.selectOrgList(data);

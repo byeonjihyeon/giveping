@@ -234,26 +234,7 @@ public class AdminService {
 		return dao.updateRefundStatus(refund);
 	}
 	
-	//신고 내역 조회
-	/*
-	public HashMap<String, Object> selectReportList(int reqPage) {
-		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
-		int pageNaviSize = 5;    //페이지 네비게이션 길이
-		int totalCount =dao.selectReportCount(type);
-		
-		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);	
-		
-		ArrayList<AdminReport> reportList =dao.selectReportList(pageInfo);
-		
-		HashMap<String,Object> reportMap =new HashMap<String,Object>();
-	    reportMap.put("reportList", reportList);   
-	 
-	    reportMap.put("pageInfo", pageInfo);
-	    
-	return reportMap;
-	
-	}
-*/
+
 	//탈퇴 신청 관리 (단체)
 	public HashMap<String, Object> selectDeleteList(int reqPage, String showType) {
 		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
@@ -367,7 +348,8 @@ public class AdminService {
 	return reportCoMap;
 		
 	}
-    //단체 신고내역 조회
+    
+	//단체 신고내역 조회
 	public HashMap<String, Object> selectOrgReportList(int reqPage,String tab, String startDate, String endDate) {
 		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
 		int pageNaviSize = 5;    //페이지 네비게이션 길이
@@ -393,34 +375,8 @@ public class AdminService {
 	return reportOrgMap;
 		
 	}
-
-
 	
-	}
+}
 
-	
-	/*
-	public HashMap<String, Object> selectBoardList(int reqPage) {
-		int viewCnt = 10;   //한 페이지당 보여줄 게시글 갯수 (기존 게시글 목록과 다르게 10개씩 보여줌)
-		int pageNaviSize = 5;    //페이지 네비게이션 길이
-		int totalCount =dao.selectBoardCount();
-		
-		PageInfo pageInfo = pageUtil.getPageInfo(reqPage, viewCnt, pageNaviSize, totalCount);
-		
-		ArrayList<Board> boardList =dao.selectBoardList(pageInfo);
-		
-		HashMap<String,Object>boardMap =new HashMap<String,Object>();
-		boardMap.put("boardList", boardList);
-		boardMap.put("pageInfo", pageInfo);
-			
-		return boardMap;
-	   }
-	
-	@Transactional
-	public int changeBoardStatus(Board board) {
-	     
-		return dao.changeBoardStatus(board);
-	}
-*/
 	
 

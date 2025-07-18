@@ -45,14 +45,14 @@ export default function CompanyIntroduction () {
 
       
   <div style={{display:"flex" ,justifyContent:"space-evenly" }}>
-  <div class="card">
+  <div className="card">
     <h2> 개인 회원이라면?</h2>
     <p>
       나에게 딱 맞는 기부 환경을 제공합니다.<br/>
       • 관심 단체 소식 자동 알림<br/>
       • 예치금 충전 / 환불 / 기부 내역 관리
     </p>
-    <a href="/join/member" class="btn primary"> 개인회원 가입하기</a>
+    <a href="/join/member" className="btn primary"> 개인회원 가입하기</a>
   </div>
 
   <div className="card" style={{display:"gap:10" }}>
@@ -63,7 +63,7 @@ export default function CompanyIntroduction () {
       • 단체 소개 게시판 운영<br/>
       • 신뢰 온도 상승으로 후원자 신뢰 확보
     <br/>
-    <a href="/join/org" class="btn success">단체회원 가입하기</a>
+    <a href="/join/org" className="btn success">단체회원 가입하기</a>
   </div>
  </div>
      </Box>

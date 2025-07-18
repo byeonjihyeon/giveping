@@ -363,9 +363,21 @@
 
 
 <!--  전체 단체 수   -->
-	<select id="selectOrgCount" resultType="_int">
-	 select count(*) from tbl_org
+	<select id="selectOrgCount" parameterType="Org" resultType="_int">
+	 select count(distinct org_no) from tbl_org
+	 <if test="checkCtgList != null and checkCtgList.size() > 0">
+	 left join tbl_org_donation using (org_no)
+	 </if>
 	 where org_status = 1
+	 <if test="searchOrgName != null and searchOrgName != ''">
+	   and org_name = #{searchOrgName}
+	 </if>
+	 <if test="checkCtgList != null and checkCtgList.size() > 0">
+	   and donate_code in
+	   <foreach collection="checkCtgList" item="category" open="(" separator="," close=")">
+	   		#{category}
+	   </foreach>
+	 </if>
 	</select>
 	
    <!--  전체 단체 목록 조회  -->

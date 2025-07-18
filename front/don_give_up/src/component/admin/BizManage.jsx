@@ -9,6 +9,7 @@ import "./admin.css";
 import Loading from "../common/Loading";
 import { Viewer } from "@toast-ui/react-editor";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 //상세보기 모달 스타일
@@ -51,6 +52,7 @@ export default function BizManage(){
     //페이지 하단 페이지 네비게이션 저장 변수
     const [pageInfo, setPageInfo] = useState({});
 
+    //기부사업 검색을 위한 변수
     const [status, setStatus] = useState(5);           // 상태 선택값
     const [keyword, setKeyword] = useState("");         // 키워드 입력값
     const [searchType, setSearchType] = useState("bizName"); // 검색 타입 (ex: 사업명)
@@ -77,24 +79,6 @@ export default function BizManage(){
      handleSearch(reqPage);
         }, [reqPage, status, searchType, keyword]); 
 
-/*
-    useEffect(function(){
-        let options = {};
-        options.url = serverUrl + "/admin/bizManage/" + reqPage;
-        options.method = 'get';
-
-        axiosInstance(options)
-        .then(function(res){
-            //res.data.resData == boardMap
-            setBizList(res.data.resData.bizList);
-            setPageInfo(res.data.resData.pageInfo);
-        });
-
-        //reqPage 변경 시, useEffect 내부 함수 재실행
-    }, [reqPage]);
-
-    
-*/
 
 
     return (
@@ -136,7 +120,7 @@ export default function BizManage(){
                         <th style={{width:"15%"}}>단체명</th>
                         <th style={{width:"15%"}}>신청일</th>
                         <th style={{width:"15%"}}>사업명</th>
-                        <th style={{width:"15%"}}>신청정보열람</th>
+                        <th style={{width:"15%"}}>신청정보</th>
                         <th style={{width:"15%"}}>상태</th>
                         <th style={{width:"15%"}}>수정사항</th>
                     </tr>
@@ -176,7 +160,7 @@ function BoardItem(props) {
         setOpen(false);
     }
 
-    //  상태 변경 시
+    // 상태 변경 시
     function handleChange(e) {
         const newStatus = e.target.value;
 
@@ -184,15 +168,15 @@ function BoardItem(props) {
         biz.bizStatus = newStatus;         // 상태 변경
 
         if (newStatus === 2) {
-            setRejectOpen(true);           // 반려 선택 시, 사유 입력 모달
+            setRejectOpen(true);           // 반려 선택 시, 사유 입력 모달창이 뜨도록 함.
             return;
         }
 
         updateBizStatus(newStatus);
     }
 
-    //  상태 업데이트
-    function updateBizStatus(newStatus, reason='') {
+    // 상태 업데이트시 동작 함수
+   function updateBizStatus(newStatus, reason='') {
         if(newStatus == 1 || newStatus == 2){
             setIsLoading(true);
         }
@@ -222,41 +206,22 @@ function BoardItem(props) {
          setRejectOpen(false);
          setIsLoading(false);
          setBizList([...bizList]);
-
-            // 성공 시 처리 로직 (예: 성공 메시지 표시, 데이터 갱신)
         })
         .catch(error => {
             console.error("업데이트 실패:", error);
-            // 실패 시 처리 로직 (예: 에러 메시지 표시)
+        
         });
 }
-        /*
-        biz.bizStatus = newStatus;
 
-        let options = {
-            url: serverUrl +'/admin/bizManage/'+ bizEdit,
-            method: 'patch',
-            data: {
-                bizNo: biz.bizNo,
-                bizStatus: newStatus,
-                bizEdit: bizEdit
-            }
-        };
-
-        axiosInstance(options).then(function (res) {
-            setIsLoading(false);
-            if (res.data.resData) {
-                alert("처리되었습니다.");
-                setRejectOpen(false);
-                setBizList([...bizList]); // 화면 갱신
-            }
-        });
-    }
-*/
     //  반려 사유 제출
     function handleRejectSubmit() {
         if (!bizEdit.trim()) {
-            alert("반려 사유를 입력해주세요.");
+            Swal.fire({
+                title : "알림",
+                text : "반려사유를 입력하세요.",
+                icon : "warning",
+                confirmButtonText :"확인"
+            });
             return;
         }
 

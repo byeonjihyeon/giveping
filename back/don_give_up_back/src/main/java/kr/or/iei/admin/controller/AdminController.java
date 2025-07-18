@@ -113,7 +113,7 @@ public class AdminController {
 		try {
 			int result = service.updateOrgStatus(org);
 			if (result > 0) {
-				res = new ResponseDTO(HttpStatus.OK, "", true, "");
+				res = new ResponseDTO(HttpStatus.OK, "변경이 완료되었습니다.", true, "success");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -301,24 +301,4 @@ public class AdminController {
 		
 
 }
-/*
- * @GetMapping("/board/{reqPage}") public ResponseEntity<ResponseDTO>
- * selectBoardList(@PathVariable int reqPage){ ResponseDTO res= new
- * ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "게시글 목록 조회 중,오류가 발생하였습니다",null,
- * "error");
- * 
- * try { HashMap<String, Object> boardMap = service.selectBoardList(reqPage);
- * res= new ResponseDTO(HttpStatus.OK, "", boardMap,""); }catch(Exception e){
- * e.printStackTrace();
- * 
- * } return new ResponseEntity<ResponseDTO>(res,res.getHttpStatus()); }
- * 
- * @PatchMapping("/board") public ResponseEntity<ResponseDTO>
- * changeBoardStatus(@RequestBody Board board){ ResponseDTO res= new
- * ResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR, "게시글 상태 변경 중 오류가 생겼습니다",false,
- * "error"); try { int result = service.changeBoardStatus(board); if(result>0) {
- * res= new ResponseDTO(HttpStatus.OK, "", true,""); } }catch(Exception e){
- * e.printStackTrace();
- * 
- * } return new ResponseEntity<ResponseDTO>(res,res.getHttpStatus()); }
- */
+

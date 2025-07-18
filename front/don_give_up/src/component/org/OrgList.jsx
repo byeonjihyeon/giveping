@@ -50,6 +50,7 @@ export default function OrgList(){
 
     //선택한 카테고리 저장
     function toggleCategory(code){
+        setReqPage(1);
         setCheckCtgList(function (prev){
             if (prev.includes(code)){
                 return prev.filter(function(item){

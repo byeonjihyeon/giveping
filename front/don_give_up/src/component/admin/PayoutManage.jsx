@@ -43,22 +43,6 @@ export default function PayoutManage(){
         //reqPage 변경 시, useEffect 내부 함수 재실행
     }, [reqPage, showType, updStatus]);
 
-  // 입금 상태에 따라 목록 필터링
-  /*
-    const filterList = refundList.filter(function(refund){
-
-        showType === "request" ? refund.refundStatus === 0 : refund.refundStatus === 1
-    });
-    */
-  /*
-  const filterList = refundList.filter(function(refund) {
-  if (showType === "request") {
-    return refund.refundStatus === 0;
-  } else {
-    return refund.refundStatus === 1;
-  }
-});
-*/
     return (
         <>
             <div className="page-title">관리자 모금액 송금 관리</div>
@@ -78,7 +62,7 @@ export default function PayoutManage(){
             <table className="admin-tbl">
                 <thead>
                     <tr>
-                        <th>송금번호</th>
+                        <th style={{ display: "none"}}>송금번호</th>
                         <th>단체명</th>
                         <th>기부사업</th>
                         <th>모금종료날짜</th>
@@ -141,17 +125,23 @@ function Payout(props) {
             }
         });
     }
+
     return (
         <tr>
-            <td>{payout.payoutNo}</td>
+            <td style={{ display: "none"}} >{payout.payoutNo}</td>
             <td>{payout.orgName}</td>
             <td>{payout.bizName}</td>
             <td>{payout.bizDonateEnd.substring(0,10)}</td>
-            <td>{payout.bizGoal}</td>
-            <td>{payout.payoutAmount}</td>
+            <td>{payout.bizGoal.toLocaleString()}원</td>
+            <td>{payout.payoutAmount.toLocaleString()}원</td>
             <td>
                 {showType === "todo" ? (
-                 <FormControl sx={{ m:1, minWidth: 80}}fullWidth> 
+                 <FormControl sx={{ minWidth: 120 ,
+                                    display:"flex",
+                                    justifyContent:"center",
+                                    alignItems:"center",
+                                    height:"100%",
+                                    width: "auto"  }}>
                             <Select
                                     value={payout.payoutStatus}
                                     onChange={handleChange}

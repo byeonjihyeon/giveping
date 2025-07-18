@@ -65,7 +65,6 @@
     </update>
     
                                                    
-    
    <!--  전체 단체 수   -->
 	<select id="selectOrgCount" resultType="_int">
 	 select count(*) from tbl_org
@@ -125,12 +124,7 @@
     </update>
     
 
-   <!--  전체 기부사업 수 
-	<select id="selectBizCount" resultType="_int">
-	 select count(*) from tbl_donate_biz
-	</select>
-	   -->
-	  <!--  전체 기부사업 수 -->
+	<!--  전체 기부사업 수 -->
 	 <select id="selectBizCount" parameterType="map" resultType="_int">
        SELECT COUNT(*)
        FROM tbl_donate_biz b
@@ -153,36 +147,6 @@
   </where>
 </select>
 	 
-	 
-   <!--  전체 기부사업 목록 조회  
-    <select id="selectBizList" parameterType="PageInfo" resultType="AdminBiz">
-	 SELECT *
-		FROM (
-		    SELECT ROWNUM AS rnum, a.*
-		    FROM (
-		        SELECT 
-		            biz_no AS bizNo,
-		            org_name AS orgName,
-		            org_email as orgEmail,
-		            donate_ctg as bizCtg,
-		            biz_content as bizContent,
-		            biz_donate_start as bizDonateStart,
-		            biz_donate_end as bizDonateEnd,
-		            biz_start as bizStart,
-		            biz_end as bizEnd,
-		            biz_goal as bizGoal,
-		            biz_reg_date AS bizRegDate,
-		            biz_name AS bizName,
-		            biz_status AS bizStatus,
-		            biz_edit AS bizEdit
-		        FROM tbl_donate_biz
-		        JOIN tbl_org ON tbl_donate_biz.org_no = tbl_org.org_no
-		        JOIN tbl_donate_code ON tbl_donate_biz.donate_code = tbl_donate_code.donate_code
-		        ORDER BY bizStatus
-		    ) a
-		) a
-	 WHERE rnum BETWEEN #{start} AND #{end}
-	</select> -->
 	 
 	 <!--  전체 기부사업 목록 조회-->  
   <select id="selectBizList" parameterType="map" resultType="AdminBiz">
@@ -307,27 +271,6 @@
 		  WHERE rnum BETWEEN #{start} AND #{end}
   </select>
 
-  <!--  SELECT *
-		FROM (
-		    SELECT ROWNUM AS rnum, a.*
-		    FROM (
-		        SELECT 
-		            refund_no AS refundNo,
-		            member_name AS memberName,
-		            refund_money AS refundMoney,
-		            member_account_bank AS memberAccountBank,
-		            member_account AS memberAccount,
-		            refund_date AS refundDate,
-		            refund_fin_date AS refundFinDate,
-		            refund_status AS refundStatus
-		        FROM tbl_refund
-		        JOIN tbl_member ON tbl_refund.member_no = tbl_member.member_no
-		        ORDER BY refundStatus
-		    ) a
-		) a
-	   WHERE rnum BETWEEN #{start} AND #{end}
-	        
-   </select>-->
  
     <!-- 환불 상태 변경  -->
 	<update id="updateRefundStatus" parameterType="AdminRefund">
@@ -361,17 +304,17 @@
 		  </where>
 		</select>
 		
-	 <!--  전체 단체 신고내역 수  -->
+   <!--  전체 단체 신고내역 수  -->
 	<select id="selectOrgReportCount" resultType="_int" parameterType="map">
-  SELECT COUNT(*) 
-  FROM tbl_report 
-  <where>
-    org_no IS NOT NULL
-    <if test="startDate != null and startDate != ''">
-      AND report_date <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
-    </if>
-    <if test="endDate != null and endDate != ''">
-      AND report_date <![CDATA[<=]]> TO_DATE(#{endDate}, 'YYYY-MM-DD')
+	  SELECT COUNT(*) 
+	  FROM tbl_report 
+	  <where>
+	    org_no IS NOT NULL
+	    <if test="startDate != null and startDate != ''">
+	      AND report_date <![CDATA[>=]]> TO_DATE(#{startDate}, 'YYYY-MM-DD')
+	    </if>
+	    <if test="endDate != null and endDate != ''">
+	      AND report_date <![CDATA[<=]]> TO_DATE(#{endDate}, 'YYYY-MM-DD')
     </if>
   </where>
 </select>
@@ -511,7 +454,7 @@
 	        o.org_url as orgUrl,
 	        o.org_status as orgStatus
 	 from tbl_org o 
-   WHERE 
+    WHERE 
       <choose>
         <when test="showType == 'request'">
           o.org_status = 3
@@ -629,6 +572,4 @@
    WHERE payout_no = #{payoutNo}
    </update>
     
-
-
  </mapper>

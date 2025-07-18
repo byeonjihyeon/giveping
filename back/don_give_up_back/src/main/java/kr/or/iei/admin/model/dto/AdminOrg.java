@@ -38,7 +38,4 @@ public class AdminOrg {
 	private String orgCtg;
 	
 	
-	
-	//단체소개 시 필요한 변수
-	
 }
