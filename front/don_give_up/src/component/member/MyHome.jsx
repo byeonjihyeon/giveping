@@ -360,12 +360,11 @@ function Surveys(props){
             <div className="posting-info">
                 <div className="posting-title">{survey.bizName}</div>
                 <div className="posting-sub-info">{survey.orgName} </div> 
-                 <div className="move-survey">
+                <div className="move-survey">
                     <Link to='#'>설문조사 참여하기 &gt;</Link>
-                </div>
+               </div>
             </div>
-           
-    </div>
+        </div>
     );
 }
 
