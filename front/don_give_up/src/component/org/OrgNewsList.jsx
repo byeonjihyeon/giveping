@@ -51,8 +51,8 @@ export default function OrgNewsList(){
             Array.isArray(newsList) && newsList.length>0
             ?
             newsList.map(function(news, index){
-                    return  <div className="mynews-list">
-                                <div key={"news"+index} className="newsList-wrap">
+                    return  <div key={"news"+index} className="mynews-list">
+                                <div className="newsList-wrap">
                                     <News key={"news" + index} news={news}  setHasNewAlert={setHasNewAlert} setUnreadAlarmCount={setUnreadAlarmCount} loginOrg={loginOrg}/>
                                 </div>
                             </div>
