@@ -308,8 +308,9 @@
 .survey-card:hover {
     border: 1px solid #c0c0c0;
 }
-.posting-title{
+.survey-card .posting-title{
     margin-bottom: 5px;
+    height: 38px;
 }
 
 .survey-card>.posting-info>.posting-sub-info {
