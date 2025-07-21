@@ -26,20 +26,39 @@ export default function CompanyIntroduction () {
 
       <Divider sx={{ my: 3 }} />
 
+<br/>
       <Typography variant="body1" paragraph>
         우리 플랫폼은 다양한 단체들이 진행하는 기부 사업을 투명하고 공정하게 관리하고,
-        시민들이 믿고 참여할 수 있도록 돕는 **비영리 기반의 기부 중개 서비스**입니다.
+        시민들이 믿고 참여할 수 있도록 돕는 **비영리 기반의 기부 중개 서비스**입니다. <br/><br/>
+
+        <strong style={{color:"#F38C79", fontSize:"20px"}}>“Don’t give up(포기하지 마)”</strong>이라는 문장에
+        <strong style={{color:"#F38C79", fontSize:"20px"}}> ‘Don(돈)’</strong>이라는 단어를 결합해,<br/>
+        <strong style={{color:"#F38C79", fontSize:"20px"}}>**‘돈을 가치 있게 give(기부)하자’**</strong>는 중의적 의미를 담았습니다.<br/>
+
       </Typography>
 
       <Typography variant="body1" paragraph>
-        단체는 사업 내용을 신청하고, 관리자는 그 신청을 심사한 후 승인 또는 반려 처리할 수 있습니다.
-        승인된 사업은 기부자들이 열람하고 후원할 수 있는 형태로 게시됩니다.
+        기부자는 관심 있는 단체를 지정할 수 있고,
+        해당 단체의 사업이 마이페이지에 자동으로 표시됩니다.
+
+        사용자가 설정한 관심 카테고리 사업을
+        메인페이지에 모아서 보여주는 기능을 통해
+        보다 맞춤형 기부 환경을 제공합니다.
+
       </Typography>
 
       <Typography variant="body1" paragraph>
-        반려된 사업은 사유와 함께 다시 수정할 수 있고, 관리자와 단체 간의 피드백을 통해
-        더욱 신뢰도 높은 기부 사업으로 발전할 수 있습니다.
+      
       </Typography>
+
+
+      <Typography variant="body1" paragraph>
+        또한 당근마켓의 ‘이용자 온도’ 시스템을 벤치마킹하여,
+        기부 단체의 신뢰도를 ‘신뢰 온도’로 시각화함으로써
+        후원자들이 더 신뢰할 수 있는 단체를 쉽게 선택할 수 있도록 돕습니다.
+      </Typography>
+      
+
 
       <Divider sx={{ my: 3 }} />
 
@@ -50,6 +69,7 @@ export default function CompanyIntroduction () {
     <p>
       나에게 딱 맞는 기부 환경을 제공합니다.<br/>
       • 관심 단체 소식 자동 알림<br/>
+      • 카테고리별 검색 기능<br/>
       • 예치금 충전 / 환불 / 기부 내역 관리
     </p>
     <a href="/join/member" className="btn primary"> 개인회원 가입하기</a>
@@ -59,12 +79,17 @@ export default function CompanyIntroduction () {
     <h2> 단체 회원이라면?</h2>
     <p/>
       따뜻한 활동을 널리 알릴 수 있어요.<br/>
-      • 기부 사업 등록 및 수정<br/>
+      • 기부 사업 등록<br/>
       • 단체 소개 게시판 운영<br/>
       • 신뢰 온도 상승으로 후원자 신뢰 확보
     <br/>
     <a href="/join/org" className="btn success">단체회원 가입하기</a>
   </div>
+ </div>
+<br/>
+ <div>
+
+
  </div>
      </Box>
 
