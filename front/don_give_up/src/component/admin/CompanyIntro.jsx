@@ -57,7 +57,7 @@ export default function CompanyIntroduction () {
         기부 단체의 신뢰도를 ‘신뢰 온도’로 시각화함으로써
         후원자들이 더 신뢰할 수 있는 단체를 쉽게 선택할 수 있도록 돕습니다.
       </Typography>
-      <br/>
+      
 
 
       <Divider sx={{ my: 3 }} />
@@ -86,7 +86,7 @@ export default function CompanyIntroduction () {
     <a href="/join/org" className="btn success">단체회원 가입하기</a>
   </div>
  </div>
-
+<br/>
  <div>
 
 
